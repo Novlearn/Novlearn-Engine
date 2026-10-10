@@ -1,6 +1,6 @@
 # Parcours d'un exercice
 
-Référence cible du 10 octobre 2026. Les étapes applicatives suivantes sont des exigences de parcours, pas des services existants dans ce dépôt. Voir [spécification](functional-specification.md), [architecture](architecture.md) et [preuves de couverture](feature-coverage.md).
+Référence actualisée le 11 octobre 2026 après consolidation canonique. Les étapes applicatives suivantes sont des exigences de parcours, pas des services existants dans ce dépôt. Voir [spécification](functional-specification.md), [architecture](architecture.md) et [preuves de couverture](feature-coverage.md).
 
 ## Création et publication dans Admin
 
@@ -47,14 +47,14 @@ flowchart TD
 ```
 
 1. Le backend sélectionne une définition publiée admissible et sa révision exacte ; il fournit seed et ID opaque indépendants. Les valeurs et politiques du client ne sont pas une entrée officielle.
-2. Le moteur valide et détache les données. Profils, références/cycles et domaines statiques sont contrôlés avant tirage dans la cible étendue. La définition/source originale est conservée, sans mutation.
+2. Le moteur valide et détache les données. Profils, références/cycles et domaines statiques sont contrôlés avant tirage dans le profil canonique admis. La définition/source originale est conservée, sans mutation.
 3. Générer une seule fois les scalaires/groupes puis computed dans l'ordre topologique ; vérifier domaines et prédicats selon les budgets/version. Refaire un candidat uniquement selon stratégie déclarée. Indétermination ou épuisement donne un échec distinct.
 4. Parcourir tous les éléments en conservant IDs/ordre. Texte et mathématiques ont des traitements distincts ; substitutions mathématiques via CortexJS. Les calculs de figures, lorsqu'admis, produisent des données, pas des pixels.
 5. Préparer chaque attendu et sa politique privée. Contrôler admissibilité/domaine avant réduction ; aucun attendu approximatif annoncé exact. Les IDs d'options persistent même si un ordre d'affichage change.
 6. Construire et vérifier l'instance complète : définition/révision, versions, valeurs typées, sources nécessaires, affichage et attendus. Aucun échec ne renvoie une instance partiellement valide.
 7. Le backend conserve l'état officiel. `projectPublicInstance` sélectionne des champs affichables et détachés ; aucun spread de définition, `correct`, solution, seed, extensions, politique privée ou trace de génération. Un calcul élève possible à partir de l'énoncé ne constitue pas une fuite de champ privé.
 
-État réel : le pipeline natif v1 est conservé. Le Lot 5 bis ajoute le parcours de liste scalaire v2 : paramètres integer/decimal/choice communs, tous les éléments/questions/QCM, attendus par ID et projection/rejeu testés. Graphe computed et contraintes intervariables restent absents ; les étapes de groupes/computed du diagramme sont cibles. La projection accepte un snapshot **officiel de confiance**, sans authentifier des objets privés fournis par le client. Voir [profil et limites v2](adr/007-native-instantiation.md#lot-5-bis--composition-v2).
+État réel : un seul pipeline sous schemaVersion 5, package privé 0.1.0. Scalaires integer/decimal/choice, tuples, computed et contraintes exactes bornées alimentent la liste texte/section/expression/question/QCM. Attendus par ID, projection et rejeu sont testés. Figures avancées, correction et intégrations applicatives restent différées. La projection accepte un snapshot **officiel de confiance**, sans authentifier des objets privés fournis par le client. Voir [architecture canonique](architecture.md) et [limites](feature-coverage.md).
 
 ## Parcours élève et tentatives
 

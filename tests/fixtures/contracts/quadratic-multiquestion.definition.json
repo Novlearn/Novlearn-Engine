@@ -1,15 +1,44 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 5,
   "kind": "composed",
   "id": "quadratic-multiquestion-native",
   "revision": "1",
   "title": "Minimum du trinôme",
-  "parameters": [
-    { "name": "a", "kind": "integer", "min": 2, "max": 2, "exclusions": [] },
-    { "name": "b", "kind": "integer", "min": -4, "max": -4, "exclusions": [] },
-    { "name": "c", "kind": "integer", "min": 5, "max": 5, "exclusions": [] }
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [
+      {
+        "name": "a",
+        "kind": "integer",
+        "min": 2,
+        "max": 2,
+        "exclusions": []
+      },
+      {
+        "name": "b",
+        "kind": "integer",
+        "min": -4,
+        "max": -4,
+        "exclusions": []
+      },
+      {
+        "name": "c",
+        "kind": "integer",
+        "min": 5,
+        "max": 5,
+        "exclusions": []
+      }
+    ],
+    "constraints": [],
+    "maxAttempts": 128,
+    "maxDraws": 4096
+  },
+  "variables": [
+    {
+      "name": "x",
+      "domain": "real"
+    }
   ],
-  "variables": [{ "name": "x", "domain": "real" }],
   "elements": [
     {
       "id": "introduction",
@@ -27,18 +56,30 @@
       "type": "question",
       "text": "Déterminer l'abscisse du minimum.",
       "points": 1,
-      "response": { "format": "latex", "kind": "rational" },
+      "response": {
+        "format": "latex",
+        "kind": "rational"
+      },
       "expectedLatex": "\\frac{-b}{2a}",
-      "policy": { "domain": "rational", "form": "value-only" }
+      "policy": {
+        "domain": "rational",
+        "form": "value-only"
+      }
     },
     {
       "id": "q-minimum",
       "type": "question",
       "text": "Déterminer la valeur minimale.",
       "points": 1,
-      "response": { "format": "latex", "kind": "rational" },
+      "response": {
+        "format": "latex",
+        "kind": "rational"
+      },
       "expectedLatex": "c-\\frac{b^2}{4a}",
-      "policy": { "domain": "rational", "form": "value-only" }
+      "policy": {
+        "domain": "rational",
+        "form": "value-only"
+      }
     },
     {
       "id": "conclusion",
@@ -48,6 +89,8 @@
   ],
   "extensions": {
     "provenance": "Synthetic native integration fixture, not a migrated historical exercise.",
-    "solution": { "privateMarker": "PRIVATE-SENTINEL" }
+    "solution": {
+      "privateMarker": "PRIVATE-SENTINEL"
+    }
   }
 }

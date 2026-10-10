@@ -6,12 +6,12 @@ import {
   validateDefinition,
 } from 'novlearn-exercise-engine';
 import type {
-  ComputedParameterV3,
-  ComparisonConstraintV3,
-  ExerciseDefinitionV4,
-  GenerationDefinitionV3,
-  GeneratedValueV3,
-  IntegerParameterV1,
+  ComputedVariableDefinition,
+  ComparisonConstraint,
+  ExerciseDefinition,
+  GenerationDefinition,
+  GeneratedValue,
+  IntegerVariableDefinition,
 } from 'novlearn-exercise-engine';
 
 const integer = (
@@ -19,29 +19,35 @@ const integer = (
   min = 1,
   max = min,
   exclusions: number[] = [],
-): IntegerParameterV1 => ({ name, kind: 'integer', min, max, exclusions });
+): IntegerVariableDefinition => ({
+  name,
+  kind: 'integer',
+  min,
+  max,
+  exclusions,
+});
 const computed = (
   name: string,
   latex: string,
-  restrictions?: ComputedParameterV3['restrictions'],
-): ComputedParameterV3 => ({
+  restrictions?: ComputedVariableDefinition['restrictions'],
+): ComputedVariableDefinition => ({
   name,
   kind: 'computed',
   latex,
   ...(restrictions ? { restrictions } : {}),
 });
 const definition = (
-  definitions: GenerationDefinitionV3['definitions'],
-  constraints: ComparisonConstraintV3[] = [],
-): GenerationDefinitionV3 => ({
-  schemaVersion: 3,
+  definitions: GenerationDefinition['definitions'],
+  constraints: ComparisonConstraint[] = [],
+): GenerationDefinition => ({
+  schemaVersion: 5,
   definitions,
   constraints,
   maxAttempts: 128,
   maxDraws: 4096,
 });
 const run = (d: unknown, seed: number | string = 42) =>
-  generateVariables(d, { seed, generationVersion: 'variables-v3' });
+  generateVariables(d, { seed, generationVersion: 'mulberry32-rejection-v1' });
 function success(d: unknown, seed: number | string = 42) {
   const r = run(d, seed);
   if (!r.ok) throw new Error(JSON.stringify(r));
@@ -67,7 +73,7 @@ const ratio = (n: number, d = 1) => ({
   numerator: n,
   denominator: d,
 });
-function number(v: GeneratedValueV3): bigint {
+function number(v: GeneratedValue): bigint {
   if (v.kind === 'rational') {
     expect(v.denominator).toBe(1);
     return BigInt(v.numerator);
@@ -101,7 +107,7 @@ describe('computed exact values and dependency resolution', () => {
     expect(r.replay).toMatchObject({
       draws: 0,
       attempts: 1,
-      generationVersion: 'variables-v3',
+      generationVersion: 'mulberry32-rejection-v1',
     });
     expect(success(JSON.parse(JSON.stringify(d)), '42')).toEqual(r);
   });
@@ -272,10 +278,9 @@ describe('complete candidate constraints and replay', () => {
     });
     expect(r.replay).toMatchObject({ attempts: 3, draws: 3 });
     expect(success(d, '42')).toEqual(r);
-    const historical = generateVariables(
-      definition([integer('a', 1, 10)]).definitions,
-      { seed: 42 },
-    );
+    const historical = generateVariables(definition([integer('a', 1, 10)]), {
+      seed: 42,
+    });
     expect(historical.ok && historical.values.a).toEqual({
       kind: 'integer',
       value: 7,
@@ -283,13 +288,17 @@ describe('complete candidate constraints and replay', () => {
     // Independent reproduction of seven draws by the historical scalar sampler.
     const names = 'abcdfgh'.split('');
     const sequence = generateVariables(
-      names.map((n) => integer(n, 1, 10)),
+      definition(names.map((n) => integer(n, 1, 10))),
       { seed: 42 },
     );
     expect(
       sequence.ok &&
         Object.values(sequence.values).map((v) =>
-          v.kind === 'decimal' ? v.coefficient : v.value,
+          v.kind === 'decimal'
+            ? v.coefficient
+            : v.kind === 'rational'
+              ? v.numerator / v.denominator
+              : v.value,
         ),
     ).toEqual([7, 1, 5, 6, 9, 8, 1]);
   });
@@ -423,7 +432,7 @@ describe('complete candidate constraints and replay', () => {
     );
   });
   it('bounds predicate lists and validates every restriction field', () => {
-    const relation: ComparisonConstraintV3 = {
+    const relation: ComparisonConstraint = {
       kind: 'comparison',
       left: { latex: '1' },
       operator: '==',
@@ -576,8 +585,8 @@ describe('mathematical integration with independent BigInt oracles', () => {
   }, 30000);
 });
 
-const exercise = (): ExerciseDefinitionV4 => ({
-  schemaVersion: 4,
+const exercise = (): ExerciseDefinition => ({
+  schemaVersion: 5,
   kind: 'composed',
   id: 'computed-quadratic',
   revision: '1',
@@ -614,7 +623,7 @@ const exercise = (): ExerciseDefinitionV4 => ({
   ],
 });
 
-describe('one resolved context in multiquestion v4', () => {
+describe('one resolved context in multiquestion', () => {
   it('keeps IDs, exact private answers, free variables and JSON replay', () => {
     const d = exercise(),
       before = JSON.stringify(d);
@@ -622,9 +631,9 @@ describe('one resolved context in multiquestion v4', () => {
     expect(validateDefinition(d).ok).toBe(true);
     const r = instantiateExercise(d, o);
     if (!r.ok) throw new Error(JSON.stringify(r));
-    expect(r.value.schemaVersion).toBe(4);
-    expect(r.value.instantiationVersion).toBe('composed-instance-v4');
-    expect(r.value.generation.parameters.d).toEqual(ratio(-24));
+    expect(r.value.schemaVersion).toBe(5);
+    expect(r.value).not.toHaveProperty('instantiationVersion');
+    expect(r.value.generation.values.d).toEqual(ratio(-24));
     expect(r.value.generation.computed.map((c) => c.name)).toEqual(['d', 's']);
     const answers = r.value.elements.filter((e) => e.type === 'question');
     expect(
@@ -649,7 +658,7 @@ describe('one resolved context in multiquestion v4', () => {
     if (q.type === 'question')
       Object.assign(q.response, { expectedLatex: 'hidden' });
     const publicInstance = projectPublicInstance(r.value);
-    expect(publicInstance.schemaVersion).toBe(4);
+    expect(publicInstance.schemaVersion).toBe(5);
     const json = JSON.stringify(publicInstance);
     for (const secret of [
       'generation',
@@ -733,20 +742,20 @@ describe('one resolved context in multiquestion v4', () => {
         seed: 42,
         instanceId: 'opaque',
         instantiationVersion: 'composed-instance-v3',
-      }).ok,
+      } as unknown as Parameters<typeof instantiateExercise>[1]).ok,
     ).toBe(false);
     expect(
       instantiateExercise(d, {
         seed: 42,
         instanceId: 'opaque',
         generationVersion: 'variables-v2',
-      }).ok,
+      } as unknown as Parameters<typeof instantiateExercise>[1]).ok,
     ).toBe(false);
     expect(
       generateVariables(d.generation, {
         seed: 42,
         generationVersion: 'variables-v2',
-      }).ok,
+      } as unknown as Parameters<typeof generateVariables>[1]).ok,
     ).toBe(false);
   });
   it('rejects whole tuple candidates using a calculated result and keeps provenance', () => {

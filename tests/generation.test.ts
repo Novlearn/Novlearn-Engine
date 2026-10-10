@@ -1,3 +1,4 @@
+import { element } from './elements.js';
 import { describe, expect, it, vi } from 'vitest';
 import {
   generateVariables,
@@ -6,16 +7,16 @@ import {
 } from 'novlearn-exercise-engine';
 import type {
   GenerateVariablesOptions,
-  GenerationParameterV1,
-  IntegerParameterV1,
+  ScalarVariableDefinition,
+  IntegerVariableDefinition,
 } from 'novlearn-exercise-engine';
 import { sampleIndex, wordStream } from '../src/generation/random.js';
 import fixture from './fixtures/contracts/rational-minimum.definition.json' with { type: 'json' };
 import packageJson from '../package.json' with { type: 'json' };
 
 const integer = (
-  overrides: Partial<IntegerParameterV1> = {},
-): IntegerParameterV1 => ({
+  overrides: Partial<IntegerVariableDefinition> = {},
+): IntegerVariableDefinition => ({
   name: 'a',
   kind: 'integer',
   min: -3,
@@ -23,7 +24,7 @@ const integer = (
   exclusions: [],
   ...overrides,
 });
-const mixed: GenerationParameterV1[] = [
+const mixed: ScalarVariableDefinition[] = [
   integer({ min: 1, max: 3 }),
   integer({ name: 'b', min: -6, max: 6, exclusions: [0] }),
   integer({ name: 'c', min: -5, max: 5 }),
@@ -39,7 +40,7 @@ const mixed: GenerationParameterV1[] = [
 ];
 
 function failed(definitions: unknown, code: string): void {
-  const result = generateVariables(definitions, { seed: 42 });
+  const result = generateVariables(generation(definitions), { seed: 42 });
   expect(result.ok).toBe(false);
   expect(result).not.toHaveProperty('values');
   if (!result.ok)
@@ -73,7 +74,7 @@ describe('generation replay and word mapping', () => {
     (seed, words, values) => {
       expect(Array.from({ length: 5 }, wordStream(seed))).toEqual(words);
       const [a, b, c, d, f] = values;
-      const result = generateVariables(mixed, { seed });
+      const result = generateVariables(generation(mixed), { seed });
       expect(result).toEqual({
         ok: true,
         values: {
@@ -83,17 +84,20 @@ describe('generation replay and word mapping', () => {
           d: { kind: 'decimal', coefficient: d, precision: 1 },
           f: { kind: 'choice', value: f },
         },
+        groups: [],
+        computed: [],
         replay: {
+          attempts: 1,
           engineVersion: packageJson.version,
-          generationVersion: 'parameters-v1',
+          generationVersion: 'mulberry32-rejection-v1',
           seed: String(seed),
           draws: 5,
         },
       });
       expect(
-        generateVariables(JSON.parse(JSON.stringify(mixed)), {
+        generateVariables(generation(JSON.parse(JSON.stringify(mixed))), {
           seed: String(seed),
-          generationVersion: 'parameters-v1',
+          generationVersion: 'mulberry32-rejection-v1',
         }),
       ).toEqual(result);
       expect(JSON.parse(JSON.stringify(result))).toEqual(result);
@@ -109,13 +113,15 @@ describe('generation replay and word mapping', () => {
       throw new Error('clock');
     });
     try {
-      const first = generateVariables(mixed, { seed: 42 });
-      generateVariables(mixed, { seed: 1 });
-      expect(generateVariables(mixed, { seed: 42 })).toEqual(first);
+      const first = generateVariables(generation(mixed), { seed: 42 });
+      generateVariables(generation(mixed), { seed: 1 });
+      expect(generateVariables(generation(mixed), { seed: 42 })).toEqual(first);
       expect(random).not.toHaveBeenCalled();
       expect(clock).not.toHaveBeenCalled();
       if (first.ok) first.values.a = { kind: 'integer', value: 999 };
-      expect(generateVariables(mixed, { seed: 42 })).not.toEqual(first);
+      expect(generateVariables(generation(mixed), { seed: 42 })).not.toEqual(
+        first,
+      );
       expect(JSON.stringify(mixed)).toBe(original);
     } finally {
       random.mockRestore();
@@ -132,15 +138,17 @@ describe('generation replay and word mapping', () => {
       min: -3,
       kind: 'integer',
     };
-    expect(generateVariables([p], { seed: 0 })).toEqual(
-      generateVariables([reorderedKeys], { seed: 0 }),
+    expect(generateVariables(generation([p]), { seed: 0 })).toEqual(
+      generateVariables(generation([reorderedKeys]), { seed: 0 }),
     );
     const fixed = integer({ name: 'b', min: 10, max: 10 });
-    const result = generateVariables([fixed, p], { seed: 0 });
+    const result = generateVariables(generation([fixed, p]), { seed: 0 });
     expect(result.ok && result.replay.draws).toBe(1);
-    const alone = generateVariables([p], { seed: 0 });
+    const alone = generateVariables(generation([p]), { seed: 0 });
     expect(result.ok && result.values.a).toEqual(alone.ok && alone.values.a);
-    const swapped = generateVariables([mixed[1], mixed[0]], { seed: 42 });
+    const swapped = generateVariables(generation([mixed[1], mixed[0]]), {
+      seed: 42,
+    });
     expect(swapped.ok && swapped.values.a).not.toEqual({
       kind: 'integer',
       value: 1,
@@ -193,13 +201,15 @@ describe('generation replay and word mapping', () => {
     null,
   ])('rejects seed %j without coercion', (seed) => {
     // Deliberately crossing the runtime boundary with invalid client data.
-    const result = generateVariables([], { seed } as GenerateVariablesOptions);
+    const result = generateVariables(generation([]), {
+      seed,
+    } as GenerateVariablesOptions);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.diagnostics[0]?.code).toBe('invalid-options');
   });
 
   it('rejects unknown versions and option fields, and accepts an empty parameter list', () => {
-    const result = generateVariables([], {
+    const result = generateVariables(generation([]), {
       seed: 0,
       generationVersion: 'future',
     } as unknown as GenerateVariablesOptions);
@@ -207,17 +217,20 @@ describe('generation replay and word mapping', () => {
     if (!result.ok)
       expect(result.diagnostics[0]?.code).toBe('unsupported-version');
     expect(
-      generateVariables([], {
+      generateVariables(generation([]), {
         seed: 0,
         maxAttempts: 1,
       } as GenerateVariablesOptions).ok,
     ).toBe(false);
-    expect(generateVariables([], { seed: 0 })).toEqual({
+    expect(generateVariables(generation([]), { seed: 0 })).toEqual({
       ok: true,
       values: {},
+      groups: [],
+      computed: [],
       replay: {
-        engineVersion: '0.0.0',
-        generationVersion: 'parameters-v1',
+        attempts: 1,
+        engineVersion: '0.1.0',
+        generationVersion: 'mulberry32-rejection-v1',
         seed: '0',
         draws: 0,
       },
@@ -236,7 +249,7 @@ describe('integer domains', () => {
           const seen = new Set<number>();
           for (let seed = 0; seed < 32; seed += 1) {
             const result = generateVariables(
-              [integer({ min, max, exclusions })],
+              generation([integer({ min, max, exclusions })]),
               { seed },
             );
             if (allowed.length === 0) {
@@ -271,7 +284,7 @@ describe('integer domains', () => {
   it('supports maximum range and an exclusion-reduced singleton', () => {
     for (let seed = 0; seed < 100; seed += 1) {
       const result = generateVariables(
-        [integer({ min: -1_000_000, max: 1_000_000 })],
+        generation([integer({ min: -1_000_000, max: 1_000_000 })]),
         { seed },
       );
       if (!result.ok || result.values.a?.kind !== 'integer')
@@ -280,9 +293,12 @@ describe('integer domains', () => {
       expect(result.values.a.value).toBeLessThanOrEqual(1_000_000);
     }
     expect(
-      generateVariables([integer({ min: -1, max: 1, exclusions: [-1, 1] })], {
-        seed: 0,
-      }),
+      generateVariables(
+        generation([integer({ min: -1, max: 1, exclusions: [-1, 1] })]),
+        {
+          seed: 0,
+        },
+      ),
     ).toMatchObject({
       ok: true,
       values: { a: { kind: 'integer', value: 0 } },
@@ -297,7 +313,7 @@ describe('decimal grids and finite choices', () => {
       const scale = 10 ** precision;
       for (let seed = 0; seed < 256; seed += 1) {
         const result = generateVariables(
-          [
+          generation([
             {
               name: 'a',
               kind: 'decimal',
@@ -306,7 +322,7 @@ describe('decimal grids and finite choices', () => {
               precision,
               exclusions: [1 / scale],
             },
-          ],
+          ]),
           { seed },
         );
         if (!result.ok || result.values.a?.kind !== 'decimal')
@@ -320,7 +336,7 @@ describe('decimal grids and finite choices', () => {
       [-0.099, -0.071, -8],
     ] as const) {
       const result = generateVariables(
-        [
+        generation([
           {
             name: 'a',
             kind: 'decimal',
@@ -329,7 +345,7 @@ describe('decimal grids and finite choices', () => {
             precision: 2,
             exclusions: [min > 0 ? 0.09 : -0.09],
           },
-        ],
+        ]),
         { seed: 0 },
       );
       expect(result).toMatchObject({
@@ -340,7 +356,7 @@ describe('decimal grids and finite choices', () => {
     }
     expect(
       generateVariables(
-        [
+        generation([
           {
             name: 'a',
             kind: 'decimal',
@@ -349,7 +365,7 @@ describe('decimal grids and finite choices', () => {
             precision: 2,
             exclusions: [],
           },
-        ],
+        ]),
         { seed: 0 },
       ),
     ).toMatchObject({
@@ -358,7 +374,7 @@ describe('decimal grids and finite choices', () => {
     });
     expect(
       generateVariables(
-        [
+        generation([
           {
             name: 'a',
             kind: 'decimal',
@@ -367,7 +383,7 @@ describe('decimal grids and finite choices', () => {
             precision: 6,
             exclusions: [],
           },
-        ],
+        ]),
         { seed: 0 },
       ),
     ).toMatchObject({
@@ -447,7 +463,7 @@ describe('decimal grids and finite choices', () => {
     const seen = new Set<number>();
     for (let seed = 0; seed < 256; seed += 1) {
       const result = generateVariables(
-        [{ name: 'a', kind: 'choice', values }],
+        generation([{ name: 'a', kind: 'choice', values }]),
         { seed },
       );
       if (!result.ok || result.values.a?.kind !== 'choice')
@@ -457,9 +473,12 @@ describe('decimal grids and finite choices', () => {
     }
     expect(seen.size).toBe(values.length);
     expect(
-      generateVariables([{ name: 'a', kind: 'choice', values: [-0] }], {
-        seed: 0,
-      }),
+      generateVariables(
+        generation([{ name: 'a', kind: 'choice', values: [-0] }]),
+        {
+          seed: 0,
+        },
+      ),
     ).toMatchObject({
       ok: true,
       values: { a: { kind: 'choice', value: 0 } },
@@ -483,10 +502,10 @@ describe('contracts and Lot 3 integration', () => {
   it('generates native trinomial parameters, keeps x free and parses the expected source unchanged', () => {
     const checked = validateDefinition(fixture);
     if (!checked.ok) throw new Error('fixture invalid');
-    if (checked.value.schemaVersion !== 1)
-      throw new Error('Expected v1 fixture.');
+    if (checked.value.schemaVersion !== 5)
+      throw new Error('Expected canonical fixture.');
     const before = JSON.stringify(checked.value);
-    const result = generateVariables(checked.value.parameters, { seed: 42 });
+    const result = generateVariables(checked.value.generation, { seed: 42 });
     expect(result).toMatchObject({
       ok: true,
       values: {
@@ -496,17 +515,22 @@ describe('contracts and Lot 3 integration', () => {
       },
     });
     expect(result).not.toHaveProperty('values.x');
-    const parsed = parseMathInput(checked.value.question.expectedLatex, {
-      parameters: checked.value.parameters.map((p) => p.name),
-      variables: checked.value.variables.map((v) => v.name),
-    });
+    const parsed = parseMathInput(
+      element(checked.value, 'question').expectedLatex,
+      {
+        parameters: checked.value.generation.definitions.flatMap((p) =>
+          p.kind === 'tuple' ? p.components.map((c) => c.name) : [p.name],
+        ),
+        variables: checked.value.variables.map((v) => v.name),
+      },
+    );
     expect(parsed).toMatchObject({
       ok: true,
-      source: checked.value.question.expectedLatex,
+      source: element(checked.value, 'question').expectedLatex,
       symbols: { variables: [] },
     });
     for (let seed = 0; seed < 512; seed += 1) {
-      const sample = generateVariables(checked.value.parameters, { seed });
+      const sample = generateVariables(checked.value.generation, { seed });
       if (
         !sample.ok ||
         sample.values.a?.kind !== 'integer' ||
@@ -518,7 +542,7 @@ describe('contracts and Lot 3 integration', () => {
     }
     expect(JSON.stringify(checked.value)).toBe(before);
   });
-  it.each(['computed', 'tuple', 'triplet', 'perfect_square'])(
+  it.each(['triplet', 'perfect_square'])(
     'explicitly rejects deferred type %s',
     (kind) =>
       failed(
@@ -577,3 +601,13 @@ describe('contracts and Lot 3 integration', () => {
     );
   });
 });
+
+function generation(definitions: unknown) {
+  return {
+    schemaVersion: 5,
+    definitions,
+    constraints: [],
+    maxAttempts: 128,
+    maxDraws: 4096,
+  };
+}

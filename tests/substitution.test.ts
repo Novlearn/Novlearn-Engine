@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { CancellationError, ComputeEngine } from '@cortex-js/compute-engine';
 import { instantiateMath } from '../src/math/substitution.js';
-import type { GeneratedValueV1 } from '../src/generation/variables.js';
-const values: Record<string, GeneratedValueV1> = {
+import type { GeneratedValue } from '../src/contracts/types.js';
+const values: Record<string, GeneratedValue> = {
   a: { kind: 'integer', value: -2 },
   b: { kind: 'integer', value: 3 },
   c: { kind: 'decimal', coefficient: 125, precision: 2 },

@@ -5,7 +5,7 @@ import type { MathJsonExpression } from '@cortex-js/compute-engine/math-json';
 export type MathSyntax = MathJsonExpression;
 
 export interface MathInputContext {
-  /** Same names as ExerciseDefinitionV1.parameters; no values are substituted. */
+  /** Resolved generation names of ExerciseDefinition; no values are substituted. */
   parameters?: readonly string[];
   /** Free variables/unknowns, distinct from parameters. */
   variables?: readonly string[];

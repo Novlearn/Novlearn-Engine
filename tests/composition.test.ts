@@ -6,23 +6,23 @@ import {
   validateDefinition,
 } from 'novlearn-exercise-engine';
 import type {
-  ExerciseDefinitionV2,
-  ExerciseElementV2,
-  PrivateInstanceV2,
-  PrivateElementV2,
+  ExerciseDefinition,
+  ExerciseElement,
+  ExerciseInstance,
+  PrivateElement,
 } from 'novlearn-exercise-engine';
 import fixture from './fixtures/contracts/quadratic-multiquestion.definition.json' with { type: 'json' };
 
-function definition(): ExerciseDefinitionV2 {
+function definition(): ExerciseDefinition {
   const result = validateDefinition(fixture);
-  if (!result.ok || result.value.schemaVersion !== 2)
-    throw new Error('Invalid v2 fixture.');
+  if (!result.ok || result.value.schemaVersion !== 5)
+    throw new Error('Invalid canonical fixture.');
   return result.value;
 }
 function instance(
-  d: ExerciseDefinitionV2 = definition(),
+  d: ExerciseDefinition = definition(),
   seed: number | string = 42,
-): PrivateInstanceV2 {
+): ExerciseInstance {
   const result = instantiateExercise(d, {
     seed,
     instanceId: 'opaque-server-id',
@@ -31,16 +31,16 @@ function instance(
   return result.value;
 }
 function question(
-  value: PrivateInstanceV2,
+  value: ExerciseInstance,
   id: string,
-): Extract<PrivateElementV2, { type: 'question' }> {
+): Extract<PrivateElement, { type: 'question' }> {
   const q = value.elements.find((e) => e.id === id);
   if (!q || q.type !== 'question') throw new Error(`Missing question ${id}`);
   return q;
 }
 function mcq(
   mode: 'single' | 'multiple' = 'single',
-): Extract<ExerciseElementV2, { type: 'mcq' }> {
+): Extract<ExerciseElement, { type: 'mcq' }> {
   return {
     id: 'q-choice',
     type: 'mcq',
@@ -108,7 +108,7 @@ describe('flat multiquestion instantiation through the built package', () => {
     expect(value.elements[4]).toMatchObject({
       text: 'Vérifier avec les coefficients 2, -4 et 5.',
     });
-    expect(value.generation.parameters).toEqual({
+    expect(value.generation.values).toEqual({
       a: { kind: 'integer', value: 2 },
       b: { kind: 'integer', value: -4 },
       c: { kind: 'integer', value: 5 },
@@ -145,7 +145,7 @@ describe('flat multiquestion instantiation through the built package', () => {
   });
   it('supports one question, no parameters, and a flat section with explicit references', () => {
     const d = definition();
-    d.parameters = [];
+    d.generation.definitions = [];
     d.variables = [];
     const q = d.elements[2]!;
     if (q.type !== 'question') throw new Error('Fixture error');
@@ -158,7 +158,7 @@ describe('flat multiquestion instantiation through the built package', () => {
       q,
     ];
     const value = instance(d);
-    expect(value.generation.parameters).toEqual({});
+    expect(value.generation.values).toEqual({});
     expect(question(value, q.id).expected).toMatchObject({
       value: { numerator: 1, denominator: 2 },
     });
@@ -174,7 +174,7 @@ describe('flat multiquestion instantiation through the built package', () => {
     q.response.kind = 'expression';
     q.policy.domain = 'polynomial';
     q.expectedLatex = 'a\\frac{1}{2}x+2';
-    d.parameters[0] = {
+    d.generation.definitions[0] = {
       name: 'a',
       kind: 'integer',
       min: 4,
@@ -192,7 +192,7 @@ describe('flat multiquestion instantiation through the built package', () => {
   });
   it('integrates the existing decimal and choice generator without losing exact grid encodings', () => {
     const d = definition();
-    d.parameters = [
+    d.generation.definitions = [
       {
         name: 'a',
         kind: 'decimal',
@@ -208,12 +208,12 @@ describe('flat multiquestion instantiation through the built package', () => {
     if (q.type !== 'question') throw new Error('Fixture error');
     q.expectedLatex = 'a+b';
     const value = instance(d);
-    expect(value.generation.parameters.a).toEqual({
+    expect(value.generation.values.a).toEqual({
       kind: 'decimal',
       coefficient: -125,
       precision: 3,
     });
-    expect(value.generation.parameters.b).toEqual({
+    expect(value.generation.values.b).toEqual({
       kind: 'choice',
       value: 0.1,
     });
@@ -229,7 +229,7 @@ describe('flat multiquestion instantiation through the built package', () => {
   });
   it('preserves negative parentheses and powers in a multiquestion exercise', () => {
     const d = definition();
-    d.parameters[0] = {
+    d.generation.definitions[0] = {
       name: 'a',
       kind: 'integer',
       min: -2,
@@ -251,19 +251,19 @@ describe('flat multiquestion instantiation through the built package', () => {
     'replays seed %s and verifies both quadratic answers with independent integer arithmetic',
     (seed) => {
       const d = definition();
-      d.parameters = [
+      d.generation.definitions = [
         { name: 'a', kind: 'integer', min: 1, max: 5, exclusions: [] },
         { name: 'b', kind: 'integer', min: -8, max: 8, exclusions: [0] },
         { name: 'c', kind: 'integer', min: -5, max: 5, exclusions: [] },
       ];
-      const generated = generateVariables(d.parameters, { seed });
+      const generated = generateVariables(d.generation, { seed });
       if (!generated.ok) throw new Error('Generation failed');
       const value = instance(d, seed);
-      expect(value.generation.parameters).toEqual(generated.values);
+      expect(value.generation.values).toEqual(generated.values);
       expect(value.generation.draws).toBe(generated.replay.draws);
-      const a = value.generation.parameters.a,
-        b = value.generation.parameters.b,
-        c = value.generation.parameters.c;
+      const a = value.generation.values.a,
+        b = value.generation.values.b,
+        c = value.generation.values.c;
       if (
         a?.kind !== 'integer' ||
         b?.kind !== 'integer' ||
@@ -513,23 +513,17 @@ describe('composition diagnostics and trust boundaries', () => {
     });
   });
   it.each([
-    [42, 'parameters-v1', 'rational-instance-v1', 'options'],
-    ['042', 'parameters-v1', 'composed-instance-v2', 'generation'],
-    [42, 'future', 'composed-instance-v2', 'generation'],
-  ])(
-    'rejects mismatched versions and invalid seeds (%s,%s,%s)',
-    (seed, generationVersion, instantiationVersion, stage) => {
-      const result = instantiateExercise(definition(), {
-        seed,
-        instanceId: 'id',
-        generationVersion,
-        instantiationVersion,
-      } as Parameters<typeof instantiateExercise>[1]);
-      expect(result.ok).toBe(false);
-      expect(result).not.toHaveProperty('value');
-      if (!result.ok) expect(result.diagnostics[0]?.stage).toBe(stage);
-    },
-  );
+    ['042', 'mulberry32-rejection-v1'],
+    [42, 'future'],
+  ])('rejects invalid seed/version (%s,%s)', (seed, generationVersion) => {
+    const result = instantiateExercise(definition(), {
+      seed,
+      instanceId: 'id',
+      generationVersion,
+    } as Parameters<typeof instantiateExercise>[1]);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.diagnostics[0]?.stage).toBe('generation');
+  });
   it('rejects hostile inert-data inputs without invoking getters or running author code', () => {
     const getter = vi.fn(() => 2);
     const d = definition();
@@ -556,7 +550,11 @@ describe('composition diagnostics and trust boundaries', () => {
   });
   it('rejects unbounded choice math instead of rounding it into an exact result', () => {
     const d = definition();
-    d.parameters[0] = { name: 'a', kind: 'choice', values: [0.123456789] };
+    d.generation.definitions[0] = {
+      name: 'a',
+      kind: 'choice',
+      values: [0.123456789],
+    };
     const result = instantiateExercise(d, { seed: 42, instanceId: 'id' });
     expect(result).toMatchObject({
       ok: false,
@@ -596,7 +594,7 @@ describe('strict composed definition validation', () => {
   });
   it('rejects text expansion beyond the final display budget', () => {
     const d = definition();
-    d.parameters[0] = {
+    d.generation.definitions[0] = {
       name: 'a',
       kind: 'integer',
       min: -1000000,
@@ -650,25 +648,38 @@ describe('strict composed definition validation', () => {
       'value',
     ],
     [
-      'unsupported tuple',
-      { parameters: [{ name: 'a', kind: 'tuple', values: [[1, 2]] }] },
-      '/parameters/0/kind',
+      'malformed tuple',
+      {
+        generation: {
+          ...definition().generation,
+          definitions: [{ name: 'a', kind: 'tuple', values: [[1, 2]] }],
+        },
+      },
+      '/generation/definitions/0/mode',
       'value',
     ],
     [
-      'unsupported computed',
-      { parameters: [{ name: 'a', kind: 'computed', latex: '1+1' }] },
-      '/parameters/0/kind',
-      'value',
+      'computed without source',
+      {
+        generation: {
+          ...definition().generation,
+          definitions: [{ name: 'a', kind: 'computed' }],
+        },
+      },
+      '/generation/definitions/0/latex',
+      'type',
     ],
     [
       'empty generation domain',
       {
-        parameters: [
-          { name: 'a', kind: 'integer', min: 2, max: 2, exclusions: [2] },
-        ],
+        generation: {
+          ...definition().generation,
+          definitions: [
+            { name: 'a', kind: 'integer', min: 2, max: 2, exclusions: [2] },
+          ],
+        },
       },
-      '/parameters/0',
+      '/generation/definitions/0',
       'impossible-constraints',
     ],
     [

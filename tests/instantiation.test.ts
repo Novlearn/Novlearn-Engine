@@ -1,3 +1,4 @@
+import { element, answer } from './elements.js';
 import { describe, expect, it, vi } from 'vitest';
 import {
   instantiateExercise,
@@ -6,21 +7,22 @@ import {
   validateSubmission,
 } from 'novlearn-exercise-engine';
 import type {
-  ExerciseDefinitionV1,
+  ExerciseDefinition,
   InstantiateExerciseOptions,
-  PrivateInstanceV1,
+  ExerciseInstance,
 } from 'novlearn-exercise-engine';
 import fixture from './fixtures/contracts/rational-minimum.definition.json' with { type: 'json' };
 
-function definition(): ExerciseDefinitionV1 {
+function definition(): ExerciseDefinition {
   const result = validateDefinition(fixture);
   if (!result.ok) throw new Error('Invalid test fixture.');
-  if (result.value.schemaVersion !== 1) throw new Error('Expected v1 fixture.');
+  if (result.value.schemaVersion !== 5)
+    throw new Error('Expected canonical fixture.');
   return result.value;
 }
-function fixed(a = 2, b = -4, c = 3): ExerciseDefinitionV1 {
+function fixed(a = 2, b = -4, c = 3): ExerciseDefinition {
   const d = definition();
-  d.parameters = ['a', 'b', 'c'].map((name, i) => ({
+  d.generation.definitions = ['a', 'b', 'c'].map((name, i) => ({
     name,
     kind: 'integer',
     min: [a, b, c][i]!,
@@ -32,14 +34,14 @@ function fixed(a = 2, b = -4, c = 3): ExerciseDefinitionV1 {
 function instance(
   d: unknown = definition(),
   seed: number | string = 42,
-): PrivateInstanceV1 {
+): ExerciseInstance {
   const result = instantiateExercise(d, {
     seed,
     instanceId: 'opaque-server-id',
   });
   if (!result.ok) throw new Error(JSON.stringify(result.diagnostics));
-  if (result.value.schemaVersion !== 1)
-    throw new Error('Expected v1 instance.');
+  if (result.value.schemaVersion !== 5)
+    throw new Error('Expected canonical instance.');
   return result.value;
 }
 
@@ -47,37 +49,48 @@ describe('native rational instance', () => {
   it('instantiates real question 103 with a computed exact answer and preserved source', () => {
     const value = instance();
     expect(value.generation).toEqual({
-      version: 'parameters-v1',
+      version: 'mulberry32-rejection-v1',
+      attempts: 1,
+      groups: [],
+      computed: [],
       seed: '42',
       draws: 3,
-      parameters: { a: 1, b: 5, c: 0 },
+      values: {
+        a: { kind: 'integer', value: 1 },
+        b: { kind: 'integer', value: 5 },
+        c: { kind: 'integer', value: 0 },
+      },
     });
-    expect(value.expectedMath.value).toEqual({
+    expect(answer(value).value).toEqual({
       kind: 'rational',
       numerator: -5,
       denominator: 2,
     });
-    expect(value.display.statement.latex).toBe('x^2+5x');
-    expect(value.expectedLatex).toBe('-\\frac{5}{2}');
+    expect(element(value, 'expression').latex).toBe('x^2+5x');
+    expect(answer(value).math.displayLatex).toBe('-\\frac{5}{2}');
     expect(value.definition).toEqual(fixture);
-    expect(value.statementMath.source).toBe(fixture.statement.latex);
-    expect(value.expectedMath.source).toBe(fixture.question.expectedLatex);
-    expect(value.expectedMath.syntax).toEqual([
+    expect(element(value, 'expression').math.source).toBe(
+      element(definition(), 'expression').latex,
+    );
+    expect(answer(value).math.source).toBe(
+      element(definition(), 'question').expectedLatex,
+    );
+    expect(answer(value).math.syntax).toEqual([
       'Divide',
       ['Negate', 'b'],
       ['InvisibleOperator', 2, 'a'],
     ]);
-    expect(value.expectedMath.substituted).toEqual([
+    expect(answer(value).math.substituted).toEqual([
       'Divide',
       ['Negate', 5],
       ['Multiply', 2, 1],
     ]);
-    expect(value.instantiationVersion).toBe('rational-instance-v1');
+    expect(value).not.toHaveProperty('instantiationVersion');
   });
   it('produces the supplied integer example end to end', () => {
     const value = instance(fixed());
-    expect(value.display.statement.latex).toBe('2x^2-4x+3');
-    expect(value.expectedMath.value).toEqual({
+    expect(element(value, 'expression').latex).toBe('2x^2-4x+3');
+    expect(answer(value).value).toEqual({
       kind: 'rational',
       numerator: 1,
       denominator: 1,
@@ -87,19 +100,19 @@ describe('native rational instance', () => {
   it('distinguishes abscissa and value of the minimum, including a fractional answer', () => {
     const d = fixed(3, -2, 5);
     const abscissa = instance(d);
-    d.question.expectedLatex = 'c-\\frac{b^2}{4a}';
+    element(d, 'question').expectedLatex = 'c-\\frac{b^2}{4a}';
     const minimum = instance(d);
-    expect(abscissa.expectedMath.value).toEqual({
+    expect(answer(abscissa).value).toEqual({
       kind: 'rational',
       numerator: 1,
       denominator: 3,
     });
-    expect(minimum.expectedMath.value).toEqual({
+    expect(answer(minimum).value).toEqual({
       kind: 'rational',
       numerator: 14,
       denominator: 3,
     });
-    expect(abscissa.expectedLatex).toBe('\\frac{1}{3}');
+    expect(answer(abscissa).math.displayLatex).toBe('\\frac{1}{3}');
   });
   it('replays byte-identically after JSON transport, normalized seed, and unrelated calls', () => {
     const first = instance();
@@ -110,8 +123,8 @@ describe('native rational instance', () => {
     );
     expect(JSON.stringify(replay)).toBe(JSON.stringify(first));
     expect(JSON.parse(JSON.stringify(first))).toEqual(first);
-    expect(instance(definition(), 43).generation.parameters).not.toEqual(
-      first.generation.parameters,
+    expect(instance(definition(), 43).generation.values).not.toEqual(
+      first.generation.values,
     );
   });
   it('does not mutate frozen definitions and keeps snapshot/display copies detached', () => {
@@ -127,15 +140,21 @@ describe('native rational instance', () => {
     const value = instance(d);
     value.definition.title = 'changed privately';
     expect(JSON.stringify(d)).toBe(before);
-    expect(value.display.title).toBe(fixture.title);
+    expect(value.title).toBe(fixture.title);
     expect(value.definition.extensions).toEqual(fixture.extensions);
   });
   it.each(Array.from({ length: 64 }, (_, seed) => seed))(
     'checks the rational minimum with independent arithmetic for seed %s',
     (seed) => {
       const value = instance(definition(), seed);
-      const { a, b, c } = value.generation.parameters;
-      const { numerator: n, denominator: q } = value.expectedMath.value;
+      const values = value.generation.values;
+      const integers = ['a', 'b', 'c'].map((n) => {
+        const v = values[n];
+        if (v?.kind !== 'integer') throw new Error('Expected integer');
+        return v.value;
+      });
+      const [a, b, c] = integers;
+      const { numerator: n, denominator: q } = answer(value).value;
       expect(a).toBeGreaterThan(0);
       expect(BigInt(n) * 2n * BigInt(a!)).toBe(-BigInt(b!) * BigInt(q));
       // f(x0+1)-f(x0)=a>0; c is irrelevant to the abscissa.
@@ -146,15 +165,16 @@ describe('native rational instance', () => {
   it('substitutes text markers only in designated fields, with escaping and complete names', () => {
     const d = fixed();
     d.title = 'a @a';
-    d.statement.text = 'a, b, c restent du texte : @a, @b, @c ; @@a ; @@ ; @.';
-    d.question.text = 'Avec a=@a, calculer x.';
+    element(d, 'text').text =
+      'a, b, c restent du texte : @a, @b, @c ; @@a ; @@ ; @.';
+    element(d, 'question').text = 'Avec a=@a, calculer x.';
     const value = instance(d);
-    expect(value.display.title).toBe('a 2');
-    expect(value.display.statement.text).toBe(
+    expect(value.title).toBe('a 2');
+    expect(element(value, 'text').text).toBe(
       'a, b, c restent du texte : 2, -4, 3 ; @a ; @ ; @.',
     );
-    expect(value.display.question.text).toBe('Avec a=2, calculer x.');
-    d.statement.text = '@ab';
+    expect(element(value, 'question').text).toBe('Avec a=2, calculer x.');
+    element(d, 'text').text = '@ab';
     const result = instantiateExercise(d, { seed: 42, instanceId: 'id' });
     expect(result).toMatchObject({
       ok: false,
@@ -162,7 +182,7 @@ describe('native rational instance', () => {
         {
           stage: 'text',
           code: 'missing-variable',
-          path: '/statement/text',
+          path: '/elements/0/text',
           symbol: 'ab',
         },
       ],
@@ -170,33 +190,35 @@ describe('native rational instance', () => {
   });
   it('does not substitute text-like names in ordinary prose or interpret prose as mathematics', () => {
     const d = fixed();
-    d.statement.text = 'Calculer avec a, ab, alpha et a^2 ; $f(x)$.';
-    expect(instance(d).display.statement.text).toBe(d.statement.text);
+    element(d, 'text').text = 'Calculer avec a, ab, alpha et a^2 ; $f(x)$.';
+    expect(element(instance(d), 'text').text).toBe(element(d, 'text').text);
   });
   it('projects an explicit detached allowlist, dropping even injected display fields', () => {
     const privateValue = instance();
-    Object.assign(privateValue.display.question, {
+    Object.assign(element(privateValue, 'question'), {
       policy: 'secret',
       correct: true,
       expectedLatex: 'secret',
     });
-    Object.assign(privateValue.display.statement, { seed: 'secret' });
+    Object.assign(element(privateValue, 'expression'), { seed: 'secret' });
     const publicValue = projectPublicInstance(privateValue);
     expect(Object.keys(publicValue).sort()).toEqual([
+      'elements',
       'instanceId',
-      'question',
       'schemaVersion',
-      'statement',
       'title',
     ]);
-    expect(Object.keys(publicValue.question).sort()).toEqual([
+    expect(Object.keys(element(publicValue, 'question')).sort()).toEqual([
       'id',
       'points',
+      'response',
       'text',
+      'type',
     ]);
-    expect(Object.keys(publicValue.statement).sort()).toEqual([
+    expect(Object.keys(element(publicValue, 'expression')).sort()).toEqual([
+      'id',
       'latex',
-      'text',
+      'type',
     ]);
     for (const secret of [
       'expected',
@@ -210,13 +232,15 @@ describe('native rational instance', () => {
       'definition',
     ])
       expect(JSON.stringify(publicValue)).not.toContain(`"${secret}`);
-    publicValue.statement.text = 'client change';
-    expect(privateValue.display.statement.text).toBe(fixture.statement.text);
+    element(publicValue, 'text').text = 'client change';
+    expect(element(privateValue, 'text').text).toBe(
+      element(definition(), 'text').text,
+    );
     expect(
       validateSubmission({
-        schemaVersion: 1,
+        schemaVersion: 5,
         instanceId: publicValue.instanceId,
-        questionId: publicValue.question.id,
+        questionId: element(publicValue, 'question').id,
         answer: { format: 'latex', source: '1' },
       }).ok,
     ).toBe(true);
@@ -259,7 +283,7 @@ describe('explicit instantiation failures, never partial instances', () => {
     ['1000000000+1', 'limit'],
   ])('rejects expected source %s with %s', (source, code) => {
     const d = fixed();
-    d.question.expectedLatex = source;
+    element(d, 'question').expectedLatex = source;
     const result = instantiateExercise(d, { seed: 42, instanceId: 'id' });
     expect(result.ok).toBe(false);
     if (!result.ok)
@@ -274,19 +298,19 @@ describe('explicit instantiation failures, never partial instances', () => {
     'refuses unsafe statement domain %s before reduction',
     (source) => {
       const d = fixed();
-      d.statement.latex = source;
+      element(d, 'expression').latex = source;
       const result = instantiateExercise(d, { seed: 42, instanceId: 'id' });
       expect(result.ok).toBe(false);
       if (!result.ok)
         expect(result.diagnostics[0]).toMatchObject({
           stage: 'statement',
-          path: '/statement/latex',
+          path: '/elements/1/latex',
         });
     },
   );
   it('keeps legacy @ math syntax explicitly unsupported', () => {
     const d = fixed();
-    d.statement.latex = '@a x^2';
+    element(d, 'expression').latex = '@a x^2';
     expect(
       instantiateExercise(d, { seed: 42, instanceId: 'id' }),
     ).toMatchObject({
@@ -298,13 +322,17 @@ describe('explicit instantiation failures, never partial instances', () => {
     const d = definition();
     expect(
       instantiateExercise(
-        { ...d, elements: [{ type: 'graph' }] },
+        { ...d, elements: [{ id: 'graph', type: 'graph' }] },
         { seed: 42, instanceId: 'id' },
       ),
     ).toMatchObject({
       ok: false,
       diagnostics: [
-        { stage: 'definition', code: 'unknown-field', path: '/elements' },
+        {
+          stage: 'definition',
+          code: 'unsupported-type',
+          path: '/elements/0/type',
+        },
       ],
     });
     d.extensions = {
@@ -319,7 +347,9 @@ describe('explicit instantiation failures, never partial instances', () => {
       false,
     );
     const d = fixed();
-    d.parameters[0]!.exclusions = [2];
+    const p = d.generation.definitions[0]!;
+    if (p.kind !== 'integer') throw new Error('Expected integer');
+    p.exclusions = [2];
     expect(
       instantiateExercise(d, { seed: 42, instanceId: 'id' }),
     ).toMatchObject({

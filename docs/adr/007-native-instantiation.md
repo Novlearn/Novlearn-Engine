@@ -1,5 +1,7 @@
 # ADR 007 — Instanciation rationnelle native
 
+**Archive de décisions expérimentales.** Depuis le 11 octobre 2026, les anciens contrats/options ne sont plus disponibles. [ADR 008](008-canonical-consolidation.md) les remplace ; profils mathématiques et preuves historiques conservés. [API actuelle](../architecture.md).
+
 ## Complément Lot 5 — instance v4
 
 Le 11 octobre 2026, `ExerciseDefinitionV4` remplace seulement le schéma et la génération de v3 : generation schemaVersion 3 / variables-v3. La même orchestration résout une seule fois toutes les valeurs, puis les réutilise dans titres/textes/expressions/questions/QCM. Substitution étendue aux ratios calculés, sans nouveau profil d'élément. Prose : ratio `3/2`, entier calculé `3` ; LaTeX substitué par CortexJS. Variables libres disjointes conservées, attendus privés attachés aux IDs. Une question échouée ne retourne aucune instance partielle.

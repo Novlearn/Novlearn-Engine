@@ -1,52 +1,35 @@
-import type { JsonValue } from './types.js';
-import type { Validation } from './validation.js';
-import { validateParameters } from './parameters.js';
-import { generationNames, validateGenerationV2 } from './generation-v2.js';
-import { resolvedNames, validateGenerationV3 } from './generation-v3.js';
-
+import type { JsonValue, GenerationDefinition } from './types.js';
+import { Validation } from './validation.js';
+import { inspectGeneration, generationNames } from './generation.js';
 /** Structural composition checks on the already copied inert JSON. No math or RNG. */
-export function inspectComposition(
-  v: Validation,
-  data: JsonValue,
-  version: 2 | 3 | 4 = 2,
-): void {
+export function inspectComposition(v: Validation, data: JsonValue): void {
   const d = v.object(data, '', [
     'schemaVersion',
     'kind',
     'id',
     'revision',
     'title',
-    version >= 3 ? 'generation' : 'parameters',
+    'generation',
     'variables',
     'elements',
     'extensions',
   ]);
-  v.literal(d.schemaVersion, '/schemaVersion', version);
+  v.version(d.schemaVersion);
   v.literal(d.kind, '/kind', 'composed');
   v.text(d.id, '/id', 128);
   v.text(d.revision, '/revision', 128);
   v.text(d.title, '/title');
   const names = new Set<string>();
-  if (version === 4) {
-    const generation = validateGenerationV3(d.generation);
-    if (!generation.ok)
-      for (const issue of generation.diagnostics)
-        v.issue(`/generation${issue.path}`, issue.code, issue.message);
-    else for (const name of resolvedNames(generation.value)) names.add(name);
-  } else if (version === 3) {
-    const generation = validateGenerationV2(d.generation);
-    if (!generation.ok) {
-      for (const issue of generation.diagnostics)
-        v.issue(`/generation${issue.path}`, issue.code, issue.message);
-    } else
-      for (const name of generationNames(generation.value)) names.add(name);
-  } else {
-    const parameters = validateParameters(d.parameters);
-    if (!parameters.ok) {
-      for (const issue of parameters.diagnostics)
-        v.issue(`/parameters${issue.path}`, issue.code, issue.message);
-    } else for (const p of parameters.value) names.add(p.name);
-  }
+  // Share the same inert structural inspector without reconstructing older schemas.
+  const local = new Validation();
+  inspectGeneration(local, d.generation ?? null);
+  for (const issue of local.diagnostics)
+    v.issue('/generation' + issue.path, issue.code, issue.message);
+  if (!local.diagnostics.length)
+    for (const name of generationNames(
+      d.generation as unknown as GenerationDefinition,
+    ))
+      names.add(name);
   for (const [index, value] of v
     .list(d.variables, '/variables', 16)
     .entries()) {

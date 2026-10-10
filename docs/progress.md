@@ -1,5 +1,76 @@
 # État et transmission
 
+## Consolidation architecturale canonique (11 octobre 2026)
+
+**Verdict : consolidation validée localement ; contrat unique schemaVersion 5,
+package privé 0.1.0.** Les bilans
+ci-dessous sont historiques : leurs anciennes APIs ne sont plus disponibles.
+Cette mission ne commence aucun lot suivant, migration, UI, serveur ou correcteur.
+Aucun changement dans les dépôts voisins ni push. Commit de cette consolidation
+explicitement demandé par l'utilisateur après validation ; aucun lot suivant engagé.
+
+1. **Inventaire initial.** [Audit par fichier et capacité](consolidation.md) effectué
+   avant modification : définitions/instances V1–V4, génération V1–V3, validations,
+   orchestrateurs, mathématiques et preuves. Le seul fichier utilisateur non suivi
+   initialement était CDC_référence.md, préservé en octets.
+2. **Décisions.** D34 et [ADR 008](adr/008-canonical-consolidation.md) remplacent la
+   compatibilité expérimentale interne. Un schéma pour définition, génération,
+   instances et soumission ; identités moteur et mulberry32-rejection-v1 distinctes.
+   Suppression de instantiationVersion, aucun adaptateur implicite ni ancien rejeu.
+3. **Architecture.** contracts/generation.ts inspecte toutes les déclarations ;
+   generation/variables.ts prépare/résout les dépendances et appelle la seule boucle
+   candidates.ts ; instantiation.ts consomme ce contexte une fois, prépare la liste
+   puis construit le snapshot et sa projection. Mathématiques/RNG/grille réutilisés.
+4. **Contrats publics.** ExerciseDefinition, GenerationDefinition, VariableDefinition
+   scalaire/tuple/computed, ExerciseElement, QuestionDefinition, AnswerDefinition,
+   ExerciseInstance, PublicInstance, AnswerSubmission ; six fonctions runtime.
+   CorrectionResult reste futur, sans export artificiel. [Référence](architecture.md).
+5. **Manifeste.** Supprimés : contracts/parameters.ts, contracts/generation-v2.ts,
+   contracts/generation-v3.ts, generation/variables-v2.ts, generation/variables-v3.ts
+   et leurs artefacts dist obsolètes. Fusion dans les deux modules canoniques
+   generation.ts et variables.ts ; candidates.ts porte la boucle unique.
+   Types, validation, composition, instantiation, index et imports mathématiques
+   adaptés. Suites renommées tuples/tuple-failures et computed/computed-failures.
+   Ajouts : canonical.test.ts, elements.ts, fixtures/canonical/reference-vectors.json,
+   audit et ADR 008. Deux fixtures natives et documentation actuelle mises à jour.
+   Package/lock passent à 0.1.0, aucune dépendance ajoutée/modifiée.
+6. **Capacités.** Integer/decimal/choice/exclusions, tuples choice/generate,
+   six comparaisons, computed/restrictions/graphe, rationnels exacts, sources/raw,
+   sections/textes/formules/multiquestions/QCM, attendus par ID et projection gardés.
+   Tout choix fini ancien reste tirable ; usage mathématique hors profil exact
+   diagnostiqué. Aucun domaine impossible/inconnu réparé par fallback.
+7. **Rupture assumée.** Schémas 1–4, anciens tableaux/options/types/version IDs
+   refusés. Sources historiques conservées pour futurs adaptateurs explicites au
+   Lot 9. Question 103 transcrite au canonique ; aucun exercice complet migré.
+8. **Vérifications intermédiaires réelles.** npm.cmd ci : PASS (130 packages).
+   Build/typecheck/lint : PASS. Check initial arrêté au formatage du CDC utilisateur,
+   désormais ignoré par Prettier. Premier portage : 521/527 tests passants, six
+   assertions de contrat/chemin adaptées puis 230/230 tests ciblés passants.
+   Treize tests canoniques ajoutés : quatre vecteurs complets, snapshot/projection,
+   JSON/rejeu/immutabilité, refus anciens schémas/versions et choix fini hors profil.
+   Oracles BigInt indépendants conservés. Vérification finale :
+
+   | Commande / contrôle                   | Résultat réellement observé                                                                                                         |
+   | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+   | npm.cmd ci                            | PASS, 130 packages                                                                                                                  |
+   | npm.cmd run format                    | PASS ; sources historiques et CDC ignorés                                                                                           |
+   | npm.cmd run check                     | PASS : build, typecheck, lint, format:check et 540 tests dans 14 fichiers, 72,99 s pour Vitest                                      |
+   | npm.cmd pack --dry-run                | PASS : 0.1.0, 58 fichiers, 49,2 kB compressés / 216,5 kB décompressés ; aucune publication ni installation consommateur             |
+   | Import ESM / déclarations / artefacts | Six exports runtime, aucun type/options expérimental dans les déclarations, 14 modules / 56 artefacts dist, anciens modules absents |
+   | Liens Markdown / git diff --check     | PASS, aucune cible/ancre locale manquante ni erreur d'espacement                                                                    |
+   | SHA-256 des originaux                 | Deux copies historiques et CDC conformes aux empreintes initiales                                                                   |
+
+9. **Conservation.** Deux sources historiques de 14583 octets, SHA-256 attendu
+   0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae.
+   Inventaire inchangé ; CDC utilisateur inchangé et exclu du formatage,
+   SHA-256 FFB97D8F1B3401E462DA6411D4DDE671A06D9522A6D745E28D06FB2F2E9459AE.
+10. **Limites/clarifications.** Profil exact borné, noms d'une lettre hors e/i,
+    value-only, pas de solveur/éléments avancés/correction/transport QCM ; contextes
+    locaux mais aucune préemption prouvée. Méthodes et politiques du futur correcteur,
+    convention de noms longs et profils supplémentaires demandent leur propre lot.
+    Aucun point bloquant pour cette consolidation ; aucune CI distante, suite
+    navigateur ou installation du tarball dans un consommateur externe annoncée.
+
 ## Complément Lot 5 — Variables calculées (11 octobre 2026)
 
 **Verdict : validé pour le profil rationnel exact borné demandé.** Aucun lot suivant, UI, migration, production, commit ou push engagé. Les bilans antérieurs ci-dessous conservent leur état historique ; les éléments avancés et le moteur complet ne sont pas annoncés terminés.

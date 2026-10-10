@@ -46,9 +46,9 @@ vi.mock('../src/generation/random.js', async (importOriginal) => {
 import { generateVariables } from '../src/generation/variables.js';
 import { instantiateExercise } from '../src/instantiation.js';
 import { wordStream } from '../src/generation/random.js';
-import type { GenerationDefinitionV3 } from '../src/contracts/types.js';
-const fixture = (): GenerationDefinitionV3 => ({
-  schemaVersion: 3,
+import type { GenerationDefinition } from '../src/contracts/types.js';
+const fixture = (): GenerationDefinition => ({
+  schemaVersion: 5,
   maxAttempts: 4,
   maxDraws: 64,
   definitions: [
@@ -71,7 +71,10 @@ const fixture = (): GenerationDefinitionV3 => ({
   ],
 });
 const run = (d: unknown = fixture()) =>
-  generateVariables(d, { seed: 42, generationVersion: 'variables-v3' });
+  generateVariables(d, {
+    seed: 42,
+    generationVersion: 'mulberry32-rejection-v1',
+  });
 beforeEach(() => {
   state.unknown = false;
   state.unknownAt = Infinity;
@@ -162,7 +165,7 @@ it('does not leak an instance when the computed result is indeterminate', () => 
   state.undefinedValue = true;
   const r = instantiateExercise(
     {
-      schemaVersion: 4,
+      schemaVersion: 5,
       kind: 'composed',
       id: 'sample',
       revision: '1',

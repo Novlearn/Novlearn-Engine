@@ -1,5 +1,7 @@
 # Décisions
 
+**Priorité actuelle : D34 et ADR 008.** Les décisions de conservation des APIs expérimentales ci-dessous sont remplacées ; leurs profils mathématiques restent documentés historiquement.
+
 ## D33 — Complément Lot 5 : résolution calculée versionnée (retenue)
 
 Demande du 11 octobre 2026. `GenerationDefinitionV3` / `variables-v3` ajoute computed (`name`, `latex`, restrictions facultatives) et des opérandes `{latex}` aux six comparaisons. `ExerciseDefinitionV4` / `composed-instance-v4` consomme ce contexte commun. Les contrats historiques restent inchangés. Calculs rationnels fermés du profil existant, source conservée, résultat `{kind:'rational',numerator,denominator}` même pour une fraction décimale ; aucun quotient flottant. Provenance : définition officielle, liaisons de tuples et liste ordonnée `{name,dependencies}` des calculs, sans deuxième copie des valeurs.
@@ -83,3 +85,19 @@ Après le bilan du Lot 5 bis, l'utilisateur demande son commit explicatif et con
 ## D32 — Lot 4 bis : tuples, comparaisons et génération v2 (retenue)
 
 Demande explicite du 11 octobre 2026. GenerationDefinitionV2 + variables-v2 ; tuple unique à deux modes, domaines scalaires réutilisés, liaisons ordonnées vers valeurs plates. Choice v2 avec exclusions optionnelles ; six opérateurs structurés nom/constante, nombres exacts fermés via CortexJS tolérance zéro. Budgets obligatoires, tirage global atomique sur flux continu, impossibilité simple / recherche épuisée / indétermination / erreur distinctes. ExerciseDefinitionV3 et snapshots v3 consomment le contexte sans changer v1/v2. D23 tranché pour groupes/liaisons/arité/essais ; computed, noms étendus et profils exacts restent ouverts. [Détails](adr/006-deterministic-generation.md#décisions-lot-4-bis--variables-v2-11-octobre-2026). Aucun complément 5, correction/UI, migration, commit ou déploiement automatiquement engagé.
+
+## D34 — Consolidation canonique (retenue, 11 octobre 2026)
+
+Demande explicite : moteur non adopté, anciennes APIs internes non conservées.
+[Audit avant suppression](consolidation.md) et [ADR 008](adr/008-canonical-consolidation.md).
+Schéma unique 5, package privé 0.1.0, types sans suffixes ; une validation de
+génération, un résolveur et une boucle atomique, une instanciation composée.
+Choix numériques finis de l'ancien tirage conservés ; exactitude contrôlée lors
+de leur usage mathématique. Suppression de instantiationVersion ; seed, révision,
+artefact et mulberry32-rejection-v1 conservés, nouveaux vecteurs complets figés.
+
+Tableaux de paramètres, schémas/options anciens et snapshots expérimentaux
+refusés sans adaptateur. Sources historiques inchangées, conversion future au Lot 9
+hors cœur. AnswerSubmission LaTeX renommé/schéma 5 ; CorrectionResult et transport
+QCM différés avec les Lots 6/7. Aucun correcteur, élément avancé, UI, serveur,
+migration, dépendance supplémentaire ou commit. [Preuves locales](progress.md).

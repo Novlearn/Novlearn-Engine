@@ -1,52 +1,71 @@
 {
-  "schemaVersion": 1,
-  "kind": "rational-value",
+  "schemaVersion": 5,
+  "kind": "composed",
   "id": "legacy-row-103-minimum",
   "revision": "corpus-0f4d1173a78f9bd4-row103-v1",
   "title": "Extremum d'un trinôme avec graphe",
-  "parameters": [
-    {
-      "name": "a",
-      "kind": "integer",
-      "min": 1,
-      "max": 3,
-      "exclusions": []
-    },
-    {
-      "name": "b",
-      "kind": "integer",
-      "min": -6,
-      "max": 6,
-      "exclusions": [0]
-    },
-    {
-      "name": "c",
-      "kind": "integer",
-      "min": -5,
-      "max": 5,
-      "exclusions": []
-    }
-  ],
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [
+      {
+        "name": "a",
+        "kind": "integer",
+        "min": 1,
+        "max": 3,
+        "exclusions": []
+      },
+      {
+        "name": "b",
+        "kind": "integer",
+        "min": -6,
+        "max": 6,
+        "exclusions": [0]
+      },
+      {
+        "name": "c",
+        "kind": "integer",
+        "min": -5,
+        "max": 5,
+        "exclusions": []
+      }
+    ],
+    "constraints": [],
+    "maxAttempts": 128,
+    "maxDraws": 4096
+  },
   "variables": [
     {
       "name": "x",
       "domain": "real"
     }
   ],
-  "statement": {
-    "text": "Soit f une fonction définie sur les réels par la formule suivante.",
-    "latex": "a x^2 + b x + c"
-  },
-  "question": {
-    "id": "1780008000003",
-    "text": "En quel point $x_0$ la fonction $f$ admet-elle un minimum ? (donner la valeur de $x_0$)",
-    "points": 1,
-    "expectedLatex": "\\frac{-b}{2a}",
-    "policy": {
-      "domain": "rational",
-      "form": "value-only"
+  "elements": [
+    {
+      "id": "statement",
+      "type": "text",
+      "text": "Soit f une fonction définie sur les réels par la formule suivante."
+    },
+    {
+      "id": "formula",
+      "type": "expression",
+      "latex": "a x^2 + b x + c"
+    },
+    {
+      "id": "1780008000003",
+      "text": "En quel point $x_0$ la fonction $f$ admet-elle un minimum ? (donner la valeur de $x_0$)",
+      "points": 1,
+      "expectedLatex": "\\frac{-b}{2a}",
+      "policy": {
+        "domain": "rational",
+        "form": "value-only"
+      },
+      "type": "question",
+      "response": {
+        "format": "latex",
+        "kind": "rational"
+      }
     }
-  },
+  ],
   "extensions": {
     "legacy": {
       "rowId": 103,

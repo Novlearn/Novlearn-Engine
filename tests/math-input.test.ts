@@ -1,4 +1,5 @@
-﻿import { describe, expect, it, vi } from 'vitest';
+import { element } from './elements.js';
+import { describe, expect, it, vi } from 'vitest';
 import { ComputeEngine } from '@cortex-js/compute-engine';
 import {
   parseMathInput,
@@ -153,15 +154,17 @@ describe('scalar-latex-v1 mathematical boundary', () => {
     expect(definition.ok).toBe(true);
     if (!definition.ok) return;
     const d = definition.value;
-    if (d.schemaVersion !== 1) throw new Error('Expected v1 fixture.');
+    if (d.schemaVersion !== 5) throw new Error('Expected canonical fixture.');
     expect(
-      parseMathInput(d.question.expectedLatex, {
-        parameters: d.parameters.map((p) => p.name),
+      parseMathInput(element(d, 'question').expectedLatex, {
+        parameters: d.generation.definitions.flatMap((p) =>
+          p.kind === 'tuple' ? p.components.map((c) => c.name) : [p.name],
+        ),
         variables: d.variables.map((v) => v.name),
       }).ok,
     ).toBe(true);
     const submission = validateSubmission({
-      schemaVersion: 1,
+      schemaVersion: 5,
       instanceId: 'i',
       questionId: 'q',
       answer: { format: 'latex', source: '\\placeholder{}' },

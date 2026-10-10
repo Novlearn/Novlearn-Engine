@@ -1,13 +1,13 @@
-import type { GenerationParameterV1 } from '../contracts/types.js';
-import type { GeneratedValueV1 } from './variables.js';
+import type { ScalarVariableDefinition } from '../contracts/types.js';
+import type { GeneratedScalarValue } from '../contracts/types.js';
 import { decimalGrid } from '../contracts/decimal-grid.js';
 import { sampleIndex } from './random.js';
 
-/** Frozen v1 rank mapping, shared with v2; callers supply one continuous stream. */
+/** Deterministic scalar rank mapping; callers supply one continuous stream. */
 export function sampleScalar(
-  parameter: GenerationParameterV1,
+  parameter: ScalarVariableDefinition,
   nextWord: () => number,
-): GeneratedValueV1 | undefined {
+): GeneratedScalarValue | undefined {
   if (parameter.kind === 'choice') {
     const rank = sampleIndex(parameter.values.length, nextWord);
     if (rank === undefined) return undefined;

@@ -1,5 +1,7 @@
 # ADR 004 — Premier contrat natif de valeur rationnelle
 
+**Archive de décisions expérimentales.** Depuis le 11 octobre 2026, les anciens contrats/options ne sont plus disponibles. [ADR 008](008-canonical-consolidation.md) les remplace ; profils mathématiques et preuves historiques conservés. [API actuelle](../architecture.md).
+
 Statut : retenu pour le premier lot, 10 octobre 2026. Le package reste privé et en version 0.0.0 ; schéma natif version 1, sans engagement de release pilote.
 
 Contexte : les huit lignes reçues dans `docs/exercises_rows.json` contiennent des enveloppes JSON encodées et des champs ambigus. `answerFormat=number` recouvre plusieurs familles mathématiques. Des collisions de flags, distracteurs et contraintes interdisent une reprise aveugle du format historique.

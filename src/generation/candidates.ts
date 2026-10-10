@@ -1,45 +1,38 @@
 import type {
-  ComparisonConstraintV2,
-  ComparisonOperandV2,
-  GenerationParameterV1,
-  GeneratedGroupV2,
-  ScalarParameterV2,
-  GenerationDefinitionV2,
-  ComparisonOperandV3,
-  ComparisonConstraintV3,
-  ComputedBindingV3,
+  ComparisonConstraint,
+  ComparisonOperand,
+  ScalarVariableDefinition,
+  GeneratedGroup,
+  GenerationDefinition,
+  ComputedBinding,
+  GeneratedScalarValue,
+  GeneratedValue,
 } from '../contracts/types.js';
-import {
-  admissibleScalar,
-  rowAllowed,
-  validateGenerationV2,
-} from '../contracts/generation-v2.js';
+import { admissibleScalar, rowAllowed } from '../contracts/generation.js';
 import { decimalGrid } from '../contracts/decimal-grid.js';
 import { numericOrder } from '../math/comparison.js';
-import {
-  definitionDiagnostic,
-  type GeneratedValueV1,
-  type GenerateVariablesResult,
-  type GenerationDiagnostic,
-  type GenerationReplayV2,
-  type GenerationReplayV3,
-  type GeneratedValueV3,
+import type {
+  GenerateVariablesResult,
+  GenerationDiagnostic,
+  GenerationReplay,
 } from './variables.js';
 import { sampleScalar } from './scalar.js';
 import { sampleIndex, wordStream } from './random.js';
-
 type Plan =
-  | { kind: 'scalar'; path: string; parameter: GenerationParameterV1 }
+  | { kind: 'scalar'; path: string; parameter: ScalarVariableDefinition }
   | {
       kind: 'tuple';
       path: string;
       id: string;
-      components: GenerationParameterV1[];
+      components: ScalarVariableDefinition[];
       rows?: number[][];
     };
-type Bounds = { min: GeneratedValueV1; max: GeneratedValueV1 };
+type Bounds = { min: GeneratedScalarValue; max: GeneratedScalarValue };
 
-function rowValue(p: ScalarParameterV2, n: number): GeneratedValueV1 {
+function rowValue(
+  p: ScalarVariableDefinition,
+  n: number,
+): GeneratedScalarValue {
   return p.kind === 'decimal'
     ? {
         kind: 'decimal',
@@ -49,7 +42,7 @@ function rowValue(p: ScalarParameterV2, n: number): GeneratedValueV1 {
     : { kind: p.kind, value: n === 0 ? 0 : n };
 }
 
-function scalarBounds(p: GenerationParameterV1): Bounds {
+function scalarBounds(p: ScalarVariableDefinition): Bounds {
   if (p.kind === 'choice')
     return {
       min: rowValue(p, Math.min(...p.values)),
@@ -65,15 +58,15 @@ function scalarBounds(p: GenerationParameterV1): Bounds {
   );
   while (excluded.has(low)) low += 1;
   while (excluded.has(high)) high -= 1;
-  const value = (coefficient: number): GeneratedValueV1 =>
+  const value = (coefficient: number): GeneratedScalarValue =>
     p.kind === 'decimal'
       ? { kind: 'decimal', coefficient, precision }
       : { kind: 'integer', value: coefficient };
   return { min: value(low), max: value(high) };
 }
 
-export function relation(
-  op: ComparisonConstraintV2['operator'],
+function relation(
+  op: ComparisonConstraint['operator'],
   order: -1 | 0 | 1,
 ): boolean {
   switch (op) {
@@ -92,55 +85,31 @@ export function relation(
   }
 }
 
-/** Complete-candidate rejection with continuous v1 RNG; no repair or fallback. */
-export function generateV2(
-  input: unknown,
-  seed: string,
-): GenerateVariablesResult {
-  const checked = validateGenerationV2(input);
-  if (!checked.ok)
-    return {
-      ok: false,
-      diagnostics: checked.diagnostics.map(definitionDiagnostic),
-      replay: {
-        engineVersion: '0.0.0',
-        generationVersion: 'variables-v2',
-        seed,
-        draws: 0,
-        attempts: 0,
-      },
-    };
-  return generateCandidates(checked.value, seed);
-}
-
 export class ResolutionFailure extends Error {
   constructor(readonly diagnostic: GenerationDiagnostic) {
     super(diagnostic.message);
   }
 }
 
-export interface CandidateExtension {
-  paths: number[];
-  computed: ComputedBindingV3[];
-  resolve(values: Record<string, GeneratedValueV3>): boolean;
+export interface CandidateResolution {
+  computed: ComputedBinding[];
+  resolve(values: Record<string, GeneratedValue>): boolean;
   expression(
     source: string,
-    values: Record<string, GeneratedValueV3>,
+    values: Record<string, GeneratedValue>,
     path: string,
-  ): GeneratedValueV3;
+  ): GeneratedValue;
 }
 
-/** Shared sampler, candidate loop and budgets; v3 adds resolution before comparisons. */
+/** One complete-candidate loop: draw, resolve, compare, reject within fixed budgets. */
 export function generateCandidates(
-  d: Omit<GenerationDefinitionV2, 'constraints'> & {
-    constraints: ComparisonConstraintV3[];
-  },
+  d: GenerationDefinition,
   seed: string,
-  extension?: CandidateExtension,
+  resolution: CandidateResolution,
 ): GenerateVariablesResult {
-  const replay: GenerationReplayV2 | GenerationReplayV3 = {
-    engineVersion: '0.0.0',
-    generationVersion: extension ? 'variables-v3' : 'variables-v2',
+  const replay: GenerationReplay = {
+    engineVersion: '0.1.0',
+    generationVersion: 'mulberry32-rejection-v1',
     seed,
     draws: 0,
     attempts: 0,
@@ -154,21 +123,26 @@ export function generateCandidates(
     diagnostics: [{ path, code, message }],
     replay: { ...replay },
   });
-  const plans: Plan[] = d.definitions.map((p, i) => {
-    const path = `/definitions/${extension?.paths[i] ?? i}`;
-    return p.kind !== 'tuple'
-      ? { kind: 'scalar', path, parameter: admissibleScalar(p) }
-      : {
-          kind: 'tuple',
-          path,
-          id: p.id,
-          components: p.components.map(admissibleScalar),
-          ...(p.mode === 'choice'
-            ? { rows: p.values.filter((row) => rowAllowed(p.components, row)) }
-            : {}),
-        };
+  const plans: Plan[] = d.definitions.flatMap((p, i): Plan[] => {
+    if (p.kind === 'computed') return [];
+    const path = `/definitions/${i}`;
+    return [
+      p.kind !== 'tuple'
+        ? { kind: 'scalar', path, parameter: admissibleScalar(p) }
+        : {
+            kind: 'tuple',
+            path,
+            id: p.id,
+            components: p.components.map(admissibleScalar),
+            ...(p.mode === 'choice'
+              ? {
+                  rows: p.values.filter((row) => rowAllowed(p.components, row)),
+                }
+              : {}),
+          },
+    ];
   });
-  const groups: GeneratedGroupV2[] = [];
+  const groups: GeneratedGroup[] = [];
   const bounds: Record<string, Bounds> = {};
   for (const p of plans) {
     if (p.kind === 'scalar')
@@ -192,12 +166,14 @@ export function generateCandidates(
   try {
     // Instantiate only when comparisons exist; ordinary tuple choices do not need math.
     const order = d.constraints.length ? numericOrder() : undefined;
-    const compare = (a: GeneratedValueV3, b: GeneratedValueV3): -1 | 0 | 1 => {
+    const compare = (a: GeneratedValue, b: GeneratedValue): -1 | 0 | 1 => {
       const result = order?.(a, b);
       if (result === undefined) throw new UnknownComparison();
       return result;
     };
-    const operandBounds = (op: ComparisonOperandV2): Bounds =>
+    const operandBounds = (
+      op: Exclude<ComparisonOperand, { latex: string }>,
+    ): Bounds =>
       'variable' in op
         ? bounds[op.variable]!
         : {
@@ -250,18 +226,18 @@ export function generateCandidates(
       return stream();
     };
     const operand = (
-      op: ComparisonOperandV3,
-      values: Record<string, GeneratedValueV3>,
+      op: ComparisonOperand,
+      values: Record<string, GeneratedValue>,
       path: string,
-    ): GeneratedValueV3 =>
+    ): GeneratedValue =>
       'latex' in op
-        ? extension!.expression(op.latex, values, path)
+        ? resolution.expression(op.latex, values, path)
         : 'variable' in op
           ? values[op.variable]!
           : { kind: 'choice', value: op.constant };
     for (let attempt = 1; attempt <= d.maxAttempts; attempt += 1) {
       replay.attempts = attempt;
-      const entries: [string, GeneratedValueV1][] = [];
+      const entries: [string, GeneratedScalarValue][] = [];
       for (const p of plans) {
         activePath = p.path;
         if (p.kind === 'tuple' && p.rows) {
@@ -291,9 +267,9 @@ export function generateCandidates(
           }
         }
       }
-      const values: Record<string, GeneratedValueV3> =
+      const values: Record<string, GeneratedValue> =
         Object.fromEntries(entries);
-      let accepted = extension ? extension.resolve(values) : true;
+      let accepted = resolution.resolve(values);
       // All constraints are checked, including after a false one: unknown never becomes rejection.
       for (const [i, c] of d.constraints.entries()) {
         activePath = `/constraints/${i}`;
@@ -309,19 +285,12 @@ export function generateCandidates(
           accepted = false;
       }
       if (accepted) {
-        if (extension && replay.generationVersion === 'variables-v3')
-          return {
-            ok: true,
-            values,
-            groups,
-            computed: extension.computed,
-            replay: { ...replay },
-          };
         return {
           ok: true,
-          values: values as Record<string, GeneratedValueV1>,
+          values,
           groups,
-          replay: { ...replay, generationVersion: 'variables-v2' },
+          computed: resolution.computed,
+          replay: { ...replay },
         };
       }
     }

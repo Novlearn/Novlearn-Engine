@@ -1,77 +1,48 @@
 # Spécification fonctionnelle
 
-Actualisation complément Lot 5 (11 octobre 2026) : computed, dépendances et contraintes arithmétiques fermées livrés sous `GenerationDefinitionV3` / `variables-v3`, intégrés à `ExerciseDefinitionV4`. Source/restrictions privées dans la définition officielle, ratio exact dans le contexte commun, dépendances dans le snapshot. Références inconnues/cycles/collisions/hors profil avant tirage ; domaine vérifié avant réduction. Comparaisons structurées avec opérandes `{latex}`, sans relation libre dans le parseur scalaire. Restriction/comparaison fausse : retirage complet borné. Formule non définie ou indéterminée : arrêt explicite. D33/ADR 006/007 et tests generation-v3 précisent preuves et limites. Les états du 4 bis ci-dessous sont historiques. Noms multi-caractères, familles symboliques et éléments avancés différés.
-
-Référence cible du 10 octobre 2026, actualisée au Lot 4 bis le 11 octobre. [Vision](exercise-engine-vision.md), [contrats](architecture.md), [couverture](feature-coverage.md) et [parcours](exercise-lifecycle.md). Exemples draft documentaires ; composition v2 livrée au 5 bis et génération variables-v2 avec tuples/comparaisons simples intégrée à v3 au 4 bis. Descriptions d'inventaire initial « absent natif » historiques ; couverture actualisée. Computed, contraintes générales et figures restent des cibles.
+Référence actuelle au 11 octobre 2026, après [consolidation](consolidation.md).
+Contrat canonique schemaVersion 5 ; package privé 0.1.0. Le cahier des charges
+CDC_référence.md reste une cible plus large, préservée en octets. Cette mission
+conserve les capacités livrées, sans engager les fonctionnalités manquantes.
+[Contrats/APIs](architecture.md), [preuves et limites](feature-coverage.md).
 
 ## 1. Document et questions
 
-Le contrat actuel `ExerciseDefinitionV1` représente une famille `rational-value` : identité/révision, titre, paramètres entiers, variables libres, énoncé texte/LaTeX, **une** question avec ID, texte, points positifs, attendu et politique fixe `{domain:rational, form:value-only}`. `extensions` conserve des données privées sans les interpréter. Ce contrat n'est pas le modèle de tout le catalogue.
+ExerciseDefinition est un document composé : id/revision/title, generation,
+variables libres, elements ordonnés et extensions privées. Une question unique
+est une liste comportant une question ; aucun format séparé. Questions multiples,
+sections explicites et variables communes sont disponibles. Les sections sont
+plates et sectionId référence un ID existant indépendamment de l'ordre.
 
-La cible confirmée est une **liste plate ordonnée** d'éléments à IDs stables, avec sections explicites et variables communes. La définition porte ID, révision immuable, version de schéma, métadonnées utiles, déclarations de génération et variables libres, éléments et attendus/politiques de chaque question. Un titre d'introduction, une conclusion et une explication sont des usages de contenu, pas des types supplémentaires sans comportement distinct.
+Chaque question porte son ID d'élément, son attendu et sa politique privée.
+Réponses référencent instanceId/questionId, jamais l'index d'une liste. Réordonner
+conserve les IDs et les associations. Une révision publiée doit rester immuable
+côté application ; aucune réutilisation d'ID pour une autre question de sa lignée.
 
-| Approche                        | Avantages                                                                                     | Coûts / limite                                                                 | Conclusion                                             |
-| ------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------ |
-| Liste plate avec sections       | Réutilise l'ordre historique, projection et réordonnancement simples, questions indépendantes | Pas de portée locale automatique ni sous-arbre déplaçable                      | Retenue ; les titres de section organisent le document |
-| Parties/sous-parties récursives | Portées locales et opérations par sous-arbre                                                  | Validation récursive, IDs/ordre/projection plus complexes, besoin non démontré | Différée ; ne pas construire dès maintenant            |
-
-Chaque question porte son format, attendu, politique de correction et éventuellement aide/explication/points. Son `id` est aussi l'identité de l'élément question : pas de deuxième ID équivalent. Réponses et résultats référencent `(instanceId, questionId)` ; une instance privée référence la révision exacte. L'ordre des tableaux n'est jamais l'identité d'une question.
-
-Réordonner ou modifier la prose conserve l'ID. Dupliquer une question crée un ID neuf ; supprimer une question n'autorise pas la réutilisation de son ID dans la même lignée. Changer le sens d'une question crée une nouvelle révision et, si c'est une autre question, un nouvel ID. Une ancienne tentative continue de référencer son ancienne instance/révision. Admin applique ces commandes ; moteur et backend vérifient unicité et correspondances. Aucun format UUID ni génération d'ID dans le cœur n'est imposé.
-
-L'instanciation prépare **toutes** les questions admises, dans l'ordre de la définition, avec un attendu privé pour chacune. Un échec de question empêche de publier une instance complète ; les diagnostics identifient l'élément concerné. Les réponses multiples à plusieurs questions sont plusieurs soumissions identifiées ; une réponse multiple à un QCM est une sélection unique d'IDs d'options.
-
-Pour le trinôme : q-discriminant attend `b²−4ac`, q-racines un ensemble de racines sous domaine/famille admis, q-sommet `−b/(2a)`, q-minimum `c−b²/(4a)` avec `a>0`. Toutes partagent a/b/c. Cet exemple est un test de conception, **pas** une capacité multiquestion ou un solveur de racines livré. La transcription actuelle de 103 ne calcule que l'abscisse.
-
-### Trois dépendances distinctes
-
-1. Mathématique : b calculé à partir de a ; graphe de valeurs indépendant de la progression élève.
-2. Pédagogique : recommander q2 après q1 ou déverrouiller une partie ; application, sans changer les valeurs officielles.
-3. Réponse précédente : corriger q2 en tenant compte de la valeur saisie à q1 ; fonctionnalité ultérieure nécessitant une politique de suivi d'erreur et un état serveur. Aucun comportement implicite.
-
-Variables communes, ID/révision, ordre, discriminants et association question-attendu sont à prévoir dans le prochain contrat. Sections peuvent être un contenu de titre simple. Portées locales, dépendances pédagogiques déclarées, questions adaptatives et suivi d'erreur peuvent attendre ; aucun champ récursif ou graphe de questions ajouté par anticipation.
+L'instanciation prépare toutes les questions admises. Un échec interdit le retour
+d'une instance complète ou partielle ; diagnostics localisés. Dépendances de
+valeurs computed distinctes des dépendances pédagogiques/de réponses précédentes,
+ces deux dernières étant différées avec les scopes locaux/workflows.
 
 ## 2. Éléments : contrat commun et inventaire
 
-Chaque type natif futur est une branche d'union discriminée avec `id`, `type` et données précises ; pas un `content: any` ou sac de propriétés générique. Validation structurelle, profil mathématique des champs, variables consommées, instance/projection et diagnostics avec chemins sont définis pour chaque branche avant annonce de support. Les comportements communs de contenu, substitution et questions sont réutilisés.
+Branches actuelles, unions discriminées à champs précis :
 
-Un élément informatif ou mathématique ne produit pas automatiquement une correction. Une interaction de zoom n'est pas une question. Pour corriger une équation affichée ou une figure, utiliser une question explicitement associée ; ne pas déduire une réponse d'un élément graphique. Le premier périmètre étendu confirmé est texte/expression/question/QCM simple et multiple. Sections n'ajoutent aucun calcul.
+| Élément        | Définition / instance                                                                                                                                                      |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| text / section | ID, texte, sectionId facultatif (sauf parent de section) ; @a/@@, texte inline opaque, longueur finale contrôlée                                                           |
+| expression     | LaTeX, label textuel facultatif ; substitution polynomial/rationnel bornée, variables libres préservées, source/raw conservés privés                                       |
+| question       | énoncé/points positifs, response latex rational/expression, expectedLatex, policy rational/polynomial value-only ; ratio exact ou expression préparée privé                |
+| mcq            | énoncé/points, mode single/multiple, options texte/LaTeX avec IDs, expectedOptionIds privés ; options rationnelles fermées, collisions exactes après substitution refusées |
 
-Sources locales en lecture seule : Creator `src/utils/defaultContent.js`, `src/editors/ElementEditor.jsx`, `src/renderers/ElementRenderer.jsx` et composants spécialisés ; NovLearn `frontend/app/types/exercise.ts` et `frontend/app/components/Exercise/ExerciseRenderer.tsx`. Les [audits voisins](architecture-review.md#sources-et-méthode) détaillent les structures. Le corpus reçu ne contient que text/question/mcq/graph.
+IDs d'éléments uniques et d'options uniques par QCM. Simple : un ID attendu ;
+multiple : ensemble non vide d'IDs existants sans doublons. Aucun mélange aléatoire
+d'options livré. La projection sélectionne chaque branche, mode/response/options,
+sans attendus/flags/politiques/traces/extensions/seed. Prose équivalente ou options
+symboliques non comparables ne sont pas réputées distinguées mathématiquement.
 
-Dans les fiches suivantes, **données/configuration**, **variables/calculs**, **validation/instance**, **réponse/rendu/Admin**, **état/lot** couvrent les onze dimensions demandées. Les contrats cibles sont des besoins, pas la reprise automatique des contrats historiques.
-
-### Texte et sections — informatif
-
-- Données/configuration : texte, titre de section éventuel, fragments mathématiques explicitement distingués du texte ; ordre et ID. Historique `text.content.text`, parfois chaîne chez Creator.
-- Variables/calculs : interpolation de valeurs déclarées ; pas d'évaluation de prose ni de remplacement de sous-chaînes mathématiques. Une formule paramétrée utilise un fragment/champ mathématique explicite. Grammaire de fragments à spécifier avant code, sans nouveau parseur LaTeX.
-- Validation/instance : longueur, gabarit, références connues, taille finale ; conserver source et produire texte/fragments affichables. Le natif v1 remplace `@a` et `@@` dans trois champs seulement ; `$...$` y reste opaque.
-- Réponse/rendu/Admin : aucune réponse ; renderer texte/LaTeX et accessibilité, Admin édite le contenu et les sections. La sanitation HTML relève de l'UI ; aucun HTML exécutable transporté implicitement.
-- État/lot : texte natif limité livré/testé au Lot 5 ; liste/sections/fragments au complément de contrat et Lot 5 étendu. Ni prose riche ni section native actuelles.
-
-### Expression, équation et système — mathématique, éventuellement associé à une question
-
-- Données/configuration : expression LaTeX et symboles/domaine ; pour une relation, membres et nature ; pour un système, relations ordonnées. Historique `equation.latex`, système Creator `system` ; ils ne sont pas tous parsables par scalar-latex-v1.
-- Variables/calculs : substitution CortexJS des paramètres, variables libres préservées ; sérialisation. Afficher une relation, comparer une solution, comparer des relations et résoudre sont des besoins différents ; aucune résolution générale promise.
-- Validation/instance : profil de commandes/opérateurs, arités, domaines avant réduction ; erreur si relation/système hors profil. Instance garde source/raw et affichage dérivé.
-- Réponse/rendu/Admin : formule seule sans réponse ; question distincte pour les solutions. Renderer LaTeX, Admin formule/contexte, avec diagnostic au champ fautif.
-- État/lot : expression polynomiale d'énoncé bornée livrée Lot 5 ; expression comme élément au Lot 5 étendu ; relations/systèmes après contrat ciblé, hors premier profil de calcul. `requireAnswer` élève historique n'est pas un comportement natif.
-
-### Question ouverte — interactif et corrigible
-
-- Données/configuration : ID, énoncé, format, attendu privé, politique ; points, aide/explication seulement si utilisés. Historique `question`, `answerFormat`, `correctAnswer`, `hint`, `explanation`, `points`.
-- Variables/calculs : tous les champs paramétrés admis consomment les mêmes valeurs ; attendu calculé par famille. Pas d'attendu déduit du LaTeX affiché.
-- Validation/instance : références, format/politique compatibles, domaine et attendu démontré ; préparer une question publique et son attendu privé. Plusieurs questions en cible, aucune omission silencieuse.
-- Réponse/rendu/Admin : saisie brute LaTeX ou texte suivant format ; renderer MathLive/feedback autorisé, Admin règle et teste attendu/politique. Les essais et points attribués restent applicatifs.
-- État/lot : une question rationnelle native livrée/testée Lot 5 ; multiquestion Lot 5 étendu ; correction 6, formes 7, autres formats par compléments qualifiés.
-
-### QCM simple et multiple — interactif et corrigible
-
-- Données/configuration : question, mode simple/multiple, options avec IDs stables et contenu, ensemble d'IDs corrects privé ; points/aide/explication si nécessaires. Historique `multipleChoice`, parfois `multipleAnswers`, `correct`/`isCorrect` et IDs absents : ne pas fusionner sans revue.
-- Variables/calculs : instancier toutes les options ; détecter collisions après substitution (cas 78, u0=1). Le mode simple exige une bonne option ; le multiple exige une sélection attendue valide. Aucun mélange via `Math.random`.
-- Validation/instance : IDs uniques, références attendues existantes, nombre/options/mode compatibles, contenus admis ; ambiguïté de distracteurs diagnostic d'auteur, pas verdict arbitraire. Comparaison sémantique non prouvée des options reste indéterminée ; aucun détecteur universel de doublons promis.
-- Réponse/rendu/Admin : IDs sélectionnés, sans indices dans l'ordre affiché ni flags corrects publics ; ordre conservé ou mélange versionné conservé côté serveur. Comparaison exacte des ensembles d'IDs ; sélection simple de cardinal 1, multiple sans doublon. Renderer choix accessibles ; Admin mode/options/bonnes réponses/essais privés.
-- État/lot : absent natif ; contrat/instance/projection Lot 5 étendu, correction discrète bornée complément ciblé du Lot 6, adaptation 9, UI application. Scores partiels non décidés par le moteur.
+Tout élément avancé ci-dessous est **cible non livrée**. Les fiches décrivent besoins,
+sources observées et lot futur, sans implémentation ou renderer implicite.
 
 ### Graphe de fonction — mathématique et interaction de vue
 
@@ -141,59 +112,77 @@ Figures géométriques génériques, images ou autres blocs non identifiés rest
 
 ## 3. Génération et contraintes
 
-[ADR 006](adr/006-deterministic-generation.md) centralise contrats/limites et vecteurs. Integer/decimal/choice sous parameters-v1, intégrés aux exercices v1/v2 ; variables-v2 ajoute tuples à deux modes, exclusions de choix et six comparaisons exactes, intégrés à v3. Computed absent.
+GenerationDefinition : schemaVersion 5, definitions, constraints et budgets
+maxAttempts/maxDraws obligatoires. Trois familles : scalaires (integer/decimal/choice), tuples et calculs :
 
-| Mécanisme cible        | Entrée / résultat                                                   | Invariants                                                                             |
-| ---------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Aléatoire              | Bornes inclusives entières ou grille décimale ; valeur typée        | Exclusions locales respectées, domaine non vide, zéro/signe par bornes/exclusions      |
-| Choix                  | Liste finie de valeurs admises ; une valeur                         | Aucune pondération implicite ou conversion ambiguë de chaîne mathématique              |
-| Tuple, mode choix      | Liste de lignes de même arité ; une ligne entière                   | Ordre conservé, arité ≥2 bornée, composantes nommées uniques, tirage atomique          |
-| Tuple, mode génération | Domaines de composantes et contraintes de groupe ; tuple            | Même représentation que le mode choix, aucune réparation hors contraintes              |
-| Calculé                | Expression CortexJS et références ; valeur exacte dans profil admis | Source/raw, dépendances résolues, domaine contrôlé avant réduction, pas de JS ni clamp |
+- integer : bornes inclusives entières de valeur absolue ≤10^6, exclusions numériques uniques dans la plage.
+- decimal : grille coefficient/10^precision, précision 0–6, coefficients ≤10^9 ;
+  bornes intersectées avec la grille, exclusions alignées, aucun snap/tolérance.
+- choice : valeurs numériques finies uniques, exclusions facultatives parmi la liste,
+  aucun poids implicite. Le tirage ne prouve pas l'utilisabilité mathématique exacte.
+- tuple : une identité de groupe et 2–8 composantes scalaires nommées ; mode choice
+  sélectionne une ligne complète admise, mode generate tire chaque composante.
+  Exclusions locales suppriment des lignes entières. Liaisons vers les seules valeurs
+  plates, aucun état numérique dupliqué. Pas de tuples imbriqués/indexation/vectoriel.
+- computed : LaTeX rationnel fermé avec dépendances extraites par CortexJS. Résultat
+  RationalValue exact, y compris entier/décimal fini ; restrictions facultatives
+  integer/rational, bornes/exclusions exactes, sans clamp/réparation.
 
-Contrat retenu au 4 bis : values plat, unique vérité numérique ; groups:[{id,components:[noms]}] ordonné conserve la provenance. Domaines de composantes réutilisés, arité 2…8, noms d'une lettre hors e/i. Choix de lignes typées, exclusions retirant les lignes entières concernées. Pas d'indexation, tuple imbriqué, opération vectorielle ou exclusion de ligne indépendante. Contraintes globales sur scalaires/composantes/constantes, sans ordre implicite entre tuples. D23 tranché pour ces groupes, ouvert pour computed et profils étendus.
+Noms : une lettre latine minuscule hors e/i, distincts des variables libres ; IDs de
+tuples distincts des noms. ≤16 déclarations/valeurs résolues et ≤16 variables libres.
+Noms longs delta/r1/xSommet différés : aucune réinterprétation de multiplication
+implicite. Exemples natifs utilisent r/s pour les racines pédagogiques.
 
-`a!=0` et `a not in {-2,0,2}` sont des exclusions locales numériques ; `b>a` et `a<b<c` sont des prédicats intervariables (chaîne explicitée en deux relations dans le profil futur) ; `a²+b²=c²` demande des calculs exacts et un prédicat après substitution. Exclusion de tirage ≠ restriction de domaine de l'expression comme x≠0. Aucun solveur général de contraintes.
+Préparation et tri topologique stable avant RNG ; références inconnues, cycles et
+profils invalides diagnostiqués. Tirages dans l'ordre des seules déclarations
+aléatoires, composantes dans l'ordre déclaré, computed sans mot RNG.
 
-### Dépendances et valeurs
+Contraintes comparison : six relations <, <=, >, >=, ==, != et exactement un opérande
+variable/constant/latex par membre. Constantes et restrictions : encodage exact sur
+six places, coefficient ≤10^9. Opérandes LaTeX dans le même profil rationnel fermé.
+Preuves statiques limitées aux bornes/réflexivité, aucun solveur général.
 
-Collecter les références sur le raw CortexJS et le contexte déclaré, sans recherche regex de symboles. Distinguer paramètres, composantes, computed, variables libres et constantes. Référence inconnue, collision, cycle et dépendance d'un computed scalaire à une variable libre sont diagnostiqués avant tirage. Un tri topologique stable garantit qu'une dépendance est calculée avant son consommateur ; l'ordre déclaré départage les nœuds indépendants et appartient au rejeu. Réordonner le JSON peut changer les tirages, jamais rendre une dépendance valide ou invalide par accident.
+Chaque tentative tire tout le contexte puis résout les calculs et vérifie toutes
+les restrictions/comparaisons. Faux → nouveau candidat complet, flux continu.
+Singularité, erreur ou indétermination → arrêt terminal sans valeurs partielles,
+y compris après faux. Les tirages singuliers doivent être exclus explicitement.
+Domaine local vide ou contradiction simple prouvée ≠ recherche épuisée.
 
-Un prédicat entre deux paramètres tirés n'est pas une arête computed : relations mutuelles permises, cycle de calcul interdit. Après substitution : division par zéro, non-fini, complexe dans un domaine réel ou résultat restant symbolique échouent explicitement ; domaine/propriété non démontrés restent indéterminés. Les valeurs transportées sont JSON typé, pas boxed/BigInt/NaN/Infinity. Ratio exact v1 borné disponible pour l'attendu natif ; représentation étendue commune integer/decimal/choice/computed à arrêter avant snapshot étendu. Les noms pédagogiques `delta`, `r1`, `xSommet` ne sont pas des symboles v1 actuellement admis.
+Budgets : ≤128 choix/lignes/exclusions, ≤32 contraintes, 1–128 tentatives,
+1–65536 mots RNG et 128 mots maximum par rejet de rang. Mulberry32 local,
+rangs sans biais modulo, singleton sans mot, identité mulberry32-rejection-v1.
+Pas de preuve d'uniformité générale sous contraintes.
 
-### Recherche, déterminisme et échecs
-
-Domaines locaux : sélection directe dans le complément d'exclusions ; lignes exclues retirées avant tirage. Variables-v2 retire **tout le candidat** si une comparaison est fausse, puis tire toutes les déclarations sur le flux RNG continu. Budgets candidats/mots, ordre versionné, aucune réparation ni uniformité générale promise. Condition indéterminée : arrêt explicite. Futures dépendances calculées dans le même système commun avant contraintes/instanciation, sans second évaluateur.
-
-| État                   | Sens / comportement                                                                             |
-| ---------------------- | ----------------------------------------------------------------------------------------------- |
-| Structure invalide     | Champs/types/références/profil invalides ; arrêt avant recherche                                |
-| Domaine prouvé vide    | Preuve sur domaine fini/grille ou cas exact couvert ; échec explicite                           |
-| Candidat rejeté        | Condition démontrée fausse ou domaine invalide propre au candidat ; nouvel essai borné possible |
-| Condition indéterminée | Ni vrai ni faux démontré ; échec distinct, jamais candidat accepté                              |
-| Budget épuisé          | Recherche bornée sans résultat ; aucune preuve d'impossibilité, aucune valeur partielle         |
-| Erreur technique       | Bibliothèque/ressources/transport ; ne devient pas impossibilité mathématique                   |
-
-Limites actuelles : seed uint32 ou chaîne canonique, ≤16 paramètres, ≤128 exclusions/choix, entiers ±1 000 000, précision 0…6, coefficients décimaux ±1 000 000 000. Rejet du rang RNG limité à 128 mots : ce n'est pas le budget futur de candidats sous contraintes. Singletons sans tirage, ordre du tableau et golden vectors figés. Aucun `Math.random`, horloge ni PRNG global.
-
-Rejeu : définition/révision/ordre + seed + moteur/CortexJS/génération/instanciation et options compatibles. Une nouvelle version d'algorithme n'offre pas automatiquement le même tirage ; préserver le support ancien ou son snapshot. La version 0.0.0 actuelle est préparatoire et ne garantit pas une compatibilité inter-build à elle seule. Backend conserve l'artefact compatible ou l'état privé nécessaire.
-
-### Recettes de conception, non livrées
-
-| Recette             | Construction                                               | Tests futurs                                                                   |
-| ------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| Carré parfait       | n entier ; a=n²                                            | Exactitude, non-négativité, cas zéro et exclusions                             |
-| Discriminant carré  | a entier non nul, r/s entiers ; b=−a(r+s), c=ars, d=b²−4ac | d=a²(r−s)² ; positif si r≠s, nul sinon ; aucun générateur spécialisé           |
-| Carré de binôme     | p/q entiers ; a=p², b=2pq, c=q²                            | Polynôme=(px+q)² ; p≠0 si degré 2 exigé                                        |
-| Tuple pythagoricien | Choix (3,4,5)… ou m>n≥1 ; a=m²−n², b=2mn, c=m²+n²          | a²+b²=c², positivité ; primitivité non promise sans conditions supplémentaires |
-
-Un discriminant entier n'est pas forcément carré ; un discriminant nul ne prouve pas que le polynôme négatif est un carré réel. Ces recettes attendent 4 bis/5 étendu et leurs tests de propriétés indépendants.
+Recettes de composition testées : carrés, discriminants et trinômes à racines
+entières, chaînes/fractions et tuple pythagoricien ; aucun générateur spécialisé,
+aucun solveur de racines. Oracles BigInt indépendants et vecteurs complets dans
+les tests canoniques. Même révision/ordre/budgets/seed/artefacts → mêmes valeurs.
 
 ## 4. Instanciation, validation et correction
 
-Pipeline cible : définition privée → validation structurelle → profils/références/domaines statiques → génération et computed/contraintes → éléments ordonnés → attendus par question → instance privée → projection publique. Préserver définition/source/IDs/ordre ; une seule génération commune. Le détail des étapes et erreurs est dans [lifecycle](exercise-lifecycle.md).
+Pipeline livré : définition privée → validation JSON → génération/résolution/
+contraintes communes → textes/formules/attendus de chaque élément → snapshot privé
+complet → projection sélectionnée. Une seule résolution et aucun JS historique.
+Source/raw/substitution/affichage distincts, calcul CortexJS, admission/domaine avant
+réduction. Expression polynomiale : degré structurel ≤16 ; rationnels fermés et
+intermédiaires ≤10^9 ; AST ≤128 nœuds/profondeur 16 ; puissances entières 0–16 sous
+contrôle de non-nullité pour puissance zéro. Décimaux jusqu'à six places, chiffres
+groupés et juxtaposition numérique ambiguë refusés. x/x, 0/x, 0^0, racines,
+irrationnels, fonctions partielles et solveurs hors profil d'évaluation.
 
-Validation structurelle ne prouve pas valeur/domaine/forme. Validation d'auteur ajoute calcul d'attendus, vérification des configurations et séries bornées de seeds ; cette campagne n'est pas une preuve pour toutes les seeds. Un type connu mais hors profil/capacité du consommateur est refusé explicitement avant publication/adoption, pas ignoré par le renderer. `extensions` conservé ne signifie pas support.
+Parsing scalar-latex-v1 reste plus large : sources préservées, racines et Pi/
+ExponentialE parsables mais aucune preuve d'évaluation/domaine. Point et {,} décimaux,
+virgule nue ambiguë refusée, placeholders détectés avant CortexJS. [ADR 005](adr/005-math-input.md).
+
+JSON : sources/textes ≤4096 unités UTF-16, IDs/révision/clés ≤128, profondeur ≤16,
+≤10000 nœuds, collections ≤128. ≤128 éléments et ≤64 options/sélection QCM. Le
+snapshot agrégé peut être refusé malgré des champs individuellement admis.
+
+AnswerSubmission reprend seulement le transport LaTeX brut sous schéma 5 : IDs et
+source, même incomplète. Aucun seed/policy/verdict client. Association à l'instance
+officielle, transport QCM et CorrectionResult nécessitent leurs futurs contrats.
+Validation structurelle ≠ parsing/domaine/preuve ; previews multi-seeds ne prouvent
+pas toutes les générations. Corps synchrone, aucun timeout préemptif démontré.
 
 Correction cible : soumission structurée → association officielle → parsing → admissibilité et domaine → preuve de valeur → politique de réponse/forme → résultat. Recueillir les témoins de forme sur source/raw **avant réduction** ; statuer séparément sur la forme après preuve de valeur. Le serveur fournit format, attendu, tolérance et politique.
 
@@ -218,6 +207,7 @@ Une expression mathématiquement valable mais hors famille supportée n'est pas 
 
 ## 5. Évolutions et limites
 
-Les contrats étendus sont proposés dans [architecture.md](architecture.md#contrats-cibles-documentaires). Liste/sections et premier périmètre sont décidés ; tuples/comparaisons et budgets arrêtés dans ADR 006 ; computed, formats exacts étendus et profils de forme restent ouverts. Aucun service, dépendance, nouveau repository ou module mathématique par élément ajouté.
-
-Les calculs actuels sont synchrones et bornés structurellement, sans deadline/mémoire préemptive. Isolation terminable à prouver au Lot 8 avant correction officielle. Les huit lignes sont inventoriées et conservées ; seulement une question de 103 est transcrite et instanciée. Les comportements historiques et bugs ne sont pas un oracle ; migration et revue individuelle au Lot 9.
+Correcteur/formes 6/7, isolation/transport 8, adaptation 9 et adoption 10/11 restent
+non engagés. Pas de serveur, UI, SQL ou dépendance supplémentaire. Anciennes APIs
+expérimentales refusées et snapshots non rejouables ; futur adaptateur explicite.
+Corpus original intact, transcription de 103 distincte de migration complète.

@@ -1,16 +1,18 @@
+import { element } from './elements.js';
 import { describe, expect, it } from 'vitest';
 import {
   validateDefinition,
   validateSubmission,
 } from 'novlearn-exercise-engine';
-import type { ExerciseDefinitionV1 } from 'novlearn-exercise-engine';
+import type { ExerciseDefinition } from 'novlearn-exercise-engine';
 import fixture from './fixtures/contracts/rational-minimum.definition.json' with { type: 'json' };
 
-function definition(): ExerciseDefinitionV1 {
+function definition(): ExerciseDefinition {
   const input: unknown = fixture;
   const result = validateDefinition(input);
   if (!result.ok) throw new Error(JSON.stringify(result.diagnostics));
-  if (result.value.schemaVersion !== 1) throw new Error('Expected v1 fixture.');
+  if (result.value.schemaVersion !== 5)
+    throw new Error('Expected canonical fixture.');
   return result.value;
 }
 
@@ -40,12 +42,16 @@ describe('native rational-value definition contract', () => {
     expect(result).toEqual({ ok: true, value: original });
     if (!result.ok) return;
     expect(result.value.variables).toEqual([{ name: 'x', domain: 'real' }]);
-    expect(result.value.question.expectedLatex).toBe('\\frac{-b}{2a}');
+    expect(element(result.value, 'question').expectedLatex).toBe(
+      '\\frac{-b}{2a}',
+    );
     expect(
       validateDefinition(JSON.parse(JSON.stringify(result.value))),
     ).toEqual(result);
-    original.question.expectedLatex = 'mutated';
-    expect(result.value.question.expectedLatex).toBe('\\frac{-b}{2a}');
+    element(original, 'question').expectedLatex = 'mutated';
+    expect(element(result.value, 'question').expectedLatex).toBe(
+      '\\frac{-b}{2a}',
+    );
   });
 
   it.each([null, [], 7, 'text', undefined])(
@@ -57,11 +63,11 @@ describe('native rational-value definition contract', () => {
 
   it('rejects unknown or missing versions without guessing a legacy schema', () => {
     rejected(
-      { ...definition(), schemaVersion: 2 },
+      { ...definition(), schemaVersion: 99 },
       '/schemaVersion',
       'unknown-version',
     );
-    const unversioned: Partial<ExerciseDefinitionV1> = definition();
+    const unversioned: Partial<ExerciseDefinition> = definition();
     delete unversioned.schemaVersion;
     rejected(unversioned, '/schemaVersion', 'unknown-version');
   });
@@ -87,24 +93,42 @@ describe('native rational-value definition contract', () => {
   it('reports exact nested field paths', () => {
     const d = definition();
     rejected(
-      { ...d, question: { ...d.question, points: '1' } },
-      '/question/points',
+      {
+        ...d,
+        elements: [
+          d.elements[0],
+          d.elements[1],
+          { ...element(d, 'question'), points: '1' },
+        ],
+      },
+      '/elements/2/points',
       'value',
     );
     rejected(
-      { ...d, question: { ...d.question, expectedLatex: null } },
-      '/question/expectedLatex',
+      {
+        ...d,
+        elements: [
+          d.elements[0],
+          d.elements[1],
+          { ...element(d, 'question'), expectedLatex: null },
+        ],
+      },
+      '/elements/2/expectedLatex',
       'type',
     );
     rejected(
       {
         ...d,
-        question: {
-          ...d.question,
-          policy: { domain: 'real', form: 'reduced' },
-        },
+        elements: [
+          d.elements[0],
+          d.elements[1],
+          {
+            ...element(d, 'question'),
+            policy: { domain: 'real', form: 'reduced' },
+          },
+        ],
       },
-      '/question/policy/domain',
+      '/elements/2/policy/domain',
       'value',
     );
   });
@@ -112,8 +136,17 @@ describe('native rational-value definition contract', () => {
   it('rejects duplicate symbols and collisions between parameters and variables', () => {
     const d = definition();
     rejected(
-      { ...d, parameters: [...d.parameters, d.parameters[0]] },
-      '/parameters/3/name',
+      {
+        ...d,
+        generation: {
+          ...definition().generation,
+          definitions: [
+            ...d.generation.definitions,
+            d.generation.definitions[0],
+          ],
+        },
+      },
+      '/generation/definitions/3/name',
       'collision',
     );
     rejected(
@@ -144,8 +177,14 @@ describe('native rational-value definition contract', () => {
     (min) => {
       const d = definition();
       rejected(
-        { ...d, parameters: [{ ...d.parameters[0], min }] },
-        '/parameters/0/min',
+        {
+          ...d,
+          generation: {
+            ...definition().generation,
+            definitions: [{ ...d.generation.definitions[0], min }],
+          },
+        },
+        '/generation/definitions/0/min',
         'value',
       );
     },
@@ -155,65 +194,101 @@ describe('native rational-value definition contract', () => {
     const d = definition();
     const p = { name: 'a', kind: 'integer', min: 1, max: 2, exclusions: [] };
     rejected(
-      { ...d, parameters: [{ ...p, min: 3 }] },
-      '/parameters/0',
+      {
+        ...d,
+        generation: {
+          ...definition().generation,
+          definitions: [{ ...p, min: 3 }],
+        },
+      },
+      '/generation/definitions/0',
       'impossible-constraints',
     );
     rejected(
-      { ...d, parameters: [{ ...p, exclusions: [1, 2] }] },
-      '/parameters/0',
+      {
+        ...d,
+        generation: {
+          ...definition().generation,
+          definitions: [{ ...p, exclusions: [1, 2] }],
+        },
+      },
+      '/generation/definitions/0',
       'impossible-constraints',
     );
     rejected(
-      { ...d, parameters: [{ ...p, exclusions: [1, 1] }] },
-      '/parameters/0/exclusions/1',
+      {
+        ...d,
+        generation: {
+          ...definition().generation,
+          definitions: [{ ...p, exclusions: [1, 1] }],
+        },
+      },
+      '/generation/definitions/0/exclusions/1',
       'collision',
     );
     rejected(
-      { ...d, parameters: [{ ...p, exclusions: [3] }] },
-      '/parameters/0/exclusions/0',
+      {
+        ...d,
+        generation: {
+          ...definition().generation,
+          definitions: [{ ...p, exclusions: [3] }],
+        },
+      },
+      '/generation/definitions/0/exclusions/0',
       'value',
     );
     expect(
-      validateDefinition({ ...d, parameters: [{ ...p, exclusions: [1] }] }).ok,
+      validateDefinition({
+        ...d,
+        generation: {
+          ...definition().generation,
+          definitions: [{ ...p, exclusions: [1] }],
+        },
+      }).ok,
     ).toBe(true);
   });
 
-  it('treats computed and symbolic exclusions as unsupported contracts', () => {
+  it('rejects malformed computed declarations and symbolic exclusions', () => {
     const d = definition();
     rejected(
       {
         ...d,
-        parameters: [
-          {
-            name: 'a',
-            kind: 'computed',
-            min: 1,
-            max: 2,
-            exclusions: [],
-            expression: '2*b',
-          },
-        ],
+        generation: {
+          ...definition().generation,
+          definitions: [
+            {
+              name: 'a',
+              kind: 'computed',
+              min: 1,
+              max: 2,
+              exclusions: [],
+              expression: '2*b',
+            },
+          ],
+        },
       },
-      '/parameters/0/kind',
-      'value',
+      '/generation/definitions/0/latex',
+      'type',
     );
     rejected(
       {
         ...d,
-        parameters: [
-          { name: 'a', kind: 'integer', min: 1, max: 2, exclusions: ['@b'] },
-        ],
+        generation: {
+          ...definition().generation,
+          definitions: [
+            { name: 'a', kind: 'integer', min: 1, max: 2, exclusions: ['@b'] },
+          ],
+        },
       },
-      '/parameters/0/exclusions/0',
+      '/generation/definitions/0/exclusions/0',
       'value',
     );
   });
 
   it('validates structure without claiming mathematical admissibility', () => {
     const d = definition();
-    d.question.expectedLatex = '\\frac{';
-    d.statement.latex = 'q/q';
+    element(d, 'question').expectedLatex = '\\frac{';
+    element(d, 'expression').latex = 'q/q';
     expect(validateDefinition(d).ok).toBe(true);
     // The math boundary must check errors, unknown symbols and domains before use.
   });
@@ -223,15 +298,18 @@ describe('native rational-value definition contract', () => {
     rejected(
       {
         ...definition(),
-        parameters: Array.from({ length: 17 }, (_, i) => ({
-          name: String(i),
-          kind: 'integer',
-          min: 1,
-          max: 2,
-          exclusions: [],
-        })),
+        generation: {
+          ...definition().generation,
+          definitions: Array.from({ length: 17 }, (_, i) => ({
+            name: String(i),
+            kind: 'integer',
+            min: 1,
+            max: 2,
+            exclusions: [],
+          })),
+        },
       },
-      '/parameters',
+      '/generation/definitions',
       'limit',
     );
     let nested: unknown = 1;
@@ -289,7 +367,7 @@ describe('native rational-value definition contract', () => {
 
 describe('submission transport contract', () => {
   const submission = {
-    schemaVersion: 1,
+    schemaVersion: 5,
     instanceId: 'server-instance',
     questionId: '1780008000003',
     answer: { format: 'latex', source: '  \\frac{1}{2}  ' },

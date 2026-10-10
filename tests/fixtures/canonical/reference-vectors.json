@@ -1,0 +1,858 @@
+{
+  "definition": {
+    "schemaVersion": 5,
+    "kind": "composed",
+    "id": "canonical-reference",
+    "revision": "1",
+    "title": "Contexte @a et @b",
+    "generation": {
+      "schemaVersion": 5,
+      "maxAttempts": 128,
+      "maxDraws": 4096,
+      "definitions": [
+        {
+          "kind": "computed",
+          "name": "d",
+          "latex": "c/2"
+        },
+        {
+          "kind": "computed",
+          "name": "c",
+          "latex": "a^2+b^2"
+        },
+        {
+          "kind": "tuple",
+          "id": "pair",
+          "mode": "choice",
+          "components": [
+            {
+              "kind": "integer",
+              "name": "a",
+              "min": 1,
+              "max": 12,
+              "exclusions": []
+            },
+            {
+              "kind": "integer",
+              "name": "b",
+              "min": 1,
+              "max": 12,
+              "exclusions": []
+            }
+          ],
+          "values": [
+            [1, 2],
+            [3, 4],
+            [5, 12]
+          ]
+        },
+        {
+          "kind": "integer",
+          "name": "f",
+          "min": 1,
+          "max": 10,
+          "exclusions": [2]
+        },
+        {
+          "name": "g",
+          "kind": "decimal",
+          "min": -0.3,
+          "max": 0.3,
+          "precision": 1,
+          "exclusions": [0]
+        },
+        {
+          "name": "h",
+          "kind": "choice",
+          "values": [0.125, 7],
+          "exclusions": [7]
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "comparison",
+          "left": {
+            "variable": "d"
+          },
+          "operator": ">",
+          "right": {
+            "constant": 10
+          }
+        }
+      ]
+    },
+    "variables": [
+      {
+        "name": "x",
+        "domain": "real"
+      }
+    ],
+    "elements": [
+      {
+        "id": "part",
+        "type": "section",
+        "text": "Calculs"
+      },
+      {
+        "id": "text",
+        "type": "text",
+        "text": "Valeur @d ; g=@g ; h=@h ; @@a",
+        "sectionId": "part"
+      },
+      {
+        "id": "expression",
+        "type": "expression",
+        "latex": "ax^2+bx+c",
+        "sectionId": "part"
+      },
+      {
+        "id": "square",
+        "type": "question",
+        "text": "square",
+        "points": 1,
+        "response": {
+          "format": "latex",
+          "kind": "rational"
+        },
+        "expectedLatex": "c",
+        "policy": {
+          "domain": "rational",
+          "form": "value-only"
+        }
+      },
+      {
+        "id": "half",
+        "type": "question",
+        "text": "half",
+        "points": 1,
+        "response": {
+          "format": "latex",
+          "kind": "rational"
+        },
+        "expectedLatex": "d",
+        "policy": {
+          "domain": "rational",
+          "form": "value-only"
+        }
+      },
+      {
+        "id": "mcq",
+        "type": "mcq",
+        "text": "Choisir.",
+        "points": 1,
+        "mode": "single",
+        "options": [
+          {
+            "id": "yes",
+            "content": {
+              "format": "latex",
+              "latex": "d"
+            }
+          },
+          {
+            "id": "no",
+            "content": {
+              "format": "latex",
+              "latex": "d+1"
+            }
+          }
+        ],
+        "expectedOptionIds": ["yes"]
+      }
+    ],
+    "extensions": {
+      "marker": "PRIVATE-REFERENCE"
+    }
+  },
+  "vectors": [
+    {
+      "seed": 0,
+      "result": {
+        "ok": true,
+        "values": {
+          "a": {
+            "kind": "integer",
+            "value": 5
+          },
+          "b": {
+            "kind": "integer",
+            "value": 12
+          },
+          "f": {
+            "kind": "integer",
+            "value": 9
+          },
+          "g": {
+            "kind": "decimal",
+            "coefficient": 2,
+            "precision": 1
+          },
+          "h": {
+            "kind": "choice",
+            "value": 0.125
+          },
+          "c": {
+            "kind": "rational",
+            "numerator": 169,
+            "denominator": 1
+          },
+          "d": {
+            "kind": "rational",
+            "numerator": 169,
+            "denominator": 2
+          }
+        },
+        "groups": [
+          {
+            "id": "pair",
+            "components": ["a", "b"]
+          }
+        ],
+        "computed": [
+          {
+            "name": "c",
+            "dependencies": ["a", "b"]
+          },
+          {
+            "name": "d",
+            "dependencies": ["c"]
+          }
+        ],
+        "replay": {
+          "engineVersion": "0.1.0",
+          "generationVersion": "mulberry32-rejection-v1",
+          "seed": "0",
+          "draws": 3,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "result": {
+        "ok": true,
+        "values": {
+          "a": {
+            "kind": "integer",
+            "value": 3
+          },
+          "b": {
+            "kind": "integer",
+            "value": 4
+          },
+          "f": {
+            "kind": "integer",
+            "value": 1
+          },
+          "g": {
+            "kind": "decimal",
+            "coefficient": 3,
+            "precision": 1
+          },
+          "h": {
+            "kind": "choice",
+            "value": 0.125
+          },
+          "c": {
+            "kind": "rational",
+            "numerator": 25,
+            "denominator": 1
+          },
+          "d": {
+            "kind": "rational",
+            "numerator": 25,
+            "denominator": 2
+          }
+        },
+        "groups": [
+          {
+            "id": "pair",
+            "components": ["a", "b"]
+          }
+        ],
+        "computed": [
+          {
+            "name": "c",
+            "dependencies": ["a", "b"]
+          },
+          {
+            "name": "d",
+            "dependencies": ["c"]
+          }
+        ],
+        "replay": {
+          "engineVersion": "0.1.0",
+          "generationVersion": "mulberry32-rejection-v1",
+          "seed": "1",
+          "draws": 3,
+          "attempts": 1
+        }
+      }
+    },
+    {
+      "seed": 42,
+      "result": {
+        "ok": true,
+        "values": {
+          "a": {
+            "kind": "integer",
+            "value": 5
+          },
+          "b": {
+            "kind": "integer",
+            "value": 12
+          },
+          "f": {
+            "kind": "integer",
+            "value": 1
+          },
+          "g": {
+            "kind": "decimal",
+            "coefficient": 1,
+            "precision": 1
+          },
+          "h": {
+            "kind": "choice",
+            "value": 0.125
+          },
+          "c": {
+            "kind": "rational",
+            "numerator": 169,
+            "denominator": 1
+          },
+          "d": {
+            "kind": "rational",
+            "numerator": 169,
+            "denominator": 2
+          }
+        },
+        "groups": [
+          {
+            "id": "pair",
+            "components": ["a", "b"]
+          }
+        ],
+        "computed": [
+          {
+            "name": "c",
+            "dependencies": ["a", "b"]
+          },
+          {
+            "name": "d",
+            "dependencies": ["c"]
+          }
+        ],
+        "replay": {
+          "engineVersion": "0.1.0",
+          "generationVersion": "mulberry32-rejection-v1",
+          "seed": "42",
+          "draws": 6,
+          "attempts": 2
+        }
+      }
+    },
+    {
+      "seed": 4294967295,
+      "result": {
+        "ok": true,
+        "values": {
+          "a": {
+            "kind": "integer",
+            "value": 5
+          },
+          "b": {
+            "kind": "integer",
+            "value": 12
+          },
+          "f": {
+            "kind": "integer",
+            "value": 4
+          },
+          "g": {
+            "kind": "decimal",
+            "coefficient": -1,
+            "precision": 1
+          },
+          "h": {
+            "kind": "choice",
+            "value": 0.125
+          },
+          "c": {
+            "kind": "rational",
+            "numerator": 169,
+            "denominator": 1
+          },
+          "d": {
+            "kind": "rational",
+            "numerator": 169,
+            "denominator": 2
+          }
+        },
+        "groups": [
+          {
+            "id": "pair",
+            "components": ["a", "b"]
+          }
+        ],
+        "computed": [
+          {
+            "name": "c",
+            "dependencies": ["a", "b"]
+          },
+          {
+            "name": "d",
+            "dependencies": ["c"]
+          }
+        ],
+        "replay": {
+          "engineVersion": "0.1.0",
+          "generationVersion": "mulberry32-rejection-v1",
+          "seed": "4294967295",
+          "draws": 3,
+          "attempts": 1
+        }
+      }
+    }
+  ],
+  "snapshot": {
+    "schemaVersion": 5,
+    "instanceId": "official-reference",
+    "definition": {
+      "schemaVersion": 5,
+      "kind": "composed",
+      "id": "canonical-reference",
+      "revision": "1",
+      "title": "Contexte @a et @b",
+      "generation": {
+        "schemaVersion": 5,
+        "maxAttempts": 128,
+        "maxDraws": 4096,
+        "definitions": [
+          {
+            "kind": "computed",
+            "name": "d",
+            "latex": "c/2"
+          },
+          {
+            "kind": "computed",
+            "name": "c",
+            "latex": "a^2+b^2"
+          },
+          {
+            "kind": "tuple",
+            "id": "pair",
+            "mode": "choice",
+            "components": [
+              {
+                "kind": "integer",
+                "name": "a",
+                "min": 1,
+                "max": 12,
+                "exclusions": []
+              },
+              {
+                "kind": "integer",
+                "name": "b",
+                "min": 1,
+                "max": 12,
+                "exclusions": []
+              }
+            ],
+            "values": [
+              [1, 2],
+              [3, 4],
+              [5, 12]
+            ]
+          },
+          {
+            "kind": "integer",
+            "name": "f",
+            "min": 1,
+            "max": 10,
+            "exclusions": [2]
+          },
+          {
+            "name": "g",
+            "kind": "decimal",
+            "min": -0.3,
+            "max": 0.3,
+            "precision": 1,
+            "exclusions": [0]
+          },
+          {
+            "name": "h",
+            "kind": "choice",
+            "values": [0.125, 7],
+            "exclusions": [7]
+          }
+        ],
+        "constraints": [
+          {
+            "kind": "comparison",
+            "left": {
+              "variable": "d"
+            },
+            "operator": ">",
+            "right": {
+              "constant": 10
+            }
+          }
+        ]
+      },
+      "variables": [
+        {
+          "name": "x",
+          "domain": "real"
+        }
+      ],
+      "elements": [
+        {
+          "id": "part",
+          "type": "section",
+          "text": "Calculs"
+        },
+        {
+          "id": "text",
+          "type": "text",
+          "text": "Valeur @d ; g=@g ; h=@h ; @@a",
+          "sectionId": "part"
+        },
+        {
+          "id": "expression",
+          "type": "expression",
+          "latex": "ax^2+bx+c",
+          "sectionId": "part"
+        },
+        {
+          "id": "square",
+          "type": "question",
+          "text": "square",
+          "points": 1,
+          "response": {
+            "format": "latex",
+            "kind": "rational"
+          },
+          "expectedLatex": "c",
+          "policy": {
+            "domain": "rational",
+            "form": "value-only"
+          }
+        },
+        {
+          "id": "half",
+          "type": "question",
+          "text": "half",
+          "points": 1,
+          "response": {
+            "format": "latex",
+            "kind": "rational"
+          },
+          "expectedLatex": "d",
+          "policy": {
+            "domain": "rational",
+            "form": "value-only"
+          }
+        },
+        {
+          "id": "mcq",
+          "type": "mcq",
+          "text": "Choisir.",
+          "points": 1,
+          "mode": "single",
+          "options": [
+            {
+              "id": "yes",
+              "content": {
+                "format": "latex",
+                "latex": "d"
+              }
+            },
+            {
+              "id": "no",
+              "content": {
+                "format": "latex",
+                "latex": "d+1"
+              }
+            }
+          ],
+          "expectedOptionIds": ["yes"]
+        }
+      ],
+      "extensions": {
+        "marker": "PRIVATE-REFERENCE"
+      }
+    },
+    "engineVersion": "0.1.0",
+    "generation": {
+      "version": "mulberry32-rejection-v1",
+      "seed": "42",
+      "draws": 6,
+      "attempts": 2,
+      "values": {
+        "a": {
+          "kind": "integer",
+          "value": 5
+        },
+        "b": {
+          "kind": "integer",
+          "value": 12
+        },
+        "f": {
+          "kind": "integer",
+          "value": 1
+        },
+        "g": {
+          "kind": "decimal",
+          "coefficient": 1,
+          "precision": 1
+        },
+        "h": {
+          "kind": "choice",
+          "value": 0.125
+        },
+        "c": {
+          "kind": "rational",
+          "numerator": 169,
+          "denominator": 1
+        },
+        "d": {
+          "kind": "rational",
+          "numerator": 169,
+          "denominator": 2
+        }
+      },
+      "groups": [
+        {
+          "id": "pair",
+          "components": ["a", "b"]
+        }
+      ],
+      "computed": [
+        {
+          "name": "c",
+          "dependencies": ["a", "b"]
+        },
+        {
+          "name": "d",
+          "dependencies": ["c"]
+        }
+      ]
+    },
+    "title": "Contexte 5 et 12",
+    "elements": [
+      {
+        "id": "part",
+        "type": "section",
+        "text": "Calculs"
+      },
+      {
+        "id": "text",
+        "sectionId": "part",
+        "type": "text",
+        "text": "Valeur 169/2 ; g=0.1 ; h=0.125 ; @a"
+      },
+      {
+        "id": "expression",
+        "sectionId": "part",
+        "type": "expression",
+        "latex": "5x^2+12x+169",
+        "math": {
+          "source": "ax^2+bx+c",
+          "syntax": [
+            "Add",
+            ["InvisibleOperator", "a", ["Power", "x", 2]],
+            ["InvisibleOperator", "b", "x"],
+            "c"
+          ],
+          "substituted": [
+            "Add",
+            ["Multiply", 5, ["Power", "x", 2]],
+            ["Multiply", 12, "x"],
+            ["Rational", 169, 1]
+          ],
+          "displayLatex": "5x^2+12x+169"
+        }
+      },
+      {
+        "id": "square",
+        "type": "question",
+        "text": "square",
+        "points": 1,
+        "response": {
+          "format": "latex",
+          "kind": "rational"
+        },
+        "policy": {
+          "domain": "rational",
+          "form": "value-only"
+        },
+        "expected": {
+          "kind": "rational",
+          "math": {
+            "source": "c",
+            "syntax": "c",
+            "substituted": ["Rational", 169, 1],
+            "displayLatex": "169"
+          },
+          "value": {
+            "kind": "rational",
+            "numerator": 169,
+            "denominator": 1
+          }
+        }
+      },
+      {
+        "id": "half",
+        "type": "question",
+        "text": "half",
+        "points": 1,
+        "response": {
+          "format": "latex",
+          "kind": "rational"
+        },
+        "policy": {
+          "domain": "rational",
+          "form": "value-only"
+        },
+        "expected": {
+          "kind": "rational",
+          "math": {
+            "source": "d",
+            "syntax": "d",
+            "substituted": ["Rational", 169, 2],
+            "displayLatex": "\\frac{169}{2}"
+          },
+          "value": {
+            "kind": "rational",
+            "numerator": 169,
+            "denominator": 2
+          }
+        }
+      },
+      {
+        "id": "mcq",
+        "type": "mcq",
+        "text": "Choisir.",
+        "points": 1,
+        "mode": "single",
+        "options": [
+          {
+            "id": "yes",
+            "content": {
+              "format": "latex",
+              "latex": "\\frac{169}{2}"
+            }
+          },
+          {
+            "id": "no",
+            "content": {
+              "format": "latex",
+              "latex": "\\frac{171}{2}"
+            }
+          }
+        ],
+        "expected": {
+          "kind": "selection",
+          "optionIds": ["yes"]
+        },
+        "optionMath": [
+          {
+            "optionId": "yes",
+            "math": {
+              "source": "d",
+              "syntax": "d",
+              "substituted": ["Rational", 169, 2],
+              "displayLatex": "\\frac{169}{2}"
+            },
+            "value": {
+              "kind": "rational",
+              "numerator": 169,
+              "denominator": 2
+            }
+          },
+          {
+            "optionId": "no",
+            "math": {
+              "source": "d+1",
+              "syntax": ["Add", "d", 1],
+              "substituted": ["Add", ["Rational", 169, 2], 1],
+              "displayLatex": "\\frac{171}{2}"
+            },
+            "value": {
+              "kind": "rational",
+              "numerator": 171,
+              "denominator": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "publicInstance": {
+    "schemaVersion": 5,
+    "instanceId": "official-reference",
+    "title": "Contexte 5 et 12",
+    "elements": [
+      {
+        "id": "part",
+        "type": "section",
+        "text": "Calculs"
+      },
+      {
+        "id": "text",
+        "sectionId": "part",
+        "type": "text",
+        "text": "Valeur 169/2 ; g=0.1 ; h=0.125 ; @a"
+      },
+      {
+        "id": "expression",
+        "sectionId": "part",
+        "type": "expression",
+        "latex": "5x^2+12x+169"
+      },
+      {
+        "id": "square",
+        "type": "question",
+        "text": "square",
+        "points": 1,
+        "response": {
+          "format": "latex",
+          "kind": "rational"
+        }
+      },
+      {
+        "id": "half",
+        "type": "question",
+        "text": "half",
+        "points": 1,
+        "response": {
+          "format": "latex",
+          "kind": "rational"
+        }
+      },
+      {
+        "id": "mcq",
+        "type": "mcq",
+        "text": "Choisir.",
+        "points": 1,
+        "mode": "single",
+        "options": [
+          {
+            "id": "yes",
+            "content": {
+              "format": "latex",
+              "latex": "\\frac{169}{2}"
+            }
+          },
+          {
+            "id": "no",
+            "content": {
+              "format": "latex",
+              "latex": "\\frac{171}{2}"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

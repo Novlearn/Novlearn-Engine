@@ -1,5 +1,7 @@
 # ADR 006 — Génération de paramètres v1
 
+**Archive de décisions expérimentales.** Depuis le 11 octobre 2026, les anciens contrats/options ne sont plus disponibles. [ADR 008](008-canonical-consolidation.md) les remplace ; profils mathématiques et preuves historiques conservés. [API actuelle](../architecture.md).
+
 ## Complément Lot 5 — variables-v3 (11 octobre 2026)
 
 Décision D33 avant implémentation : génération schemaVersion 3, computed `{kind:'computed',name:'d',latex:'b^2-4ac'}`. Résultats toujours rationnels exacts bornés (entier compris), domaines facultatifs `{domain:'integer'|'rational',min?,max?,exclusions?}`. Bornes/exclusions numériques exactes selon le profil v2, pas de clamp. Dépendances extraites de la syntaxe CortexJS ; tri topologique stable avant tirage, cycles/inconnues/collisions diagnostiqués avec les noms et chemins.

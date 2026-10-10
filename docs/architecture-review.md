@@ -1,5 +1,7 @@
 # Audit de cohérence de l'architecture
 
+**Audit historique du 10 octobre et actualisation 4 bis.** Les descriptions de versions ci-dessous décrivent ces étapes. [Audit de consolidation actuel](consolidation.md) et [architecture canonique](architecture.md) font référence pour le package 0.1.0.
+
 Date : 10 octobre 2026. Verdict : **cohérente avec réserves**. Les frontières et le premier sous-ensemble livré correspondent à la cible ; les contrats et parcours étendus, le correcteur et l'isolation n'ont pas encore les preuves nécessaires à une adoption officielle. Cette conclusion ne valide ni un correcteur universel ni une intégration de production.
 
 Actualisation Lot 5 bis : les constats d'absence de liste/sections/multiquestion/QCM et d'intégration decimal/choice du tableau initial ci-dessous sont corrigés pour le **profil scalaire v2**. [Audit initial et preuve du complément](adr/007-native-instantiation.md#lot-5-bis--composition-v2), [couverture actualisée](feature-coverage.md), [bilan](progress.md). Le tableau reste une trace de la revue initiale, pas l'état courant de ces branches. Réserves maintenues : groupes/computed/contraintes, domaines/familles avancés, grading/formes, préemption, transport/adoption officielle et compatibilité inter-build. La nouvelle demande autorise la composition scalaire sans engager le 4 bis ; aucune recommandation initiale n'est transformée en capacité livrée.

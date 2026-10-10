@@ -29,10 +29,10 @@ describe('received historical corpus conservation', () => {
     const source = JSON.parse(row.content);
     const question = source.elements[2];
     expect(native.title).toBe(row.title);
-    expect(native.question.id).toBe(String(question.id));
-    expect(native.question.text).toBe(question.content.question);
-    expect(native.question.points).toBe(question.content.points);
-    expect(native.parameters).toEqual(
+    expect(native.elements[2].id).toBe(String(question.id));
+    expect(native.elements[2].text).toBe(question.content.question);
+    expect(native.elements[2].points).toBe(question.content.points);
+    expect(native.generation.definitions).toEqual(
       source.variables.map((p) => ({
         name: p.name,
         kind: p.type,
@@ -41,7 +41,7 @@ describe('received historical corpus conservation', () => {
         exclusions: p.exclusions === '' ? [] : [Number(p.exclusions)],
       })),
     );
-    expect(native.statement.text).toBe(
+    expect(native.elements[0].text).toBe(
       'Soit f une fonction définie sur les réels par la formule suivante.',
     );
   });

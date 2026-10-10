@@ -1,6 +1,6 @@
 # Vision et périmètre du moteur d'exercices
 
-Référence fonctionnelle du 10 octobre 2026. Cette mission consolide la documentation, sans développement, migration ni intégration applicative. « Cible » désigne un comportement à construire ; seules les preuves de la [couverture](feature-coverage.md) établissent une capacité disponible.
+Référence fonctionnelle actualisée le 11 octobre 2026 après consolidation du moteur sous schemaVersion 5, package privé 0.1.0. Aucune migration ni intégration applicative exécutée. « Cible » désigne un comportement à construire ; seules les preuves de la [couverture](feature-coverage.md) établissent une capacité disponible.
 
 ## Objectif
 
@@ -21,7 +21,7 @@ Un exercice est un document pédagogique ordonné, pas nécessairement une quest
 | Contrats sobres et versionnés                        | Unions discriminées, JSON inerte, identifiants stables, API racine réduite, aucun objet boxed public                                             |
 | Autorité et visibilité séparées                      | Instance privée complète ; projection élève par sélection de champs ; feedback autorisé par le backend                                           |
 
-Trois arbitrages ont été confirmés par l'utilisateur pendant cette mission : **liste plate avec sections explicites**, **texte/expression/question/QCM simple et multiple comme premier périmètre étendu**, **mêmes domaines par défaut, domaine imposé explicite possible par question**. Ce sont des décisions de cible ; les contrats v1 ne sont pas modifiés.
+Trois arbitrages ont été confirmés par l'utilisateur pendant cette mission : **liste plate avec sections explicites**, **texte/expression/question/QCM simple et multiple comme premier périmètre étendu**, **mêmes domaines par défaut, domaine imposé explicite possible par question**. Liste, sections et questions/QCM sont livrés dans le contrat canonique. La politique de domaine reste une cible pour le futur correcteur.
 
 ## Responsabilités
 
@@ -40,7 +40,7 @@ Trois arbitrages ont été confirmés par l'utilisateur pendant cette mission : 
 
 ## Fonctionnalités retenues et étapes
 
-Le premier moteur étendu prépare une liste plate d'éléments, toutes ses questions et leurs attendus, avec variables communes et réponses associées par ID. Les quatre mécanismes de génération, exclusions locales et contraintes déclaratives restent des objectifs décidés. Les graphiques, suites, tableaux, arbres, vecteurs et plans complexes identifiés dans les sources nécessitent des contrats et compléments ciblés, puis un rendu applicatif. Leur existence historique ne les rend pas natifs.
+Le premier moteur étendu prépare une liste plate d'éléments, toutes ses questions et leurs attendus, avec variables communes et réponses associées par ID. Les scalaires, tuples et calculs rationnels, exclusions locales et contraintes déclaratives sont livrés dans le profil borné documenté. Les graphiques, suites, tableaux, arbres, vecteurs et plans complexes identifiés dans les sources nécessitent des contrats et compléments ciblés, puis un rendu applicatif. Leur existence historique ne les rend pas natifs.
 
 Les problèmes longs utilisent d'abord des sections dans la liste. Variables locales aux parties, dépendances pédagogiques et correction à partir d'une réponse précédente demandent un besoin et une politique spécifiques avant extension. Ils ne changent pas implicitement les attendus officiels.
 
@@ -52,7 +52,7 @@ Comptes et authentification, accès DB/réseau, stockage de tentatives, catalogu
 
 Une version est consommable lorsque chaque fonctionnalité annoncée possède contrat, validation, limites et tests de succès/erreur/indétermination pertinents ; une même définition et les mêmes versions rejouent une instance ; toutes les associations de questions survivent au réordonnancement ; la projection ne transporte aucune solution privée ; les états non démontrés restent explicites. L'adoption officielle nécessite aussi une preuve d'isolation terminable côté hôte et une intégration qui ignore les verdicts clients.
 
-Aujourd'hui : contrats natifs, parsing scalaire, génération integer/decimal/choice et instances v1/v2 composées ; Lot 4 bis : tuples/comparaisons exactes et tirages atomiques variables-v2 intégrés à v3. Computed/graphe, contraintes générales et figures avancées restent des cibles. Aucune correction élève, UI, migration des huit lignes ou adoption applicative livrée. Réserves : profils/familles, isolation terminable et compatibilité inter-build.
+Aujourd'hui : contrat canonique, parsing scalaire, génération integer/decimal/choice/tuple/computed, dépendances et contraintes exactes bornées, instance composée multiquestion/QCM, projection et vecteurs reproductibles. Correction élève, éléments avancés, noms longs, UI, isolation terminable, migration/adoption restent différés. Les anciens prototypes ne sont plus des APIs disponibles.
 
 ## Index de la référence
 

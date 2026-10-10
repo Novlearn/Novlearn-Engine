@@ -6,13 +6,13 @@ import {
   validateDefinition,
 } from 'novlearn-exercise-engine';
 import type {
-  ComparisonConstraintV2,
-  ExerciseDefinitionV3,
-  GeneratedValueV1,
-  GenerationDefinitionV2,
-  IntegerParameterV1,
-  ScalarParameterV2,
-  TupleParameterV2,
+  ComparisonConstraint,
+  ExerciseDefinition,
+  GeneratedValue,
+  GenerationDefinition,
+  IntegerVariableDefinition,
+  ScalarVariableDefinition,
+  TupleVariableDefinition,
 } from 'novlearn-exercise-engine';
 import { sampleIndex, wordStream } from '../src/generation/random.js';
 
@@ -21,29 +21,35 @@ const integer = (
   min = 1,
   max = 10,
   exclusions: number[] = [],
-): IntegerParameterV1 => ({ name, kind: 'integer', min, max, exclusions });
+): IntegerVariableDefinition => ({
+  name,
+  kind: 'integer',
+  min,
+  max,
+  exclusions,
+});
 const comparison = (
-  operator: ComparisonConstraintV2['operator'],
+  operator: ComparisonConstraint['operator'],
   a = 'a',
   b = 'b',
-): ComparisonConstraintV2 => ({
+): ComparisonConstraint => ({
   kind: 'comparison',
   left: { variable: a },
   operator,
   right: { variable: b },
 });
 const definition = (
-  definitions: GenerationDefinitionV2['definitions'],
-  constraints: ComparisonConstraintV2[] = [],
-): GenerationDefinitionV2 => ({
-  schemaVersion: 2,
+  definitions: GenerationDefinition['definitions'],
+  constraints: ComparisonConstraint[] = [],
+): GenerationDefinition => ({
+  schemaVersion: 5,
   definitions,
   constraints,
   maxAttempts: 128,
   maxDraws: 4096,
 });
 const run = (d: unknown, seed: number | string = 42) =>
-  generateVariables(d, { seed, generationVersion: 'variables-v2' });
+  generateVariables(d, { seed, generationVersion: 'mulberry32-rejection-v1' });
 function success(d: unknown, seed: number | string = 42) {
   const r = run(d, seed);
   if (!r.ok || !('groups' in r)) throw new Error(JSON.stringify(r));
@@ -65,7 +71,9 @@ function failed(d: unknown, code = 'invalid-definition', path?: string) {
   );
   return r;
 }
-function rational(v: GeneratedValueV1): [bigint, bigint] {
+function rational(v: GeneratedValue): [bigint, bigint] {
+  if (v.kind === 'rational')
+    return [BigInt(v.numerator), BigInt(v.denominator)];
   if (v.kind === 'integer') return [BigInt(v.value), 1n];
   if (v.kind === 'decimal')
     return [BigInt(v.coefficient), 10n ** BigInt(v.precision)];
@@ -73,12 +81,15 @@ function rational(v: GeneratedValueV1): [bigint, bigint] {
   const [whole, fraction = ''] = String(v.value).split('.');
   return [BigInt(whole! + fraction), 10n ** BigInt(fraction.length)];
 }
-function order(a: GeneratedValueV1, b: GeneratedValueV1): bigint {
+function order(a: GeneratedValue, b: GeneratedValue): bigint {
   const [an, ad] = rational(a),
     [bn, bd] = rational(b);
   return an * bd - bn * ad;
 }
-const pythagorean = (): Extract<TupleParameterV2, { mode: 'choice' }> => ({
+const pythagorean = (): Extract<
+  TupleVariableDefinition,
+  { mode: 'choice' }
+> => ({
   kind: 'tuple',
   id: 'triangle',
   mode: 'choice',
@@ -90,7 +101,7 @@ const pythagorean = (): Extract<TupleParameterV2, { mode: 'choice' }> => ({
   ],
 });
 
-describe('atomic tuples and replay variables-v2', () => {
+describe('atomic tuples and replay', () => {
   it('accepts maximum arity and exactly sixteen bindings without expanding domains', () => {
     const names = 'abcdfghjklmnopqrs'.split('');
     const d = definition(
@@ -127,7 +138,11 @@ describe('atomic tuples and replay variables-v2', () => {
       expect(success(JSON.parse(JSON.stringify(d)), '42')).toEqual(r);
       for (const v of Object.values(r.values))
         expect([-2, 0, 2]).not.toContain(
-          v.kind === 'decimal' ? v.coefficient : v.value,
+          v.kind === 'decimal'
+            ? v.coefficient
+            : v.kind === 'rational'
+              ? v.numerator / v.denominator
+              : v.value,
         );
     },
   );
@@ -170,7 +185,7 @@ describe('atomic tuples and replay variables-v2', () => {
   });
 
   it('shares scalar integer/decimal/choice sampling without changing the v1 sequence', () => {
-    const scalars: ScalarParameterV2[] = [
+    const scalars: ScalarVariableDefinition[] = [
       integer('a'),
       {
         name: 'b',
@@ -182,7 +197,7 @@ describe('atomic tuples and replay variables-v2', () => {
       },
       { name: 'c', kind: 'choice', values: [-2, 0.125, 7] },
     ];
-    const old = generateVariables(scalars, { seed: 42 });
+    const old = generateVariables(definition(scalars), { seed: 42 });
     const current = success(
       definition([
         { kind: 'tuple', id: 'mixed', mode: 'generate', components: scalars },
@@ -270,13 +285,17 @@ describe('atomic tuples and replay variables-v2', () => {
     const r = success(d);
     expect(
       Object.values(r.values).map((v) =>
-        v.kind === 'decimal' ? v.coefficient : v.value,
+        v.kind === 'decimal'
+          ? v.coefficient
+          : v.kind === 'rational'
+            ? v.numerator / v.denominator
+            : v.value,
       ),
     ).toEqual(expected);
     expect(r.replay).toMatchObject({ draws, attempts });
   });
 
-  it('has a frozen v2 retry vector and independent object key order', () => {
+  it('has a canonical retry vector and independent object key order', () => {
     const d = definition(
       [
         {
@@ -294,8 +313,8 @@ describe('atomic tuples and replay variables-v2', () => {
       b: { kind: 'integer', value: 6 },
     });
     expect(r.replay).toEqual({
-      engineVersion: '0.0.0',
-      generationVersion: 'variables-v2',
+      engineVersion: '0.1.0',
+      generationVersion: 'mulberry32-rejection-v1',
       seed: '42',
       draws: 4,
       attempts: 2,
@@ -366,7 +385,7 @@ describe('six exact comparisons', () => {
   it.each(['<', '<=', '>', '>=', '==', '!='] as const)(
     'verifies %s by independent rational arithmetic on 96 seeds',
     (operator) => {
-      const components: ScalarParameterV2[] = [
+      const components: ScalarVariableDefinition[] = [
         {
           name: 'a',
           kind: 'decimal',
@@ -532,12 +551,12 @@ describe('untrusted tuple and comparison contracts', () => {
     ],
   ])('rejects malformed choice rows %j', (values, code) => {
     failed(
-      definition([{ ...pythagorean(), values } as TupleParameterV2]),
+      definition([{ ...pythagorean(), values } as TupleVariableDefinition]),
       code as string,
     );
   });
   it.each([
-    [{ name: 'a', kind: 'computed', source: '2*b' }, 'unsupported-type'],
+    [{ name: 'a', kind: 'computed', source: '2*b' }, 'invalid-definition'],
     [
       { name: 'x1', kind: 'integer', min: 1, max: 2, exclusions: [] },
       'invalid-definition',
@@ -562,9 +581,6 @@ describe('untrusted tuple and comparison contracts', () => {
       { name: 'a', kind: 'choice', values: [1], exclusions: {} },
       'invalid-definition',
     ],
-    [{ name: 'a', kind: 'choice', values: [0.0000001] }, 'limit'],
-    [{ name: 'a', kind: 'choice', values: [1000000001] }, 'limit'],
-    [{ name: 'a', kind: 'choice', values: [0.1 + 0.2] }, 'limit'],
     [
       {
         name: 'a',
@@ -577,14 +593,14 @@ describe('untrusted tuple and comparison contracts', () => {
       'empty-domain',
     ],
   ])('rejects invalid scalar/component %j', (p, code) => {
-    failed(definition([p as ScalarParameterV2]), code);
+    failed(definition([p as ScalarVariableDefinition]), code);
     failed(
       definition([
         {
           kind: 'tuple',
           id: 'bad',
           mode: 'generate',
-          components: [p as ScalarParameterV2, integer('b')],
+          components: [p as ScalarVariableDefinition, integer('b')],
         },
       ]),
       code,
@@ -598,7 +614,6 @@ describe('untrusted tuple and comparison contracts', () => {
     { ...comparison('<'), right: {} },
     { ...comparison('<'), right: { constant: '3' } },
     { ...comparison('<'), right: { constant: 0.0000001 } },
-    { ...comparison('<'), left: { latex: 'a^2+b^2' } },
     { kind: 'expression', latex: 'a^2+b^2=c^2' },
   ])('rejects unsupported/malformed constraint %j', (c) => {
     failed(
@@ -640,7 +655,7 @@ describe('untrusted tuple and comparison contracts', () => {
       },
     ],
   ])('rejects duplicate or ambiguous names/IDs', (...parameters) => {
-    failed(definition(parameters as GenerationDefinitionV2['definitions']));
+    failed(definition(parameters as GenerationDefinition['definitions']));
   });
   it.each([0, 1, 9])('rejects tuple arity %i', (arity) => {
     failed(
@@ -754,23 +769,23 @@ describe('untrusted tuple and comparison contracts', () => {
           integer('b'),
         ],
         values: [[1, 1]],
-      })) as unknown as GenerationDefinitionV2['definitions'],
+      })) as unknown as GenerationDefinition['definitions'],
     );
     const r = failed(d);
     expect(r.diagnostics.length).toBeLessThanOrEqual(128);
   });
-  it('requires explicit version and keeps legacy arrays on parameters-v1', () => {
+  it('accepts only the canonical object contract and rejects legacy arrays', () => {
     const d = definition([integer('a')]);
-    expect(generateVariables(d, { seed: 42 }).ok).toBe(false);
+    expect(generateVariables(d, { seed: 42 }).ok).toBe(true);
     expect(run([integer('a')]).ok).toBe(false);
-    expect(generateVariables([integer('a')], { seed: 42 }).ok).toBe(true);
+    expect(generateVariables([integer('a')], { seed: 42 }).ok).toBe(false);
     failed({ ...d, schemaVersion: 99 }, 'unsupported-version');
   });
 });
 
-describe('minimal composition v3 integration', () => {
-  const exercise = (): ExerciseDefinitionV3 => ({
-    schemaVersion: 3,
+describe('minimal composition integration', () => {
+  const exercise = (): ExerciseDefinition => ({
+    schemaVersion: 5,
     kind: 'composed',
     id: 'triangle',
     revision: '1',
@@ -797,11 +812,11 @@ describe('minimal composition v3 integration', () => {
     const r = instantiateExercise(d, { seed: 42, instanceId: 'server-id' });
     if (!r.ok) throw new Error(JSON.stringify(r.diagnostics));
     const g = success(d.generation);
-    expect(r.value.generation.parameters).toEqual(g.values);
+    expect(r.value.generation.values).toEqual(g.values);
     expect(r.value.generation.groups).toEqual(g.groups);
     expect(r.value.generation).toMatchObject({
       attempts: 1,
-      version: 'variables-v2',
+      version: 'mulberry32-rejection-v1',
     });
     const a = rational(g.values.a!)[0],
       b = rational(g.values.b!)[0];
@@ -812,7 +827,7 @@ describe('minimal composition v3 integration', () => {
       a * b * BigInt(q.expected.value.denominator),
     );
     const pub = projectPublicInstance(r.value);
-    expect(pub.schemaVersion).toBe(3);
+    expect(pub.schemaVersion).toBe(5);
     expect(JSON.stringify(pub)).not.toMatch(
       /generation|groups|expected|policy|seed|syntax|definition/,
     );
@@ -842,17 +857,17 @@ describe('minimal composition v3 integration', () => {
         seed: 42,
         instanceId: 'id',
         generationVersion: 'parameters-v1',
-      }).ok,
+      } as unknown as Parameters<typeof instantiateExercise>[1]).ok,
     ).toBe(false);
     expect(
       instantiateExercise(exercise(), {
         seed: 42,
         instanceId: 'id',
         instantiationVersion: 'composed-instance-v2',
-      }).ok,
+      } as unknown as Parameters<typeof instantiateExercise>[1]).ok,
     ).toBe(false);
   });
-  it('keeps a free x symbol and consumes exact decimal/choice tuple values in v3', () => {
+  it('keeps a free x symbol and consumes exact decimal/choice tuple values in the canonical instance', () => {
     const d = exercise();
     d.generation = definition([
       {
@@ -902,7 +917,7 @@ describe('minimal composition v3 integration', () => {
       numerator: -3,
       denominator: 40,
     });
-    expect(r.value.generation.parameters.a).toEqual({
+    expect(r.value.generation.values.a).toEqual({
       kind: 'decimal',
       coefficient: -2,
       precision: 1,

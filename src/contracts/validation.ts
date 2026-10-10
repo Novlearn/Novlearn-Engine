@@ -1,12 +1,9 @@
 import type {
   ContractDiagnostic,
-  ExerciseDefinitionV1,
-  ExerciseDefinitionV2,
-  ExerciseDefinitionV3,
-  ExerciseDefinitionV4,
   JsonObject,
   JsonValue,
-  SubmissionV1,
+  ExerciseDefinition,
+  AnswerSubmission,
   ValidationResult,
 } from './types.js';
 import { inspectComposition } from './composition.js';
@@ -181,11 +178,11 @@ export class Validation {
   }
 
   version(value: JsonValue | undefined): void {
-    if (value !== 1)
+    if (value !== 5)
       this.issue(
         '/schemaVersion',
         'unknown-version',
-        'Only schemaVersion 1 is supported.',
+        'Only canonical schemaVersion 5 is supported.',
       );
   }
 
@@ -288,125 +285,17 @@ export function inspectIntegerParameter(
   }
 }
 
-/** Structural validation only: no parsing, substitution or mathematical proof. */
-export function validateDefinition(
-  input: ExerciseDefinitionV1,
-): ValidationResult<ExerciseDefinitionV1>;
-export function validateDefinition(
-  input: ExerciseDefinitionV2,
-): ValidationResult<ExerciseDefinitionV2>;
-export function validateDefinition(
-  input: ExerciseDefinitionV3,
-): ValidationResult<ExerciseDefinitionV3>;
-export function validateDefinition(
-  input: ExerciseDefinitionV4,
-): ValidationResult<ExerciseDefinitionV4>;
+/** Structural validation only: no parsing, RNG or mathematical proof. */
 export function validateDefinition(
   input: unknown,
-): ValidationResult<
-  | ExerciseDefinitionV1
-  | ExerciseDefinitionV2
-  | ExerciseDefinitionV3
-  | ExerciseDefinitionV4
->;
-export function validateDefinition(
-  input: unknown,
-): ValidationResult<
-  | ExerciseDefinitionV1
-  | ExerciseDefinitionV2
-  | ExerciseDefinitionV3
-  | ExerciseDefinitionV4
-> {
-  return validate(input, (v, data) => {
-    if (record(data) && data.schemaVersion === 4 && data.kind === 'composed') {
-      inspectComposition(v, data, 4);
-      return;
-    }
-    if (record(data) && data.schemaVersion === 2 && data.kind === 'composed') {
-      inspectComposition(v, data);
-      return;
-    }
-    if (record(data) && data.schemaVersion === 3 && data.kind === 'composed') {
-      inspectComposition(v, data, 3);
-      return;
-    }
-    const d = v.object(data, '', [
-      'schemaVersion',
-      'kind',
-      'id',
-      'revision',
-      'title',
-      'parameters',
-      'variables',
-      'statement',
-      'question',
-      'extensions',
-    ]);
-    v.version(d.schemaVersion);
-    v.literal(d.kind, '/kind', 'rational-value');
-    v.text(d.id, '/id', 128);
-    v.text(d.revision, '/revision', 128);
-    v.text(d.title, '/title');
-    const names = new Set<string>();
-    for (const [index, value] of v
-      .list(d.parameters, '/parameters', 16)
-      .entries()) {
-      const path = child('/parameters', index);
-      const p = v.object(value, path, [
-        'name',
-        'kind',
-        'min',
-        'max',
-        'exclusions',
-      ]);
-      v.symbol(p.name, child(path, 'name'), names);
-      v.literal(p.kind, child(path, 'kind'), 'integer');
-      inspectIntegerParameter(v, p, path);
-    }
-    for (const [index, value] of v
-      .list(d.variables, '/variables', 16)
-      .entries()) {
-      const path = child('/variables', index);
-      const variable = v.object(value, path, ['name', 'domain']);
-      v.symbol(variable.name, child(path, 'name'), names);
-      if (variable.domain !== 'real' && variable.domain !== 'integer')
-        v.issue(child(path, 'domain'), 'value', 'Expected real or integer.');
-    }
-    const statement = v.object(d.statement, '/statement', ['text', 'latex']);
-    v.text(statement.text, '/statement/text');
-    v.text(statement.latex, '/statement/latex');
-    const q = v.object(d.question, '/question', [
-      'id',
-      'text',
-      'points',
-      'expectedLatex',
-      'policy',
-    ]);
-    v.text(q.id, '/question/id', 128);
-    v.text(q.text, '/question/text');
-    v.text(q.expectedLatex, '/question/expectedLatex');
-    if (
-      !v.integer(q.points, '/question/points') ||
-      typeof q.points !== 'number' ||
-      q.points <= 0
-    )
-      v.issue(
-        '/question/points',
-        'value',
-        'Points must be a positive integer.',
-      );
-    const policy = v.object(q.policy, '/question/policy', ['domain', 'form']);
-    v.literal(policy.domain, '/question/policy/domain', 'rational');
-    v.literal(policy.form, '/question/policy/form', 'value-only');
-    if (d.extensions !== undefined && !record(d.extensions))
-      v.issue('/extensions', 'type', 'Expected a private JSON object.');
-  });
+): ValidationResult<ExerciseDefinition> {
+  return validate(input, inspectComposition);
 }
 
 /** Transport validation preserves source; instance lookup and mathematical checks remain server responsibilities. */
 export function validateSubmission(
   input: unknown,
-): ValidationResult<SubmissionV1> {
+): ValidationResult<AnswerSubmission> {
   return validate(input, (v, data) => {
     const d = v.object(data, '', [
       'schemaVersion',

@@ -1,0 +1,36 @@
+# Consolidation canonique — audit du 11 octobre 2026
+
+Audit effectué avant modification du moteur : AGENTS, README, vision, spécification,
+architecture, décisions/ADR, roadmap, matrices, code et tests. Cette mission remplace
+les contrats expérimentaux, sans engager correction, éléments avancés, UI ou adaptation.
+
+| Ancien fichier / contrat                                   | Apport réel                                                            | Duplication                                                   | Équivalent nécessaire / décision                                                                                                           |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| types.ts : ExerciseDefinitionV1 / instances v1             | Question rationnelle, texte, expression, sources et ratio exact        | Identité, snapshot, projection                                | Fusionner dans la liste composée : texte + expression + question. Transcription native 103 conservée au format canonique.                  |
+| types.ts : ExerciseDefinitionV2 / éléments et instances v2 | Sections, multiquestions, réponses par ID, QCM, decimal/choice         | Identité, paramètres, snapshots                               | Conserver les branches d'éléments et la projection par sélection, fusionner les enveloppes.                                                |
+| ExerciseDefinitionV3 / instances v3                        | Tuples, liaisons de groupes, contraintes, attempts                     | Omit et variantes de snapshots                                | Fusionner dans ExerciseDefinition / ExerciseInstance.                                                                                      |
+| ExerciseDefinitionV4 / instances v4                        | Computed rationnels, graphe, restrictions                              | Autre enveloppe/version et dispatch                           | Base fonctionnelle canonique, sans hériter d'anciennes interfaces.                                                                         |
+| GenerationParameterV1, ScalarParameterV2                   | Integer/decimal/choice ; exclusions choice en v2                       | Union de domaines scalaires                                   | ScalarVariableDefinition unique ; conserver tout choix numérique fini du premier générateur, exactitude vérifiée avant usage mathématique. |
+| GenerationDefinitionV2 / V3                                | Tuple à deux modes ; puis calculs/expressions                          | Budgets, noms, contraintes                                    | GenerationDefinition unique, schemaVersion 5 ; toutes les familles réunies.                                                                |
+| contracts/parameters.ts                                    | Domaines, grilles, exclusions                                          | Validation scalaire appelée depuis deux validateurs           | Intégrer les règles dans contracts/generation.ts ; supprimer le validateur de listes historiques.                                          |
+| contracts/generation-v2.ts / generation-v3.ts              | Tuples, restrictions, comparaisons, collisions                         | Copies, reconstruction v2, remappage de chemins               | Fusionner dans generation.ts : une inspection de chaque déclaration, chemins d'origine.                                                    |
+| generation/variables.ts                                    | Options/seed, sampling scalar, dispatch v1/v2/v3                       | Orchestrateur scalar et résultats parallèles                  | generateVariables unique, contrat obligatoire ; options communes et résultat unique.                                                       |
+| generation/variables-v2.ts                                 | Plans de tirage, bornes, boucle atomique, budgets                      | generateV2 et extension optionnelle v3                        | Déplacer la seule boucle dans candidates.ts ; résolution obligatoire, sans branche par version.                                            |
+| generation/variables-v3.ts                                 | Préparation CortexJS, tri topologique, restrictions                    | Autre entrée, référence au validateur/boucle v2               | Fusionner dans variables.ts ; réutiliser la frontière mathématique.                                                                        |
+| instantiation.ts                                           | Native v1 + composée v2/v3/v4                                          | Surcharges, sélection de versions, snapshots et projection v1 | Un chemin composé et une construction de snapshot ; suppression du dispatch historique.                                                    |
+| math/input.ts, substitution.ts, comparison.ts              | Parsing raw, domaine avant réduction, calcul/comparaison exacts bornés | Aucune implémentation mathématique parallèle                  | Conserver, renommer seulement les références de types/imports.                                                                             |
+| scalar.ts, random.ts, decimal-grid.ts                      | Grilles et mapping déterministe Mulberry32                             | Aucune duplication métier                                     | Conserver ; nouveaux vecteurs canoniques complets, pas de garantie de rejeu expérimental.                                                  |
+| SubmissionV1                                               | Transport LaTeX brut sans autorité client                              | Suffixe de contrat                                            | AnswerSubmission, schemaVersion 5 ; transport QCM et CorrectionResult restent aux Lots 6/7, sans nouveau correcteur.                       |
+| Corpus Creator / DB                                        | Huit sources et inventaire                                             | Pas de contrat natif équivalent complet                       | Garder les octets ; futur adaptateur hors fonctions principales (Lot 9), non implémenté ici.                                               |
+
+Cible retenue : package privé 0.1.0, schéma canonique 5 (définition, génération
+autonome, snapshot, projection, soumission), algorithme `mulberry32-rejection-v1`.
+Le schéma de génération imbriqué reste le même contrat que l'entrée autonome,
+pas une version d'implémentation concurrente. Suppression de instantiationVersion :
+schéma et artefact moteur identifient déjà la construction de snapshot. L'identité
+de génération distingue le flux/rangs/ordre/rejet nécessaires au rejeu.
+
+Les anciennes entrées et options sont refusées, sans adaptation implicite.
+Le corpus et la référence utilisateur non suivie sont préservés. Le check initial
+échoue au formatage de cette référence seulement ; elle sera exclue de Prettier.
+Les preuves finales et le manifeste des fichiers figurent dans progress.md.

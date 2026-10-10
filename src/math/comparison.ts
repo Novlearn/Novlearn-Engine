@@ -1,16 +1,16 @@
 import { ComputeEngine } from '@cortex-js/compute-engine';
-import type { GeneratedValueV3 } from '../generation/variables.js';
-import { exactNumber } from '../contracts/generation-v2.js';
+import type { GeneratedValue } from '../contracts/types.js';
+import { exactNumber } from '../contracts/generation.js';
 
 /** Isolated, closed numeric comparison only. Boxed values never leave this boundary. */
 export function numericOrder(): (
-  a: GeneratedValueV3,
-  b: GeneratedValueV3,
+  a: GeneratedValue,
+  b: GeneratedValue,
 ) => -1 | 0 | 1 | undefined {
   const ce = new ComputeEngine({ tolerance: 0 });
   ce.iterationLimit = 1024;
   ce.recursionLimit = 64;
-  const box = (value: GeneratedValueV3) => {
+  const box = (value: GeneratedValue) => {
     if (value.kind === 'rational')
       return ce.box(['Rational', value.numerator, value.denominator]);
     const n = value.kind === 'decimal' ? value : exactNumber(value.value);

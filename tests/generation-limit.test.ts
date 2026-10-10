@@ -12,17 +12,24 @@ import composedFixture from './fixtures/contracts/quadratic-multiquestion.defini
 
 it('returns a resource diagnostic without partial values when random rejection exhausts', () => {
   const result = generateVariables(
-    [
+    generation([
       { name: 'a', kind: 'integer', min: 1, max: 1, exclusions: [] },
       { name: 'b', kind: 'integer', min: 0, max: 2, exclusions: [] },
-    ],
+    ]),
     { seed: 0 },
   );
   expect(result).toEqual({
     ok: false,
+    replay: {
+      engineVersion: '0.1.0',
+      generationVersion: 'mulberry32-rejection-v1',
+      seed: '0',
+      draws: 128,
+      attempts: 1,
+    },
     diagnostics: [
       {
-        path: '/1',
+        path: '/definitions/1',
         code: 'limit',
         message:
           'Random rank rejection exceeded 128 words; no impossibility is inferred.',
@@ -39,25 +46,42 @@ it('propagates Lot 4 generation failure without constructing a partial instance'
   });
   expect(result).toMatchObject({
     ok: false,
-    diagnostics: [{ stage: 'generation', code: 'limit', path: '/0' }],
+    diagnostics: [
+      { stage: 'generation', code: 'limit', path: '/generation/definitions/0' },
+    ],
   });
   expect(result).not.toHaveProperty('value');
 });
 
-it('propagates the same exhausted Lot 4 draw for composition v2 without partial elements', () => {
+it('propagates the same exhausted Lot 4 draw for composition without partial elements', () => {
   const result = instantiateExercise(
     {
       ...composedFixture,
-      parameters: [
-        { name: 'a', kind: 'integer', min: 1, max: 3, exclusions: [] },
-        ...composedFixture.parameters.slice(1),
-      ],
+      generation: {
+        ...composedFixture.generation,
+        definitions: [
+          { name: 'a', kind: 'integer', min: 1, max: 3, exclusions: [] },
+          ...composedFixture.generation.definitions.slice(1),
+        ],
+      },
     },
     { seed: 0, instanceId: 'server-id' },
   );
   expect(result).toMatchObject({
     ok: false,
-    diagnostics: [{ stage: 'generation', code: 'limit', path: '/0' }],
+    diagnostics: [
+      { stage: 'generation', code: 'limit', path: '/generation/definitions/0' },
+    ],
   });
   expect(result).not.toHaveProperty('value');
 });
+
+function generation(definitions: unknown) {
+  return {
+    schemaVersion: 5,
+    definitions,
+    constraints: [],
+    maxAttempts: 128,
+    maxDraws: 4096,
+  };
+}

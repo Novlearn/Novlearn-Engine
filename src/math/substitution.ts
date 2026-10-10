@@ -1,9 +1,6 @@
 import { CancellationError, ComputeEngine } from '@cortex-js/compute-engine';
-import type {
-  InstantiatedMathV1,
-  RationalValueV1,
-} from '../contracts/types.js';
-import type { GeneratedValueV3 } from '../generation/variables.js';
+import type { InstantiatedMath, RationalValue } from '../contracts/types.js';
+import type { GeneratedValue } from '../contracts/types.js';
 import { parseMathInput } from './input.js';
 import type {
   MathInputContext,
@@ -205,11 +202,11 @@ export function prepareScalarExpression(
 export function instantiateMath(
   source: string,
   context: MathInputContext,
-  values: Readonly<Record<string, GeneratedValueV3>>,
+  values: Readonly<Record<string, GeneratedValue>>,
   path: string,
   scalar: boolean,
 ):
-  | { ok: true; value: InstantiatedMathV1; exact?: RationalValueV1 }
+  | { ok: true; value: InstantiatedMath; exact?: RationalValue }
   | { ok: false; diagnostics: InstantiationMathDiagnostic[] } {
   const parsed = parseMathInput(source, context);
   if (!parsed.ok)
@@ -263,7 +260,7 @@ export function instantiateMath(
     );
     const substituted = explicit.subs(replacements, { canonical: false });
     const raw = substituted.json;
-    const rational = (node: MathSyntax, nodePath: string): RationalValueV1 => {
+    const rational = (node: MathSyntax, nodePath: string): RationalValue => {
       const evaluated = ce.box(node, { form: 'raw' }).canonical.evaluate();
       if (evaluated.isFinite === false)
         fail('non-finite', nodePath, 'The result is not finite.');
@@ -295,7 +292,7 @@ export function instantiateMath(
     const inspect = (
       node: MathSyntax,
       nodePath: string,
-    ): { degree: number; exact?: RationalValueV1 } => {
+    ): { degree: number; exact?: RationalValue } => {
       if (typeof node === 'string') {
         if (!(context.variables ?? []).includes(node))
           fail(
