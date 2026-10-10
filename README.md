@@ -24,6 +24,8 @@ npm pack --dry-run
 - [Stratégie de tests](docs/test-strategy.md)
 - [Roadmap complète et critères de passage](docs/roadmap.md)
 - [État réel, vérifications et transmission](docs/progress.md)
+- [Spécification de génération actuelle et cible](docs/adr/006-deterministic-generation.md)
+- [Matrice de couverture de génération](docs/compatibility.md#matrice-de-couverture-fonctionnelle--génération)
 - [ADR](docs/adr/001-core-boundary.md)
 
 Les huit lignes historiques reçues dans `docs/exercises_rows.json` sont conservées avec leur empreinte et inventoriées dans [compatibility.md](docs/compatibility.md). Une question de minimum de trinôme (ligne 103) est transcrite manuellement pour le premier contrat de valeur rationnelle. Aucun adaptateur de migration des huit exercices n'est implémenté. Les tests du POC constituent des observations externes ; ils ne valident pas ce nouveau moteur.
@@ -95,4 +97,6 @@ La liste `parameters` d'une définition native validée peut être fournie direc
 
 Types supportés : `integer`, `decimal` et `choice`. Le contrat `GenerationParameterV1` ajoute les deux derniers pour les tirages autonomes ; `ExerciseDefinitionV1` reste la famille à paramètres entiers. Exemple décimal : `{name:'d', kind:'decimal', min:-0.3, max:0.3, precision:1, exclusions:[0]}` renvoie `{kind:'decimal', coefficient, precision:1}`, représentant exactement `coefficient/10`. Les bornes non alignées sont intersectées avec la grille ; les exclusions doivent être alignées. Pas de snap ni de tolérance pour les artefacts flottants. Exemple choix : `{name:'f', kind:'choice', values:[-2, 0.125, 7]}` renvoie un nombre de cette liste ; doublons refusés, sans poids implicites.
 
-Au plus 16 paramètres et 128 exclusions/choix. Entiers dans ±1 000 000, précision décimale 0…6 et coefficients de grille dans ±1 000 000 000. Domaines vides, définitions invalides, types/version inconnus et limites dépassées produisent des diagnostics explicites, sans valeur partielle ni fallback. Contraintes entre paramètres, computed, tuples/triplets/perfect_square et fractions calculées sont différés. La fixture du trinôme garantit a>0 ; le générateur ne calcule pas encore l'abscisse −b/(2a). Détails, garanties et passage au Lot 5 dans [ADR 006](docs/adr/006-deterministic-generation.md).
+Au plus 16 paramètres et 128 exclusions/choix. Entiers dans ±1 000 000, précision décimale 0…6 et coefficients de grille dans ±1 000 000 000. Domaines vides, définitions invalides, types/version inconnus et limites dépassées produisent des diagnostics explicites, sans valeur partielle ni fallback. Contraintes entre paramètres, computed, tuples et fractions calculées sont absents. La fixture du trinôme garantit a>0 ; le générateur ne calcule pas encore l'abscisse −b/(2a).
+
+La cible décidée retient quatre mécanismes composables : **aléatoire numérique, choix, tuple générique et calculé**. Aucun type indépendant `function`, `perfect_square` ou doublet/triplet ; les familles mathématiques se construisent par formules et contraintes. Les JSON cibles proposés dans [ADR 006](docs/adr/006-deterministic-generation.md) sont explicitement distincts des contrats disponibles. La [roadmap](docs/roadmap.md) propose un complément 4 bis pour tuples et comparaisons simples avant les calculs/snapshots du Lot 5. Cette mise à jour est documentaire ; aucun nouveau lot de code commencé.

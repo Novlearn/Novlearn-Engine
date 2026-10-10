@@ -57,7 +57,15 @@ La correction doit distinguer correct, valeur correcte/forme refusée, incorrect
 
 ## Génération et contenus
 
+Le modèle cible décidé comporte quatre mécanismes : aléatoire numérique (integer/decimal), choix, tuple générique (choix d'une ligne ou composantes sous contraintes) et calculé par expression CortexJS. Les seuls tirages actuellement livrés sont integer/decimal/choice ; tuples, calculs et contraintes intervariables ne sont pas implémentés. Spécification, contrats JSON proposés et garanties dans [ADR 006](adr/006-deterministic-generation.md), couverture réelle/testée dans [compatibility.md](compatibility.md#matrice-de-couverture-fonctionnelle--génération).
+
+Un paramètre fournit une valeur scalaire ; un tuple ordonne des valeurs liées ; un computed dérive une valeur. Une expression paramétrée comme f(x)=a*x²+b*x+c consomme ces valeurs et conserve x libre. L'attendu est une donnée privée de correction, distincte de l'expression d'énoncé. Aucun type de génération `function`, doublet/triplet ou perfect_square : les carrés parfaits, discriminants carrés, binômes au carré et triplets pythagoriciens se décrivent par composition. Les recettes ne sont pas des capacités livrées.
+
 Reproductibilité : même définition/révision + seed + moteur/RNG/politique de génération → même instance sérialisée. Ordre des tirages et algorithme RNG versionnés. Contraintes validées, essais bornés et échec explicite. Décimaux sur grille entière lorsque l'exactitude est exigée. Graphe computed : références absentes, cycles et collisions paramètres/variables libres interdits.
+
+Ces garanties d'instance sont des objectifs du Lot 5. Les contraintes cibles complètent les mécanismes sans solveur général : domaines locaux directement calculables puis prédicats bornés sur groupes/valeurs calculées. Distinguer structure invalide, domaine prouvé vide, candidat rejeté, indétermination et budget épuisé. Aucun échec de recherche n'est une preuve d'impossibilité, aucune condition inconnue n'est acceptée. Le complément 4 bis proposé fixe les groupes et comparaisons simples avant le snapshot du Lot 5 ; les formules et contraintes sur computed restent au Lot 5.
+
+Les capacités moteur requises pour le futur Admin sont validation avec chemins, description des dépendances, prévisualisation privée, régénération/rejeu et tests bornés sur plusieurs seeds. Réutiliser les mêmes mécanismes ; pas de conception UI ni de service supplémentaire. Les schémas étendus, formats exacts de computed et adaptation des DTO d'instance restent à décider explicitement.
 
 Les marqueurs historiques de contenu devront avoir une grammaire de gabarit bornée distincte de la syntaxe mathématique ; substitution par CortexJS pour les expressions. Aucune chaîne JavaScript historique exécutée. Figures non couvertes conservées avec diagnostic, sans promesse de renderer.
 

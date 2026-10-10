@@ -1,6 +1,6 @@
 # ADR 006 — Génération de paramètres v1
 
-Statut : retenu, 10 octobre 2026, Lot 4. Aucun Lot 5 engagé.
+Statut : retenu, 10 octobre 2026, Lot 4. Complément documentaire du même jour : modèle cible décidé, schémas proposés à arbitrer avant implémentation. Aucun complément du Lot 4 ni Lot 5 engagé.
 
 ## Périmètre et contrats
 
@@ -36,7 +36,7 @@ Grille décimale : encoder **l'écriture décimale la plus courte** du nombre re
 
 Les choix copient des nombres finis sans calcul : aucune preuve d'exactitude rationnelle ou représentation de fraction ne leur est attribuée. Le résultat décimal est un encodage exact de grille, sans approximation numérique supplémentaire. Il n'existe pas de résultats calculés exacts/approximatifs dans ce lot ; une fraction ne sera donc jamais convertie prématurément en flottant ici.
 
-## Limites et passage au Lot 5
+## Limites de l'implémentation du Lot 4
 
 Codes de génération : `invalid-definition`, `unsupported-type`, `invalid-bounds`, `empty-domain`, `invalid-options`, `unsupported-version`, `limit`. Les budgets JSON du Lot 2 sont conservés, dont 128 diagnostics au plus. Les erreurs de données non JSON restent `invalid-definition`, même lorsque leur chemin désigne une borne.
 
@@ -45,3 +45,176 @@ Contraintes entre paramètres, expressions computed, dépendances/cycles, fracti
 Inventaire : le corpus reçu contient des integer et computed, avec `choices:[]` et `decimals:2` même lorsqu'inactifs. Tuples/doublets/triplets/perfect_square sont des formats spécifiques observés dans les analyses du code historique, sans représentation canonique native ; aucune de ces familles n'est implémentée ou migrée. Les décimaux et choix ici sont des contrats natifs nouveaux, pas une migration de ces champs legacy.
 
 Aucun énoncé, instance, projection publique, correction, score, service ou catalogue migré. Pas de réseau/base dans le générateur. Pas de garantie d'isolation de calcul synchrone ou de deadline : ces questions restent au Lot 8. Aucun blocage des tirages entiers pour le Lot 5 ; avant computed, il faut définir le contrat d'expression, l'admissibilité/domaines avant réduction, les dépendances, les limites de calcul et une sérialisation exacte via CortexJS. Aucun Lot 5 lancé automatiquement.
+
+## Modèle cible décidé — quatre mécanismes composables
+
+Cette section spécifie un objectif, sans élargir `parameters-v1`, les contrats TypeScript ou les validateurs actuels. La couverture réelle et les preuves sont dans la [matrice de génération](../compatibility.md#matrice-de-couverture-fonctionnelle--génération). Les statuts de roadmap distinguent le Lot 4 terminé de son complément proposé.
+
+1. **Aléatoire numérique** : un domaine entier ou décimal sur grille, bornes inclusives, signes et exclusions explicites. Réutiliser les tirages du Lot 4 ; ne pas ajouter un type par propriété mathématique.
+2. **Choix** : sélection dans une liste finie de valeurs admises. Aujourd'hui uniquement des nombres JS finis ; fractions ou autres valeurs mathématiques exigent d'abord un contrat sérialisable validé. Un choix ne prouve aucune propriété de ces valeurs. Pas de pondération implicite.
+3. **Tuple générique** : une collection ordonnée d'au moins deux composantes, avec une arité bornée à décider. Deux modes du même mécanisme : sélectionner une ligne complète parmi des tuples prédéfinis, ou tirer les composantes puis valider les contraintes du groupe. Aucun type distinct doublet/triplet/quadruplet. Un tuple n'est pas un vecteur muni d'opérations.
+4. **Calculé** : une expression mathématique déclarative dépendant de paramètres générés ou calculés, évaluée par CortexJS dans un contexte isolé. Chaînes de dépendances et références multiples requises. Aucun type indépendant `function` : une fonction d'énoncé consomme des paramètres, elle n'est pas un générateur supplémentaire.
+
+Pas de `perfect_square`, de générateur de trinômes, de solveur général de contraintes, de CAS parallèle, d'exécution JavaScript ou de transformation algébrique par regex. Les recettes de composition peuvent servir d'exemples Admin sans devenir des types du cœur.
+
+### Valeurs, calculs et expressions
+
+| Notion                | Responsabilité cible                                                         | État actuel                                                                                       |
+| --------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Paramètre scalaire    | Fournir une valeur numérique typée à une expression                          | integer/decimal/choice générés ; seule la famille integer est intégrée à la définition d'exercice |
+| Tuple                 | Conserver ordre et cohérence d'un groupe ; exposer ses composantes déclarées | Absent                                                                                            |
+| Paramètre calculé     | Produire une valeur à partir de dépendances ; garder source et diagnostic    | Absent ; parsing seul disponible                                                                  |
+| Variable libre        | Rester symbolique dans l'expression, par exemple x                           | Déclarée et distinguée au parsing ; substitution absente                                          |
+| Expression paramétrée | Consommer des valeurs pour l'énoncé, par exemple f(x)=a*x²+b*x+c             | Sources stockées/parsées ; calcul et affichage absents                                            |
+| Réponse attendue      | Donnée privée et politique pédagogique officielle de l'instance              | Source privée dans la définition ; calcul et correction absents                                   |
+
+Proposition canonique de tuple : un tableau ordonné `values` de valeurs scalaires typées, associé à une liste de noms de composantes de même longueur. Le tuple reçoit une identité de groupe distincte ; chaque composante a un nom unique dans l'espace des paramètres. Les références aux composantes utilisent ces noms scalaires : pas de syntaxe d'indexation ni de déstructuration mathématique nouvelle. Un groupe est publié atomiquement, sans écraser un scalaire ni partager un nom avec une variable libre. Choix et génération produisent la même représentation ; le stockage du groupe et de ses liaisons doit éviter deux copies divergentes. Cette représentation est **proposée**, non un contrat runtime retenu ; indexation, imbrication et opérations vectorielles sont hors périmètre initial.
+
+Pour computed : collecter les symboles sur le raw de CortexJS, distinguer constantes, paramètres et variables libres ; une valeur scalaire calculée ne peut pas dépendre d'une variable libre. Rejeter références inconnues, collisions et cycles avant les tirages. Construire un ordre topologique stable, avec l'ordre de définition comme départage ; évaluer chaque dépendance seulement après ses entrées. Les noms `r1`, `r2`, `delta`, `xSommet` sont pédagogiques dans les exemples en prose, **refusés par les règles de noms v1 actuelles**. Leur éventuelle admission est un arbitrage de contrat, pas une extension implicite du parseur.
+
+Conserver la formule originale et son raw ; vérifier admissibilité, type et domaine avant réduction. Division par zéro, non-fini, résultat complexe dans un domaine réel ou valeur restant symbolique doivent échouer explicitement ; un domaine non démontré reste indéterminé, jamais réputé valide. Sérialisation exacte des rationnels à décider via CortexJS ; ne pas convertir une fraction en flottant pour faire réussir le contrat. Pas de promesse d'exactitude pour toute expression, ni de comparaison universelle fondée sur `isIdenticallyEqual()` seul. Calcul, simplification, rendu LaTeX et correction restent des responsabilités séparées.
+
+### Contraintes et stratégies bornées
+
+Les contraintes complètent les quatre mécanismes. Bornes/exclusions sont des domaines locaux directement calculables ; comparaisons et conditions intervariables sont des prédicats déclaratifs sur des valeurs déjà produites. Exemples cibles : a≠0, b>a, a²+b²=c². Le profil de prédicats devra être borné et évalué par CortexJS sans code exécutable ni parseur supplémentaire.
+
+| Situation              | Garantie actuelle                                                                                                                | Garantie cible                                                                                                                         |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Définition incorrecte  | Erreurs de structure/options, noms, champs ou types ; diagnostics avec chemins                                                   | Ajouter arités incohérentes, références inconnues, cycles et prédicats hors profil avant tirage                                        |
+| Domaine prouvé vide    | `empty-domain` pour plage/grille/liste vide ou entièrement exclue ; bornes inversées également classées ainsi par l'API actuelle | Réserver la preuve d'impossibilité aux domaines directement calculables ou à une vérification exacte bornée ; pas d'inférence générale |
+| Candidat invalide      | Pas de recherche de candidats sous relations ; exclusions traitées par complément                                                | Prédicat faux ou résultat calculé invalide : rejeter le candidat et tracer la cause ; aucune valeur partielle                          |
+| Tentatives épuisées    | `limit` après 128 mots pour un rang RNG ; ce n'est pas une recherche sous contraintes                                            | Diagnostic distinct d'épuisement du budget de candidats ; jamais une preuve de domaine vide                                            |
+| Condition indéterminée | Aucune évaluation de condition                                                                                                   | Échec explicite/diagnostic d'indétermination ; ne pas accepter, ni classer faux ou impossible                                          |
+
+Les codes cibles restent à décider ; cette table ne promet aucun nouvel export. Une expression invalide structurellement échoue immédiatement ; une erreur de domaine propre à un candidat peut conduire à un nouvel essai borné. Un calcul hors budget ou une condition indéterminée termine la génération avec un diagnostic distinct.
+
+Stratégie initiale proposée : sélectionner directement dans les domaines locaux ; pour un groupe contraint, retirer **tout le groupe**, dans l'ordre déclaré, au lieu de réparer une composante. Pour une contrainte globale impliquant computed, retirer tous les paramètres aléatoires de la tentative et recalculer le graphe ; les contraintes ne sont pas des arêtes de dépendance de calcul. Un cycle de computed est interdit, une relation mutuelle entre deux valeurs tirées est permise. Le flux RNG continue entre tentatives, avec budget, ordre, filtrage éventuel et comptage versionnés. Préférer une construction par formules ou une liste connue pour un événement rare ; le rejet borné peut échouer même lorsqu'une solution existe. Il ne garantit ni résolution ni uniformité générale sur les solutions. Tout changement de stratégie nécessite une nouvelle version ; conserver les vecteurs de `parameters-v1`.
+
+Les bornes d'un computed sont, dans la cible, des **conditions de validation du résultat**, jamais un domaine de tirage ou une consigne de clamp. Les historiques comme 106 doivent être revus explicitement ; ce choix n'en change pas la signification silencieusement. Budget de candidats, tailles de tuples, profil des prédicats et limites de calcul restent à fixer avant le lot concerné. Un budget d'opérations n'est pas une deadline préemptive ; isolation réelle toujours au Lot 8.
+
+### Recettes mathématiques cibles, non exécutées
+
+| Besoin                     | Composition et conditions                                                               | Garantie mathématique / limite                                                                                             |
+| -------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Carré parfait              | Tirer un entier n, calculer a=n²                                                        | Entier carré ≥0 ; exclure n=0 pour un carré strictement positif                                                            |
+| Discriminant carré parfait | Tirer a entier non nul et r1/r2 entiers ; b=−a(r1+r2), c=a*r1*r2                        | a*x²+b*x+c=a(x−r1)(x−r2) ; delta=a²(r1−r2)² ; delta>0 si r1≠r2, delta=0 si r1=r2                                           |
+| Carré d'un binôme          | Tirer p/q entiers ; a=p², b=2pq, c=q²                                                   | a*x²+b*x+c=(p*x+q)² ; p≠0 si un vrai trinôme de degré 2 est requis                                                         |
+| Triplet pythagoricien      | Choisir (3,4,5), (5,12,13), (8,15,17), ou tirer m>n≥1 entiers ; a=m²−n², b=2mn, c=m²+n² | a²+b²=c² et composantes positives ; aucune garantie de primitivité sans conditions supplémentaires, pas d'algorithme dédié |
+
+Un discriminant entier n'est pas nécessairement carré (x²+x−1 donne 5). Un carré strictement positif donne deux racines rationnelles pour des coefficients entiers et a≠0 ; le zéro donne une racine double. Un discriminant nul ne garantit pas que le polynôme est le carré d'une expression réelle : −(x−1)² a aussi delta=0. La construction par racines entières couvre un sous-ensemble utile, pas tous les trinômes à racines rationnelles. Aucun test de génération de ces recettes n'existe encore ; le test actuel de 103 tire seulement a/b/c et parse l'attendu.
+
+### Exemples JSON et contrats cibles
+
+**Compatible aujourd'hui avec `generateVariables` uniquement** (pas une définition d'exercice) :
+
+```json
+[
+  { "name": "a", "kind": "integer", "min": -5, "max": 5, "exclusions": [0] },
+  {
+    "name": "b",
+    "kind": "decimal",
+    "min": -1,
+    "max": 1,
+    "precision": 2,
+    "exclusions": []
+  },
+  { "name": "c", "kind": "choice", "values": [-5, -2, 1, 3, 7] }
+]
+```
+
+**Propositions documentaires refusées par l'API actuelle** : `generation-draft` est un marqueur de brouillon, pas une version disponible. Les champs `definitions`, `components`, `mode`, `constraints` et `expression` sont proposés ; leur validation et leur représentation exacte restent à arbitrer.
+
+Tuple par choix :
+
+```json
+{
+  "generationVersion": "generation-draft",
+  "definitions": [
+    {
+      "name": "t",
+      "kind": "tuple",
+      "mode": "choice",
+      "components": ["a", "b", "c"],
+      "values": [
+        [3, 4, 5],
+        [5, 12, 13],
+        [8, 15, 17]
+      ]
+    }
+  ]
+}
+```
+
+Tuple par génération sous contraintes ; les composantes reprennent les domaines scalaires existants :
+
+```json
+{
+  "generationVersion": "generation-draft",
+  "definitions": [
+    {
+      "name": "t",
+      "kind": "tuple",
+      "mode": "generate",
+      "components": [
+        {
+          "name": "a",
+          "kind": "integer",
+          "min": 1,
+          "max": 10,
+          "exclusions": []
+        },
+        {
+          "name": "b",
+          "kind": "integer",
+          "min": 1,
+          "max": 10,
+          "exclusions": []
+        }
+      ],
+      "constraints": [{ "format": "latex", "source": "a<b" }]
+    }
+  ]
+}
+```
+
+Calculs à dépendances multiples et en chaîne ; r/s sont les deux racines, d représente delta, f l'abscisse du sommet. Tous les noms utilisent une lettre autorisée aujourd'hui ; cela ne rend pas `computed` compatible :
+
+```json
+{
+  "generationVersion": "generation-draft",
+  "definitions": [
+    { "name": "a", "kind": "integer", "min": -3, "max": 3, "exclusions": [0] },
+    { "name": "r", "kind": "integer", "min": -5, "max": 5, "exclusions": [] },
+    { "name": "s", "kind": "integer", "min": -5, "max": 5, "exclusions": [] },
+    {
+      "name": "b",
+      "kind": "computed",
+      "expression": { "format": "latex", "source": "-a(r+s)" }
+    },
+    {
+      "name": "c",
+      "kind": "computed",
+      "expression": { "format": "latex", "source": "ars" }
+    },
+    {
+      "name": "d",
+      "kind": "computed",
+      "expression": { "format": "latex", "source": "b^2-4ac" }
+    },
+    {
+      "name": "f",
+      "kind": "computed",
+      "expression": { "format": "latex", "source": "\\frac{-b}{2a}" }
+    }
+  ],
+  "constraints": [{ "format": "latex", "source": "r\\ne s" }]
+}
+```
+
+La contrainte r≠s cible delta>0 ; sans elle, la construction autorise delta=0. L'énoncé f(x)=a*x²+b*x+c conserve x libre, et la réponse attendue peut consommer f sans devenir un nouveau générateur. Les sorties computed, le snapshot typé et l'évolution de `PrivateInstanceV1.generation.parameters` (actuellement `Record<string, number>`) restent à spécifier ; aucun de ces JSON ne résout ce choix de transport.
+
+### Capacités nécessaires à NovLearn Admin
+
+Sans concevoir l'interface, les API devront permettre : valider une définition avec chemins de diagnostics, exposer les mécanismes/domaines réellement supportés et leurs limites, décrire dépendances et cycles, prévisualiser valeurs et contraintes avec une seed/version, régénérer avec une autre seed, rejouer avec une révision immuable et tester une liste bornée de seeds. Les erreurs doivent permettre de retrouver composante, formule ou contrainte et de distinguer impossibilité prouvée, candidat rejeté, indétermination et budget épuisé. La validation autonome du modèle étendu reste à concevoir ; `validateDefinition` n'en dispose pas aujourd'hui.
+
+Réutiliser `generateVariables` pour les tirages déjà supportés et la future construction d'instance pour les expressions/affichages. Les prévisualisations détaillées sont privées côté auteur autorisé ; elles ne deviennent pas la projection élève. Pas de moteur de génération distinct dans Admin, de service ajouté ni d'obligation de nouvelle API publique pour chaque geste d'édition. Les noms et signatures futurs sont ouverts ; la construction finale doit garder l'autorité serveur, les valeurs exactes et les objets boxed privés.

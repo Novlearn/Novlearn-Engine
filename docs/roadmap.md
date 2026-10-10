@@ -2,6 +2,8 @@
 
 Un lot = une modification revue et un bilan de preuves. Aucun enchaînement automatique. Les noms de modules sont proposés ; ils ne figent pas les schémas.
 
+Révision documentaire du 10 octobre 2026 : quatre mécanismes cibles (aléatoire, choix, tuple, calculé), détaillés dans [ADR 006](adr/006-deterministic-generation.md). La [matrice de couverture](compatibility.md#matrice-de-couverture-fonctionnelle--génération) sépare livré, testé et manquant. Lots 1 à 4 conservés comme terminés dans leur périmètre livré ; complément 4 bis proposé, non implémenté, avant le Lot 5 étendu.
+
 ## Lot 0 — Évidence POC existante (externe)
 
 Objectif : caractériser CortexJS/MathLive. Livrables disponibles dans le dépôt POC : 162 tests et 23 scénarios Edge documentés. Réserves domaine/placeholder/ressources intactes. Dépendances : versions POC. Risque : rapports contradictoires et confusion test/preuve. Passage : requalifier les sondes nécessaires dans chaque lot production. Aucune copie aveugle du POC, aucune modification de ce dépôt voisin.
@@ -53,24 +55,44 @@ Objectif : caractériser CortexJS/MathLive. Livrables disponibles dans le dépô
 - Objectif : générer des valeurs avec contraintes et rejeu exact.
 - Fichiers : src/generation, tests/generation, ADR RNG et seed.
 - Dépendances : Lot 2 ; parallèle possible avec Lot 3 pour paramètres sans expression.
-- Tâches : choisir RNG/encodage seed, golden vectors, ordre de tirage ; integer/choice puis decimal/tuples réellement requis ; bornes et essais limités, grille entière décimale.
-- Tests obligatoires : seeds golden, instance sérialisée identique, exclusions impossibles, plages vides, tuples et distribution de plage sans biais manifeste ; aucun Math.random.
+- Tâches livrées : RNG/encodage seed, golden vectors, ordre de tirage ; integer/choice/decimal ; bornes/exclusions et rejet RNG limité, grille entière décimale. Tuples non livrés, désormais attribués au complément 4 bis.
+- Tests de passage du périmètre livré : seeds golden, résultat de paramètres sérialisé identique, exclusions impossibles, plages vides et smoke de distribution ; aucun Math.random. Le rejeu d'instance relève du Lot 5 ; tests de tuples absents, prévus au 4 bis.
 - Acceptation : résultat reproductible sous révision/version identiques ; aucun fallback hors contraintes.
 - Risques : floats, biais de mapping, ordre modifié sans version, fuite seed.
 - Livrables : génération paramètres couverts et erreurs structurées.
 - Passage : vecteurs stables, contraintes vérifiées ; computed différé au lot suivant.
 
+## Complément Lot 4 bis — Tuples et comparaisons bornées (proposé)
+
+Complément ciblé nécessaire pour la cible complète avant de figer le snapshot du Lot 5 ; les tirages scalaires existants ne nécessitent pas de réimplémentation. Il ne rouvre pas le Lot 4 livré et ne commence pas le Lot 5. Son besoin découle des deux modes de tuple et des contraintes intervariables, absents des contrats actuels. Aucune capacité nouvelle n'est disponible du seul fait de cette roadmap.
+
+- Objectif : un seul tuple ordonné, par choix complet ou tirages de composantes validés ensemble ; comparaisons simples entre valeurs scalaires, sans solveur.
+- Fichiers envisagés : contrats/génération et tests associés ; pas de module par famille mathématique.
+- Dépendances : Lots 2, 3, 4 ; arbitrage documentaire du schéma de groupe, arité, liaisons de composantes, budget d'essais et version de génération avant code.
+- Tâches : réutiliser RNG/domaines, valider arités et collisions, tirer atomiquement le groupe, partager contraintes/diagnostics avec les scalaires. Profil initial de comparaisons exactes a≠b/a<b sur entiers et décimaux sur grille admis, via la frontière CortexJS ; identifier les références sans les confondre avec un graphe computed. Définir un ordre et un budget de tentatives reproductibles. Les conditions contenant des formules ou computed restent au Lot 5.
+- Versionnement : nouveau contrat/version pour groupes et tentatives ; préserver `parameters-v1` et ses golden vectors. Le schéma JSON de l'ADR est une proposition, pas une version déjà supportée.
+- Tests futurs obligatoires : tuple choisi intégralement, arités 2/3 et arité maximale fixée, composantes typées/nommées, a<b, plages/exclusions, collisions, définition incorrecte, domaine local prouvé vide, candidat rejeté, indétermination de comparaison et budget épuisé sans fallback/valeurs partielles ; rejeu JSON et ordre des tirages.
+- Acceptation : les deux modes produisent le même tuple canonique, comparaisons couvertes réellement vérifiées, diagnostics distincts, RNG v1 inchangé. Revue du contrat de groupe utilisable par computed et le futur snapshot, sans implémenter ces derniers.
+- Risques : duplication de valeurs de groupe/composantes, confusion tuple/vecteur, événement rare, biais supposé uniforme, limites synchrones non préemptives.
+- Livrables : tuple générique, comparaisons simples et tests ; mise à jour de la couverture sur preuves réelles.
+- Passage : contrat/génération de groupe revus avant Lot 5 ; pas de calcul dépendant, instance ou UI dans ce complément.
+
 ## Lot 5 — Substitution et instance affichable
 
 - Objectif : calculer dépendances paramétriques et produire une projection publique.
 - Fichiers : src/generation/dependencies, src/math/substitution, src/contracts/projection, tests/instances.
-- Dépendances : Lots 2, 3, 4.
-- Tâches : graphe computed, cycles/références, noms réservés, substitution CortexJS, gabarits de contenu distincts du LaTeX, instance privée/version et projection par sélection ; IDs QCM stables.
-- Tests obligatoires : a=-2 dans a², fractions exactes, variables libres inchangées, cycles, computed invalide, contraintes impossibles, secrets/seed/flags absents de projection.
+- Dépendances : Lots 2, 3, 4 et complément 4 bis pour la cible avec tuples/contraintes. Aucun blocage démontré de l'ancien scénario scalaire 103 ; la recommandation est de stabiliser le contrat étendu avant son snapshot.
+- Tâches : contrat computed et valeurs exactes sérialisables, dépendances simples/multiples/en chaîne, cycles/références inconnues, noms réservés et références aux composantes. Admissibilité/domaine avant réduction, substitution/évaluation CortexJS dans un contexte isolé ; conditions mathématiques déclaratives sur valeurs générées/calculées avec essais globaux bornés. Gabarits de contenu distincts du LaTeX, instance privée/version et projection par sélection ; IDs QCM stables.
+- Contrats : décider explicitement l'intégration decimal/choice/tuple/computed dans la définition et l'évolution du snapshot numérique préparatoire, sans prétendre que `ExerciseDefinitionV1` ou `PrivateInstanceV1` actuels les portent déjà. Garder distinction valeur exacte, approximation éventuelle, indétermination et erreur. Pas de type `function`.
+- Tests obligatoires : a=-2 dans a², fractions exactes, variables libres inchangées, ordre topologique stable, chaînes/entrées multiples et composantes de tuple, cycles/références absentes avant tirage, division par zéro/complexe/non-fini/symbolique, contraintes impossibles ou indéterminées, épuisement d'essais, secrets/seed/flags absents de projection.
+- Recettes de validation après les fondations : n² ; trinôme construit par a≠0/r/s avec discriminant carré positif ou nul ; carré de binôme avec condition de degré ; triplet pythagoricien par formules. Tests de propriétés mathématiques bornées, pas de générateur spécialisé. Le choix d'un triplet connu peut être vérifié dès 4 bis.
+- Besoins Admin : validation étendue avec chemins, dépendances consultables, prévisualisation privée, nouvelle seed/rejeu sous révision immuable et séries bornées de seeds avec diagnostics. Signatures à fixer selon besoin, sans concevoir l'interface ou ajouter un service.
 - Acceptation : même définition/seed/version → même affichage ; toute erreur déclarée ; aucun JS legacy exécuté.
 - Risques : gabarits ambigus, réponses recomposables, contenu figure non couvert.
 - Livrables : generateInstance et prepareDisplay pour famille choisie.
 - Passage : démonstration locale définition → instance privée → projection/rejeu, sans correction officielle.
+
+Peuvent attendre un complément ultérieur explicitement demandé : choix de valeurs mathématiques autres que les scalaires numériques couverts, extension des noms multi-caractères, tuples imbriqués/indexation et profils de prédicats plus riches. Le format exact nécessaire aux computed rationnels et les liaisons de tuple ne peuvent pas être différés après le snapshot. Opérations vectorielles, solveur général, générateurs spécialisés et JavaScript arbitraire sont hors périmètre. Les schémas d'exemples et budgets restent ouverts jusqu'à leur revue ; cette mission ne les implémente pas.
 
 ## Lot 6 — Correction exacte bornée
 
@@ -146,10 +168,10 @@ Objectif : caractériser CortexJS/MathLive. Livrables disponibles dans le dépô
 
 ## Dépendances et parallélisation
 
-Chemin principal : 1 → 2 → (3 et 4) → 5 → 6 → (7 et 8) → 9 → 10 → 11. La caractérisation mathématique du Lot 3 peut avancer parallèlement à la collecte du corpus, mais ne fige pas l'API du Lot 2. Le travail sur enveloppes du Lot 9 peut démarrer après 2 ; ses conversions dépendent des capacités réellement livrées. La preuve d'isolation du Lot 8 peut être préparée dès 3, puis branchée après 6.
+Chemin principal cible : 1 → 2 → (3 et 4) → 4 bis (proposé) → 5 → 6 → (7 et 8) → 9 → 10 → 11. La caractérisation mathématique du Lot 3 peut avancer parallèlement à la collecte du corpus, mais ne fige pas l'API du Lot 2. Le travail sur enveloppes du Lot 9 peut démarrer après 2 ; ses conversions dépendent des capacités réellement livrées, y compris tuples/contraintes/computed des 4 bis/5 si requis. La preuve d'isolation du Lot 8 peut être préparée dès 3, puis branchée après 6.
 
 Séquentiel : décisions de contrats avant génération ; admissibilité raw avant correction ; correction avant formes ; isolation avant correction serveur officielle ; démonstration avant pilote. En travail multi-agents, donner des fichiers distincts à chaque auteur et faire intégrer/revoir par le principal.
 
 Démos : Lot 5 affichage/rejeu sans verdict ; Lot 8 Python ↔ Node avec interruption réelle ; Lot 10 parcours étudiant complet.
 
-**Prochain lot recommandé : Lot 5, substitution et instance affichable, après revue du Lot 4 et sur nouvelle instruction.** Les tirages natifs sont disponibles. Contrats computed/domaines, calculs exacts, snapshot et projection restent à définir ; migration de comportements aux lots suivants. Aucun enchaînement automatique.
+**Prochaine étape recommandée : arbitrer puis développer séparément le complément 4 bis, sur nouvelle instruction.** Les tirages natifs du Lot 4 restent disponibles. Stabiliser tuple, comparaisons et versionnement avant le Lot 5 étendu ; y livrer ensuite computed/domaines, calculs exacts, contraintes mathématiques, snapshot et projection. La recommandation antérieure de passer directement au Lot 5 convenait au seul scénario scalaire ; elle évolue pour couvrir les objectifs désormais décidés sans reconstruire le snapshot. Migration de comportements aux lots suivants. Aucun enchaînement automatique.

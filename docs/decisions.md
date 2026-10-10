@@ -2,31 +2,43 @@
 
 Statut « retenue » = cohérente avec le cadrage et adoptée pour ce socle ; pas une validation métier externe implicite.
 
-| ID  | Statut     | Décision et motif                                                                                                                                             |
-| --- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| D01 | Retenue    | Package strict ESM indépendant ; `.d.ts`, export racine, pas de CJS sans besoin. ADR 001.                                                                     |
-| D02 | Retenue    | CortexJS 0.151.0 seul moteur mathématique principal ; MathLive hors cœur.                                                                                     |
-| D03 | Retenue    | Source originale/raw et restrictions avant réduction ; forme séparée de valeur. ADR 002.                                                                      |
-| D04 | Retenue    | Exact/heuristique/indéterminé/erreur explicites ; aucun faux incorrect par défaut.                                                                            |
-| D05 | Retenue    | Correction serveur et projection publique par allowlist ; pas de seed sensible publique. ADR 003.                                                             |
-| D06 | Retenue    | Génération de paramètres seedée et versionnée livrée au Lot 4 ; domaines vides et limites explicites, aucun fallback. ADR 006.                                |
-| D07 | Retenue    | Aucun `eval`, `new Function`, parseur LaTeX supplémentaire ou CAS parallèle.                                                                                  |
-| D08 | Retenue    | Périmètre limité au lot autorisé ; pas de correction/UI à ce stade, publication désactivée.                                                                   |
-| D09 | Provisoire | TS6.0.3 au lieu du TS7.0.2 POC : peer déclaré de typescript-eslint8.71.1 <6.1.0.                                                                              |
-| D10 | Provisoire | Rationnels/polynômes univariés bornés pour premier correcteur ; spécifier bornes et coefficients.                                                             |
-| D11 | Provisoire | CLI puis pool local comme expériences FastAPI ; aucun service imposé.                                                                                         |
-| D12 | Retenue    | Contrat natif v1 de valeur rationnelle sur question 103 ; aliases et autres familles différés. ADR 004.                                                       |
-| D13 | Ouverte    | Domaines identiques ou domaine imposé, types numériques, tolérances et familles pédagogiques.                                                                 |
-| D14 | Ouverte    | Politique forme factorisée/réduite, cas triviaux et états de forme inconnue.                                                                                  |
-| D15 | Retenue    | Profil scalaire v1 : point ou `{,}` natif, virgule nue refusée, placeholders rejetés avant parsing. ADR 005.                                                  |
-| D16 | Retenue    | Mulberry32 parameters-v1, seed uint32 canonique, ordre du tableau et singleton sans tirage figés. Snapshot au Lot 5. ADR 006.                                 |
-| D17 | Ouverte    | Transport production, budgets de ressources, SLO et contraintes déploiement.                                                                                  |
-| D18 | Ouverte    | Registre privé, licence, nom final, processus de release et compatibilité consommateurs.                                                                      |
-| D19 | Retenue    | Parsing CortexJS 0.151.0 `form:raw`, MathJSON public détaché, source conservée, contexte isolé par appel ; aucune évaluation ni garantie de domaine. ADR 005. |
+| ID  | Statut          | Décision et motif                                                                                                                                                                                                            |
+| --- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D01 | Retenue         | Package strict ESM indépendant ; `.d.ts`, export racine, pas de CJS sans besoin. ADR 001.                                                                                                                                    |
+| D02 | Retenue         | CortexJS 0.151.0 seul moteur mathématique principal ; MathLive hors cœur.                                                                                                                                                    |
+| D03 | Retenue         | Source originale/raw et restrictions avant réduction ; forme séparée de valeur. ADR 002.                                                                                                                                     |
+| D04 | Retenue         | Exact/heuristique/indéterminé/erreur explicites ; aucun faux incorrect par défaut.                                                                                                                                           |
+| D05 | Retenue         | Correction serveur et projection publique par allowlist ; pas de seed sensible publique. ADR 003.                                                                                                                            |
+| D06 | Retenue         | Génération de paramètres seedée et versionnée livrée au Lot 4 ; domaines vides et limites explicites, aucun fallback. ADR 006.                                                                                               |
+| D07 | Retenue         | Aucun `eval`, `new Function`, parseur LaTeX supplémentaire ou CAS parallèle.                                                                                                                                                 |
+| D08 | Retenue         | Périmètre limité au lot autorisé ; pas de correction/UI à ce stade, publication désactivée.                                                                                                                                  |
+| D09 | Provisoire      | TS6.0.3 au lieu du TS7.0.2 POC : peer déclaré de typescript-eslint8.71.1 <6.1.0.                                                                                                                                             |
+| D10 | Provisoire      | Rationnels/polynômes univariés bornés pour premier correcteur ; spécifier bornes et coefficients.                                                                                                                            |
+| D11 | Provisoire      | CLI puis pool local comme expériences FastAPI ; aucun service imposé.                                                                                                                                                        |
+| D12 | Retenue         | Contrat natif v1 de valeur rationnelle sur question 103 ; aliases et autres familles différés. ADR 004.                                                                                                                      |
+| D13 | Ouverte         | Domaines identiques ou domaine imposé, types numériques, tolérances et familles pédagogiques.                                                                                                                                |
+| D14 | Ouverte         | Politique forme factorisée/réduite, cas triviaux et états de forme inconnue.                                                                                                                                                 |
+| D15 | Retenue         | Profil scalaire v1 : point ou `{,}` natif, virgule nue refusée, placeholders rejetés avant parsing. ADR 005.                                                                                                                 |
+| D16 | Retenue         | Mulberry32 parameters-v1, seed uint32 canonique, ordre du tableau et singleton sans tirage figés. Snapshot au Lot 5. ADR 006.                                                                                                |
+| D17 | Ouverte         | Transport production, budgets de ressources, SLO et contraintes déploiement.                                                                                                                                                 |
+| D18 | Ouverte         | Registre privé, licence, nom final, processus de release et compatibilité consommateurs.                                                                                                                                     |
+| D19 | Retenue         | Parsing CortexJS 0.151.0 `form:raw`, MathJSON public détaché, source conservée, contexte isolé par appel ; aucune évaluation ni garantie de domaine. ADR 005.                                                                |
+| D20 | Retenue (cible) | Quatre mécanismes : aléatoire numérique, choix, tuple générique à deux modes et calculé par CortexJS. Composition pour les familles mathématiques ; aucun type indépendant function/perfect_square/doublet/triplet. ADR 006. |
+| D21 | Retenue (cible) | Contraintes déclaratives bornées sans solveur ; séparer structure invalide, domaine prouvé vide, candidat rejeté, indétermination et essais épuisés. Aucun fallback ni acceptation d'une condition inconnue. ADR 006.        |
+| D22 | Proposée        | Complément 4 bis pour tuples/comparaisons simples avant Lot 5 étendu ; computed et contraintes avec formules restent au Lot 5. Lot 4 livré conservé, aucun nouveau lot engagé.                                               |
+| D23 | Ouverte         | Schéma/version étendus, arité et liaisons de tuple, budgets et profil de contraintes, noms multi-caractères, sérialisation exacte de computed et évolution du snapshot. ADR 006 et roadmap.                                  |
 
 Les arbitrages entre agents et documents contradictoires figurent dans [analysis.md](analysis.md). Ne pas utiliser les 162 tests externes comme certification du moteur neuf. Les onze sondes polynomialCoefficients justifient un candidat borné, pas un correcteur général. La migration des tableaux/figures reste conditionnelle, sans transformation générique de noms.
 
-Lot 4 : génération native integer/decimal/choice et valeurs typées sérialisables, précision de grille explicite sans tolérance. Doublons et exclusions hors domaine refusés. Contrat d'exercice rationnel inchangé ; computed et contraintes entre paramètres restent au Lot 5. Décisions détaillées et versionnement dans [ADR 006](adr/006-deterministic-generation.md).
+Lot 4 : génération native integer/decimal/choice et valeurs typées sérialisables, précision de grille explicite sans tolérance. Doublons et exclusions hors domaine refusés. Contrat d'exercice rationnel inchangé ; computed et contraintes intervariables absents. Leur allocation cible est précisée ci-dessous. Décisions détaillées et versionnement dans [ADR 006](adr/006-deterministic-generation.md).
+
+## Clarification documentaire de la génération — 10 octobre 2026
+
+« Retenue (cible) » adopte l'objectif fonctionnel sans annoncer une implémentation. L'état réel reste integer/decimal/choice, parsing sans calcul et DTO d'instance préparatoires. La [matrice](compatibility.md#matrice-de-couverture-fonctionnelle--génération) relie chaque capacité à ses preuves et manques. Tuple/vecteur, paramètre/variable libre, expression d'énoncé et attendu privé restent distincts ; calcul, rendu et correction ne deviennent pas des générateurs.
+
+Ajustement explicite de l'allocation antérieure : D06/D16 et le périmètre livré du Lot 4 restent retenus. Les tuples envisagés mais non livrés sont regroupés au 4 bis proposé avec les comparaisons simples auparavant différées globalement au Lot 5. Formules, graphe computed, contraintes sur ses résultats et instances restent au Lot 5. La fin de roadmap recommande donc 4 bis avant le Lot 5 étendu, sans relancer les lots terminés. Les notes historiques conservent leur recommandation à la date de livraison.
+
+Arbitrages encore nécessaires avant code : adopter ou ajuster le tuple ordonné avec liaisons scalaires proposé, fixer tailles/budgets et profil CortexJS des prédicats, choisir une nouvelle version tout en préservant `parameters-v1`, définir valeurs calculées exactes et snapshot. Les exemples JSON étendus sont des propositions refusées aujourd'hui, pas une modification des contrats v1. Les bornes computed cibles valident le résultat, sans clamp ; la contradiction de 106 exige une revue au Lot 9, pas une migration silencieuse. Aucun motif pour créer un service, une dépendance, un moteur Admin séparé ou un algorithme par famille.
 
 ## Reprise du développement — 10 octobre 2026
 
