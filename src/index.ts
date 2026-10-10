@@ -11,6 +11,8 @@ export type {
   GenerationParameterV1,
   JsonObject,
   JsonValue,
+  InstantiatedMathV1,
+  RationalValueV1,
   PrivateInstanceV1,
   PublicInstanceV1,
   QuestionV1,
@@ -33,3 +35,9 @@ export type {
   GeneratedValueV1,
   GenerationDiagnostic,
 } from './generation/variables.js';
+export { instantiateExercise, projectPublicInstance } from './instantiation.js';
+export type {
+  InstantiateExerciseOptions,
+  InstantiateExerciseResult,
+  InstantiationDiagnostic,
+} from './instantiation.js';

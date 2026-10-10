@@ -79,6 +79,8 @@ Complément ciblé nécessaire pour la cible complète avant de figer le snapsho
 
 ## Lot 5 — Substitution et instance affichable
 
+**Tranche native livrée le 10 octobre 2026 sur demande explicite** : `instantiateExercise`, substitution CortexJS contrôlée, attendu rationnel exact du trinôme 103, snapshot entier privé et `projectPublicInstance`, tests de rejeu et projection. [ADR 007](adr/007-native-instantiation.md) et [progress.md](progress.md) précisent les preuves et limites. La demande interdit de reconstruire tuples/computed/contraintes absents : ces objectifs étendus ci-dessous restent différés, aucun 4 bis lancé. Le contrat entier natif reste admis sans figer le snapshot étendu. Ce statut ne clôture pas la cible complète du Lot 5 décrite ci-dessous.
+
 - Objectif : calculer dépendances paramétriques et produire une projection publique.
 - Fichiers : src/generation/dependencies, src/math/substitution, src/contracts/projection, tests/instances.
 - Dépendances : Lots 2, 3, 4 et complément 4 bis pour la cible avec tuples/contraintes. Aucun blocage démontré de l'ancien scénario scalaire 103 ; la recommandation est de stabiliser le contrat étendu avant son snapshot.
@@ -174,4 +176,4 @@ Séquentiel : décisions de contrats avant génération ; admissibilité raw ava
 
 Démos : Lot 5 affichage/rejeu sans verdict ; Lot 8 Python ↔ Node avec interruption réelle ; Lot 10 parcours étudiant complet.
 
-**Prochaine étape recommandée : arbitrer puis développer séparément le complément 4 bis, sur nouvelle instruction.** Les tirages natifs du Lot 4 restent disponibles. Stabiliser tuple, comparaisons et versionnement avant le Lot 5 étendu ; y livrer ensuite computed/domaines, calculs exacts, contraintes mathématiques, snapshot et projection. La recommandation antérieure de passer directement au Lot 5 convenait au seul scénario scalaire ; elle évolue pour couvrir les objectifs désormais décidés sans reconstruire le snapshot. Migration de comportements aux lots suivants. Aucun enchaînement automatique.
+**Prochaine étape recommandée pour la cible étendue : arbitrer puis développer séparément le complément 4 bis, sur nouvelle instruction.** Les tirages natifs du Lot 4 et l'instance native du Lot 5 restent disponibles. Stabiliser tuple, comparaisons et versionnement avant le Lot 5 étendu ; y livrer ensuite computed/domaines, contraintes mathématiques et snapshot étendu. La tranche scalaire livrée sur demande au Lot 5 ne réalise pas ces extensions. Le Lot 6 nécessite une instruction distincte, des familles/bornes de comparaison et le contexte officiel serveur ; aucune correction commencée. Migration de comportements aux lots suivants. Aucun enchaînement automatique.

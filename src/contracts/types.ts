@@ -67,22 +67,41 @@ export interface ExerciseDefinitionV1 {
   extensions?: JsonObject;
 }
 
-/** Server snapshot; creation and runtime validation belong to the instance lot. */
+/** Exact bounded rational; no rounded JavaScript quotient is stored. */
+export interface RationalValueV1 {
+  kind: 'rational';
+  numerator: number;
+  denominator: number;
+}
+
+/** Sources and raw substitution are distinct from the derived display. */
+export interface InstantiatedMathV1 {
+  source: string;
+  syntax: import('../math/input.js').MathSyntax;
+  substituted: import('../math/input.js').MathSyntax;
+  displayLatex: string;
+}
+
+/** Trusted server snapshot produced by instantiateExercise. */
 export interface PrivateInstanceV1 {
   schemaVersion: 1;
   instanceId: string;
   definition: ExerciseDefinitionV1;
   engineVersion: string;
+  instantiationVersion: 'rational-instance-v1';
   generation: {
     version: string;
     seed: string;
+    draws: number;
     parameters: Record<string, number>;
   };
   display: { title: string; statement: StatementV1; question: QuestionV1 };
   expectedLatex: string;
+  statementMath: InstantiatedMathV1;
+  expectedMath: InstantiatedMathV1 & { value: RationalValueV1 };
 }
 
-/** Planned allowlisted display DTO. No projection function is implemented yet. */
+/** Allowlisted display DTO, detached from the private snapshot. */
 export interface PublicInstanceV1 {
   schemaVersion: 1;
   instanceId: string;

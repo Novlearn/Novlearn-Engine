@@ -2,7 +2,7 @@
 
 ## Frontières
 
-Un package TypeScript portable, indépendant des frameworks, utilisant CortexJS comme unique bibliothèque mathématique. Livraison ESM et `.d.ts`, point d'entrée racine explicite. Les Lots 2 à 4 exportent `validateDefinition`, `validateSubmission`, `parseMathInput` et `generateVariables` ; aucun calcul d'expression encore implémenté. MathLive reste dans les applications ; la soumission actuelle conserve une saisie LaTeX brute. Une entrée MathJSON n'est pas acceptée par ce contrat initial.
+Un package TypeScript portable, indépendant des frameworks, utilisant CortexJS comme unique bibliothèque mathématique. Livraison ESM et `.d.ts`, point d'entrée racine explicite. Les Lots 2 à 4 exportent `validateDefinition`, `validateSubmission`, `parseMathInput` et `generateVariables`. La tranche native du Lot 5 ajoute `instantiateExercise` et `projectPublicInstance`, avec calcul rationnel exact borné, substitution et affichage du trinôme 103. MathLive reste dans les applications ; la soumission actuelle conserve une saisie LaTeX brute. Une entrée MathJSON n'est pas acceptée par ce contrat initial.
 
 Quatre modules logiques suffisent pour démarrer ; ce sont des responsabilités prévues, pas des dossiers vides créés :
 
@@ -30,7 +30,7 @@ Candidats MVP : rationnels exacts et polynômes univariés de degré/taille born
 
 ## Modèle de données proposé, non gelé
 
-Le premier sous-ensemble v1 est maintenant défini dans `src/contracts/types.ts` et [ADR 004](adr/004-first-contract.md), à partir de la question 103 du corpus réel. La définition privée et la soumission disposent de validateurs structurels ; les DTO d'instance privée et publique restent préparatoires jusqu'au Lot 5. Les orientations générales suivantes ne promettent pas de fonctions déjà implémentées.
+Le premier sous-ensemble v1 est maintenant défini dans `src/contracts/types.ts` et [ADR 004](adr/004-first-contract.md), à partir de la question 103 du corpus réel. La définition privée et la soumission disposent de validateurs structurels ; les DTO d'instance privée et publique sont concrétisés par la tranche native du Lot 5 ([ADR 007](adr/007-native-instantiation.md)). Les orientations générales suivantes ne promettent pas le support des contrats étendus.
 
 - Définition privée : identité/révision, déclarations de paramètres et variables libres, contenus, attendus et politique de correction.
 - Instance privée : référence à la révision, version moteur et RNG, seed, tirages et données nécessaires au rejeu. Snapshot ou conservation immuable de la définition requis.
@@ -41,7 +41,7 @@ Contrats JSON versionnés et validés runtime aux frontières ; unknown jusqu'à
 
 ## API minimale envisagée
 
-`validateDefinition` et `validateSubmission` effectuent la validation structurelle, `parseMathInput` conserve la syntaxe brute et `generateVariables` tire des paramètres typés. Cette dernière API est décrite dans ADR 006, sans construction d'instance. Les autres opérations ci-dessous restent candidates pour les lots futurs :
+`validateDefinition` et `validateSubmission` effectuent la validation structurelle, `parseMathInput` conserve la syntaxe brute et `generateVariables` tire des paramètres typés. Cette dernière API est décrite dans ADR 006, sans construction d'instance. `instantiateExercise` orchestre ces API pour le contrat rationnel natif et `projectPublicInstance` sélectionne l'affichage. La substitution reste interne. Les noms ci-dessous sont les candidats historiques de l'architecture ; seuls les deux noms concrets précédents implémentent aujourd'hui instance/projection :
 
 | Besoin                 | Opération candidate  | Résultat conceptuel                                          |
 | ---------------------- | -------------------- | ------------------------------------------------------------ |
@@ -63,7 +63,7 @@ Un paramètre fournit une valeur scalaire ; un tuple ordonne des valeurs liées 
 
 Reproductibilité : même définition/révision + seed + moteur/RNG/politique de génération → même instance sérialisée. Ordre des tirages et algorithme RNG versionnés. Contraintes validées, essais bornés et échec explicite. Décimaux sur grille entière lorsque l'exactitude est exigée. Graphe computed : références absentes, cycles et collisions paramètres/variables libres interdits.
 
-Ces garanties d'instance sont des objectifs du Lot 5. Les contraintes cibles complètent les mécanismes sans solveur général : domaines locaux directement calculables puis prédicats bornés sur groupes/valeurs calculées. Distinguer structure invalide, domaine prouvé vide, candidat rejeté, indétermination et budget épuisé. Aucun échec de recherche n'est une preuve d'impossibilité, aucune condition inconnue n'est acceptée. Le complément 4 bis proposé fixe les groupes et comparaisons simples avant le snapshot du Lot 5 ; les formules et contraintes sur computed restent au Lot 5.
+Ces garanties de rejeu sont livrées pour l'instance native entière du Lot 5, avec ID fourni et versions identiques. Le snapshot étendu reste ouvert. Les contraintes cibles complètent les mécanismes sans solveur général : domaines locaux directement calculables puis prédicats bornés sur groupes/valeurs calculées. Distinguer structure invalide, domaine prouvé vide, candidat rejeté, indétermination et budget épuisé. Aucun échec de recherche n'est une preuve d'impossibilité, aucune condition inconnue n'est acceptée. Le complément 4 bis proposé fixe les groupes et comparaisons simples avant le snapshot étendu du Lot 5 ; les formules et contraintes sur computed restent au Lot 5 étendu.
 
 Les capacités moteur requises pour le futur Admin sont validation avec chemins, description des dépendances, prévisualisation privée, régénération/rejeu et tests bornés sur plusieurs seeds. Réutiliser les mêmes mécanismes ; pas de conception UI ni de service supplémentaire. Les schémas étendus, formats exacts de computed et adaptation des DTO d'instance restent à décider explicitement.
 

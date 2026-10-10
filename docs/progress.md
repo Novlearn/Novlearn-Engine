@@ -1,6 +1,6 @@
 # État et transmission
 
-Date : 10 octobre 2026. Lots 1 à 4 terminés (bilans ci-dessous). Initialement seul `.codex/config.toml` existait. Git initialisé sur main ; socle versionné par un commit initial à la demande utilisateur. Aucun remote, publication ou modification des dépôts voisins. Les sections historiques conservent les preuves des étapes précédentes.
+Date : 10 octobre 2026. Lots 1 à 4 terminés, tranche native du Lot 5 livrée (bilans ci-dessous). La cible étendue du Lot 5 reste différée. Initialement seul `.codex/config.toml` existait. Git initialisé sur main ; socle versionné par un commit initial à la demande utilisateur. Aucun remote, publication ou modification des dépôts voisins. Les sections historiques conservent les preuves des étapes précédentes.
 
 ## Historique — fondations réalisées
 
@@ -42,7 +42,7 @@ Perte de domaine et placeholder au parsing ; virgule française pouvant devenir 
 
 ## État courant pour le prochain agent Codex
 
-Lire AGENTS, architecture, décisions, compatibility, ADR 004/005/006 et roadmap. Ne pas recopier POC ou ouvrir un correcteur général. Corpus reçu, huit lignes conservées/inventoriées ; première question native : minimum du trinôme (103). API actuelle : validateDefinition/validateSubmission structurels, parseMathInput scalaire LaTeX v1 et generateVariables pour integer/decimal/choice. Aucun calcul d'expression ni garantie de domaine après substitution. Prochaine étape proposée après clarification documentaire : complément 4 bis (tuples/comparaisons simples) avant Lot 5 étendu, uniquement sur nouvelle instruction. Les DTO privés/publics d'instance sont préparatoires, sans constructeur ni projection runtime. TS6 est choisi pour la compatibilité lint ; versions POC TS7 distinctes. Ne pas décider service Node avant mesures. Les autres dépôts restent lecture seule.
+Lire AGENTS, architecture, décisions, compatibility, ADR 004/005/006/007 et roadmap. Ne pas recopier POC ou ouvrir un correcteur général. Corpus reçu, huit lignes conservées/inventoriées ; première question native : minimum du trinôme (103). API actuelle : validateDefinition/validateSubmission structurels, parseMathInput scalaire LaTeX v1, generateVariables pour integer/decimal/choice, instantiateExercise pour la définition native entière et projectPublicInstance. Substitution et calcul rationnel exact bornés avec domaine vérifié sur le profil admis ; source conservée et familles partielles refusées. Prochaine étape proposée pour la cible étendue : complément 4 bis (tuples/comparaisons simples), uniquement sur nouvelle instruction ; aucun computed/tuple/contrainte ajouté par la tranche native. Les DTO d'instance sont concrétisés, le snapshot étendu reste ouvert. TS6 est choisi pour la compatibilité lint ; versions POC TS7 distinctes. Ne pas décider service Node avant mesures. Les autres dépôts restent lecture seule.
 
 ## Versionnement du socle
 
@@ -144,3 +144,40 @@ Vérifications locales de cette mission : `npm.cmd ci` PASS (130 packages) ; `np
 ### Versionnement de la clarification documentaire
 
 À la demande explicite de l'utilisateur après le bilan, les sept documents sont regroupés dans un commit dédié `docs(generation)`. La mention « aucun commit » ci-dessus décrit la livraison avant cette demande. Seule cette note de versionnement est ajoutée après les vérifications ; aucun code ni test modifié, aucun push ou lot de développement engagé.
+
+## Lot 5 — tranche native d'instanciation (10 octobre 2026)
+
+Demande jointe, AGENTS, README/progress/décisions/roadmap, architecture, stratégie de tests, ADR 004/005/006, compatibilité, huit lignes historiques, fixture native et code/tests des Lots 2 à 4 inspectés avant modification. Travail séquentiel par le principal seul. Le générateur tire integer/decimal/choice ; la définition native ne porte que des entiers. Tuple/computed/contraintes intervariables absents mais non indispensables à 103 : aucune reconstruction du Lot 4 ni blocage du premier exercice. La tranche native demandée est livrée ; la cible étendue du Lot 5 reste différée.
+
+Fichiers créés : `src/instantiation.ts`, `src/math/substitution.ts`, `tests/instantiation.test.ts`, `tests/substitution.test.ts`, `docs/adr/007-native-instantiation.md`. Fichiers modifiés : `src/contracts/types.ts`, `src/index.ts`, `tests/package.test.ts`, `tests/generation-limit.test.ts`, README, architecture, compatibility, décisions, roadmap et présent état. Implémentations du générateur/parsing/validateurs, fixture native, corpus, package et lockfile inchangés ; aucune dépendance ajoutée.
+
+API publiques : `instantiateExercise(definition, {instanceId, seed, generationVersion?, instantiationVersion?})` et `projectPublicInstance(instance)`. Définition/options validées depuis JSON inerte, `generateVariables` réutilisé, gabarits bornés dans les trois champs texte, parsing raw du Lot 3, encodage numérique exact et substitution CortexJS isolée, contrôle des domaines/budgets avant réduction, attendu rationnel exact et copie JSON finale. Aucun résultat partiel. Diagnostics avec étape/chemin et erreurs internes assainies. Le DTO privé préparatoire est concrétisé par `rational-instance-v1`, `generation.draws`, `statementMath` et `expectedMath.value` ; définition/soumission v1 inchangées. Projection par sélection et copies détachées : aucun champ de correction, extension ou métadonnée de seed transmis. L'appelant fournit l'ID opaque et conserve son état serveur officiel.
+
+Exemple exécuté avec la fixture native de 103 et seed 42 : a=1,b=5,c=0, 3 tirages, énoncé `x^2+5x`, attendu `{kind:rational,numerator:-5,denominator:2}`, LaTeX `-\frac{5}{2}`. Rejeu sérialisé byte-identique avec snapshot/ID/versions identiques. Le cas fixe a=2,b=−4,c=3 produit `2x^2-4x+3`, abscisse 1 ; a=3,b=−2,c=5 distingue abscisse 1/3 et valeur du minimum 14/3. La question native transcrite fonctionne, aucun graphe historique ou exercice complet migré.
+
+Tests ajoutés : déterminisme/transport JSON, absence de mutation, snapshot/extension/source préservés, projection détachée avec champs sensibles injectés puis exclus, gabarits `@a`/`@@` et noms complets, fractions/entiers/décimaux internes et multiplications implicites, priorités et valeurs négatives, oracle arithmétique indépendant de −b/(2a) sur 64 seeds, domaines sensibles refusés avant réduction, symboles inconnus même sous zéro/annulation, attendu symbolique non calculable, divisions par zéro, racines/constantes hors profil, bornes de nœuds/degré/précision/ratios, exceptions de bibliothèque, résultats non finis et épuisement détecté, échec du RNG propagé sans instance. Les tests de limitation ne sont pas des capacités de support.
+
+Corrections pendant vérification : builds ajustés aux signatures typées du CortexJS installé. Premier run des nouveaux tests : boucle de 64 seeds dépassant le timeout Vitest et assertion supposant un seul diagnostic pour d−d ; cas séparés par seed et assertion d'appartenance, sans augmenter le timeout. Un oracle a également révélé une erreur réelle de sens : CortexJS traite un entier juxtaposé à une fraction comme un nombre mixte après substitution. Les produits implicites symboliques sont maintenant fixés en `Multiply` via `map`/`function` raw avant `subs`, avec régressions sur bc/a−bc ; juxtapositions purement numériques refusées. Décimaux longs ou chiffres groupés refusés pour empêcher un arrondi du parseur de devenir une prétention d'exactitude. Les runs initiaux échoués ne sont pas annoncés comme validations finales.
+
+Vérifications locales exécutées :
+
+| Commande / contrôle                                                    | Résultat                                                                                       |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `npm.cmd ci`                                                           | PASS, 130 packages depuis lockfile                                                             |
+| Sondes stdin Node CortexJS 0.151.0 et lecture des déclarations         | Signatures/substitution/raw/exactitude/ambiguïté des nombres mixtes vérifiées                  |
+| `npm.cmd run build`, `npm.cmd run typecheck` après corrections         | PASS                                                                                           |
+| `npm.cmd test` intermédiaire                                           | PASS, 8 fichiers / 297 tests avant quatre régressions supplémentaires de chiffres groupés      |
+| Formatage ciblé `npm.cmd exec -- prettier --write`                     | PASS                                                                                           |
+| `npm.cmd run check` final du code                                      | Build, typecheck, lint, format PASS ; **8 fichiers / 301 tests PASS**, dont les 166 antérieurs |
+| `npm.cmd pack --dry-run`                                               | PASS, 42 fichiers, 33,6 kB compressés, README/package/dist seulement ; aucun corpus/fixture    |
+| Sonde stdin Node de l'import public, instance 103, rejeu et projection | PASS                                                                                           |
+| Liens documentaires locaux                                             | 34 cibles vérifiées existantes                                                                 |
+| `git diff --check` et SHA-256 des deux originaux                       | PASS ; empreinte inchangée `0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae`  |
+
+La rédaction finale du présent bilan intervient après le check à 301 tests et le packaging ; aucun code ni test changé ensuite. Contrôle de format documentaire et diff réexécuté après rédaction.
+
+Limites : définition entière et question rationnelle unique, aucun tuple/computed/contrainte additionnelle ni intégration native de decimal/choice. Expressions à domaines partiels, dénominateurs libres, fonctions/racines, QCM/équations/figures et familles avancées refusés ou conservés privés dans extensions sans instanciation. Profil rationnel/polynomial borné, pas de domaine universel ni de forme pédagogique ; détails dans ADR 007. Aucun arrondi de l'attendu, `N`, solveur ou CAS parallèle ; aucune deadline synchrone/mémoire garantie. Avant Lot 6 : fixer familles/bornes et états exact/indéterminé/erreur, recontrôler saisie/domaine, utiliser l'état officiel serveur ; isolation effective au Lot 8 avant branchement officiel. Aucun Lot 6, service, UI, production, CI distante, suite navigateur/POC ou consommateur externe du tarball exécuté. Aucun autre dépôt modifié, commit, push ou merge.
+
+### Versionnement du Lot 5 natif
+
+À la demande explicite de l'utilisateur après le bilan, les quinze fichiers du Lot 5 natif sont regroupés dans un commit dédié `feat(instantiation)`. La mention « aucun commit » ci-dessus décrit la livraison avant cette demande. Seule cette note est ajoutée après les vérifications à 301 tests ; aucun code ni test modifié, aucun push ou Lot 6 engagé.

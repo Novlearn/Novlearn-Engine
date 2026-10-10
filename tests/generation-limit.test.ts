@@ -6,6 +6,8 @@ vi.mock('../src/generation/random.js', async (importOriginal) => {
   return { ...original, wordStream: () => () => 0xffff_ffff };
 });
 import { generateVariables } from '../src/generation/variables.js';
+import { instantiateExercise } from '../src/instantiation.js';
+import fixture from './fixtures/contracts/rational-minimum.definition.json' with { type: 'json' };
 
 it('returns a resource diagnostic without partial values when random rejection exhausts', () => {
   const result = generateVariables(
@@ -27,4 +29,16 @@ it('returns a resource diagnostic without partial values when random rejection e
     ],
   });
   expect(result).not.toHaveProperty('values');
+});
+
+it('propagates Lot 4 generation failure without constructing a partial instance', () => {
+  const result = instantiateExercise(fixture, {
+    seed: 0,
+    instanceId: 'server-id',
+  });
+  expect(result).toMatchObject({
+    ok: false,
+    diagnostics: [{ stage: 'generation', code: 'limit', path: '/0' }],
+  });
+  expect(result).not.toHaveProperty('value');
 });

@@ -1,6 +1,6 @@
 # NovLearn Exercise Engine
 
-Moteur partagé TypeScript, initialisé le 10 octobre 2026. Ce dépôt est distinct du POC. Les Lots 2 à 4 fournissent des contrats natifs, leur validation structurelle, une frontière de parsing scalaire LaTeX et une génération déterministe de paramètres. Instances, calculs paramétriques, correction et interface utilisateur restent à développer.
+Moteur partagé TypeScript, initialisé le 10 octobre 2026. Ce dépôt est distinct du POC. Les Lots 2 à 4 fournissent des contrats natifs, leur validation structurelle, une frontière de parsing scalaire LaTeX et une génération déterministe de paramètres. La tranche native du Lot 5 instancie la question rationnelle de trinôme, calcule son attendu exact et produit une projection publique. Tuples/computed/contraintes intervariables, correction et interface utilisateur restent à développer.
 
 Package ESM privé `novlearn-exercise-engine`, déclarations TypeScript et export racine uniquement. CortexJS 0.151.0 est la seule dépendance mathématique ; MathLive appartient aux interfaces des applications.
 
@@ -27,6 +27,7 @@ npm pack --dry-run
 - [Spécification de génération actuelle et cible](docs/adr/006-deterministic-generation.md)
 - [Matrice de couverture de génération](docs/compatibility.md#matrice-de-couverture-fonctionnelle--génération)
 - [ADR](docs/adr/001-core-boundary.md)
+- [API, substitution et limites d'instanciation](docs/adr/007-native-instantiation.md)
 
 Les huit lignes historiques reçues dans `docs/exercises_rows.json` sont conservées avec leur empreinte et inventoriées dans [compatibility.md](docs/compatibility.md). Une question de minimum de trinôme (ligne 103) est transcrite manuellement pour le premier contrat de valeur rationnelle. Aucun adaptateur de migration des huit exercices n'est implémenté. Les tests du POC constituent des observations externes ; ils ne valident pas ce nouveau moteur.
 
@@ -49,7 +50,7 @@ if (result.ok) {
 }
 ```
 
-`validateSubmission` conserve le LaTeX brut (y compris incomplet) et refuse les champs client de seed, politique ou verdict. Un succès structurel n'est pas une autorisation de correction : le serveur doit retrouver l'instance officielle et appliquer les contrôles mathématiques. Types `ExerciseDefinitionV1`, `SubmissionV1`, `PrivateInstanceV1` et `PublicInstanceV1` exportés ; les deux types d'instance restent préparatoires, sans constructeur, projection ou validateur runtime.
+`validateSubmission` conserve le LaTeX brut (y compris incomplet) et refuse les champs client de seed, politique ou verdict. Un succès structurel n'est pas une autorisation de correction : le serveur doit retrouver l'instance officielle et appliquer les contrôles mathématiques. Types `ExerciseDefinitionV1`, `SubmissionV1`, `PrivateInstanceV1` et `PublicInstanceV1` exportés ; les instances natives sont construites par l'API du Lot 5 ci-dessous, sans validateur public de snapshots arbitraires.
 
 ```ts
 import { parseMathInput } from 'novlearn-exercise-engine';
@@ -97,6 +98,39 @@ La liste `parameters` d'une définition native validée peut être fournie direc
 
 Types supportés : `integer`, `decimal` et `choice`. Le contrat `GenerationParameterV1` ajoute les deux derniers pour les tirages autonomes ; `ExerciseDefinitionV1` reste la famille à paramètres entiers. Exemple décimal : `{name:'d', kind:'decimal', min:-0.3, max:0.3, precision:1, exclusions:[0]}` renvoie `{kind:'decimal', coefficient, precision:1}`, représentant exactement `coefficient/10`. Les bornes non alignées sont intersectées avec la grille ; les exclusions doivent être alignées. Pas de snap ni de tolérance pour les artefacts flottants. Exemple choix : `{name:'f', kind:'choice', values:[-2, 0.125, 7]}` renvoie un nombre de cette liste ; doublons refusés, sans poids implicites.
 
-Au plus 16 paramètres et 128 exclusions/choix. Entiers dans ±1 000 000, précision décimale 0…6 et coefficients de grille dans ±1 000 000 000. Domaines vides, définitions invalides, types/version inconnus et limites dépassées produisent des diagnostics explicites, sans valeur partielle ni fallback. Contraintes entre paramètres, computed, tuples et fractions calculées sont absents. La fixture du trinôme garantit a>0 ; le générateur ne calcule pas encore l'abscisse −b/(2a).
+Au plus 16 paramètres et 128 exclusions/choix. Entiers dans ±1 000 000, précision décimale 0…6 et coefficients de grille dans ±1 000 000 000. Domaines vides, définitions invalides, types/version inconnus et limites dépassées produisent des diagnostics explicites, sans valeur partielle ni fallback. Contraintes entre paramètres, computed et tuples sont absents. La fixture du trinôme garantit a>0 ; `generateVariables` reste limité aux tirages, tandis que `instantiateExercise` calcule désormais l'abscisse −b/(2a).
 
-La cible décidée retient quatre mécanismes composables : **aléatoire numérique, choix, tuple générique et calculé**. Aucun type indépendant `function`, `perfect_square` ou doublet/triplet ; les familles mathématiques se construisent par formules et contraintes. Les JSON cibles proposés dans [ADR 006](docs/adr/006-deterministic-generation.md) sont explicitement distincts des contrats disponibles. La [roadmap](docs/roadmap.md) propose un complément 4 bis pour tuples et comparaisons simples avant les calculs/snapshots du Lot 5. Cette mise à jour est documentaire ; aucun nouveau lot de code commencé.
+La cible décidée retient quatre mécanismes composables : **aléatoire numérique, choix, tuple générique et calculé**. Aucun type indépendant `function`, `perfect_square` ou doublet/triplet ; les familles mathématiques se construisent par formules et contraintes. Les JSON cibles proposés dans [ADR 006](docs/adr/006-deterministic-generation.md) sont explicitement distincts des contrats disponibles. La [roadmap](docs/roadmap.md) propose un complément 4 bis pour tuples et comparaisons simples avant le Lot 5 étendu. La tranche native ci-dessous ne les implémente pas.
+
+## Instanciation native — Lot 5
+
+```ts
+import {
+  instantiateExercise,
+  projectPublicInstance,
+} from 'novlearn-exercise-engine';
+
+// definition : contrat natif entier v1, fourni par le serveur.
+const result = instantiateExercise(definition, {
+  seed: 42,
+  instanceId: 'opaque-id-supplied-by-server',
+});
+if (result.ok) {
+  const official = result.value; // Snapshot privé complet et détaché.
+  const display = projectPublicInstance(official); // DTO public sélectionné.
+  // Fixture native 103 : a=1,b=5,c=0 ; énoncé x^2+5x.
+  // official.expectedMath.value :
+  // {kind:'rational', numerator:-5, denominator:2}
+  // official.expectedLatex : '-\\frac{5}{2}'
+} else {
+  // diagnostics : étape, chemin JSON Pointer, code et message.
+}
+```
+
+La définition reste inchangée. Sources, syntaxe raw, substitution, valeur exacte et affichage sont séparés. Seed/moteur/génération/instanciation et snapshot restent privés ; la projection sélectionne uniquement ID, titre, énoncé et question. L'appelant doit utiliser un ID opaque indépendant de la seed et retrouver son état officiel côté serveur. Même définition/révision, seed, ID et versions → même JSON ; aucun état global, horloge ou réseau.
+
+Dans `title`, `statement.text`, `question.text`, `@a` désigne un paramètre et `@@` échappe `@` ; les noms ordinaires restent du texte. Les formules utilisent les symboles natifs du champ LaTeX, sans `@`. CortexJS fixe les produits implicites symboliques puis substitue les paramètres en raw. Les juxtapositions purement numériques ambiguës sont refusées : utiliser `\cdot`. Les restrictions sont contrôlées avant réduction : `x/x`, division par zéro, variable libre dans l'attendu, racines et familles non couvertes échouent explicitement, sans instance partielle.
+
+Profil borné : rationnels fermés exacts, expression polynomiale d'énoncé de degré structurel ≤16, dénominateurs fermés non nuls, exposants entiers 0…16 (base symbolique à la puissance zéro refusée). Décimaux jusqu'à six places sans groupement de chiffres ; numérateurs/dénominateurs fermés ≤1 000 000 000, AST ≤128 nœuds/profondeur 16. Les contrôles sont synchrones et ne garantissent pas une deadline. Détails, contrat privé concrétisé et limites dans [ADR 007](docs/adr/007-native-instantiation.md).
+
+Éléments supportés : texte, expression d'énoncé, question rationnelle unique. QCM, graphes/tableaux et autres familles restent différés ; `extensions` est conservé privé sans interprétation. Aucun adaptateur du corpus, correcteur élève, règle de forme, renderer ou Lot 6 implémenté.
