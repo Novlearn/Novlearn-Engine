@@ -1,5 +1,15 @@
 # ADR 006 — Génération de paramètres v1
 
+## Complément Lot 5 — variables-v3 (11 octobre 2026)
+
+Décision D33 avant implémentation : génération schemaVersion 3, computed `{kind:'computed',name:'d',latex:'b^2-4ac'}`. Résultats toujours rationnels exacts bornés (entier compris), domaines facultatifs `{domain:'integer'|'rational',min?,max?,exclusions?}`. Bornes/exclusions numériques exactes selon le profil v2, pas de clamp. Dépendances extraites de la syntaxe CortexJS ; tri topologique stable avant tirage, cycles/inconnues/collisions diagnostiqués avec les noms et chemins.
+
+Comparaisons : mêmes six opérateurs, opérandes `{variable}`, `{constant}` ou `{latex}`. Exemple Pythagore : left `{latex:'a^2+b^2'}`, operator `==`, right `{latex:'c^2'}`. Pas de syntaxe relationnelle dans le parseur scalaire, booléens composés ni solveur. Chaque expression est un rationnel fermé du profil de substitution existant : arithmétique, fractions, puissances entières 0…16 ; source/admissibilité/domaines avant réduction. Racines/irrationnels/complexes/fonctions non couverts refusés.
+
+Une seule boucle de candidats partagée avec v2 : même PRNG, domaines, exclusions, tuples, ordre et budgets. Calculs en ordre topologique après tirage complet ; restrictions puis toutes les comparaisons. Condition fausse/restriction fausse rejette le candidat ; indétermination/erreur arrête, même après une condition fausse. Aucun résultat partiel. Erreur de domaine dans une formule (dont division par zéro) est terminale et explicite ; l'auteur doit exclure les tirages singuliers. Recherche épuisée ne prouve pas un domaine vide. Les preuves statiques v2 restent disponibles pour les opérandes sans calcul ; aucune propagation d'intervalles symbolique ajoutée.
+
+Valeurs plates uniques, `groups` inchangé ; `computed:[{name,dependencies}]` en ordre de résolution conserve provenance, définition/source/restrictions dans la définition officielle. Aucun boxed en JSON, pas de copies de traces calculées nécessaires au rejeu. 16 valeurs au total, 32 contraintes, 128 tentatives, 65536 mots, profil 128 nœuds/profondeur 16 et ratios/intermédiaires ≤10^9. Calcul synchrone sans deadline préemptive. ExerciseDefinitionV4 et snapshot v4 distincts, versions antérieures conservées ; six fonctions publiques inchangées.
+
 ## Décisions Lot 4 bis — variables-v2 (11 octobre 2026)
 
 Contrat retenu avant implémentation : `GenerationDefinitionV2` porte `schemaVersion:2`, `definitions`, `constraints`, `maxAttempts` et `maxDraws`. L'appel existant exige explicitement `{generationVersion:'variables-v2', seed}` ; l'absence de version conserve `parameters-v1` et son tableau de paramètres inchangé.

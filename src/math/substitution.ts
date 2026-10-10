@@ -3,7 +3,7 @@ import type {
   InstantiatedMathV1,
   RationalValueV1,
 } from '../contracts/types.js';
-import type { GeneratedValueV1 } from '../generation/variables.js';
+import type { GeneratedValueV3 } from '../generation/variables.js';
 import { parseMathInput } from './input.js';
 import type {
   MathInputContext,
@@ -89,13 +89,123 @@ function encode(
   return node;
 }
 
-/** Private math boundary: the native definition currently supplies integer values only.
- * Decimal/choice encodings are exercised internally, not new definition contracts.
- */
+/** Shared lexical numeric admission. Guards do not transform mathematical source. */
+function admitSource(source: string, path: string): void {
+  if (/\d(?:\s|\\[,;:! ]|\\(?:quad|qquad)\s*)+\d/.test(source))
+    fail(
+      'unsupported',
+      path,
+      'Grouped numeric digits require an ungrouped literal in this profile.',
+    );
+  for (const match of source.matchAll(
+    /(\d+(?:\.(\d+)|\{,\}(\d+))?|\.(\d+))(?:[eE]([+-]?\d+))?/g,
+  )) {
+    const fraction = match[2] ?? match[3] ?? match[4] ?? '';
+    if (fraction.length > 6)
+      fail('limit', path, 'Source decimal precision exceeds six places.');
+    const whole = match[1]!.split('.')[0]!.split('{')[0]! || '0';
+    exactLiteral(
+      `${whole}${fraction ? `.${fraction}` : ''}${match[5] === undefined ? '' : `e${match[5]}`}`,
+      path,
+    );
+  }
+}
+
+/** One arithmetic profile for preparation and admission after substitution. */
+function admitOperator(head: string, arity: number, path: string): void {
+  if (
+    ![
+      'Rational',
+      'Add',
+      'Subtract',
+      'Negate',
+      'Multiply',
+      'InvisibleOperator',
+      'Divide',
+      'Power',
+      'Square',
+      'Delimiter',
+    ].includes(head)
+  )
+    fail(
+      'unsupported',
+      path,
+      'Operator outside the rational/polynomial instantiation profile.',
+    );
+  if (
+    (['Negate', 'Square', 'Delimiter'].includes(head) && arity !== 1) ||
+    (['Divide', 'Rational', 'Power', 'Subtract'].includes(head) &&
+      arity !== 2) ||
+    (['Add', 'Multiply', 'InvisibleOperator'].includes(head) && arity < 2)
+  )
+    fail('unsupported', path, 'Operator arity outside the supported profile.');
+}
+
+/** Parse references and admit the closed arithmetic profile before any RNG or evaluation. */
+export function prepareScalarExpression(
+  source: string,
+  names: string[],
+  path: string,
+):
+  | { ok: true; dependencies: string[] }
+  | { ok: false; diagnostics: InstantiationMathDiagnostic[] } {
+  const parsed = parseMathInput(source, { parameters: names });
+  if (!parsed.ok)
+    return {
+      ok: false,
+      diagnostics: parsed.diagnostics.map((d) => ({ ...d, path })),
+    };
+  try {
+    admitSource(source, path);
+    const syntax = encode(parsed.syntax, path);
+    const inspect = (node: MathSyntax, at: string): void => {
+      if (typeof node === 'number') return;
+      if (typeof node === 'string' && names.includes(node)) return;
+      if (!Array.isArray(node))
+        fail(
+          'unsupported',
+          at,
+          'Only declared parameters and rational arithmetic are supported.',
+        );
+      const head = String(node[0]);
+      admitOperator(head, node.length - 1, at);
+      (node as readonly MathSyntax[])
+        .slice(1)
+        .forEach((n, i) => inspect(n, `${at}/${i + 1}`));
+      if (
+        head === 'Power' &&
+        typeof node[2] === 'number' &&
+        (!Number.isInteger(node[2]) || node[2] < 0 || node[2] > 16)
+      )
+        fail(
+          'unsupported',
+          at,
+          'Powers require an integer exponent from 0 to 16.',
+        );
+    };
+    inspect(syntax, path);
+    return { ok: true, dependencies: parsed.symbols.parameters };
+  } catch (error) {
+    return {
+      ok: false,
+      diagnostics: [
+        error instanceof MathFailure
+          ? error.diagnostic
+          : {
+              code: 'substitution-failed',
+              path,
+              message: 'Unable to prepare the rational expression.',
+            },
+      ],
+    };
+  }
+}
+
+/** Private math boundary shared by variable resolution and exercise elements. */
 export function instantiateMath(
   source: string,
   context: MathInputContext,
-  values: Readonly<Record<string, GeneratedValueV1>>,
+  values: Readonly<Record<string, GeneratedValueV3>>,
   path: string,
   scalar: boolean,
 ):
@@ -116,24 +226,7 @@ export function instantiateMath(
     // Lexical numeric admission before any reduction. The parser may round a long
     // decimal into a machine literal; such sources must never acquire an exact claim.
     // This guard neither rewrites the source nor interprets algebra.
-    if (/\d(?:\s|\\[,;:! ]|\\(?:quad|qquad)\s*)+\d/.test(source))
-      fail(
-        'unsupported',
-        path,
-        'Grouped numeric digits require an ungrouped literal in this profile.',
-      );
-    for (const match of source.matchAll(
-      /(\d+(?:\.(\d+)|\{,\}(\d+))?|\.(\d+))(?:[eE]([+-]?\d+))?/g,
-    )) {
-      const fraction = match[2] ?? match[3] ?? match[4] ?? '';
-      if (fraction.length > 6)
-        fail('limit', path, 'Source decimal precision exceeds six places.');
-      const whole = match[1]!.split('.')[0]!.split('{')[0]! || '0';
-      exactLiteral(
-        `${whole}${fraction ? `.${fraction}` : ''}${match[5] === undefined ? '' : `e${match[5]}`}`,
-        path,
-      );
-    }
+    admitSource(source, path);
     const encoded = encode(parsed.syntax, path);
     const ce = new ComputeEngine();
     ce.iterationLimit = 1024;
@@ -144,9 +237,11 @@ export function instantiateMath(
       if (!value)
         fail('missing-variable', path, `Missing generated parameter ${name}.`);
       replacements[name] =
-        value.kind === 'decimal'
-          ? ['Rational', value.coefficient, 10 ** value.precision]
-          : exactLiteral(String(value.value), path);
+        value.kind === 'rational'
+          ? ['Rational', value.numerator, value.denominator]
+          : value.kind === 'decimal'
+            ? ['Rational', value.coefficient, 10 ** value.precision]
+            : exactLiteral(String(value.value), path);
     }
     // Only CortexJS performs mathematical substitution. No assignments or global engine.
     // Resolve symbolic juxtaposition BEFORE inserting numbers: CortexJS otherwise
@@ -220,39 +315,7 @@ export function instantiateMath(
         );
       const head = node[0];
       const operands = node.slice(1);
-      if (
-        ![
-          'Rational',
-          'Add',
-          'Subtract',
-          'Negate',
-          'Multiply',
-          'InvisibleOperator',
-          'Divide',
-          'Power',
-          'Square',
-          'Delimiter',
-        ].includes(String(head))
-      )
-        fail(
-          'unsupported',
-          nodePath,
-          'Operator outside the rational/polynomial instantiation profile.',
-        );
-      const arity = operands.length;
-      if (
-        (['Negate', 'Square', 'Delimiter'].includes(String(head)) &&
-          arity !== 1) ||
-        (['Divide', 'Rational', 'Power', 'Subtract'].includes(String(head)) &&
-          arity !== 2) ||
-        (['Add', 'Multiply', 'InvisibleOperator'].includes(String(head)) &&
-          arity < 2)
-      )
-        fail(
-          'unsupported',
-          nodePath,
-          'Operator arity outside the supported profile.',
-        );
+      admitOperator(String(head), operands.length, nodePath);
       const parts = operands.map((n, i) => inspect(n, `${nodePath}/${i + 1}`));
       let degree = Math.max(0, ...parts.map((p) => p.degree));
       if (head === 'Divide' || head === 'Rational') {

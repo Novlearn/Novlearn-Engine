@@ -1,5 +1,7 @@
 # Architecture et contrats
 
+Actualisation complément Lot 5, 11 octobre 2026 : `contracts/generation-v3.ts` valide le nouveau contrat structurel ; `generation/variables-v3.ts` extrait les dépendances via `math/substitution.ts`, trie les calculs et étend la boucle partagée de `variables-v2.ts`. Le profil mathématique existant évalue aussi les opérandes LaTeX des comparaisons. Aucun calculateur dans les éléments. Définition/instance v4, génération variables-v3, valeurs exactes plates et liaisons computed/groupes privées ; six exports runtime conservés. Les descriptions v1/v2/v3 suivantes gardent leur portée historique ; les exemples Draft restent distincts du contrat livré. D33 et ADR 006/007 fixent le nouveau profil. Pas de grading, renderer ou isolation préemptive ajouté.
+
 Référence du 10 octobre, actualisée au Lot 4 bis le 11 octobre 2026. [Vision](exercise-engine-vision.md), [spécification](functional-specification.md), [parcours](exercise-lifecycle.md), [couverture](feature-coverage.md) et [audit](architecture-review.md). Composition v2 et génération tuples/comparaisons intégrée à v3 livrées, v1/v2 conservés. Computed et exemples Draft documentaires. [Génération](adr/006-deterministic-generation.md), [instanciation](adr/007-native-instantiation.md).
 
 ## Frontières

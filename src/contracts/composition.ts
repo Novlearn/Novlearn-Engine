@@ -2,12 +2,13 @@ import type { JsonValue } from './types.js';
 import type { Validation } from './validation.js';
 import { validateParameters } from './parameters.js';
 import { generationNames, validateGenerationV2 } from './generation-v2.js';
+import { resolvedNames, validateGenerationV3 } from './generation-v3.js';
 
 /** Structural composition checks on the already copied inert JSON. No math or RNG. */
 export function inspectComposition(
   v: Validation,
   data: JsonValue,
-  version: 2 | 3 = 2,
+  version: 2 | 3 | 4 = 2,
 ): void {
   const d = v.object(data, '', [
     'schemaVersion',
@@ -15,7 +16,7 @@ export function inspectComposition(
     'id',
     'revision',
     'title',
-    version === 3 ? 'generation' : 'parameters',
+    version >= 3 ? 'generation' : 'parameters',
     'variables',
     'elements',
     'extensions',
@@ -26,7 +27,13 @@ export function inspectComposition(
   v.text(d.revision, '/revision', 128);
   v.text(d.title, '/title');
   const names = new Set<string>();
-  if (version === 3) {
+  if (version === 4) {
+    const generation = validateGenerationV3(d.generation);
+    if (!generation.ok)
+      for (const issue of generation.diagnostics)
+        v.issue(`/generation${issue.path}`, issue.code, issue.message);
+    else for (const name of resolvedNames(generation.value)) names.add(name);
+  } else if (version === 3) {
     const generation = validateGenerationV2(d.generation);
     if (!generation.ok) {
       for (const issue of generation.diagnostics)

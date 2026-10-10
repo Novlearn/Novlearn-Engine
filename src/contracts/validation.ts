@@ -3,6 +3,7 @@ import type {
   ExerciseDefinitionV1,
   ExerciseDefinitionV2,
   ExerciseDefinitionV3,
+  ExerciseDefinitionV4,
   JsonObject,
   JsonValue,
   SubmissionV1,
@@ -298,16 +299,29 @@ export function validateDefinition(
   input: ExerciseDefinitionV3,
 ): ValidationResult<ExerciseDefinitionV3>;
 export function validateDefinition(
+  input: ExerciseDefinitionV4,
+): ValidationResult<ExerciseDefinitionV4>;
+export function validateDefinition(
   input: unknown,
 ): ValidationResult<
-  ExerciseDefinitionV1 | ExerciseDefinitionV2 | ExerciseDefinitionV3
+  | ExerciseDefinitionV1
+  | ExerciseDefinitionV2
+  | ExerciseDefinitionV3
+  | ExerciseDefinitionV4
 >;
 export function validateDefinition(
   input: unknown,
 ): ValidationResult<
-  ExerciseDefinitionV1 | ExerciseDefinitionV2 | ExerciseDefinitionV3
+  | ExerciseDefinitionV1
+  | ExerciseDefinitionV2
+  | ExerciseDefinitionV3
+  | ExerciseDefinitionV4
 > {
   return validate(input, (v, data) => {
+    if (record(data) && data.schemaVersion === 4 && data.kind === 'composed') {
+      inspectComposition(v, data, 4);
+      return;
+    }
     if (record(data) && data.schemaVersion === 2 && data.kind === 'composed') {
       inspectComposition(v, data);
       return;

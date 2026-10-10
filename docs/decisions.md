@@ -1,5 +1,11 @@
 # Décisions
 
+## D33 — Complément Lot 5 : résolution calculée versionnée (retenue)
+
+Demande du 11 octobre 2026. `GenerationDefinitionV3` / `variables-v3` ajoute computed (`name`, `latex`, restrictions facultatives) et des opérandes `{latex}` aux six comparaisons. `ExerciseDefinitionV4` / `composed-instance-v4` consomme ce contexte commun. Les contrats historiques restent inchangés. Calculs rationnels fermés du profil existant, source conservée, résultat `{kind:'rational',numerator,denominator}` même pour une fraction décimale ; aucun quotient flottant. Provenance : définition officielle, liaisons de tuples et liste ordonnée `{name,dependencies}` des calculs, sans deuxième copie des valeurs.
+
+Références extraites par CortexJS, validation mathématique et tri topologique stable avant RNG ; tirages dans l'ordre des seules déclarations aléatoires, calculs sans mots RNG puis contraintes sur le candidat complet. Mêmes budgets v2 et limites mathématiques. Restriction de résultat fausse ou comparaison fausse : retrait du candidat complet. Expression invalide, hors profil, non définie, indéterminée ou erreur technique : arrêt explicite, sans fallback. Aucun solveur ou réparation. Noms d'une lettre conservés : parser/contexte v1 les imposent ; `delta` est un produit implicite et `r1` peut être un indice/produit, pas un identifiant contractuel. Une convention explicite multi-caractère reste à arbitrer séparément, avant modification du parseur/contrat. Aucun besoin bloquant pour le profil demandé (r/s pour les racines).
+
 Statut « retenue » = cohérente avec le cadrage et adoptée pour ce socle ; pas une validation métier externe implicite.
 
 | ID  | Statut                 | Décision et motif                                                                                                                                                                                                            |

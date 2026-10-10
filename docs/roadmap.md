@@ -1,5 +1,7 @@
 # Roadmap exécutable
 
+État au 11 octobre 2026 après complément Lot 5 : computed rationnels exacts, dépendances/cycles et comparaisons avec expressions livrés dans la résolution commune variables-v3 et les instances v4 (D33). Les objectifs historiques ci-dessous sont conservés ; 4 bis et ce complément sont terminés dans leurs profils bornés. Les compléments d'éléments avancés et Lots 6–11 restent non engagés. Noms multi-caractères, autres nombres/profils et isolation préemptive restent différés. Aucune migration, UI ou production commencée.
+
 Un lot = une modification revue et un bilan de preuves. Aucun enchaînement automatique. Les noms de modules sont proposés ; ils ne figent pas les schémas.
 
 Révision documentaire du 10 octobre 2026 : quatre mécanismes cibles (aléatoire, choix, tuple, calculé), détaillés dans [ADR 006](adr/006-deterministic-generation.md). La [matrice de couverture](compatibility.md#matrice-de-couverture-fonctionnelle--génération) sépare livré, testé et manquant. Lots 1 à 4 conservés comme terminés dans leur périmètre livré ; complément 4 bis proposé, non implémenté, avant le Lot 5 étendu.
@@ -87,7 +89,7 @@ Ne rouvre pas la première famille v1 livrée ; prépare un schéma étendu dist
 
 ## Lot 5 — Substitution et instance affichable
 
-Actualisation 4 bis : groupes/comparaisons et snapshots v3 livrés. Les paragraphes datés du 10 octobre ci-dessous conservent le bilan historique ; computed/graphe/conditions mathématiques restent la prochaine tranche, sans commencement automatique.
+**Complément computed terminé le 11 octobre 2026** : GenerationDefinitionV3/variables-v3, calculs rationnels exacts du profil existant, tri topologique stable avant RNG, références/cycles/collisions diagnostiqués, contraintes avec opérandes LaTeX et restrictions de résultat, essais globaux atomiques/bornés et intégration ExerciseDefinitionV4/composed-instance-v4. Tests discriminant, trinôme à racines entières, tuple pythagoricien, multiquestions/projection/rejeu et erreurs/indéterminations dans generation-v3 et generation-v3-limit. D33/ADR 006/007 décrivent représentation/profil/limites. Les bilans datés du 10 octobre ci-dessous restent historiques. Le Lot 5 complet n'inclut pas encore les éléments avancés, noms étendus ou profils symboliques ; aucun lot suivant engagé.
 
 **Lot 5 bis livré le 10 octobre 2026** : composition scalaire v2, liste plate/sections, questions multiples avec attendus par ID, QCM simple/multiple, decimal/choice intégrés, projection par branche et tests ; v1/RNG conservés. [D30](decisions.md#d30--lot-5-bis--composition-scalaire-v2-retenue) et [ADR 007](adr/007-native-instantiation.md#lot-5-bis--composition-v2). Les tâches multiéléments/questions/QCM ci-dessous sont réalisées dans ce profil borné ; tuples/computed/graphe/conditions mathématiques restent absents et le snapshot avec groupes reste ouvert. Verdict **validé avec réserves**, cible complète non clôturée ; aucun 4 bis ni Lot 6 engagé.
 
@@ -196,4 +198,4 @@ Séquentiel : décisions de contrats avant génération ; admissibilité raw ava
 
 Démos : Lot 5 affichage/rejeu sans verdict ; Lot 8 Python ↔ Node avec interruption réelle ; Lot 10 parcours étudiant complet.
 
-**Prochaine étape recommandée pour la cible complète : revoir les contrats de valeurs/groupes, puis développer séparément le complément 4 bis, sur nouvelle instruction.** Composition scalaire, liste d'éléments/questions, sections/QCM et snapshot v2 sont désormais livrés au Lot 5 bis ; v1 et les tirages du Lot 4 restent disponibles. Stabiliser tuple, comparaisons et versionnement avant le complément du Lot 5 pour computed/domaines, contraintes mathématiques et snapshot avec groupes. Un premier Lot 6 rationnel peut se concevoir sur le profil scalaire livré, avec instruction distincte, familles/bornes de comparaison et contexte officiel serveur ; aucune correction commencée. Migration et isolation officielle aux lots suivants. Aucun enchaînement automatique.
+**Suite à décider sur instruction distincte** : compléments de données d'éléments du Lot 5 selon le corpus, ou Lot 6 rationnel/discret borné avec méthodes et familles explicites. Tuples/comparaisons et computed/dépendances/contraintes rationnelles sont livrés ; les anciennes versions restent disponibles. Isolation officielle, migration et adoption aux lots prévus ; interfaces React différées selon D31. Aucun enchaînement automatique.

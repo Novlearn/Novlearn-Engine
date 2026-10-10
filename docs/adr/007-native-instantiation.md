@@ -1,5 +1,13 @@
 # ADR 007 — Instanciation rationnelle native
 
+## Complément Lot 5 — instance v4
+
+Le 11 octobre 2026, `ExerciseDefinitionV4` remplace seulement le schéma et la génération de v3 : generation schemaVersion 3 / variables-v3. La même orchestration résout une seule fois toutes les valeurs, puis les réutilise dans titres/textes/expressions/questions/QCM. Substitution étendue aux ratios calculés, sans nouveau profil d'élément. Prose : ratio `3/2`, entier calculé `3` ; LaTeX substitué par CortexJS. Variables libres disjointes conservées, attendus privés attachés aux IDs. Une question échouée ne retourne aucune instance partielle.
+
+Snapshot `PrivateInstanceV4` / `composed-instance-v4` : définition détachée (sources/restrictions), seed/versions/tirages/tentatives, paramètres typés exacts, groupes et liaisons computed ordonnées. Le ratio apparaît uniquement dans la table de valeurs ; les liaisons ne le dupliquent pas. Données JSON-sérialisables, rejeu avec mêmes entrées/artefacts. Projection `PublicInstanceV4` : même sélection de branches/objets imbriqués qu'en v2/v3, aucun attendu/politique/dépendance/calcul/source privé/seed. Un auteur peut choisir d'afficher une valeur dans un texte public ; la projection ne cache pas ce contenu volontairement publié.
+
+API inchangée : nouvelles surcharges/types, aucun second instanciateur/résolveur public. v1/v2/v3 et snapshots historiques conservés. Diagnostics génération préfixés `/generation`, erreurs mathématiques/indéterminations terminales distinctes des essais épuisés. Tests generation-v3 : discriminant −24 et sommet 1 dans deux questions, partage/rejeu/IDs/permutation/projection, fraction en texte/QCM et échec atomique. Les descriptions antérieures restent historiques. Correcteur, éléments avancés, UI et transport différés.
+
 Statut : retenu pour la tranche native du Lot 5, 10 octobre 2026. La demande autorise l'instanciation du premier trinôme et interdit de reconstruire les capacités absentes du Lot 4. Le complément 4 bis et le Lot 5 étendu restent différés. Aucun blocage du scénario scalaire 103 : ses paramètres entiers et ses domaines locaux sont déjà disponibles.
 
 Les sections natives ci-dessous décrivent le contrat v1 conservé. La mission **Lot 5 bis** ajoute le sous-ensemble composé scalaire v2 en fin de document ; elle ne clôture pas tuples/computed/contraintes de la cible complète.

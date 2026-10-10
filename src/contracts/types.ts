@@ -61,6 +61,39 @@ export interface GenerationDefinitionV2 {
   maxDraws: number;
 }
 
+export interface ComputedParameterV3 {
+  name: string;
+  kind: 'computed';
+  latex: string;
+  restrictions?: {
+    domain: 'integer' | 'rational';
+    min?: number;
+    max?: number;
+    exclusions?: number[];
+  };
+}
+
+export type ComparisonOperandV3 = ComparisonOperandV2 | { latex: string };
+export interface ComparisonConstraintV3 extends Omit<
+  ComparisonConstraintV2,
+  'left' | 'right'
+> {
+  left: ComparisonOperandV3;
+  right: ComparisonOperandV3;
+}
+export interface GenerationDefinitionV3 extends Omit<
+  GenerationDefinitionV2,
+  'schemaVersion' | 'definitions' | 'constraints'
+> {
+  schemaVersion: 3;
+  definitions: (ScalarParameterV2 | TupleParameterV2 | ComputedParameterV3)[];
+  constraints: ComparisonConstraintV3[];
+}
+export interface ComputedBindingV3 {
+  name: string;
+  dependencies: string[];
+}
+
 /** Ordered bindings into the sole values map, with no duplicate numeric state. */
 export interface GeneratedGroupV2 {
   id: string;
@@ -205,6 +238,14 @@ export interface ExerciseDefinitionV3 extends Omit<
   generation: GenerationDefinitionV2;
 }
 
+export interface ExerciseDefinitionV4 extends Omit<
+  ExerciseDefinitionV3,
+  'schemaVersion' | 'generation'
+> {
+  schemaVersion: 4;
+  generation: GenerationDefinitionV3;
+}
+
 export type PublicElementV2 =
   | { id: string; sectionId?: string; type: 'text' | 'section'; text: string }
   | {
@@ -301,6 +342,33 @@ export interface PublicInstanceV3 extends Omit<
   'schemaVersion'
 > {
   schemaVersion: 3;
+}
+
+export interface PrivateInstanceV4 extends Omit<
+  PrivateInstanceV3,
+  'schemaVersion' | 'definition' | 'instantiationVersion' | 'generation'
+> {
+  schemaVersion: 4;
+  definition: ExerciseDefinitionV4;
+  instantiationVersion: 'composed-instance-v4';
+  generation: {
+    version: 'variables-v3';
+    seed: string;
+    draws: number;
+    attempts: number;
+    parameters: Record<
+      string,
+      import('../generation/variables.js').GeneratedValueV3
+    >;
+    groups: GeneratedGroupV2[];
+    computed: ComputedBindingV3[];
+  };
+}
+export interface PublicInstanceV4 extends Omit<
+  PublicInstanceV3,
+  'schemaVersion'
+> {
+  schemaVersion: 4;
 }
 
 export interface ContractDiagnostic {

@@ -1,6 +1,18 @@
 # Matrice de couverture fonctionnelle
 
-État local actualisé le 11 octobre 2026, au-delà de la génération. Sources accessibles seulement, pas catalogue de production exhaustif. [Bilan local](progress.md). Tests voisins/navigateur non exécutés. 4 bis : tuples/comparaisons variables-v2 et intégration v3 ; computed/conditions générales différés.
+État local actualisé le 11 octobre 2026 après complément Lot 5. Sources accessibles seulement, pas catalogue exhaustif. [Bilan local](progress.md). Tests voisins/navigateur non exécutés. Variables-v3 et instances v4 : computed rationnels exacts, dépendances et contraintes arithmétiques bornées ; contraintes symboliques générales différées.
+
+Preuves du complément : [generation-v3](../tests/generation-v3.test.ts), [indétermination/limites](../tests/generation-v3-limit.test.ts), D33/ADR 006/007. Conditions mathématiques, variables calculées, dépendances, cycles et discriminant carré passent au statut **IT dans le profil rationnel fermé**. Substitution/snapshot/multiquestions/projection incluent v4 ; pas de correction. Les lignes de la matrice initiale conservées ci-dessous décrivent le bilan 4 bis ; ce tableau précise les nouveaux états sans annoncer les profils différés.
+
+| Capacité                          | État actuel                                      | Preuves                                                         | Limites restantes                                 |
+| --------------------------------- | ------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------- |
+| Computed entier/décimal/rationnel | IT : ratio exact ≤10^9                           | 3/2, 3/10, grilles/choix, intermédiaires et singularités        | Racines/irrationnels/complexes hors profil        |
+| Dépendances et cycles             | IT : tri stable avant RNG                        | Inconnue, auto-référence, cycles 2/3, ordre inversé, collisions | Noms multi-caractères différés                    |
+| Contraintes après calcul          | IT : six relations, opérandes valeurs ou LaTeX   | Expressions, fractions, retries, budgets, inconnue après faux   | Booléens composés/solveur hors profil             |
+| Restrictions de résultat          | IT : domaine entier/rationnel, bornes/exclusions | Fraction refusée, bounds/exclusions, indétermination            | Aucune réparation/clamp                           |
+| Discriminant et racines entières  | IT : composition                                 | Oracles BigInt sur 32/24 seeds, d=a²(r−s)²                      | Aucun générateur spécialisé ni solveur de racines |
+| Tuple puis computed               | IT : composantes nommées et provenance           | Pythagore sur 24 seeds                                          | Tuples imbriqués/opérations vectorielles différés |
+| Instance/snapshot/projection v4   | IT : contexte commun, attendus privés par ID     | Deux questions, fraction/QCM, JSON/rejeu, échec atomique        | Éléments avancés et correction absents            |
 
 ## Lecture et sources
 
@@ -127,4 +139,4 @@ Les onze dimensions de chaque type sont détaillées dans [la spécification](fu
 
 ## Conclusion de couverture
 
-Lots 1–4 et 4 bis livrés dans leurs profils bornés ; v1/v2 conservés, groupes/comparaisons variables-v2 intégrés à v3. Fondations testées localement. Correction, computed/graphe et contraintes générales, figures avancées, isolation forte et adoption restent absents ; cible complète du Lot 5 non clôturée. Fonctions applicatives sous responsable externe, catalogue inconnu au-delà des sources reçues ; aucune migration.
+Lots 1–4, 4 bis et complément computed du 5 livrés dans leurs profils bornés ; générations/snapshots historiques conservés. Calculs rationnels et dépendances/contraintes intégrés à v4, preuves locales. Correction, contraintes symboliques générales, figures avancées, isolation forte et adoption absentes ; cible complète du Lot 5 non clôturée. Fonctions applicatives sous responsable externe, catalogue inconnu au-delà des sources reçues ; aucune migration.

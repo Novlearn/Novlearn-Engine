@@ -1,8 +1,51 @@
 # NovLearn Exercise Engine
 
-Lot 4 bis (11 octobre 2026) : tuples génériques, comparaisons exactes et tirages atomiques livrés sous `variables-v2`, intégrés au schéma d'exercice v3. Les paragraphes consacrés à `parameters-v1` gardent le périmètre historique. Calculés, correcteur et UI restent différés.
+Complément Lot 5 (11 octobre 2026) : calculs rationnels exacts, dépendances et contraintes arithmétiques bornées sous `variables-v3`, intégrés aux exercices v4. Les sections v1/v2/v3 ci-dessous conservent leurs profils historiques. Correcteur, éléments avancés et UI restent différés.
 
-Moteur partagé TypeScript, initialisé le 10 octobre 2026. Contrats natifs, parsing scalaire LaTeX, génération déterministe et instances v1/v2/v3 avec attendus privés/projection publique. Tuples/comparaisons simples livrés ; calculés, correction et UI différés.
+Moteur partagé TypeScript, initialisé le 10 octobre 2026. Contrats natifs, parsing scalaire LaTeX, génération déterministe et instances v1/v2/v3/v4 avec attendus privés/projection publique. Tuples, comparaisons et calculs rationnels livrés ; correction et UI différées.
+
+## Variables calculées — complément Lot 5
+
+```ts
+import { generateVariables } from 'novlearn-exercise-engine';
+import type { GenerationDefinitionV3 } from 'novlearn-exercise-engine';
+
+const generation: GenerationDefinitionV3 = {
+  schemaVersion: 3,
+  definitions: [
+    { name: 'b', kind: 'computed', latex: '2a+3' },
+    { name: 'a', kind: 'integer', min: 1, max: 10, exclusions: [] },
+  ],
+  constraints: [
+    {
+      kind: 'comparison',
+      left: { variable: 'b' },
+      operator: '<',
+      right: { constant: 15 },
+    },
+    {
+      kind: 'comparison',
+      left: { variable: 'b' },
+      operator: '>',
+      right: { constant: 7 },
+    },
+  ],
+  maxAttempts: 128,
+  maxDraws: 4096,
+};
+const result = generateVariables(generation, {
+  seed: 42,
+  generationVersion: 'variables-v3',
+});
+// a=5, b={kind:'rational',numerator:13,denominator:1}
+// attempts=3, draws=3 ; computed=[{name:'b',dependencies:['a']}].
+```
+
+`computed.latex` réutilise le profil rationnel fermé de substitution CortexJS. Les références aux scalaires/composantes/calculs sont extraites par le parseur ; inconnues et cycles refusés avant RNG. Ordre topologique stable, sans tirage pour les calculs. `a/b` avec a=3,b=2 donne le ratio 3/2 ; 0.1+0.2 donne 3/10. Les restrictions facultatives `{domain:'integer'|'rational',min?,max?,exclusions?}` contrôlent exactement le résultat, sans clamp. Les comparaisons ajoutent des opérandes `{latex:'a^2+b^2'}` / `{latex:'c^2'}`.
+
+Chaque tentative tire tout le contexte, calcule les dépendances puis vérifie restrictions et contraintes. Faux → nouveau candidat ; indéterminé, formule non définie ou erreur → diagnostic terminal, aucune valeur partielle. Exclure les tirages entraînant une division par zéro. Budgets v2 conservés, ratios/intermédiaires ≤10^9, AST ≤128 nœuds/profondeur 16, puissances entières 0…16. En LaTeX, écrire `a^{16}` pour un exposant à plusieurs chiffres. Racines, irrationnels, complexes et solveur hors profil.
+
+`ExerciseDefinitionV4` porte `generation:GenerationDefinitionV3` et les éléments v2. Les mêmes fonctions `instantiateExercise` / `projectPublicInstance` sélectionnent `variables-v3` / `composed-instance-v4`. Contexte résolu une seule fois, partagé entre questions/expressions/textes/QCM. Snapshot privé : seed/versions/attempts/draws, valeurs exactes plates, groups/computed (liaisons sans valeurs dupliquées), définition/source/restrictions et attendus par ID. Projection : contenu affichable sélectionné ; aucun calcul/attendu/politique/seed transmis automatiquement. Noms d'une lettre hors e/i conservés ; r/s remplacent r1/r2 dans les exemples natifs. Détails : [ADR 006](docs/adr/006-deterministic-generation.md), [ADR 007](docs/adr/007-native-instantiation.md).
 
 Package ESM privé `novlearn-exercise-engine`, déclarations TypeScript et export racine uniquement. CortexJS 0.151.0 est la seule dépendance mathématique ; MathLive appartient aux interfaces des applications.
 

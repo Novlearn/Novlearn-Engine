@@ -4,18 +4,22 @@ import { validate } from '../contracts/validation.js';
 import { wordStream } from './random.js';
 import { sampleScalar } from './scalar.js';
 import { generateV2 } from './variables-v2.js';
+import { generateV3 } from './variables-v3.js';
+import type { RationalValueV1, ComputedBindingV3 } from '../contracts/types.js';
 import type { GeneratedGroupV2 } from '../contracts/types.js';
 
 export interface GenerateVariablesOptions {
   /** uint32, or its canonical base-10 spelling; no hashing or implicit coercion. */
   seed: number | string;
-  generationVersion?: 'parameters-v1' | 'variables-v2';
+  generationVersion?: 'parameters-v1' | 'variables-v2' | 'variables-v3';
 }
 
 export type GeneratedValueV1 =
   | { kind: 'integer'; value: number }
   | { kind: 'decimal'; coefficient: number; precision: number }
   | { kind: 'choice'; value: number };
+
+export type GeneratedValueV3 = GeneratedValueV1 | RationalValueV1;
 
 export interface GenerationDiagnostic {
   path: string;
@@ -29,7 +33,13 @@ export interface GenerationDiagnostic {
     | 'limit'
     | 'attempts-exhausted'
     | 'indeterminate-constraint'
-    | 'comparison-failed';
+    | 'comparison-failed'
+    | 'invalid-expression'
+    | 'dependency-cycle'
+    | 'undefined-expression'
+    | 'unsupported-expression'
+    | 'indeterminate-expression'
+    | 'evaluation-failed';
   message: string;
 }
 
@@ -61,8 +71,22 @@ export type GenerateVariablesResult =
   | {
       ok: false;
       diagnostics: GenerationDiagnostic[];
-      replay?: GenerationReplayV2;
+      replay?: GenerationReplayV2 | GenerationReplayV3;
+    }
+  | {
+      ok: true;
+      values: Record<string, GeneratedValueV3>;
+      groups: GeneratedGroupV2[];
+      computed: ComputedBindingV3[];
+      replay: GenerationReplayV3;
     };
+
+export interface GenerationReplayV3 extends Omit<
+  GenerationReplayV2,
+  'generationVersion'
+> {
+  generationVersion: 'variables-v3';
+}
 
 export type GenerateVariablesResultV1 =
   | Extract<
@@ -71,7 +95,17 @@ export type GenerateVariablesResultV1 =
     >
   | Extract<GenerateVariablesResult, { ok: false }>;
 export type GenerateVariablesResultV2 =
-  | Extract<GenerateVariablesResult, { ok: true; groups: GeneratedGroupV2[] }>
+  | Extract<
+      GenerateVariablesResult,
+      { ok: true; replay: { generationVersion: 'variables-v2' } }
+    >
+  | Extract<GenerateVariablesResult, { ok: false }>;
+
+export type GenerateVariablesResultV3 =
+  | Extract<
+      GenerateVariablesResult,
+      { ok: true; computed: ComputedBindingV3[] }
+    >
   | Extract<GenerateVariablesResult, { ok: false }>;
 
 export function definitionDiagnostic(
@@ -105,6 +139,10 @@ export function generateVariables(
   definitions: unknown,
   options: GenerateVariablesOptions & { generationVersion: 'variables-v2' },
 ): GenerateVariablesResultV2;
+export function generateVariables(
+  definitions: unknown,
+  options: GenerateVariablesOptions & { generationVersion: 'variables-v3' },
+): GenerateVariablesResultV3;
 export function generateVariables(
   definitions: unknown,
   options: GenerateVariablesOptions,
@@ -141,12 +179,13 @@ export function generateVariables(
       if (
         o.generationVersion !== undefined &&
         o.generationVersion !== 'parameters-v1' &&
-        o.generationVersion !== 'variables-v2'
+        o.generationVersion !== 'variables-v2' &&
+        o.generationVersion !== 'variables-v3'
       )
         v.issue(
           '/generationVersion',
           'unknown-version',
-          'Supported versions: parameters-v1 and variables-v2.',
+          'Supported versions: parameters-v1, variables-v2 and variables-v3.',
         );
     },
   );
@@ -165,6 +204,8 @@ export function generateVariables(
     };
   if (checkedOptions.value.generationVersion === 'variables-v2')
     return generateV2(definitions, String(checkedOptions.value.seed));
+  if (checkedOptions.value.generationVersion === 'variables-v3')
+    return generateV3(definitions, String(checkedOptions.value.seed));
   const checked = validateParameters(definitions);
   if (!checked.ok)
     return {

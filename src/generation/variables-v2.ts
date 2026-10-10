@@ -4,6 +4,10 @@ import type {
   GenerationParameterV1,
   GeneratedGroupV2,
   ScalarParameterV2,
+  GenerationDefinitionV2,
+  ComparisonOperandV3,
+  ComparisonConstraintV3,
+  ComputedBindingV3,
 } from '../contracts/types.js';
 import {
   admissibleScalar,
@@ -18,6 +22,8 @@ import {
   type GenerateVariablesResult,
   type GenerationDiagnostic,
   type GenerationReplayV2,
+  type GenerationReplayV3,
+  type GeneratedValueV3,
 } from './variables.js';
 import { sampleScalar } from './scalar.js';
 import { sampleIndex, wordStream } from './random.js';
@@ -66,7 +72,7 @@ function scalarBounds(p: GenerationParameterV1): Bounds {
   return { min: value(low), max: value(high) };
 }
 
-function relation(
+export function relation(
   op: ComparisonConstraintV2['operator'],
   order: -1 | 0 | 1,
 ): boolean {
@@ -91,9 +97,50 @@ export function generateV2(
   input: unknown,
   seed: string,
 ): GenerateVariablesResult {
-  const replay: GenerationReplayV2 = {
+  const checked = validateGenerationV2(input);
+  if (!checked.ok)
+    return {
+      ok: false,
+      diagnostics: checked.diagnostics.map(definitionDiagnostic),
+      replay: {
+        engineVersion: '0.0.0',
+        generationVersion: 'variables-v2',
+        seed,
+        draws: 0,
+        attempts: 0,
+      },
+    };
+  return generateCandidates(checked.value, seed);
+}
+
+export class ResolutionFailure extends Error {
+  constructor(readonly diagnostic: GenerationDiagnostic) {
+    super(diagnostic.message);
+  }
+}
+
+export interface CandidateExtension {
+  paths: number[];
+  computed: ComputedBindingV3[];
+  resolve(values: Record<string, GeneratedValueV3>): boolean;
+  expression(
+    source: string,
+    values: Record<string, GeneratedValueV3>,
+    path: string,
+  ): GeneratedValueV3;
+}
+
+/** Shared sampler, candidate loop and budgets; v3 adds resolution before comparisons. */
+export function generateCandidates(
+  d: Omit<GenerationDefinitionV2, 'constraints'> & {
+    constraints: ComparisonConstraintV3[];
+  },
+  seed: string,
+  extension?: CandidateExtension,
+): GenerateVariablesResult {
+  const replay: GenerationReplayV2 | GenerationReplayV3 = {
     engineVersion: '0.0.0',
-    generationVersion: 'variables-v2',
+    generationVersion: extension ? 'variables-v3' : 'variables-v2',
     seed,
     draws: 0,
     attempts: 0,
@@ -107,16 +154,8 @@ export function generateV2(
     diagnostics: [{ path, code, message }],
     replay: { ...replay },
   });
-  const checked = validateGenerationV2(input);
-  if (!checked.ok)
-    return {
-      ok: false,
-      diagnostics: checked.diagnostics.map(definitionDiagnostic),
-      replay,
-    };
-  const d = checked.value;
   const plans: Plan[] = d.definitions.map((p, i) => {
-    const path = `/definitions/${i}`;
+    const path = `/definitions/${extension?.paths[i] ?? i}`;
     return p.kind !== 'tuple'
       ? { kind: 'scalar', path, parameter: admissibleScalar(p) }
       : {
@@ -153,7 +192,7 @@ export function generateV2(
   try {
     // Instantiate only when comparisons exist; ordinary tuple choices do not need math.
     const order = d.constraints.length ? numericOrder() : undefined;
-    const compare = (a: GeneratedValueV1, b: GeneratedValueV1): -1 | 0 | 1 => {
+    const compare = (a: GeneratedValueV3, b: GeneratedValueV3): -1 | 0 | 1 => {
       const result = order?.(a, b);
       if (result === undefined) throw new UnknownComparison();
       return result;
@@ -168,6 +207,13 @@ export function generateV2(
     // Conservative interval proofs and reflexive comparisons only, no relation solver.
     for (const [i, c] of d.constraints.entries()) {
       activePath = `/constraints/${i}`;
+      if (
+        'latex' in c.left ||
+        'latex' in c.right ||
+        ('variable' in c.left && !bounds[c.left.variable]) ||
+        ('variable' in c.right && !bounds[c.right.variable])
+      )
+        continue;
       const a = operandBounds(c.left),
         b = operandBounds(c.right);
       let possible: boolean;
@@ -204,12 +250,15 @@ export function generateV2(
       return stream();
     };
     const operand = (
-      op: ComparisonOperandV2,
-      values: Record<string, GeneratedValueV1>,
-    ): GeneratedValueV1 =>
-      'variable' in op
-        ? values[op.variable]!
-        : { kind: 'choice', value: op.constant };
+      op: ComparisonOperandV3,
+      values: Record<string, GeneratedValueV3>,
+      path: string,
+    ): GeneratedValueV3 =>
+      'latex' in op
+        ? extension!.expression(op.latex, values, path)
+        : 'variable' in op
+          ? values[op.variable]!
+          : { kind: 'choice', value: op.constant };
     for (let attempt = 1; attempt <= d.maxAttempts; attempt += 1) {
       replay.attempts = attempt;
       const entries: [string, GeneratedValueV1][] = [];
@@ -242,20 +291,39 @@ export function generateV2(
           }
         }
       }
-      const values = Object.fromEntries(entries);
-      let accepted = true;
+      const values: Record<string, GeneratedValueV3> =
+        Object.fromEntries(entries);
+      let accepted = extension ? extension.resolve(values) : true;
       // All constraints are checked, including after a false one: unknown never becomes rejection.
       for (const [i, c] of d.constraints.entries()) {
         activePath = `/constraints/${i}`;
         if (
           !relation(
             c.operator,
-            compare(operand(c.left, values), operand(c.right, values)),
+            compare(
+              operand(c.left, values, `${activePath}/left/latex`),
+              operand(c.right, values, `${activePath}/right/latex`),
+            ),
           )
         )
           accepted = false;
       }
-      if (accepted) return { ok: true, values, groups, replay: { ...replay } };
+      if (accepted) {
+        if (extension && replay.generationVersion === 'variables-v3')
+          return {
+            ok: true,
+            values,
+            groups,
+            computed: extension.computed,
+            replay: { ...replay },
+          };
+        return {
+          ok: true,
+          values: values as Record<string, GeneratedValueV1>,
+          groups,
+          replay: { ...replay, generationVersion: 'variables-v2' },
+        };
+      }
     }
     return fail(
       '/constraints',
@@ -263,6 +331,12 @@ export function generateV2(
       'Complete-candidate search exhausted maxAttempts; no impossibility is inferred.',
     );
   } catch (error) {
+    if (error instanceof ResolutionFailure)
+      return {
+        ok: false,
+        diagnostics: [error.diagnostic],
+        replay: { ...replay },
+      };
     return error instanceof WordLimit
       ? fail(
           activePath,

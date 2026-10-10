@@ -1,5 +1,56 @@
 # État et transmission
 
+## Complément Lot 5 — Variables calculées (11 octobre 2026)
+
+**Verdict : validé pour le profil rationnel exact borné demandé.** Aucun lot suivant, UI, migration, production, commit ou push engagé. Les bilans antérieurs ci-dessous conservent leur état historique ; les éléments avancés et le moteur complet ne sont pas annoncés terminés.
+
+1. **État initial.** HEAD `07570f2`, arbre propre ; Lot 4 bis disponible, 466 tests/11 fichiers passants. Audit AGENTS, README/progress/decisions/roadmap, architecture/spécification/couverture/ADR, contrats v1/v2/v3, génération/contraintes, frontière mathématique, instanciation et tests. Aucun changement non validé d'un autre lot intégré.
+
+2. **Représentation.** D33 et ADR 006 consignés avant code : computed `{name,kind:'computed',latex,restrictions?}`, résultat `{kind:'rational',numerator,denominator}`, y compris entier/décimal fini, sans quotient flottant. Définition privée conserve source/restrictions ; valeurs plates uniques et liaisons computed `{name,dependencies}` ordonnées. Groupes de tuples inchangés, sans valeur dupliquée. Raw traité par CortexJS, domaine contrôlé avant réduction, aucun boxed exporté/persisté.
+
+3. **Fichiers.** Ajouts : `src/contracts/generation-v3.ts`, `src/generation/variables-v3.ts`, `tests/generation-v3.test.ts`, `tests/generation-v3-limit.test.ts`. Extensions : contracts types/validation/composition, generation variables/variables-v2 (boucle commune), math substitution/comparison, instantiation et index. Documents : README, decisions, ADR 006/007, architecture, functional-specification, feature-coverage, compatibility, roadmap et ce bilan. Package/lock, RNG, sampler, grille, domaines scalaires, validateur generation-v2, parseur input et tests historiques inchangés.
+
+4. **API/contrats.** Six fonctions runtime conservées. `generateVariables` ajoute GenerationDefinitionV3 (`schemaVersion:3`), version explicite `variables-v3` et résultat/valeurs/rejeu v3. Définition/instances v4 dans validateDefinition/instantiateExercise/projectPublicInstance : `composed-instance-v4`, mêmes éléments/questions/QCM v2. Surcharges typées, garde de schéma depuis unknown. Soumission et contrats historiques inchangés.
+
+5. **Dépendances et noms.** Références extraites par le parseur et préparation du profil rationnel ; inconnue/hors profil/collision/cycles avant RNG. Tri topologique simple, premier calcul prêt dans l'ordre déclaré. Tirages dans l'ordre des seules déclarations aléatoires ; calculs sans RNG. Noms d'une lettre hors e/i conservés : sondes `r1` → r×1, `delta` → lettres dont e inconnu, `xSommet` → plusieurs symboles. Une convention explicite de noms longs demande une évolution du contexte/allowlist/dictionnaire LaTeX et du contrat, différée sous D33. Les racines sont r/s dans les exemples natifs.
+
+6. **Contraintes.** Boucle atomique/budgets/domaines/exclusions/tuples du 4 bis partagés. Candidat complet → calculs ordonnés → restrictions et toutes les comparaisons. Six relations, opérandes variable/constant/latex. Restrictions de résultat : integer/rational, bornes et exclusions exactes. Faux → retirage complet sur flux continu ; aucun clamp/réparation/fallback. Formule invalide/hors profil, cycle, singularité, indétermination, erreur et budget diagnostiqués distinctement ; formule non définie terminale (exclure les tirages singuliers). Indétermination après faux reste terminale. Épuisement ≠ preuve d'impossibilité.
+
+7. **Exemples exécutés depuis l'entrée ESM publique.** Seed 42, a entier 1…10, b=2a+3 et 7<b<15 → a=5,b=13, 3 tentatives/3 mots (7 puis 1 rejetés). a=3,b=2,c=a/b → 3/2 exact, zéro mot. Tuple choice (1,2)/(3,4)/(5,6), c=ab et c=12 → (3,4), c=12, 2 tentatives/2 mots et provenance conservée. Instance v4 a=2,b=−4,c=5,d=b²−4ac → deux réponses privées −24 et sommet 1, IDs distincts, zéro mot ; projection sans attendus/seed et rejeu JSON identique. Fixtures synthétiques, aucune migration.
+
+8. **Vérifications réellement exécutées.**
+
+| Commande / contrôle                                                                        | Résultat                                                                                       |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `npm.cmd ci`                                                                               | PASS : 130 packages, package/lock inchangés                                                    |
+| `npm.cmd run check` initial                                                                | PASS : build/types/lint/format, 466 tests / 11 fichiers                                        |
+| Build/typecheck/lint intermédiaires                                                        | PASS après reconstruction des déclarations publiques                                           |
+| `npm.cmd exec -- vitest run tests/generation-v3.test.ts tests/generation-v3-limit.test.ts` | PASS : 65 tests avant les trois derniers cas                                                   |
+| Prettier ciblé                                                                             | PASS : sources/tests/docs concernés                                                            |
+| `npm.cmd run check` final                                                                  | **PASS : build/types/lint/format, 534 tests / 13 fichiers, 85,58 s**                           |
+| `npm.cmd pack --dry-run`                                                                   | PASS : prepack/build, 70 fichiers, 62,9 kB ; README/package/dist uniquement                    |
+| Sondes Node stdin/import ESM                                                               | PASS : fraction, tuple/retry, deux questions, projection/rejeu, noms ambigus                   |
+| Liens Markdown locaux                                                                      | PASS : 20 fichiers, 141 liens/cibles/ancres avant ce bilan                                     |
+| Diff/fichiers historiques/octet/SHA-256                                                    | PASS : RNG/grille/parse/domaines/sampler/golden/package/lock inchangés, deux corpus identiques |
+
+Les 68 nouveaux tests couvrent calculs simples/multiples/chaînes/ordre inversé, inconnue/auto-référence/cycles 2/3/collisions, tuples, fractions/grilles/choix, singularité après restriction fausse, limites/exposants, six relations, restrictions/retries/budgets/épuisement. Oracles BigInt indépendants : discriminants 32 seeds, racines entières 24 seeds (d=a²(r−s)², zéro et positif), Pythagore après tuple 24 seeds. Inconnue après faux, restriction indéterminée, résultat exact absent, exceptions et propagation à l'instance injectés. Multiquestions : attendus par ID/permutation, fraction texte/QCM, variables libres, secrets injectés exclus, JSON/rejeu/atomicité/versions. Getter hostile non invoqué.
+
+Essais intermédiaires corrigés sans retirer de tests : typecheck avant rebuild `.d.ts` ; test `a^17` signifie a¹×7 en LaTeX (corrigé en `a^{17}`), AST de 70 termes sous limite 128 (remplacé par 129), séquence RNG supposée (remplacée par séquence historique sondée et deux rejets). Deux nouveaux tests multi-seeds dépassaient 5 s : délais de ces seuls tests portés à 30 s, sans prétendre interrompre le calcul synchrone. Premier check complet : 533 succès/1 échec, chemin de diagnostic trop précis ; assertion corrigée à la racine de la formule et check complet vert à 534. Gardes numériques/opérateurs mutualisés ; aucun comportement ancien affaibli.
+
+9. **Limites.** Rationnels fermés : arithmétique/fractions/puissances entières 0…16 ; ratios/intermédiaires ≤10^9, AST ≤128 nœuds/profondeur 16. Pas de racine/irrationnel/complexe/fonction/solveur ou calcul symbolique illimité. Seize valeurs, arité 2…8, 32 contraintes, 128 lignes/choix/exclusions/tentatives, 65536 mots et JSON historique. Calcul synchrone, aucune deadline/mémoire préemptive ni uniformité globale. Pas de propagation d'intervalles computed ou solveur de contradictions générales.
+
+10. **Déterminisme/compatibilité.** Mêmes définition/révision/ordre/budgets, seed normalisée, ID et artefacts/versions → même JSON, valeurs/provenance/tentatives/mots. Mulberry32 local continu historique ; aucun état global mutable, horloge ou Math.random. Les 466 tests historiques, golden et instances passent. 0.0.0 seule ne garantit pas le rejeu entre builds.
+
+11. **Corpus et documentation.** Corpus/copie : SHA-256 `0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae`, identiques octet pour octet ; inventaire/transcription seulement. D33 tranche représentation/contraintes/versionnement/noms ; ADR 006/007, README, architecture/spécification/matrices/roadmap actualisés en distinguant support et historique.
+
+12. **Suite non engagée.** Éléments avancés du Lot 5, noms étendus et autres profils sur instruction distincte, correction/formes 6/7, isolation/transport 8, adaptation réelle 9, adoption/distribution 10/11. Aucun autre dépôt modifié ; aucune CI distante, navigateur/POC, installation externe du tarball ou opération applicative annoncée.
+
+13. **Conclusion du lot.** Complément demandé terminé dans le profil exact borné documenté ; les limitations testées restent des limitations. Publication et correction officielle ne sont pas livrées.
+
+### Versionnement du complément Lot 5 demandé par l'utilisateur
+
+Après ce bilan, l'utilisateur demande explicitement un commit. Le commit `feat(generation)` regroupe computed rationnels exacts, dépendances/contraintes atomiques, contrats variables-v3 et instances v4, 68 nouveaux tests et documentation. Les mentions « aucun commit » ci-dessus décrivent la livraison avant cette instruction. Les 534 tests et le packaging restent les vérifications du code livré ; seule cette note est ajoutée pour le versionnement, avec formatage et diff contrôlés. Aucun push ni lot suivant engagé.
+
 Dernière mission : Lot 5 bis, audit et composition scalaire v2, 10 octobre 2026. Les arbitrages D25/D26 sont réalisés pour liste/sections/multiquestions/QCM avec paramètres integer/decimal/choice communs. [Audit initial/API/limites](adr/007-native-instantiation.md#lot-5-bis--composition-v2), [couverture globale](feature-coverage.md) et bilan en fin de document. V1/RNG conservés ; pas de 4 bis ou Lot 6 engagé.
 
 Date : 10 octobre 2026. Lots 1 à 4 terminés, tranche native v1 et composition scalaire v2 du Lot 5 livrées (bilans ci-dessous). La cible complète avec groupes/computed/contraintes demeure ouverte. Initialement seul `.codex/config.toml` existait. Git initialisé sur main ; socle versionné par un commit initial à la demande utilisateur. Aucun remote, publication ou modification des dépôts voisins. Les sections historiques conservent les preuves des étapes précédentes.

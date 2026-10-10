@@ -1,5 +1,7 @@
 # Spécification fonctionnelle
 
+Actualisation complément Lot 5 (11 octobre 2026) : computed, dépendances et contraintes arithmétiques fermées livrés sous `GenerationDefinitionV3` / `variables-v3`, intégrés à `ExerciseDefinitionV4`. Source/restrictions privées dans la définition officielle, ratio exact dans le contexte commun, dépendances dans le snapshot. Références inconnues/cycles/collisions/hors profil avant tirage ; domaine vérifié avant réduction. Comparaisons structurées avec opérandes `{latex}`, sans relation libre dans le parseur scalaire. Restriction/comparaison fausse : retirage complet borné. Formule non définie ou indéterminée : arrêt explicite. D33/ADR 006/007 et tests generation-v3 précisent preuves et limites. Les états du 4 bis ci-dessous sont historiques. Noms multi-caractères, familles symboliques et éléments avancés différés.
+
 Référence cible du 10 octobre 2026, actualisée au Lot 4 bis le 11 octobre. [Vision](exercise-engine-vision.md), [contrats](architecture.md), [couverture](feature-coverage.md) et [parcours](exercise-lifecycle.md). Exemples draft documentaires ; composition v2 livrée au 5 bis et génération variables-v2 avec tuples/comparaisons simples intégrée à v3 au 4 bis. Descriptions d'inventaire initial « absent natif » historiques ; couverture actualisée. Computed, contraintes générales et figures restent des cibles.
 
 ## 1. Document et questions
