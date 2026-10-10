@@ -1,6 +1,6 @@
 # NovLearn Exercise Engine
 
-Moteur partagé TypeScript, initialisé le 10 octobre 2026. Ce dépôt est distinct du POC. Le Lot 2 fournit un premier contrat natif versionné et sa validation structurelle ; génération, parsing mathématique, correction et interface utilisateur restent à développer.
+Moteur partagé TypeScript, initialisé le 10 octobre 2026. Ce dépôt est distinct du POC. Les Lots 2 et 3 fournissent un contrat natif versionné, sa validation structurelle et une frontière de parsing scalaire LaTeX ; génération, correction et interface utilisateur restent à développer.
 
 Package ESM privé `novlearn-exercise-engine`, déclarations TypeScript et export racine uniquement. CortexJS 0.151.0 est la seule dépendance mathématique ; MathLive appartient aux interfaces des applications.
 
@@ -47,6 +47,24 @@ if (result.ok) {
 }
 ```
 
-`validateSubmission` conserve le LaTeX brut (y compris incomplet) et refuse les champs client de seed, politique ou verdict. Un succès structurel n'est pas une autorisation de correction : le serveur doit retrouver l'instance officielle et appliquer la future frontière mathématique. Types `ExerciseDefinitionV1`, `SubmissionV1`, `PrivateInstanceV1` et `PublicInstanceV1` exportés ; les deux types d'instance restent préparatoires, sans constructeur, projection ou validateur runtime.
+`validateSubmission` conserve le LaTeX brut (y compris incomplet) et refuse les champs client de seed, politique ou verdict. Un succès structurel n'est pas une autorisation de correction : le serveur doit retrouver l'instance officielle et appliquer les contrôles mathématiques. Types `ExerciseDefinitionV1`, `SubmissionV1`, `PrivateInstanceV1` et `PublicInstanceV1` exportés ; les deux types d'instance restent préparatoires, sans constructeur, projection ou validateur runtime.
+
+```ts
+import { parseMathInput } from 'novlearn-exercise-engine';
+
+const parsed = parseMathInput(String.raw`\frac{-b}{2a}`, {
+  parameters: ['a', 'b'],
+  variables: ['x'],
+});
+if (parsed.ok) {
+  const syntax = parsed.syntax; // MathJSON raw, sans objet boxed ni calcul.
+  const symbols = parsed.symbols; // paramètres, variables libres, constantes.
+} else {
+  const diagnostics = parsed.diagnostics; // codes stables, chemin/offset si disponible.
+}
+// parsed.source conserve toujours exactement le LaTeX fourni.
+```
+
+Le profil `scalar-latex-v1` accepte fractions, puissances, racines et arithmétique avec noms du contrat v1. `1.25` et `1{,}25` sont décimaux ; `1,25` est refusé comme ambigu. Les placeholders sont refusés avant parsing. Le MathJSON raw conserve `x/x` comme division et `1+2` comme addition : aucun calcul ni canonicalisation. Un succès ne prouve ni domaine, ni forme pédagogique, ni valeur ; `1/0` reste parsable. Sources limitées à 4096 unités UTF-16 ; parsing synchrone sans garantie de deadline. API, matrice de support et limites dans [ADR 005](docs/adr/005-math-input.md).
 
 La publication reste désactivée (`private: true`). Licence, nom/registre de distribution et premier contrat public seront décidés avant une release pilote.

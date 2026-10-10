@@ -16,3 +16,10 @@ export type {
   ValidationResult,
   VariableV1,
 } from './contracts/types.js';
+export { parseMathInput } from './math/input.js';
+export type {
+  MathInputContext,
+  MathInputDiagnostic,
+  MathInputResult,
+  MathSyntax,
+} from './math/input.js';

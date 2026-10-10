@@ -4,6 +4,7 @@ import * as engine from 'novlearn-exercise-engine';
 describe('built package boundary', () => {
   it('loads through the public ESM export without browser globals', () => {
     expect(Object.keys(engine).sort()).toEqual([
+      'parseMathInput',
       'validateDefinition',
       'validateSubmission',
     ]);

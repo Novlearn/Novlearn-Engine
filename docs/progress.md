@@ -1,6 +1,6 @@
 # État et transmission
 
-Date : 10 octobre 2026. Lot 1 terminé ; Lot 2 exécuté après réception du corpus (bilan ci-dessous). Initialement seul `.codex/config.toml` existait. Git initialisé sur main ; socle versionné par un commit initial à la demande utilisateur. Aucun remote, publication ou modification des dépôts voisins. Les sections historiques conservent les preuves des étapes précédentes.
+Date : 10 octobre 2026. Lots 1, 2 et 3 terminés (bilans ci-dessous). Initialement seul `.codex/config.toml` existait. Git initialisé sur main ; socle versionné par un commit initial à la demande utilisateur. Aucun remote, publication ou modification des dépôts voisins. Les sections historiques conservent les preuves des étapes précédentes.
 
 ## Historique — fondations réalisées
 
@@ -42,7 +42,7 @@ Perte de domaine et placeholder au parsing ; virgule française pouvant devenir 
 
 ## État courant pour le prochain agent Codex
 
-Lire AGENTS, architecture, décisions, compatibility, ADR 004 et roadmap. Ne pas recopier POC ou ouvrir un correcteur général. Corpus reçu, huit lignes conservées/inventoriées ; première question native : minimum du trinôme (103). API actuelle : validateDefinition/validateSubmission, structure uniquement. Prochain lot proposé : 3, frontière mathématique/source/profils/admissibilité. Les DTO privés/publics d'instance sont préparatoires, sans génération ni projection runtime. TS6 est choisi pour la compatibilité lint ; versions POC TS7 distinctes. Ne pas décider service Node avant mesures ; aucun lot suivant sans nouvelle instruction. Les autres dépôts restent lecture seule.
+Lire AGENTS, architecture, décisions, compatibility, ADR 004/005 et roadmap. Ne pas recopier POC ou ouvrir un correcteur général. Corpus reçu, huit lignes conservées/inventoriées ; première question native : minimum du trinôme (103). API actuelle : validateDefinition/validateSubmission structurels et parseMathInput pour le profil scalaire LaTeX v1. Aucun calcul ni garantie de domaine. Prochain lot proposé : 4, paramètres et RNG déterministe, uniquement sur nouvelle instruction. Les DTO privés/publics d'instance sont préparatoires, sans génération ni projection runtime. TS6 est choisi pour la compatibilité lint ; versions POC TS7 distinctes. Ne pas décider service Node avant mesures. Les autres dépôts restent lecture seule.
 
 ## Versionnement du socle
 
@@ -92,3 +92,15 @@ Revue indépendante finale par les trois agents : deux défauts démontrés corr
 Essais corrigés : première sonde `node -e` refusée par un problème de quoting PowerShell, remplacée par stdin ; typecheck initial sur tests Node sans déclarations et dist encore vide, corrigé par tests documentaires MJS/import JSON puis rebuild ; premier check arrêté sur variable inutilisée, corrigée. Une requête `npm.cmd view @types/node version` a été interrompue sans résultat ; aucun package ajouté. La création documentaire a été relancée après un patch combinant suppression/ajout d'un même chemin refusé. Ces essais ne sont pas des validations réussies.
 
 Le Lot 2 est terminé pour les contrats et l'inventaire ; les huit exercices ne sont pas migrés. La validation structurelle n'établit pas la syntaxe, le domaine ou la valeur mathématique de sources LaTeX. Aucune CI distante, suite POC/navigateur, installation de la nouvelle archive dans un consommateur externe ou garantie d'isolation exécutée dans ce lot. Aucun commit/push/merge. Prochain lot recommandé : 3, à engager uniquement sur nouvelle instruction.
+
+## Lot 3 — frontière mathématique terminée (10 octobre 2026)
+
+Implémentation par le principal seul, sans délégation : `src/math/input.ts`, exports racine et test de distribution adaptés, `tests/math-input.test.ts`, README, décisions, roadmap et ADR 005. Aucun nouveau package. Contrats du Lot 2 inchangés : validation structurelle séparée du parsing ; la fixture native fournit le contexte de noms pour un test d'intégration.
+
+API `parseMathInput(source, { parameters, variables })` : source inchangée, profil scalaire v1, succès avec syntaxe MathJSON raw et symboles classés, échec avec diagnostics typés bornés. ComputeEngine neuf à chaque appel ; séparateur natif `{,}`, point accepté, virgule nue refusée. Source contrôlée avant parsing pour placeholders, commandes hors profil, commentaires, décimaux incomplets et budgets. Aucune réduction, évaluation, substitution, génération ou correction. `x/x`, `1+2`, `2/4`, `1/0` et √(−1) restent syntaxiques ; domaine non démontré. Matrice des capacités et limites dans ADR 005.
+
+Sondes locales stdin Node sur CortexJS 0.151.0 et lecture des déclarations installées : option réellement typée `form:raw`, comparée à `form:canonical`. Premières sondes JavaScript utilisant l'ancienne option `canonical:false` remplacées après l'échec du build TS2769. Premier check : 92/93 tests passent ; comparaison de code trop large confondait expected/unexpected-closing-delimiter, corrigée avec égalité exacte et régression. Check intermédiaire après correction : 4 fichiers / 97 tests PASS. Deux régressions ajoutées ensuite pour `0y` et `y-y` : un symbole inconnu ne peut pas disparaître par réduction. Ces essais initiaux ne sont pas annoncés comme validations finales.
+
+Vérifications locales finales : `npm.cmd ci` PASS (130 packages depuis lockfile) ; `npm.cmd run check` PASS (build, typecheck, lint, format, 4 fichiers / 99 tests) ; `npm.cmd pack --dry-run` PASS ; formatage ciblé et `git diff --check` PASS. Sondes stdin Node du package construit : API ESM, source intacte, MathJSON raw et rejet de placeholder PASS. Empreintes SHA-256 des deux originaux identiques et inchangées : `0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae`.
+
+Limites : sous-ensemble scalaire uniquement, noms du contrat v1, diagnostic d'incomplétude conservateur et non universel, syntaxe CortexJS sans fidélité aux commandes/espaces, aucune garantie de domaine ou de ressources synchrones. Pas de CI distante, tests navigateur/MathLive réel, suite POC, installation externe du tarball ou preuve d'isolation exécutés. Aucun corpus migré, dépôt voisin modifié, commit, push ou production. Lot 4 non commencé ; RNG, seed/encodage et ordre des tirages restent à décider sur nouvelle instruction. Les domaines et bornes arithmétiques doivent être spécifiés avant les futurs calculs/corrections.

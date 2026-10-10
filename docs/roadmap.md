@@ -34,6 +34,8 @@ Objectif : caractériser CortexJS/MathLive. Livrables disponibles dans le dépô
 
 ## Lot 3 — Frontière mathématique et saisie
 
+**Terminé le 10 octobre 2026** : `parseMathInput`, profil scalaire LaTeX v1, source intégrale, MathJSON raw, contexte explicite de symboles, diagnostics et budgets. Matrice de support/limites dans ADR 005 ; preuves locales dans progress.md. Aucun domaine, calcul, correcteur ou migration implémenté.
+
 - Objectif : parser et conserver l'information nécessaire avant réduction.
 - Fichiers : src/math, tests/math/input, ADR profils et familles.
 - Dépendances : Lot 1 ; déclarations de symboles/politiques du Lot 2 pour API finale.
@@ -148,4 +150,4 @@ Séquentiel : décisions de contrats avant génération ; admissibilité raw ava
 
 Démos : Lot 5 affichage/rejeu sans verdict ; Lot 8 Python ↔ Node avec interruption réelle ; Lot 10 parcours étudiant complet.
 
-**Prochain lot recommandé : Lot 3, frontière mathématique et saisie, après revue du Lot 2.** Le corpus est désormais reçu ; génération et migration de comportements restent aux lots suivants. Ne pas lancer le Lot 3 automatiquement dans cette mission.
+**Prochain lot recommandé : Lot 4, paramètres et RNG déterministe, après revue du Lot 3 et sur nouvelle instruction.** Le corpus est reçu et la frontière scalaire est disponible ; génération et migration de comportements restent aux lots suivants. Aucun enchaînement automatique.
