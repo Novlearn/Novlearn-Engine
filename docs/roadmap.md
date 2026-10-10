@@ -74,24 +74,20 @@ Ne rouvre pas la première famille v1 livrée ; prépare un schéma étendu dist
 - Livrables : génération paramètres couverts et erreurs structurées.
 - Passage : vecteurs stables, contraintes vérifiées ; computed différé au lot suivant.
 
-## Complément Lot 4 bis — Tuples et comparaisons bornées (proposé)
+## Complément Lot 4 bis — Tuples et comparaisons bornées
 
-Priorité utilisateur après le Lot 5 bis ([D31](decisions.md#d31--priorité-au-moteur-complet-avant-ui-confirmée-utilisateur)) : terminer le moteur avant toute UI. Ce complément est la prochaine intervention recommandée, puis computed/contraintes et données d'éléments du Lot 5, correction/formes, isolation/compatibilité/distribution. Les renderers et parcours avec UI restent différés ; aucun nouveau lot engagé par le seul commit du Lot 5 bis.
+**Terminé le 11 octobre 2026**, pour le profil borné demandé : tuple générique à deux modes, exclusions scalaires/composantes/choix, six comparaisons structurées, génération globale atomique et diagnostics distincts. [D32](decisions.md#d32--lot-4-bis--tuples-comparaisons-et-génération-v2-retenue), [ADR 006](adr/006-deterministic-generation.md), [preuves](progress.md).
 
-Complément ciblé nécessaire pour la cible complète avant de figer le snapshot du Lot 5 ; les tirages scalaires existants ne nécessitent pas de réimplémentation. Il ne rouvre pas le Lot 4 livré et ne commence pas le Lot 5. Son besoin découle des deux modes de tuple et des contraintes intervariables, absents des contrats actuels. Aucune capacité nouvelle n'est disponible du seul fait de cette roadmap.
-
-- Objectif : un seul tuple ordonné, par choix complet ou tirages de composantes validés ensemble ; comparaisons simples entre valeurs scalaires, sans solveur.
-- Fichiers envisagés : contrats/génération et tests associés ; pas de module par famille mathématique.
-- Dépendances : Lots 2, 3, 4 ; arbitrage documentaire du schéma de groupe, arité, liaisons de composantes, budget d'essais et version de génération avant code.
-- Tâches : réutiliser RNG/domaines, valider arités et collisions, tirer atomiquement le groupe, partager contraintes/diagnostics avec les scalaires. Profil initial de comparaisons exactes a≠b/a<b sur entiers et décimaux sur grille admis, via la frontière CortexJS ; identifier les références sans les confondre avec un graphe computed. Définir un ordre et un budget de tentatives reproductibles. Les conditions contenant des formules ou computed restent au Lot 5.
-- Versionnement : nouveau contrat/version pour groupes et tentatives ; préserver `parameters-v1` et ses golden vectors. Le schéma JSON de l'ADR est une proposition, pas une version déjà supportée.
-- Tests futurs obligatoires : tuple choisi intégralement, arités 2/3 et arité maximale fixée, composantes typées/nommées, a<b, plages/exclusions, collisions, définition incorrecte, domaine local prouvé vide, candidat rejeté, indétermination de comparaison et budget épuisé sans fallback/valeurs partielles ; rejeu JSON et ordre des tirages.
-- Acceptation : les deux modes produisent le même tuple canonique, comparaisons couvertes réellement vérifiées, diagnostics distincts, RNG v1 inchangé. Revue du contrat de groupe utilisable par computed et le futur snapshot, sans implémenter ces derniers.
-- Risques : duplication de valeurs de groupe/composantes, confusion tuple/vecteur, événement rare, biais supposé uniforme, limites synchrones non préemptives.
-- Livrables : tuple générique, comparaisons simples et tests ; mise à jour de la couverture sur preuves réelles.
-- Passage : contrat/génération de groupe revus avant Lot 5 ; pas de calcul dépendant, instance ou UI dans ce complément.
+- Contrats : GenerationDefinitionV2, variables-v2 explicite, noms d'une lettre hors e/i, groupes comme liaisons vers valeurs plates ; ExerciseDefinitionV3/instances v3 pour l'intégration minimale. V1/v2 et golden vectors préservés.
+- Réutilisation : même Mulberry32 et tirage scalaire, grille exacte ; CortexJS pour comparaisons numériques fermées, aucun nouveau parseur/solveur.
+- Limites : arité 2…8, 16 valeurs nommées, 128 lignes/choix/exclusions, 32 contraintes, 1…128 tentatives et 1…65 536 mots RNG ; budgets obligatoires et JSON historique. Toute tentative retire le contexte complet ; jamais réparation ou fallback.
+- Preuves : arités 2/3/4/8, oracle pythagoricien 256 seeds, six opérateurs 96 seeds chacun, scalaires/groupes 128 seeds, exclusions/budgets/rejeu et versions, inconnue/erreur injectées, instances v1/v2 conservées et v3 exploitant les composantes.
+- Réserves : pas d'uniformité générale, de deadline préemptive, de tuples imbriqués ou noms étendus ; contraintes par expressions et computed différés. Les recettes par calcul ne sont pas livrées.
+- Suite recommandée : complément Lot 5 pour calculated/dépendances dans le système commun de résolution des variables, avant contraintes et instanciation ; profils exacts/domaines et cycles à décider. Puis autres capacités moteur selon D31, aucune UI. Aucun complément suivant commencé.
 
 ## Lot 5 — Substitution et instance affichable
+
+Actualisation 4 bis : groupes/comparaisons et snapshots v3 livrés. Les paragraphes datés du 10 octobre ci-dessous conservent le bilan historique ; computed/graphe/conditions mathématiques restent la prochaine tranche, sans commencement automatique.
 
 **Lot 5 bis livré le 10 octobre 2026** : composition scalaire v2, liste plate/sections, questions multiples avec attendus par ID, QCM simple/multiple, decimal/choice intégrés, projection par branche et tests ; v1/RNG conservés. [D30](decisions.md#d30--lot-5-bis--composition-scalaire-v2-retenue) et [ADR 007](adr/007-native-instantiation.md#lot-5-bis--composition-v2). Les tâches multiéléments/questions/QCM ci-dessous sont réalisées dans ce profil borné ; tuples/computed/graphe/conditions mathématiques restent absents et le snapshot avec groupes reste ouvert. Verdict **validé avec réserves**, cible complète non clôturée ; aucun 4 bis ni Lot 6 engagé.
 

@@ -1,6 +1,8 @@
 # NovLearn Exercise Engine
 
-Moteur partagé TypeScript, initialisé le 10 octobre 2026. Ce dépôt est distinct du POC. Les Lots 2 à 4 fournissent des contrats natifs, leur validation structurelle, une frontière de parsing scalaire LaTeX et une génération déterministe de paramètres. Le Lot 5 instancie le natif v1 et les documents composés v2 à plusieurs éléments/questions, avec attendus privés et projection publique. Tuples/computed/contraintes intervariables, correction et interface utilisateur restent à développer.
+Lot 4 bis (11 octobre 2026) : tuples génériques, comparaisons exactes et tirages atomiques livrés sous `variables-v2`, intégrés au schéma d'exercice v3. Les paragraphes consacrés à `parameters-v1` gardent le périmètre historique. Calculés, correcteur et UI restent différés.
+
+Moteur partagé TypeScript, initialisé le 10 octobre 2026. Contrats natifs, parsing scalaire LaTeX, génération déterministe et instances v1/v2/v3 avec attendus privés/projection publique. Tuples/comparaisons simples livrés ; calculés, correction et UI différés.
 
 Package ESM privé `novlearn-exercise-engine`, déclarations TypeScript et export racine uniquement. CortexJS 0.151.0 est la seule dépendance mathématique ; MathLive appartient aux interfaces des applications.
 
@@ -38,7 +40,7 @@ Les huit lignes historiques reçues dans `docs/exercises_rows.json` sont conserv
 
 ## API actuelle
 
-Le contrat v2 retient une liste plate avec sections et variables communes : texte/expression/question/QCM simple et multiple. Chaque question possède son ID et son attendu privés ; les politiques mathématiques restent privées. Les futures comparaisons symboliques exigent les mêmes domaines par défaut, avec domaine imposé explicite possible par question. Le natif v1 est conservé. L'audit conclut **cohérente avec réserves**, notamment sur groupes/computed/contraintes, correcteur, isolation et adoption applicative.
+Le contrat v2 retient une liste plate avec sections et variables communes : texte/expression/question/QCM simple et multiple. Chaque question possède son ID et son attendu privés ; les politiques mathématiques restent privées. Les futures comparaisons symboliques exigent les mêmes domaines par défaut, avec domaine imposé explicite possible par question. Le natif v1 est conservé. L'audit conclut **cohérente avec réserves**, notamment sur computed/contraintes générales, correcteur, isolation et adoption applicative.
 
 ```ts
 import {
@@ -48,7 +50,7 @@ import {
 
 const result = validateDefinition(input); // input: unknown
 if (result.ok) {
-  // Contrat v1 ou v2 validé structurellement, copie détachée.
+  // Contrat v1, v2 ou v3 validé structurellement, copie détachée.
   // Aucun parsing, calcul ou preuve mathématique effectué.
   const definition = result.value;
 } else {
@@ -57,7 +59,7 @@ if (result.ok) {
 }
 ```
 
-`validateSubmission` conserve le LaTeX brut (y compris incomplet) et refuse les champs client de seed, politique ou verdict. Un succès structurel n'est pas une autorisation de correction : le serveur doit retrouver l'instance officielle et appliquer les contrôles mathématiques. Types de définition/instances v1 et v2 exportés ; `SubmissionV1` reste le transport LaTeX, sans transport QCM livré. Les instances sont construites par l'API du Lot 5 ci-dessous, sans validateur public de snapshots arbitraires. Depuis une entrée `unknown`, vérifier `schemaVersion` avant d'accéder aux champs propres à v1/v2 ; les entrées déjà typées conservent leur type de résultat via surcharges.
+`validateSubmission` conserve le LaTeX brut (y compris incomplet) et refuse les champs client de seed, politique ou verdict. Un succès structurel n'est pas une autorisation de correction : le serveur doit retrouver l'instance officielle et appliquer les contrôles mathématiques. Types de définition/instances v1, v2 et v3 exportés ; `SubmissionV1` reste le transport LaTeX, sans transport QCM livré. Les instances sont construites par l'API du Lot 5 ci-dessous, sans validateur public de snapshots arbitraires. Depuis une entrée `unknown`, vérifier `schemaVersion` avant d'accéder aux champs propres à chaque version ; les entrées déjà typées conservent leur type de résultat via surcharges.
 
 ```ts
 import { parseMathInput } from 'novlearn-exercise-engine';
@@ -105,9 +107,9 @@ La liste `parameters` d'une définition native validée peut être fournie direc
 
 Types supportés : `integer`, `decimal` et `choice`. Le contrat `GenerationParameterV1` ajoute les deux derniers pour les tirages autonomes ; `ExerciseDefinitionV1` reste la famille à paramètres entiers. Exemple décimal : `{name:'d', kind:'decimal', min:-0.3, max:0.3, precision:1, exclusions:[0]}` renvoie `{kind:'decimal', coefficient, precision:1}`, représentant exactement `coefficient/10`. Les bornes non alignées sont intersectées avec la grille ; les exclusions doivent être alignées. Pas de snap ni de tolérance pour les artefacts flottants. Exemple choix : `{name:'f', kind:'choice', values:[-2, 0.125, 7]}` renvoie un nombre de cette liste ; doublons refusés, sans poids implicites.
 
-Au plus 16 paramètres et 128 exclusions/choix. Entiers dans ±1 000 000, précision décimale 0…6 et coefficients de grille dans ±1 000 000 000. Domaines vides, définitions invalides, types/version inconnus et limites dépassées produisent des diagnostics explicites, sans valeur partielle ni fallback. Contraintes entre paramètres, computed et tuples sont absents. La fixture du trinôme garantit a>0 ; `generateVariables` reste limité aux tirages, tandis que `instantiateExercise` calcule désormais l'abscisse −b/(2a).
+Au plus 16 paramètres et 128 exclusions/choix. Entiers dans ±1 000 000, précision décimale 0…6 et coefficients de grille dans ±1 000 000 000. Domaines vides, définitions invalides, types/version inconnus et limites dépassées produisent des diagnostics explicites, sans valeur partielle ni fallback. Sous `parameters-v1`, contraintes entre paramètres, computed et tuples restent refusés. La fixture du trinôme garantit a>0 ; `generateVariables` reste limité aux tirages, tandis que `instantiateExercise` calcule désormais l'abscisse −b/(2a).
 
-La cible décidée retient quatre mécanismes composables : **aléatoire numérique, choix, tuple générique et calculé**. Aucun type indépendant `function`, `perfect_square` ou doublet/triplet ; les familles mathématiques se construisent par formules et contraintes. Les JSON cibles proposés dans [ADR 006](docs/adr/006-deterministic-generation.md) sont explicitement distincts des contrats disponibles. La [roadmap](docs/roadmap.md) propose un complément 4 bis pour tuples et comparaisons simples avant le Lot 5 étendu. La tranche native ci-dessous ne les implémente pas.
+La cible retient **aléatoire numérique, choix, tuple générique et calculé**. Tuples/comparaisons simples livrés au 4 bis ; computed et contraintes par expressions différés. Aucun type `function`, `perfect_square` ou doublet/triplet. Les JSON marqués draft dans ADR 006 restent des propositions distinctes du contrat variables-v2 livré.
 
 ## Instanciation native — Lot 5
 
@@ -153,3 +155,51 @@ Une question attend soit un rationnel exact (`response:{format:latex,kind:ration
 Le [scénario natif à cinq éléments](tests/fixtures/contracts/quadratic-multiquestion.definition.json) utilise a=2,b=−4,c=5 : `2x²−4x+5`, abscisse 1 et minimum 3. [Tests](tests/composition.test.ts) : association par ID après réordonnancement, rejeu JSON, fractions, génération intégrée, QCM, diagnostics et secrets imbriqués exclus. Il s'agit d'une fixture synthétique, pas d'une migration historique. Limites et audit initial dans [ADR 007](docs/adr/007-native-instantiation.md#lot-5-bis--composition-v2).
 
 Au plus 128 éléments, 64 options par QCM et les budgets JSON/math existants ; les budgets agrégés du snapshot peuvent être plus restrictifs. Graphes/tableaux, relations/systèmes, options QCM symboliques, tuples, computed et contraintes intervariables restent explicitement refusés. Verdict : **Lot 5 validé avec réserves** pour la composition scalaire ; la cible complète de roadmap n'est pas clôturée. Aucune correction élève ou intégration officielle livrée.
+
+## Tuples et contraintes — Lot 4 bis
+
+La même API accepte un contrat de génération versionné :
+
+```ts
+import { generateVariables } from 'novlearn-exercise-engine';
+import type { GenerationDefinitionV2 } from 'novlearn-exercise-engine';
+
+const generation: GenerationDefinitionV2 = {
+  schemaVersion: 2,
+  definitions: [
+    {
+      id: 'ordered',
+      kind: 'tuple',
+      mode: 'generate',
+      components: [
+        { name: 'a', kind: 'integer', min: 1, max: 10, exclusions: [] },
+        { name: 'b', kind: 'integer', min: 1, max: 10, exclusions: [] },
+      ],
+    },
+  ],
+  constraints: [
+    {
+      kind: 'comparison',
+      left: { variable: 'a' },
+      operator: '<',
+      right: { variable: 'b' },
+    },
+  ],
+  maxAttempts: 128,
+  maxDraws: 1024,
+};
+const result = generateVariables(generation, {
+  seed: 42,
+  generationVersion: 'variables-v2',
+});
+// a=5, b=6 ; attempts=2, draws=4.
+// values contient les scalaires typés ; groups=[{id:'ordered',components:['a','b']}].
+```
+
+Le mode `choice` utilise les mêmes domaines de composantes et ajoute, par exemple, `values:[[3,4,5],[5,12,13],[8,15,17]]` pour une arité trois : une ligne entière est tirée. Seed 42 choisit (3,4,5), seed 0 choisit (8,15,17). Les exclusions de composantes retirent les lignes concernées. Choice scalaire v2 accepte `exclusions` optionnel ; choice v1 reste inchangé.
+
+Six opérateurs : `< <= > >= == !=`. Opérandes `{variable:'a'}` ou `{constant:3}`, entre scalaires et groupes. Limites : 16 valeurs nommées, arité 2…8, 32 contraintes, 128 tentatives et 65 536 mots RNG ; `maxAttempts/maxDraws` obligatoires. Noms d'une lettre hors e/i ; choix/constants exacts sur six décimales au plus, coefficient ±1 000 000 000. Aucun prédicat LaTeX, tuple imbriqué, calculé ou solveur.
+
+Un échec v2 ne contient aucune valeur/groupe ; métadonnées privées de rejeu (seed, draws, attempts) et diagnostic distinct : `empty-domain`, `attempts-exhausted`, `indeterminate-constraint`, `comparison-failed` ou `limit`. Options invalides rejetées avant ce rejeu. Pas d'uniformité générale ni de deadline préemptive. [Contrat détaillé](docs/adr/006-deterministic-generation.md#décisions-lot-4-bis--variables-v2-11-octobre-2026).
+
+`ExerciseDefinitionV3` réutilise les éléments v2, avec `schemaVersion:3` et `generation` à la place de `parameters`. `instantiateExercise` sélectionne `variables-v2/composed-instance-v3`, substitue les mêmes valeurs partout et conserve les groupes dans `PrivateInstanceV3.generation`. `projectPublicInstance` sélectionne les champs publics v3. Les six fonctions publiques restent les mêmes ; les nouveaux types sont exportés. Depuis `unknown`, vérifier `schemaVersion`. V1/v2 restent acceptés sans changement de leurs vecteurs.

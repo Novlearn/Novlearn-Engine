@@ -2,12 +2,15 @@ import type {
   ContractDiagnostic,
   ExerciseDefinitionV1,
   ExerciseDefinitionV2,
+  ExerciseDefinitionV3,
   PrivateInstanceV1,
   PrivateInstanceV2,
+  PrivateInstanceV3,
   PrivateElementV2,
   PublicElementV2,
   PublicInstanceV1,
   PublicInstanceV2,
+  PublicInstanceV3,
 } from './contracts/types.js';
 import { validate, validateDefinition } from './contracts/validation.js';
 import { generateVariables } from './generation/variables.js';
@@ -23,7 +26,8 @@ import type { InstantiationMathDiagnostic } from './math/substitution.js';
 export interface InstantiateExerciseOptions extends GenerateVariablesOptions {
   /** Opaque ID supplied by the trusted caller, independent of the seed. */
   instanceId: string;
-  instantiationVersion?: 'rational-instance-v1' | 'composed-instance-v2';
+  instantiationVersion?:
+    'rational-instance-v1' | 'composed-instance-v2' | 'composed-instance-v3';
 }
 
 export type InstantiationDiagnostic = (
@@ -42,7 +46,7 @@ export type InstantiationDiagnostic = (
   questionId?: string;
 };
 export type InstantiateExerciseResult<
-  T = PrivateInstanceV1 | PrivateInstanceV2,
+  T = PrivateInstanceV1 | PrivateInstanceV2 | PrivateInstanceV3,
 > =
   | { ok: true; value: T }
   | { ok: false; diagnostics: InstantiationDiagnostic[] };
@@ -118,6 +122,10 @@ export function instantiateExercise(
   options: InstantiateExerciseOptions,
 ): InstantiateExerciseResult<PrivateInstanceV2>;
 export function instantiateExercise(
+  definition: ExerciseDefinitionV3,
+  options: InstantiateExerciseOptions,
+): InstantiateExerciseResult<PrivateInstanceV3>;
+export function instantiateExercise(
   definition: unknown,
   options: InstantiateExerciseOptions,
 ): InstantiateExerciseResult;
@@ -147,7 +155,9 @@ export function instantiateExercise(
       const version =
         checked.value.schemaVersion === 1
           ? 'rational-instance-v1'
-          : 'composed-instance-v2';
+          : checked.value.schemaVersion === 3
+            ? 'composed-instance-v3'
+            : 'composed-instance-v2';
       if (
         o.instantiationVersion !== undefined &&
         o.instantiationVersion !== version
@@ -169,21 +179,27 @@ export function instantiateExercise(
     };
   const o = checkedOptions.value;
   const d = checked.value;
-  const generated = generateVariables(d.parameters, {
-    seed: o.seed,
-    ...(o.generationVersion === undefined
-      ? {}
-      : { generationVersion: o.generationVersion }),
-  });
+  const generated = generateVariables(
+    d.schemaVersion === 3 ? d.generation : d.parameters,
+    {
+      seed: o.seed,
+      ...(o.generationVersion === undefined
+        ? d.schemaVersion === 3
+          ? { generationVersion: 'variables-v2' as const }
+          : {}
+        : { generationVersion: o.generationVersion }),
+    },
+  );
   if (!generated.ok)
     return {
       ok: false,
       diagnostics: generated.diagnostics.map((issue) => ({
         ...issue,
+        path: d.schemaVersion === 3 ? `/generation${issue.path}` : issue.path,
         stage: 'generation',
       })),
     };
-  if (d.schemaVersion === 2) return instantiateComposition(d, generated, o);
+  if (d.schemaVersion !== 1) return instantiateComposition(d, generated, o);
   const parameters: Record<string, number> = {};
   for (const [name, value] of Object.entries(generated.values)) {
     // validateDefinition enforces integer-only; no coercion of future value kinds.
@@ -310,14 +326,17 @@ export function projectPublicInstance(
   instance: PrivateInstanceV2,
 ): PublicInstanceV2;
 export function projectPublicInstance(
-  instance: PrivateInstanceV1 | PrivateInstanceV2,
-): PublicInstanceV1 | PublicInstanceV2;
+  instance: PrivateInstanceV3,
+): PublicInstanceV3;
 export function projectPublicInstance(
-  instance: PrivateInstanceV1 | PrivateInstanceV2,
-): PublicInstanceV1 | PublicInstanceV2 {
-  if (instance.schemaVersion === 2)
+  instance: PrivateInstanceV1 | PrivateInstanceV2 | PrivateInstanceV3,
+): PublicInstanceV1 | PublicInstanceV2 | PublicInstanceV3;
+export function projectPublicInstance(
+  instance: PrivateInstanceV1 | PrivateInstanceV2 | PrivateInstanceV3,
+): PublicInstanceV1 | PublicInstanceV2 | PublicInstanceV3 {
+  if (instance.schemaVersion !== 1)
     return {
-      schemaVersion: 2,
+      schemaVersion: instance.schemaVersion,
       instanceId: instance.instanceId,
       title: instance.title,
       elements: instance.elements.map(projectElement),
@@ -352,10 +371,10 @@ function textValue(value: GeneratedValueV1): string {
 }
 
 function instantiateComposition(
-  definition: ExerciseDefinitionV2,
+  definition: ExerciseDefinitionV2 | ExerciseDefinitionV3,
   generated: Extract<GenerateVariablesResult, { ok: true }>,
   options: InstantiateExerciseOptions,
-): InstantiateExerciseResult<PrivateInstanceV2> {
+): InstantiateExerciseResult<PrivateInstanceV2 | PrivateInstanceV3> {
   const parameters = Object.fromEntries(
     Object.entries(generated.values).map(([name, value]) => [
       name,
@@ -365,7 +384,7 @@ function instantiateComposition(
   const title = textTemplate(definition.title, parameters, '/title');
   if (!title.ok) return title;
   const context = {
-    parameters: definition.parameters.map((p) => p.name),
+    parameters: Object.keys(generated.values),
     variables: definition.variables.map((v) => v.name),
   };
   const elements: PrivateElementV2[] = [];
@@ -379,7 +398,7 @@ function instantiateComposition(
     };
     const failElement = (
       diagnostics: InstantiationDiagnostic[],
-    ): InstantiateExerciseResult<PrivateInstanceV2> => ({
+    ): InstantiateExerciseResult<PrivateInstanceV2 | PrivateInstanceV3> => ({
       ok: false,
       diagnostics: diagnostics.map((d) => ({
         ...d,
@@ -533,22 +552,56 @@ function instantiateComposition(
       elements.push(rendered);
     }
   }
-  const instance: PrivateInstanceV2 = {
-    schemaVersion: 2,
+  const common = {
     instanceId: options.instanceId,
-    definition,
     engineVersion: generated.replay.engineVersion,
-    instantiationVersion: 'composed-instance-v2',
-    generation: {
-      version: generated.replay.generationVersion,
-      seed: generated.replay.seed,
-      draws: generated.replay.draws,
-      parameters: generated.values,
-    },
     title: title.value,
     elements,
   };
-  const checked = validate<PrivateInstanceV2>(instance, () => {});
+  const generation = {
+    version: generated.replay.generationVersion,
+    seed: generated.replay.seed,
+    draws: generated.replay.draws,
+    parameters: generated.values,
+  };
+  let instance: PrivateInstanceV2 | PrivateInstanceV3;
+  if (definition.schemaVersion === 3) {
+    if (!('groups' in generated))
+      return {
+        ok: false,
+        diagnostics: [
+          {
+            stage: 'generation',
+            path: '/generationVersion',
+            code: 'unsupported-version',
+            message: 'Definition v3 requires variables-v2.',
+          },
+        ],
+      };
+    instance = {
+      ...common,
+      schemaVersion: 3,
+      definition,
+      instantiationVersion: 'composed-instance-v3',
+      generation: {
+        ...generation,
+        version: 'variables-v2',
+        attempts: generated.replay.attempts,
+        groups: generated.groups,
+      },
+    };
+  } else
+    instance = {
+      ...common,
+      schemaVersion: 2,
+      definition,
+      instantiationVersion: 'composed-instance-v2',
+      generation,
+    };
+  const checked = validate<PrivateInstanceV2 | PrivateInstanceV3>(
+    instance,
+    () => {},
+  );
   return checked.ok
     ? checked
     : {

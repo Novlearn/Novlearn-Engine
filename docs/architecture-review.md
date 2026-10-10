@@ -101,3 +101,7 @@ La matrice rattache chaque capacité à un responsable, un statut et une preuve 
 Preuves nécessaires avant validation d'adoption : constructeurs/validateurs multiéléments et groupes, méthodes exactes de comparaison et forme, projection exhaustive par branche, gestion serveur des tentatives partielles, processus terminés à échéance et récupérés, tests FastAPI/Colyseus de falsification, rendu réel MathLive, conversion individuelle des exercices utilisés, bundle consommateur et compatibilité d'upgrade. Leur absence impose les réserves ; elle ne demande pas de réécrire les fondations.
 
 Prochaine étape recommandée : **sur instruction distincte**, revoir le contrat de composition/valeurs/groupes puis engager le complément 4 bis ; ensuite 5 étendu, correction et isolation selon dépendances. Le scénario rationnel natif peut servir au premier correcteur sous profil borné sur demande distincte, sans prétendre livrer toute la cible. Aucun lot suivant n'est engagé ici.
+
+## Actualisation Lot 4 bis — 11 octobre 2026
+
+Réserves historiques sur tuples, liaisons de composantes et comparaisons simples levées pour le profil variables-v2 de ADR 006 intégré à v3. Aucune preuve générale pour expressions/solveur : Pythagore vérifié seulement comme oracle des lignes connues. Computed/graphe, familles/politiques avancées, préemption, correction et adoption restent ouverts. Revue locale par le même auteur, sans sous-agent ou audit externe annoncé ; couverture/bilan actualisés sur vérifications locales.

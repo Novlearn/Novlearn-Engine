@@ -1,6 +1,6 @@
 # Spécification fonctionnelle
 
-Référence cible du 10 octobre 2026. [Vision](exercise-engine-vision.md), [contrats](architecture.md), [couverture réelle](feature-coverage.md) et [parcours](exercise-lifecycle.md) font partie de la même référence. Les exemples marqués `draft` sont documentaires et refusés par les validateurs actuels. Lot 5 bis : le [contrat composé scalaire v2](adr/007-native-instantiation.md#lot-5-bis--composition-v2) réalise désormais liste/sections, texte/expression, questions multiples rationnelles ou polynomiales préparées et QCM texte/rationnel fermé. Les descriptions « absent natif » ci-dessous proviennent de l'inventaire initial v1 ; la matrice de couverture donne l'état actualisé. Les exigences de computed/groupes/contraintes/figures restent des cibles, sans support annoncé.
+Référence cible du 10 octobre 2026, actualisée au Lot 4 bis le 11 octobre. [Vision](exercise-engine-vision.md), [contrats](architecture.md), [couverture](feature-coverage.md) et [parcours](exercise-lifecycle.md). Exemples draft documentaires ; composition v2 livrée au 5 bis et génération variables-v2 avec tuples/comparaisons simples intégrée à v3 au 4 bis. Descriptions d'inventaire initial « absent natif » historiques ; couverture actualisée. Computed, contraintes générales et figures restent des cibles.
 
 ## 1. Document et questions
 
@@ -139,7 +139,7 @@ Figures géométriques génériques, images ou autres blocs non identifiés rest
 
 ## 3. Génération et contraintes
 
-La spécification détaillée, les JSON documentaires et les golden vectors restent dans [ADR 006](adr/006-deterministic-generation.md). Les capacités réelles sont : integer, decimal sur grille et choice numérique autonome, Mulberry32 `parameters-v1` ; définition native entière uniquement. Tuple et computed sont absents.
+[ADR 006](adr/006-deterministic-generation.md) centralise contrats/limites et vecteurs. Integer/decimal/choice sous parameters-v1, intégrés aux exercices v1/v2 ; variables-v2 ajoute tuples à deux modes, exclusions de choix et six comparaisons exactes, intégrés à v3. Computed absent.
 
 | Mécanisme cible        | Entrée / résultat                                                   | Invariants                                                                             |
 | ---------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
@@ -149,7 +149,7 @@ La spécification détaillée, les JSON documentaires et les golden vectors rest
 | Tuple, mode génération | Domaines de composantes et contraintes de groupe ; tuple            | Même représentation que le mode choix, aucune réparation hors contraintes              |
 | Calculé                | Expression CortexJS et références ; valeur exacte dans profil admis | Source/raw, dépendances résolues, domaine contrôlé avant réduction, pas de JS ni clamp |
 
-Proposition technique à revoir avant 4 bis : tuple canonique ordonné avec identité de groupe et noms de composantes scalaires ; le groupe possède les valeurs, les références aux composantes donnent une vue sans copie concurrente persistée. Pas d'indexation, tuple imbriqué ou type par arité. Ce schéma n'est pas encore adopté dans les contrats ; D23 demeure ouvert. Une exclusion de composante s'applique à son domaine, une exclusion de tuple interdit une ligne entière, une contrainte de groupe vérifie la relation entre composantes. Une contrainte globale compare des scalaires ou composantes déclarés, pas un ordre implicite entre tuples.
+Contrat retenu au 4 bis : values plat, unique vérité numérique ; groups:[{id,components:[noms]}] ordonné conserve la provenance. Domaines de composantes réutilisés, arité 2…8, noms d'une lettre hors e/i. Choix de lignes typées, exclusions retirant les lignes entières concernées. Pas d'indexation, tuple imbriqué, opération vectorielle ou exclusion de ligne indépendante. Contraintes globales sur scalaires/composantes/constantes, sans ordre implicite entre tuples. D23 tranché pour ces groupes, ouvert pour computed et profils étendus.
 
 `a!=0` et `a not in {-2,0,2}` sont des exclusions locales numériques ; `b>a` et `a<b<c` sont des prédicats intervariables (chaîne explicitée en deux relations dans le profil futur) ; `a²+b²=c²` demande des calculs exacts et un prédicat après substitution. Exclusion de tirage ≠ restriction de domaine de l'expression comme x≠0. Aucun solveur général de contraintes.
 
@@ -161,7 +161,7 @@ Un prédicat entre deux paramètres tirés n'est pas une arête computed : relat
 
 ### Recherche, déterminisme et échecs
 
-Domaines locaux calculables : sélectionner directement parmi les valeurs admissibles. Proposition pour les groupes : retirer tout le groupe si un prédicat exact est faux ; proposition pour contraintes globales/computed : retirer tous les paramètres aléatoires du candidat puis recalculer le graphe. Flux RNG continu, ordre et nombre maximal de candidats versionnés ; aucune uniformité générale sur les solutions promise. Un événement rare devrait être construit par formules ou tuples connus.
+Domaines locaux : sélection directe dans le complément d'exclusions ; lignes exclues retirées avant tirage. Variables-v2 retire **tout le candidat** si une comparaison est fausse, puis tire toutes les déclarations sur le flux RNG continu. Budgets candidats/mots, ordre versionné, aucune réparation ni uniformité générale promise. Condition indéterminée : arrêt explicite. Futures dépendances calculées dans le même système commun avant contraintes/instanciation, sans second évaluateur.
 
 | État                   | Sens / comportement                                                                             |
 | ---------------------- | ----------------------------------------------------------------------------------------------- |
@@ -216,6 +216,6 @@ Une expression mathématiquement valable mais hors famille supportée n'est pas 
 
 ## 5. Évolutions et limites
 
-Les contrats étendus sont proposés dans [architecture.md](architecture.md#contrats-cibles-documentaires). Liste/sections et premier périmètre sont décidés ; schéma tuple, formats exacts étendus, budgets de candidats et profils de forme restent à revoir avant leur code. Aucun service, dépendance, nouveau repository ou module mathématique par élément ajouté.
+Les contrats étendus sont proposés dans [architecture.md](architecture.md#contrats-cibles-documentaires). Liste/sections et premier périmètre sont décidés ; tuples/comparaisons et budgets arrêtés dans ADR 006 ; computed, formats exacts étendus et profils de forme restent ouverts. Aucun service, dépendance, nouveau repository ou module mathématique par élément ajouté.
 
 Les calculs actuels sont synchrones et bornés structurellement, sans deadline/mémoire préemptive. Isolation terminable à prouver au Lot 8 avant correction officielle. Les huit lignes sont inventoriées et conservées ; seulement une question de 103 est transcrite et instanciée. Les comportements historiques et bugs ne sont pas un oracle ; migration et revue individuelle au Lot 9.

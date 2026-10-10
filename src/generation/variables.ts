@@ -1,13 +1,15 @@
 import type { ContractDiagnostic } from '../contracts/types.js';
-import { decimalGrid } from '../contracts/decimal-grid.js';
 import { validateParameters } from '../contracts/parameters.js';
 import { validate } from '../contracts/validation.js';
-import { sampleIndex, wordStream } from './random.js';
+import { wordStream } from './random.js';
+import { sampleScalar } from './scalar.js';
+import { generateV2 } from './variables-v2.js';
+import type { GeneratedGroupV2 } from '../contracts/types.js';
 
 export interface GenerateVariablesOptions {
   /** uint32, or its canonical base-10 spelling; no hashing or implicit coercion. */
   seed: number | string;
-  generationVersion?: 'parameters-v1';
+  generationVersion?: 'parameters-v1' | 'variables-v2';
 }
 
 export type GeneratedValueV1 =
@@ -24,8 +26,19 @@ export interface GenerationDiagnostic {
     | 'empty-domain'
     | 'invalid-options'
     | 'unsupported-version'
-    | 'limit';
+    | 'limit'
+    | 'attempts-exhausted'
+    | 'indeterminate-constraint'
+    | 'comparison-failed';
   message: string;
+}
+
+export interface GenerationReplayV2 {
+  engineVersion: '0.0.0';
+  generationVersion: 'variables-v2';
+  seed: string;
+  draws: number;
+  attempts: number;
 }
 
 export type GenerateVariablesResult =
@@ -39,27 +52,63 @@ export type GenerateVariablesResult =
         draws: number;
       };
     }
-  | { ok: false; diagnostics: GenerationDiagnostic[] };
+  | {
+      ok: true;
+      values: Record<string, GeneratedValueV1>;
+      groups: GeneratedGroupV2[];
+      replay: GenerationReplayV2;
+    }
+  | {
+      ok: false;
+      diagnostics: GenerationDiagnostic[];
+      replay?: GenerationReplayV2;
+    };
 
-function definitionDiagnostic(d: ContractDiagnostic): GenerationDiagnostic {
+export type GenerateVariablesResultV1 =
+  | Extract<
+      GenerateVariablesResult,
+      { ok: true; replay: { generationVersion: 'parameters-v1' } }
+    >
+  | Extract<GenerateVariablesResult, { ok: false }>;
+export type GenerateVariablesResultV2 =
+  | Extract<GenerateVariablesResult, { ok: true; groups: GeneratedGroupV2[] }>
+  | Extract<GenerateVariablesResult, { ok: false }>;
+
+export function definitionDiagnostic(
+  d: ContractDiagnostic,
+): GenerationDiagnostic {
   const code =
     d.code === 'limit'
       ? 'limit'
-      : d.code === 'invalid-json'
-        ? 'invalid-definition'
-        : d.path.endsWith('/kind')
-          ? 'unsupported-type'
-          : d.code === 'impossible-constraints'
-            ? 'empty-domain'
-            : d.path.endsWith('/min') || d.path.endsWith('/max')
-              ? 'invalid-bounds'
-              : 'invalid-definition';
+      : d.code === 'unknown-version'
+        ? 'unsupported-version'
+        : d.code === 'invalid-json'
+          ? 'invalid-definition'
+          : d.path.endsWith('/kind')
+            ? 'unsupported-type'
+            : d.code === 'impossible-constraints'
+              ? 'empty-domain'
+              : d.path.endsWith('/min') || d.path.endsWith('/max')
+                ? 'invalid-bounds'
+                : 'invalid-definition';
   return { ...d, code };
 }
 
 /** Generate parameters only. No expressions, instances, network or global random state.
  * Unknown inputs are runtime-validated, with no partial values on failure.
  */
+export function generateVariables(
+  definitions: unknown,
+  options: GenerateVariablesOptions & { generationVersion?: 'parameters-v1' },
+): GenerateVariablesResultV1;
+export function generateVariables(
+  definitions: unknown,
+  options: GenerateVariablesOptions & { generationVersion: 'variables-v2' },
+): GenerateVariablesResultV2;
+export function generateVariables(
+  definitions: unknown,
+  options: GenerateVariablesOptions,
+): GenerateVariablesResult;
 export function generateVariables(
   definitions: unknown,
   options: GenerateVariablesOptions,
@@ -91,12 +140,13 @@ export function generateVariables(
         );
       if (
         o.generationVersion !== undefined &&
-        o.generationVersion !== 'parameters-v1'
+        o.generationVersion !== 'parameters-v1' &&
+        o.generationVersion !== 'variables-v2'
       )
         v.issue(
           '/generationVersion',
           'unknown-version',
-          'Only parameters-v1 is supported.',
+          'Supported versions: parameters-v1 and variables-v2.',
         );
     },
   );
@@ -113,6 +163,8 @@ export function generateVariables(
               : 'invalid-options',
       })),
     };
+  if (checkedOptions.value.generationVersion === 'variables-v2')
+    return generateV2(definitions, String(checkedOptions.value.seed));
   const checked = validateParameters(definitions);
   if (!checked.ok)
     return {
@@ -129,45 +181,8 @@ export function generateVariables(
   const entries: [string, GeneratedValueV1][] = [];
   // Caller-supplied array order is part of the replay contract; object key order is irrelevant.
   for (const [index, parameter] of checked.value.entries()) {
-    let value: GeneratedValueV1;
-    if (parameter.kind === 'choice') {
-      const rank = sampleIndex(parameter.values.length, nextWord);
-      if (rank === undefined) return exhausted(index);
-      // The rank is strictly below the validated non-empty array length.
-      const chosen = parameter.values[rank]!;
-      value = { kind: 'choice', value: chosen === 0 ? 0 : chosen };
-    } else {
-      const precision = parameter.kind === 'decimal' ? parameter.precision : 0;
-      const min =
-        parameter.kind === 'decimal'
-          ? decimalGrid(parameter.min, precision).ceil
-          : parameter.min;
-      const max =
-        parameter.kind === 'decimal'
-          ? decimalGrid(parameter.max, precision).floor
-          : parameter.max;
-      const exclusions = parameter.exclusions
-        .map((n) =>
-          parameter.kind === 'decimal' ? decimalGrid(n, precision).floor : n,
-        )
-        .sort((a, b) => a - b);
-      const rank = sampleIndex(max - min + 1 - exclusions.length, nextWord);
-      if (rank === undefined) return exhausted(index);
-      let coefficient = min + rank;
-      // Select directly from the complement of exclusions, without enumerating the domain.
-      for (const excluded of exclusions) {
-        if (excluded > coefficient) break;
-        coefficient += 1;
-      }
-      value =
-        parameter.kind === 'integer'
-          ? { kind: 'integer', value: coefficient === 0 ? 0 : coefficient }
-          : {
-              kind: 'decimal',
-              coefficient: coefficient === 0 ? 0 : coefficient,
-              precision,
-            };
-    }
+    const value = sampleScalar(parameter, nextWord);
+    if (value === undefined) return exhausted(index);
     entries.push([parameter.name, value]);
   }
   return {

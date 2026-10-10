@@ -32,6 +32,41 @@ export interface ChoiceParameterV1 {
 export type GenerationParameterV1 =
   IntegerParameterV1 | DecimalParameterV1 | ChoiceParameterV1;
 
+export type ScalarParameterV2 =
+  | IntegerParameterV1
+  | DecimalParameterV1
+  | (ChoiceParameterV1 & { exclusions?: number[] });
+
+/** The component domains type and admit rows; exclusions remove whole rows. */
+export type TupleParameterV2 = {
+  id: string;
+  kind: 'tuple';
+  components: ScalarParameterV2[];
+} & ({ mode: 'generate' } | { mode: 'choice'; values: number[][] });
+
+export type ComparisonOperandV2 = { variable: string } | { constant: number };
+export interface ComparisonConstraintV2 {
+  kind: 'comparison';
+  left: ComparisonOperandV2;
+  operator: '<' | '<=' | '>' | '>=' | '==' | '!=';
+  right: ComparisonOperandV2;
+}
+
+/** Explicit generation contract, selected by variables-v2, never parameters-v1. */
+export interface GenerationDefinitionV2 {
+  schemaVersion: 2;
+  definitions: (ScalarParameterV2 | TupleParameterV2)[];
+  constraints: ComparisonConstraintV2[];
+  maxAttempts: number;
+  maxDraws: number;
+}
+
+/** Ordered bindings into the sole values map, with no duplicate numeric state. */
+export interface GeneratedGroupV2 {
+  id: string;
+  components: string[];
+}
+
 export interface VariableV1 {
   name: string;
   domain: 'real' | 'integer';
@@ -162,6 +197,14 @@ export interface ExerciseDefinitionV2 {
   extensions?: JsonObject;
 }
 
+export interface ExerciseDefinitionV3 extends Omit<
+  ExerciseDefinitionV2,
+  'schemaVersion' | 'parameters'
+> {
+  schemaVersion: 3;
+  generation: GenerationDefinitionV2;
+}
+
 export type PublicElementV2 =
   | { id: string; sectionId?: string; type: 'text' | 'section'; text: string }
   | {
@@ -237,6 +280,27 @@ export interface PublicInstanceV2 {
   instanceId: string;
   title: string;
   elements: PublicElementV2[];
+}
+
+export interface PrivateInstanceV3 extends Omit<
+  PrivateInstanceV2,
+  'schemaVersion' | 'definition' | 'instantiationVersion' | 'generation'
+> {
+  schemaVersion: 3;
+  definition: ExerciseDefinitionV3;
+  instantiationVersion: 'composed-instance-v3';
+  generation: PrivateInstanceV2['generation'] & {
+    version: 'variables-v2';
+    attempts: number;
+    groups: GeneratedGroupV2[];
+  };
+}
+
+export interface PublicInstanceV3 extends Omit<
+  PublicInstanceV2,
+  'schemaVersion'
+> {
+  schemaVersion: 3;
 }
 
 export interface ContractDiagnostic {

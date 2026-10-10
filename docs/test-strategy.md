@@ -45,3 +45,7 @@ Un timeout Vitest sert au diagnostic ; il ne prouve ni préemption synchrone ni 
 ## Passage de lot
 
 Exécuter les vérifications appropriées, conserver commandes/résultats, mettre à jour progress et liste de support. Aucun lot de correction accepté sans vrais positifs, vrais négatifs et hors-famille indéterminée. Aucun adaptateur annoncé complet sans corpus réel. Aucun branchement officiel serveur avant démonstration isolation et absence de secrets.
+
+## Preuves Lot 4 bis
+
+Tests generation-v2 : lignes pythagoriciennes sur 256 seeds (oracle arithmétique indépendant, sans support de prédicat général annoncé), six opérateurs sur 96 seeds chacun par produits croisés BigInt, comparaisons entre scalaires/groupes sur 128 seeds, arités 2/3/4 et maximum 8, 16 liaisons, rejets hostiles/exclusions, atomicité/rejeu/budgets et intégration v3. Tests generation-v2-limit : mots rejetés, comparaison inconnue/exception, y compris après condition fausse, arrêt sans RNG pour preuve statique et propagation v3. Golden vectors et tests historiques inchangés. Budgets structurels/candidats/mots testés ; aucune preuve de deadline/préemption ni de suite navigateur/CI distante.

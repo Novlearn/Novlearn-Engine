@@ -8,6 +8,15 @@ export type {
   DecimalParameterV1,
   ExerciseDefinitionV1,
   ExerciseDefinitionV2,
+  ExerciseDefinitionV3,
+  PrivateInstanceV3,
+  PublicInstanceV3,
+  ScalarParameterV2,
+  TupleParameterV2,
+  GenerationDefinitionV2,
+  ComparisonOperandV2,
+  ComparisonConstraintV2,
+  GeneratedGroupV2,
   ExerciseElementV2,
   OptionContentV2,
   ExpectedAnswerV2,
@@ -40,8 +49,11 @@ export { generateVariables } from './generation/variables.js';
 export type {
   GenerateVariablesOptions,
   GenerateVariablesResult,
+  GenerateVariablesResultV1,
+  GenerateVariablesResultV2,
   GeneratedValueV1,
   GenerationDiagnostic,
+  GenerationReplayV2,
 } from './generation/variables.js';
 export { instantiateExercise, projectPublicInstance } from './instantiation.js';
 export type {

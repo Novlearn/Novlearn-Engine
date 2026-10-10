@@ -2,6 +2,7 @@ import type {
   ContractDiagnostic,
   ExerciseDefinitionV1,
   ExerciseDefinitionV2,
+  ExerciseDefinitionV3,
   JsonObject,
   JsonValue,
   SubmissionV1,
@@ -294,14 +295,25 @@ export function validateDefinition(
   input: ExerciseDefinitionV2,
 ): ValidationResult<ExerciseDefinitionV2>;
 export function validateDefinition(
-  input: unknown,
-): ValidationResult<ExerciseDefinitionV1 | ExerciseDefinitionV2>;
+  input: ExerciseDefinitionV3,
+): ValidationResult<ExerciseDefinitionV3>;
 export function validateDefinition(
   input: unknown,
-): ValidationResult<ExerciseDefinitionV1 | ExerciseDefinitionV2> {
+): ValidationResult<
+  ExerciseDefinitionV1 | ExerciseDefinitionV2 | ExerciseDefinitionV3
+>;
+export function validateDefinition(
+  input: unknown,
+): ValidationResult<
+  ExerciseDefinitionV1 | ExerciseDefinitionV2 | ExerciseDefinitionV3
+> {
   return validate(input, (v, data) => {
     if (record(data) && data.schemaVersion === 2 && data.kind === 'composed') {
       inspectComposition(v, data);
+      return;
+    }
+    if (record(data) && data.schemaVersion === 3 && data.kind === 'composed') {
+      inspectComposition(v, data, 3);
       return;
     }
     const d = v.object(data, '', [
