@@ -4,6 +4,8 @@ Un lot = une modification revue et un bilan de preuves. Aucun enchaînement auto
 
 Révision documentaire du 10 octobre 2026 : quatre mécanismes cibles (aléatoire, choix, tuple, calculé), détaillés dans [ADR 006](adr/006-deterministic-generation.md). La [matrice de couverture](compatibility.md#matrice-de-couverture-fonctionnelle--génération) sépare livré, testé et manquant. Lots 1 à 4 conservés comme terminés dans leur périmètre livré ; complément 4 bis proposé, non implémenté, avant le Lot 5 étendu.
 
+Cadrage global du même jour : [vision](exercise-engine-vision.md), [spécification](functional-specification.md), [parcours](exercise-lifecycle.md), [contrats](architecture.md), [couverture globale](feature-coverage.md) et [audit](architecture-review.md). Choix confirmés par l'utilisateur : liste plate avec sections, texte/expression/question/QCM simple et multiple d'abord, mêmes domaines par défaut avec domaine imposé explicite par question. Cette révision ne lance aucun lot et ne modifie pas les contrats v1.
+
 ## Lot 0 — Évidence POC existante (externe)
 
 Objectif : caractériser CortexJS/MathLive. Livrables disponibles dans le dépôt POC : 162 tests et 23 scénarios Edge documentés. Réserves domaine/placeholder/ressources intactes. Dépendances : versions POC. Risque : rapports contradictoires et confusion test/preuve. Passage : requalifier les sondes nécessaires dans chaque lot production. Aucune copie aveugle du POC, aucune modification de ce dépôt voisin.
@@ -33,6 +35,16 @@ Objectif : caractériser CortexJS/MathLive. Livrables disponibles dans le dépô
 - Risques : contenu absent, computed JS non migrable, figures non interprétables.
 - Livrables : matrice huit documents, fixtures autorisées, contrat minimal et validateDefinition.
 - Passage : contrat revu sur vrai corpus. Sans corpus, seule préparation/inventaire des besoins possible, pas validation de migration.
+
+## Complément de contrats — Composition et questions (proposé, rattaché aux Lots 2/5)
+
+Ne rouvre pas la première famille v1 livrée ; prépare un schéma étendu distinct. C'est une dépendance explicite avant l'instance multiquestion, coordonnée au schéma de valeurs/groupes du 4 bis. La revue peut être distincte de l'implémentation du contrat ; aucun validateur étendu n'est livré par ce document.
+
+- Objectif : liste ordonnée plate/sections, union discriminée texte/expression/question/QCM, identité de question égale à l'ID de son élément, format/attendu/politique privés et DTO public par sélection ; metadata utile issue des besoins historiques, sans modèle applicatif de brouillon dans le cœur.
+- Dépendances : inventaire Lot 2, profils Lot 3, tirages Lot 4 et décision D23 pour groupes/valeurs ; maintenir définition/soumission natives et golden vectors.
+- Tests de passage futurs : IDs uniques/stables, réordonnancement sans perte d'association, options avec IDs et cardinal/mode, référence attendue inconnue, formats/politiques incompatibles, version/branche non supportée, source/données conservées et projection sans secrets. Aucun simple type TypeScript annoncé comme support.
+- Limites : variables communes seulement ; portées locales, récursion de parties, workflow pédagogique et suivi de réponse précédente différés. Exemples `exercise-draft` documentaires uniquement.
+- Livrables : schéma revu, validateurs et conventions de migration d'IDs/version avant pipeline étendu, sur instruction de développement distincte. Un seul modèle de question, aucun service/factory supplémentaire.
 
 ## Lot 3 — Frontière mathématique et saisie
 
@@ -83,30 +95,38 @@ Complément ciblé nécessaire pour la cible complète avant de figer le snapsho
 
 - Objectif : calculer dépendances paramétriques et produire une projection publique.
 - Fichiers : src/generation/dependencies, src/math/substitution, src/contracts/projection, tests/instances.
-- Dépendances : Lots 2, 3, 4 et complément 4 bis pour la cible avec tuples/contraintes. Aucun blocage démontré de l'ancien scénario scalaire 103 ; la recommandation est de stabiliser le contrat étendu avant son snapshot.
+- Dépendances : Lots 2, 3, 4, complément de contrat de composition/questions et complément 4 bis pour la cible avec tuples/contraintes. Aucun blocage démontré de l'ancien scénario scalaire 103 ; la recommandation est de stabiliser le contrat étendu avant son snapshot.
 - Tâches : contrat computed et valeurs exactes sérialisables, dépendances simples/multiples/en chaîne, cycles/références inconnues, noms réservés et références aux composantes. Admissibilité/domaine avant réduction, substitution/évaluation CortexJS dans un contexte isolé ; conditions mathématiques déclaratives sur valeurs générées/calculées avec essais globaux bornés. Gabarits de contenu distincts du LaTeX, instance privée/version et projection par sélection ; IDs QCM stables.
-- Contrats : décider explicitement l'intégration decimal/choice/tuple/computed dans la définition et l'évolution du snapshot numérique préparatoire, sans prétendre que `ExerciseDefinitionV1` ou `PrivateInstanceV1` actuels les portent déjà. Garder distinction valeur exacte, approximation éventuelle, indétermination et erreur. Pas de type `function`.
-- Tests obligatoires : a=-2 dans a², fractions exactes, variables libres inchangées, ordre topologique stable, chaînes/entrées multiples et composantes de tuple, cycles/références absentes avant tirage, division par zéro/complexe/non-fini/symbolique, contraintes impossibles ou indéterminées, épuisement d'essais, secrets/seed/flags absents de projection.
+- Contrats : décider explicitement l'intégration decimal/choice/tuple/computed dans la définition et l'évolution du snapshot natif numérique entier, sans prétendre que `ExerciseDefinitionV1` ou `PrivateInstanceV1` actuels les portent déjà. Garder distinction valeur exacte, approximation éventuelle, indétermination et erreur. Pas de type `function`.
+- Tests obligatoires : a=-2 dans a², fractions exactes, variables libres inchangées, ordre topologique stable, chaînes/entrées multiples et composantes de tuple, cycles/références absentes avant tirage, division par zéro/complexe/non-fini/symbolique, contraintes impossibles ou indéterminées, épuisement d'essais, secrets/seed/flags absents de projection. Plusieurs questions avec tous les attendus ; IDs et ordre conservés, réordonnancement sans perte d'association, source intacte ; échec d'une question sans instance partielle. QCM simple/multiple : IDs d'options, collisions après substitution, attendu privé et sélection publique du mode/options sans flags corrects.
 - Recettes de validation après les fondations : n² ; trinôme construit par a≠0/r/s avec discriminant carré positif ou nul ; carré de binôme avec condition de degré ; triplet pythagoricien par formules. Tests de propriétés mathématiques bornées, pas de générateur spécialisé. Le choix d'un triplet connu peut être vérifié dès 4 bis.
 - Besoins Admin : validation étendue avec chemins, dépendances consultables, prévisualisation privée, nouvelle seed/rejeu sous révision immuable et séries bornées de seeds avec diagnostics. Signatures à fixer selon besoin, sans concevoir l'interface ou ajouter un service.
 - Acceptation : même définition/seed/version → même affichage ; toute erreur déclarée ; aucun JS legacy exécuté.
 - Risques : gabarits ambigus, réponses recomposables, contenu figure non couvert.
-- Livrables : generateInstance et prepareDisplay pour famille choisie.
+- Livrables : extension explicite de `instantiateExercise` et `projectPublicInstance` pour le schéma/familles admis ; pas d'API generateInstance/prepareDisplay en doublon.
 - Passage : démonstration locale définition → instance privée → projection/rejeu, sans correction officielle.
 
 Peuvent attendre un complément ultérieur explicitement demandé : choix de valeurs mathématiques autres que les scalaires numériques couverts, extension des noms multi-caractères, tuples imbriqués/indexation et profils de prédicats plus riches. Le format exact nécessaire aux computed rationnels et les liaisons de tuple ne peuvent pas être différés après le snapshot. Opérations vectorielles, solveur général, générateurs spécialisés et JavaScript arbitraire sont hors périmètre. Les schémas d'exemples et budgets restent ouverts jusqu'à leur revue ; cette mission ne les implémente pas.
+
+### Compléments d'éléments après le premier périmètre (non engagés)
+
+Texte/expression/question/QCM constitue le premier périmètre étendu retenu. Fonctions graphiques, suite/graphe discret, tableaux signes/variations/statistiques, arbre de probabilités, vecteurs et plan complexe sont attribués à des compléments ciblés du Lot 5 pour contrats/validation/substitution/préparation de données ; leurs formes et calculs exacts doivent avoir un profil borné avant annonce de support. Relations/systèmes affichés demandent également un contrat, sans solveur général. Les [fiches](functional-specification.md#2-éléments--contrat-commun-et-inventaire) et la [couverture](feature-coverage.md) indiquent responsables/risques/tests.
+
+Le Lot 9 n'invente pas ces capacités : il adapte uniquement les branches déjà livrées, avec diagnostic explicite pour le reste. Renderers partagés et éditeurs Admin sont un chantier applicatif séparé, sans nouveau lot moteur par composant. Un pilote borné au premier périmètre est possible ; refuser tout exercice dépendant d'un bloc/famille non livré, sans supprimer silencieusement son graphe. Ordre des compléments selon corpus et besoin consommateur, sur instruction distincte.
 
 ## Lot 6 — Correction exacte bornée
 
 - Objectif : gradeAnswer pour rationnels et polynômes univariés rationnels bornés.
 - Fichiers : src/grading, src/math/comparison, tests/grading, docs/support-matrix.md.
-- Dépendances : Lots 2, 3, 5 ; politique domaine acceptée.
+- Dépendances : Lots 2, 3, 5 pour la famille concernée ; politique de mêmes domaines par défaut et domaine imposé explicite confirmée, méthodes/bornes de preuve à fixer. La tranche native suffit à un premier scénario rationnel ; toute annonce de support multiquestion/QCM requiert le contrat et l'instance étendus. Isolation du Lot 8 nécessaire avant adoption officielle, pas avant conception pure du correcteur.
 - Tâches : admissibilité raw, bornes coefficient/degré, API polynomialCoefficients, preuves exactes, états distincts ; méthodes non prouvées hors parcours officiel.
 - Tests obligatoires : vrais positifs/négatifs, fractions, coefficient muté, grands nombres hors borne, variable au dénominateur, sin, x/x et domaines inconnus → indeterminate ; oracle indépendant.
 - Acceptation : aucune heuristique/undefined convertie en faute ; correction prétendue exacte uniquement dans familles documentées.
 - Risques : canonicalisation masque domaine, coefficient numérique approximé, oracle circulaire.
 - Livrables : premier correcteur exact et tableau de garanties.
 - Passage : revue mathématique de familles/bornes et contre-exemples ; pas d'élargissement automatique aux fonctions partielles.
+
+Complément discret ciblé après instance QCM : comparaison exacte de l'ensemble d'IDs sélectionnés, cardinal/mode, options inconnues/doublons, permutations d'ordre affiché et correspondance instance/question ; aucun score partiel implicite. Réutiliser le résultat par question et ses états sans moteur mathématique QCM séparé. Formats intervalle/ensemble/texte/complexe et tolérances nécessitent des compléments motivés, leurs contrats/profils/exemples et tests, pas un élargissement implicite du Lot 6.
 
 ## Lot 7 — Formes pédagogiques minimales
 
@@ -136,7 +156,7 @@ Peuvent attendre un complément ultérieur explicitement demandé : choix de val
 
 - Objectif : importer progressivement les vrais historiques sans pertes silencieuses.
 - Fichiers : src/adapters/legacy, tests/fixtures/legacy, docs/compatibility.md et migration-guide.md.
-- Dépendances : Lot 2 ; Lots 5–7 pour comportements couverts. Tests d'enveloppe peuvent être préparés plus tôt.
+- Dépendances : Lot 2, contrat de composition/IDs et Lots 5–7 pour comportements effectivement couverts, dont compléments d'éléments s'ils sont nécessaires au document choisi. Tests d'enveloppe peuvent être préparés plus tôt. La migration complète des huit lignes reste un objectif du Lot 9 avec rapports et blocages explicites ; le pilote peut sélectionner des exercices admis sans annoncer les huit migrés.
 - Tâches : decode explicite Creator/DB/élève, aliases avec provenance, conserver extensions/brut ; convertir computed autorisés ; revue manuelle JS ; identifier tableaux/figures non convertibles ; version et rollback par définition.
 - Tests obligatoires : chaque JSON, conservation champs, collisions, variations/signes divergents, computed malveillant non exécuté, différences intentionnelles contre legacy.
 - Acceptation : huit rapports individuels, couverture et pertes explicites, aucun remplacement aveugle camelCase/snake_case.
@@ -150,7 +170,7 @@ Peuvent attendre un complément ultérieur explicitement demandé : choix de val
 - Fichiers : examples/e2e, tests/e2e, docs/demo.md ; aucun autre dépôt modifié dans cette mission.
 - Dépendances : Lots 5, 6, 8, 9 ; Lot 7 si forme exigée.
 - Tâches : JSON historique autorisé → adaptation → génération → projection → champ MathLive réel → soumission FastAPI → correction officielle et rejeu.
-- Tests obligatoires : clavier/collage fr, placeholder, soumission HTTP falsifiée, policy/seed/verdict client ignorés, secrets absents, timeout visible, réponses correctes/fausses/indéterminées.
+- Tests obligatoires : clavier/collage fr, placeholder, soumission HTTP falsifiée, policy/seed/verdict client ignorés, secrets absents, timeout visible, réponses correctes/fausses/indéterminées. Selon profil : plusieurs questions, tentative partielle/reprise, non répondu distinct d'incorrect, QCM par IDs et instance de duel périmée ; projection et correction serveur communes. Au moins un vrai exercice autorisé entièrement couvert, sans annoncer sa migration par un affichage natif manuel.
 - Acceptation : parcours complet reproductible et résultats distincts ; aucune confiance accordée au navigateur.
 - Risques : interopérabilité réelle et version MathLive, rendu non sécurisé côté app.
 - Livrables : démonstration, captures/logs sans secrets et guide d'intégration.
@@ -170,10 +190,10 @@ Peuvent attendre un complément ultérieur explicitement demandé : choix de val
 
 ## Dépendances et parallélisation
 
-Chemin principal cible : 1 → 2 → (3 et 4) → 4 bis (proposé) → 5 → 6 → (7 et 8) → 9 → 10 → 11. La caractérisation mathématique du Lot 3 peut avancer parallèlement à la collecte du corpus, mais ne fige pas l'API du Lot 2. Le travail sur enveloppes du Lot 9 peut démarrer après 2 ; ses conversions dépendent des capacités réellement livrées, y compris tuples/contraintes/computed des 4 bis/5 si requis. La preuve d'isolation du Lot 8 peut être préparée dès 3, puis branchée après 6.
+Chemin principal cible : 1 → 2 → (3 et 4) → revue du contrat étendu de composition/valeurs/groupes → 4 bis (proposé) → 5 étendu → 6 → (7 et 8) → 9 → 10 → 11. Le contrat de liste/questions est indispensable à l'instance étendue, mais ne conditionne pas les anciens tirages ou la tranche native 103. La caractérisation mathématique du Lot 3 peut avancer parallèlement à la collecte du corpus, mais ne fige pas l'API du Lot 2. Le travail sur enveloppes du Lot 9 peut démarrer après 2 ; ses conversions dépendent des capacités réellement livrées, y compris tuples/contraintes/computed des 4 bis/5 et compléments d'éléments si requis. La preuve d'isolation du Lot 8 peut être préparée dès 3, puis branchée après 6. Chantier UI/Admin et adoption NovLearn/Colyseus séparés des lots cœur ; démonstration isolée avant toute production.
 
 Séquentiel : décisions de contrats avant génération ; admissibilité raw avant correction ; correction avant formes ; isolation avant correction serveur officielle ; démonstration avant pilote. En travail multi-agents, donner des fichiers distincts à chaque auteur et faire intégrer/revoir par le principal.
 
 Démos : Lot 5 affichage/rejeu sans verdict ; Lot 8 Python ↔ Node avec interruption réelle ; Lot 10 parcours étudiant complet.
 
-**Prochaine étape recommandée pour la cible étendue : arbitrer puis développer séparément le complément 4 bis, sur nouvelle instruction.** Les tirages natifs du Lot 4 et l'instance native du Lot 5 restent disponibles. Stabiliser tuple, comparaisons et versionnement avant le Lot 5 étendu ; y livrer ensuite computed/domaines, contraintes mathématiques et snapshot étendu. La tranche scalaire livrée sur demande au Lot 5 ne réalise pas ces extensions. Le Lot 6 nécessite une instruction distincte, des familles/bornes de comparaison et le contexte officiel serveur ; aucune correction commencée. Migration de comportements aux lots suivants. Aucun enchaînement automatique.
+**Prochaine étape recommandée pour la cible étendue : revoir le contrat de composition/valeurs/groupes, puis développer séparément le complément 4 bis, sur nouvelle instruction.** Les tirages natifs du Lot 4 et l'instance native du Lot 5 restent disponibles. Stabiliser tuple, comparaisons et versionnement avant le Lot 5 étendu ; y livrer ensuite computed/domaines, contraintes mathématiques, liste d'éléments/questions et snapshot étendu. La tranche scalaire livrée sur demande au Lot 5 ne réalise pas ces extensions. Le Lot 6 nécessite une instruction distincte, des familles/bornes de comparaison et le contexte officiel serveur ; aucune correction commencée. Migration de comportements aux lots suivants. Aucun enchaînement automatique.

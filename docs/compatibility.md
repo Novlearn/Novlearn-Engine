@@ -4,6 +4,8 @@ Le 10 octobre 2026, l'utilisateur a fourni `docs/exercises_rows.json` et autoris
 
 ## Provenance et conservation
 
+Ce document conserve l'inventaire du corpus et la couverture détaillée de génération. La [matrice globale](feature-coverage.md) ajoute tous les éléments, correction et fonctions applicatives ; la [spécification](functional-specification.md) définit leurs besoins cibles. Les constats historiques ne sont ni une migration exécutée ni un inventaire du catalogue complet.
+
 - Source reçue : `docs/exercises_rows.json`, 14 583 octets.
 - SHA-256 : `0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae`.
 - Copie byte-identique : `tests/fixtures/legacy/exercises_rows.original.json`.

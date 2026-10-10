@@ -9,16 +9,21 @@ Package ESM privé `novlearn-exercise-engine`, déclarations TypeScript et expor
 Node 24.19.0 et npm 11.17.0 ont été vérifiés localement. Sur PowerShell, utiliser `npm.cmd` si `npm.ps1` est bloqué, sans modifier l'ExecutionPolicy.
 
 ```sh
-npm ci
-npm run check
-npm pack --dry-run
+npm.cmd ci
+npm.cmd run check
+npm.cmd pack --dry-run
 ```
 
 `check` construit le package, vérifie les types, le lint, le formatage et les tests de distribution. `npm test` construit puis lance Vitest ; `npm run format` applique Prettier. Le cache npm reste local au dépôt. Les dépendances directes sont épinglées et le lockfile doit être conservé.
 
 ## Documentation
 
+- [Vision et périmètre](docs/exercise-engine-vision.md)
+- [Spécification fonctionnelle et inventaire des types d'éléments](docs/functional-specification.md)
+- [Parcours Admin, élève, correction et duels](docs/exercise-lifecycle.md)
 - [Architecture et frontière FastAPI](docs/architecture.md)
+- [Couverture fonctionnelle globale et preuves manquantes](docs/feature-coverage.md)
+- [Audit de cohérence et arbitrages](docs/architecture-review.md)
 - [Décisions et arbitrages multi-agents](docs/decisions.md)
 - [Sources et analyses indépendantes](docs/analysis.md)
 - [Stratégie de tests](docs/test-strategy.md)
@@ -32,6 +37,8 @@ npm pack --dry-run
 Les huit lignes historiques reçues dans `docs/exercises_rows.json` sont conservées avec leur empreinte et inventoriées dans [compatibility.md](docs/compatibility.md). Une question de minimum de trinôme (ligne 103) est transcrite manuellement pour le premier contrat de valeur rationnelle. Aucun adaptateur de migration des huit exercices n'est implémenté. Les tests du POC constituent des observations externes ; ils ne valident pas ce nouveau moteur.
 
 ## API actuelle
+
+Le cadrage global retient une liste plate avec sections et variables communes, puis texte/expression/question/QCM simple et multiple pour le premier contrat étendu. Chaque question aura son ID, attendu et politique privés. Les futures comparaisons symboliques exigent les mêmes domaines par défaut, avec domaine imposé explicite possible par question. Ces choix confirmés orientent la roadmap ; le code actuel reste à question rationnelle unique. L'audit conclut **cohérente avec réserves**, notamment sur contrats étendus, correcteur, isolation et adoption applicative.
 
 ```ts
 import {

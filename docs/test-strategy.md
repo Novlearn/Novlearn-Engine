@@ -2,11 +2,11 @@
 
 ## Socle exécuté et capacités futures
 
-Les tests actuels vérifient distribution ESM, fermeture des chemins internes, conservation du corpus et validation structurelle des contrats natifs v1. Ils ne corrigent aucun exercice. Les résultats POC (162 Vitest, 23 Edge documentés, non réexécutés) sont des preuves externes à requalifier.
+Les tests actuels vérifient distribution ESM, fermeture des chemins internes, conservation du corpus, contrats natifs, parsing scalaire, génération déterministe et tranche native d'instance/substitution/projection. Ils ne corrigent aucun exercice. La [couverture globale](feature-coverage.md) distingue ces preuves des tests futurs. Les résultats POC (162 Vitest, 23 Edge documentés, non réexécutés) sont des preuves externes à requalifier.
 
 Lot 2 exécuté après réception des huit lignes : tests de contrat sur transcription de la question 103, versions inconnues, champs/types malformés, diagnostics localisés, aliases refusés, collisions de symboles, ranges/exclusions impossibles, extensions JSON privées et aller-retour sans perte. Corpus vérifié byte-identique par SHA-256, inventaire de tous les chemins et préservation des chaînes JSON source. Les tests Node de conservation sont en `.mjs` pour utiliser fs/crypto sans introduire de dépendance de types Node dans le cœur TypeScript. Les fixtures natives sont importées comme JSON pour les tests TypeScript.
 
-Les tests critiques de soumission refusent seed/policy/verdict client et conservent exactement LaTeX vide, incomplet, placeholder ou virgule. Leur succès est uniquement celui du transport : le rejet mathématique de ces entrées attend le Lot 3. Un test accepte délibérément une définition avec LaTeX malformé pour documenter cette séparation, sans compter cette limitation comme parsing supporté. Les types d'instance ne constituent pas encore une garantie runtime de projection ; les tests de fuite attendent son implémentation au Lot 5.
+Les tests critiques de soumission refusent seed/policy/verdict client et conservent exactement LaTeX vide, incomplet, placeholder ou virgule. Leur succès est uniquement celui du transport ; les tests du Lot 3 couvrent désormais les rejets mathématiques du profil scalaire. Un test accepte délibérément une définition avec LaTeX malformé pour documenter cette séparation, sans compter cette limitation comme parsing supporté. Les tests du Lot 5 vérifient la projection native par sélection avec champs sensibles injectés, le détachement et le rejeu ; nouvelles branches d'éléments/QCM et intégrations HTTP restent à prouver.
 
 Chaque test futur porte une famille et une garantie : support exact, limitation connue, ou exploration. Une limitation verte ne compte pas comme capacité supportée. Les références mathématiques sont indépendantes de la méthode testée : ne pas appeler la même comparaison Cortex des deux côtés de l'assertion.
 
@@ -29,6 +29,8 @@ Chaque test futur porte une famille et une garantie : support exact, limitation 
 | E2E             | JSON autorisé → adaptation → instance → saisie réelle MathLive → correction serveur → rejeu, avant pilote                                   |
 
 ## Propriétés et régressions
+
+Complément multiquestion/QCM à préparer avec les contrats étendus : tous les attendus calculés, ordre/IDs préservés, réordonnancement sans changement d'association, échec d'une question sans instance partielle, options aux IDs stables malgré permutation, sélection simple/multiple et collisions après substitution, plusieurs questions soumises indépendamment. Les tentatives partielles/reprises, feedback autorisé, droits et tour de duel périmé demandent des tests d'intégration applicative, pas un état mutable ajouté au moteur.
 
 Générer des cas bornés avec seed enregistrée : rationnels attendus par arithmétique indépendante ; polynômes à coefficients connus puis constructions équivalentes, mutation d'un coefficient pour non-égalité, symétrie/réflexivité seulement dans famille autorisée. Vérifier substitution et invariants de génération sur plusieurs seeds. Ajouter un framework de property testing seulement au lot qui l'utilise.
 

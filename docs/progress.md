@@ -1,5 +1,7 @@
 # État et transmission
 
+Dernière mission : cadrage fonctionnel global et audit documentaire, 10 octobre 2026. Les trois arbitrages utilisateur sont confirmés sous D25–D27 ; [référence](exercise-engine-vision.md), [couverture globale](feature-coverage.md) et [audit](architecture-review.md) disponibles. Aucun lot de développement supplémentaire engagé ; bilan de la mission en fin de document.
+
 Date : 10 octobre 2026. Lots 1 à 4 terminés, tranche native du Lot 5 livrée (bilans ci-dessous). La cible étendue du Lot 5 reste différée. Initialement seul `.codex/config.toml` existait. Git initialisé sur main ; socle versionné par un commit initial à la demande utilisateur. Aucun remote, publication ou modification des dépôts voisins. Les sections historiques conservent les preuves des étapes précédentes.
 
 ## Historique — fondations réalisées
@@ -178,6 +180,46 @@ La rédaction finale du présent bilan intervient après le check à 301 tests e
 
 Limites : définition entière et question rationnelle unique, aucun tuple/computed/contrainte additionnelle ni intégration native de decimal/choice. Expressions à domaines partiels, dénominateurs libres, fonctions/racines, QCM/équations/figures et familles avancées refusés ou conservés privés dans extensions sans instanciation. Profil rationnel/polynomial borné, pas de domaine universel ni de forme pédagogique ; détails dans ADR 007. Aucun arrondi de l'attendu, `N`, solveur ou CAS parallèle ; aucune deadline synchrone/mémoire garantie. Avant Lot 6 : fixer familles/bornes et états exact/indéterminé/erreur, recontrôler saisie/domaine, utiliser l'état officiel serveur ; isolation effective au Lot 8 avant branchement officiel. Aucun Lot 6, service, UI, production, CI distante, suite navigateur/POC ou consommateur externe du tarball exécuté. Aucun autre dépôt modifié, commit, push ou merge.
 
+## Cadrage fonctionnel global et audit — 10 octobre 2026
+
+Mission documentaire demandée : vision globale, structures/questions multiples, inventaire des éléments, génération/contraintes, parcours complets, contrats/APIs, couverture et audit de cohérence. Lecture préalable de demande jointe, AGENTS, README, progress/decisions/roadmap, architecture/compatibility/test-strategy et ADR, code/contrats/exports/tests, corpus et sources locales NovLearn/Creator/Colyseus/POC. Travail séquentiel sans sous-agent ; phase critique distincte après rédaction, sans revendiquer une revue externe indépendante. Modifications préexistantes de Lot 5 conservées ; empreintes de code/fixtures capturées avant rédaction.
+
+Trois questions structurantes posées puis réponses reçues : liste plate avec sections explicites et variables communes ; premier périmètre texte/expression/question/QCM simple et multiple ; mêmes domaines par défaut avec domaine imposé explicite par question. D25–D27 enregistrent ces choix de **cible** ; aucune modification de contrat réel. D23 (groupes/valeurs/versions/budgets), règles de formes/tolérances, transport/SLO et release restent ouverts avant leurs étapes respectives, avec recommandations distinguées des décisions confirmées.
+
+Documents créés :
+
+- `docs/exercise-engine-vision.md` : philosophie, frontières, critères et index de référence.
+- `docs/functional-specification.md` : document multiquestion, IDs, génération/contraintes/dépendances, onze dimensions de chaque type d'élément, correction/domaines et limites.
+- `docs/exercise-lifecycle.md` : 14 étapes Admin, pipeline d'instance, 10 étapes élève, partiel/reprise/feedback, correction et duels ; deux diagrammes Mermaid textuels.
+- `docs/feature-coverage.md` : **78 fonctionnalités**, source/statut/cible/responsable/lot/tests présents/manquants/priorité/risque ; cœur et applications distingués.
+- `docs/architecture-review.md` : sources/état local, écarts/risques, surarchitecture, arbitrages et preuves d'adoption encore nécessaires.
+
+Documents actualisés : README, architecture (contrats et API regroupés dans l'emplacement existant), compatibility, décisions, roadmap, test-strategy, ADR 002/004/006 et présent état. Pas de doublon architecture-and-contracts ni nouvelle roadmap. Passages historiques signalés explicitement pour éviter confusion avec instance native livrée. Les JSON/TypeScript cibles sont des exemples de discussion refusés par v1 ; aucun nouveau numéro de schéma/runtime annoncé supporté.
+
+Roadmap : complément de contrat de composition/questions rattaché aux Lots 2/5 avant instance étendue, coordonné aux valeurs/groupes du 4 bis proposé ; multiquestions/QCM/projection au 5 étendu, comparaison discrète QCM par IDs en complément du 6, figures/tableaux/suites par compléments ciblés de 5 puis adaptation 9. UI/Admin/adoption séparés des lots cœur. Lot 5 natif et Lots 1–4 restent livrés dans leur périmètre ; aucun redémarrage automatique ni service imposé. Premier correcteur rationnel possible sur scénario natif sur instruction distincte, sans annoncer la cible étendue livrée.
+
+Constats critiques recoupés : serveur de duels utilise actuellement le verdict client, API historique diffuse content avec solutions, contrats de tableaux divergents, mathématiques présentes dans renderers historiques, fallbacks hors exclusions et new Function Creator ; état local, aucune assertion de production déployée. Huit lignes inventoriées, seule question 103 transcrite/instanciée ; aucune migration complète ni catalogue exhaustif. Verdict : **cohérente avec réserves**, sous réserve de preuves par code/tests pour contrats étendus, grading/formes, projections de toutes branches, isolation effective et intégrations officielles.
+
+Vérifications locales réellement exécutées :
+
+| Commande / contrôle                                            | Résultat                                                                                                                                                                                                          |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm.cmd ci`                                                   | PASS, 130 packages à partir du lockfile                                                                                                                                                                           |
+| Formatage ciblé `npm.cmd exec -- prettier --write <documents>` | PASS, uniquement Markdown                                                                                                                                                                                         |
+| `npm.cmd run check`                                            | PASS : build/typecheck/lint/format ; **8 fichiers / 301 tests existants**, aucun test ajouté                                                                                                                      |
+| `npm.cmd pack --dry-run`                                       | PASS, 42 fichiers, environ 34,0 kB ; README/package/dist uniquement, aucun corpus/fixture/document privé embarqué                                                                                                 |
+| Sonde stdin Node de documents/liens/JSON et API v1             | PASS : 15 documents inspectés, 115 liens locaux avec cibles/ancres existantes, 6 blocs JSON décodés ; 2 exemples draft d'architecture refusés par validateDefinition/validateSubmission ; 78 lignes de couverture |
+| SHA-256 avant/après de src/tests/package/lock/corpus           | **24 fichiers inchangés**, dont contrats et fixtures ; originaux toujours `0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae`                                                                      |
+| `git diff --check`                                             | PASS ; changements de cette mission limités au Markdown                                                                                                                                                           |
+
+Le bilan est ajouté après le check/pack ; seuls ajustements documentaires effectués ensuite, avec formatage/liens/diff recontrôlés. Les Mermaid ont fait l'objet d'une revue textuelle, pas d'un rendu navigateur. Une tentative de patch global n'a pas été appliquée (BOM préexistant de compatibility empêchant l'ancrage de titre) ; reprise avec un ancrage de section, sans toucher au corpus. `git rev-parse` initialement bloqué par propriété des deux voisins a été relancé avec safe.directory limité à la commande de lecture, sans modifier la configuration Git globale ; POC sans référence Git disponible. Aucun échec de ces lectures annoncé comme preuve de capacité.
+
+Ne pas annoncer : correction élève native, computed/tuples, contrats multiquestions, renderer partagé, futur Admin, intégration officielle FastAPI/Colyseus, deadline/mémoire, migration, catalogue complet, CI distante, tests navigateur/POC ou consommateur externe du tarball courant. Aucun code métier/contrat/test/fixture, dépendance/configuration, dépôt voisin, DB/production modifié ; aucun commit/push/merge réalisé par cette mission. Prochaine étape recommandée seulement : revue du contrat composition/valeurs/groupes, puis instruction distincte pour 4 bis et les lots suivants.
+
 ### Versionnement du Lot 5 natif
 
 À la demande explicite de l'utilisateur après le bilan, les quinze fichiers du Lot 5 natif sont regroupés dans un commit dédié `feat(instantiation)`. La mention « aucun commit » ci-dessus décrit la livraison avant cette demande. Seule cette note est ajoutée après les vérifications à 301 tests ; aucun code ni test modifié, aucun push ou Lot 6 engagé.
+
+### Versionnement du cadrage fonctionnel global
+
+À la demande explicite de l'utilisateur après le bilan documentaire, les quinze fichiers Markdown du cadrage global sont regroupés dans un commit dédié `docs(engine)`. La mention « aucun commit » du bilan décrit la livraison avant cette demande. Revue du périmètre et du diff, contrôle de format documentaire et `git diff --check` effectués pour ce versionnement ; les résultats précédents à 301 tests restent ceux de la mission documentaire, sans réexécution de la suite pour cette seule note. Aucun code, contrat, test ou fixture modifié ; aucun push ni lot suivant engagé.
