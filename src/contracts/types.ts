@@ -118,6 +118,127 @@ export interface SubmissionV1 {
   answer: { format: 'latex'; source: string };
 }
 
+/** Flat composition; v1 and its integer snapshot remain independently supported. */
+export interface ElementIdentityV2 {
+  id: string;
+  sectionId?: string;
+  /** Private author metadata, never projected. */
+  extensions?: JsonObject;
+}
+
+export type OptionContentV2 =
+  { format: 'text'; text: string } | { format: 'latex'; latex: string };
+
+export type ExerciseElementV2 =
+  | (ElementIdentityV2 & { type: 'text'; text: string })
+  | (ElementIdentityV2 & { type: 'section'; text: string })
+  | (ElementIdentityV2 & { type: 'expression'; latex: string; label?: string })
+  | (ElementIdentityV2 & {
+      type: 'question';
+      text: string;
+      points: number;
+      response: { format: 'latex'; kind: 'rational' | 'expression' };
+      expectedLatex: string;
+      policy: { domain: 'rational' | 'polynomial'; form: 'value-only' };
+    })
+  | (ElementIdentityV2 & {
+      type: 'mcq';
+      text: string;
+      points: number;
+      mode: 'single' | 'multiple';
+      options: { id: string; content: OptionContentV2 }[];
+      expectedOptionIds: string[];
+    });
+
+export interface ExerciseDefinitionV2 {
+  schemaVersion: 2;
+  kind: 'composed';
+  id: string;
+  revision: string;
+  title: string;
+  parameters: GenerationParameterV1[];
+  variables: VariableV1[];
+  elements: ExerciseElementV2[];
+  extensions?: JsonObject;
+}
+
+export type PublicElementV2 =
+  | { id: string; sectionId?: string; type: 'text' | 'section'; text: string }
+  | {
+      id: string;
+      sectionId?: string;
+      type: 'expression';
+      latex: string;
+      label?: string;
+    }
+  | {
+      id: string;
+      sectionId?: string;
+      type: 'question';
+      text: string;
+      points: number;
+      response: { format: 'latex'; kind: 'rational' | 'expression' };
+    }
+  | {
+      id: string;
+      sectionId?: string;
+      type: 'mcq';
+      text: string;
+      points: number;
+      mode: 'single' | 'multiple';
+      options: { id: string; content: OptionContentV2 }[];
+    };
+
+export type ExpectedAnswerV2 =
+  | { kind: 'rational'; math: InstantiatedMathV1; value: RationalValueV1 }
+  | { kind: 'expression'; math: InstantiatedMathV1 }
+  | { kind: 'selection'; optionIds: string[] };
+
+/** Expected data stays attached to the question ID, never its array index. */
+export type PrivateElementV2 =
+  | Extract<PublicElementV2, { type: 'text' | 'section' }>
+  | (Extract<PublicElementV2, { type: 'expression' }> & {
+      math: InstantiatedMathV1;
+    })
+  | (Extract<PublicElementV2, { type: 'question' }> & {
+      expected: Exclude<ExpectedAnswerV2, { kind: 'selection' }>;
+      policy: { domain: 'rational' | 'polynomial'; form: 'value-only' };
+    })
+  | (Extract<PublicElementV2, { type: 'mcq' }> & {
+      expected: Extract<ExpectedAnswerV2, { kind: 'selection' }>;
+      optionMath: {
+        optionId: string;
+        math: InstantiatedMathV1;
+        value: RationalValueV1;
+      }[];
+    });
+
+export interface PrivateInstanceV2 {
+  schemaVersion: 2;
+  instanceId: string;
+  definition: ExerciseDefinitionV2;
+  engineVersion: string;
+  instantiationVersion: 'composed-instance-v2';
+  generation: {
+    version: string;
+    seed: string;
+    draws: number;
+    parameters: Record<
+      string,
+      import('../generation/variables.js').GeneratedValueV1
+    >;
+  };
+  title: string;
+  elements: PrivateElementV2[];
+}
+
+export interface PublicInstanceV2 {
+  schemaVersion: 2;
+  instanceId: string;
+  title: string;
+  elements: PublicElementV2[];
+}
+
 export interface ContractDiagnostic {
   /** JSON Pointer; the empty string denotes the root. */
   path: string;
@@ -129,6 +250,7 @@ export interface ContractDiagnostic {
     | 'unknown-version'
     | 'unknown-field'
     | 'collision'
+    | 'unsupported-type'
     | 'impossible-constraints';
   message: string;
 }

@@ -1,6 +1,6 @@
 # NovLearn Exercise Engine
 
-Moteur partagé TypeScript, initialisé le 10 octobre 2026. Ce dépôt est distinct du POC. Les Lots 2 à 4 fournissent des contrats natifs, leur validation structurelle, une frontière de parsing scalaire LaTeX et une génération déterministe de paramètres. La tranche native du Lot 5 instancie la question rationnelle de trinôme, calcule son attendu exact et produit une projection publique. Tuples/computed/contraintes intervariables, correction et interface utilisateur restent à développer.
+Moteur partagé TypeScript, initialisé le 10 octobre 2026. Ce dépôt est distinct du POC. Les Lots 2 à 4 fournissent des contrats natifs, leur validation structurelle, une frontière de parsing scalaire LaTeX et une génération déterministe de paramètres. Le Lot 5 instancie le natif v1 et les documents composés v2 à plusieurs éléments/questions, avec attendus privés et projection publique. Tuples/computed/contraintes intervariables, correction et interface utilisateur restent à développer.
 
 Package ESM privé `novlearn-exercise-engine`, déclarations TypeScript et export racine uniquement. CortexJS 0.151.0 est la seule dépendance mathématique ; MathLive appartient aux interfaces des applications.
 
@@ -38,7 +38,7 @@ Les huit lignes historiques reçues dans `docs/exercises_rows.json` sont conserv
 
 ## API actuelle
 
-Le cadrage global retient une liste plate avec sections et variables communes, puis texte/expression/question/QCM simple et multiple pour le premier contrat étendu. Chaque question aura son ID, attendu et politique privés. Les futures comparaisons symboliques exigent les mêmes domaines par défaut, avec domaine imposé explicite possible par question. Ces choix confirmés orientent la roadmap ; le code actuel reste à question rationnelle unique. L'audit conclut **cohérente avec réserves**, notamment sur contrats étendus, correcteur, isolation et adoption applicative.
+Le contrat v2 retient une liste plate avec sections et variables communes : texte/expression/question/QCM simple et multiple. Chaque question possède son ID et son attendu privés ; les politiques mathématiques restent privées. Les futures comparaisons symboliques exigent les mêmes domaines par défaut, avec domaine imposé explicite possible par question. Le natif v1 est conservé. L'audit conclut **cohérente avec réserves**, notamment sur groupes/computed/contraintes, correcteur, isolation et adoption applicative.
 
 ```ts
 import {
@@ -48,7 +48,7 @@ import {
 
 const result = validateDefinition(input); // input: unknown
 if (result.ok) {
-  // Contrat natif v1 validé structurellement, copie détachée.
+  // Contrat v1 ou v2 validé structurellement, copie détachée.
   // Aucun parsing, calcul ou preuve mathématique effectué.
   const definition = result.value;
 } else {
@@ -57,7 +57,7 @@ if (result.ok) {
 }
 ```
 
-`validateSubmission` conserve le LaTeX brut (y compris incomplet) et refuse les champs client de seed, politique ou verdict. Un succès structurel n'est pas une autorisation de correction : le serveur doit retrouver l'instance officielle et appliquer les contrôles mathématiques. Types `ExerciseDefinitionV1`, `SubmissionV1`, `PrivateInstanceV1` et `PublicInstanceV1` exportés ; les instances natives sont construites par l'API du Lot 5 ci-dessous, sans validateur public de snapshots arbitraires.
+`validateSubmission` conserve le LaTeX brut (y compris incomplet) et refuse les champs client de seed, politique ou verdict. Un succès structurel n'est pas une autorisation de correction : le serveur doit retrouver l'instance officielle et appliquer les contrôles mathématiques. Types de définition/instances v1 et v2 exportés ; `SubmissionV1` reste le transport LaTeX, sans transport QCM livré. Les instances sont construites par l'API du Lot 5 ci-dessous, sans validateur public de snapshots arbitraires. Depuis une entrée `unknown`, vérifier `schemaVersion` avant d'accéder aux champs propres à v1/v2 ; les entrées déjà typées conservent leur type de résultat via surcharges.
 
 ```ts
 import { parseMathInput } from 'novlearn-exercise-engine';
@@ -140,4 +140,16 @@ Dans `title`, `statement.text`, `question.text`, `@a` désigne un paramètre et 
 
 Profil borné : rationnels fermés exacts, expression polynomiale d'énoncé de degré structurel ≤16, dénominateurs fermés non nuls, exposants entiers 0…16 (base symbolique à la puissance zéro refusée). Décimaux jusqu'à six places sans groupement de chiffres ; numérateurs/dénominateurs fermés ≤1 000 000 000, AST ≤128 nœuds/profondeur 16. Les contrôles sont synchrones et ne garantissent pas une deadline. Détails, contrat privé concrétisé et limites dans [ADR 007](docs/adr/007-native-instantiation.md).
 
-Éléments supportés : texte, expression d'énoncé, question rationnelle unique. QCM, graphes/tableaux et autres familles restent différés ; `extensions` est conservé privé sans interprétation. Aucun adaptateur du corpus, correcteur élève, règle de forme, renderer ou Lot 6 implémenté.
+Dans le contrat v1 : texte, expression d'énoncé, question rationnelle unique. QCM et collections utilisent le contrat v2 ci-dessous ; graphes/tableaux et autres familles restent différés. `extensions` est conservé privé sans interprétation. Aucun adaptateur du corpus, correcteur élève, règle de forme, renderer ou Lot 6 implémenté.
+
+## Composition multiquestion — Lot 5 bis
+
+`ExerciseDefinitionV2` (`schemaVersion:2`, `kind:composed`) porte `id`, `revision`, `title`, `parameters`, `variables`, `elements` et des `extensions` privées facultatives. Les paramètres réutilisent integer/decimal/choice du Lot 4, sans nouveau PRNG. `instantiateExercise` et `projectPublicInstance` sont les mêmes fonctions ; le snapshot v2 utilise `composed-instance-v2` et conserve les valeurs typées. La version d'instanciation facultative doit correspondre au schéma.
+
+Branches d'éléments : texte/section (`text`), expression (`latex`, `label` textuel facultatif), question (`text`, `points`, `response`, `expectedLatex`, `policy`) et QCM (`text`, `points`, `mode`, `options`, `expectedOptionIds` privés). Chaque élément porte un ID unique et peut référencer une section par `sectionId`. Les sections restent plates. `@a`/`@@` s'appliquent aux textes et labels ; les formules passent par CortexJS dans leur champ dédié.
+
+Une question attend soit un rationnel exact (`response:{format:latex,kind:rational}`, politique rationnelle value-only), soit une expression polynomiale préparée (`kind:expression`, politique polynomial value-only), sans preuve d'équivalence ni forme pédagogique. Son `expected` privé reste attaché à son ID dans `instance.elements`. Le QCM simple/multiple conserve l'ordre et les IDs d'options, avec contenu texte ou LaTeX rationnel fermé ; collisions exactes après substitution refusées. La projection sélectionne chaque branche et ses objets imbriqués, sans attendu, politique, trace mathématique ni métadonnées privées.
+
+Le [scénario natif à cinq éléments](tests/fixtures/contracts/quadratic-multiquestion.definition.json) utilise a=2,b=−4,c=5 : `2x²−4x+5`, abscisse 1 et minimum 3. [Tests](tests/composition.test.ts) : association par ID après réordonnancement, rejeu JSON, fractions, génération intégrée, QCM, diagnostics et secrets imbriqués exclus. Il s'agit d'une fixture synthétique, pas d'une migration historique. Limites et audit initial dans [ADR 007](docs/adr/007-native-instantiation.md#lot-5-bis--composition-v2).
+
+Au plus 128 éléments, 64 options par QCM et les budgets JSON/math existants ; les budgets agrégés du snapshot peuvent être plus restrictifs. Graphes/tableaux, relations/systèmes, options QCM symboliques, tuples, computed et contraintes intervariables restent explicitement refusés. Verdict : **Lot 5 validé avec réserves** pour la composition scalaire ; la cible complète de roadmap n'est pas clôturée. Aucune correction élève ou intégration officielle livrée.

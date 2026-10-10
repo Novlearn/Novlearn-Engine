@@ -52,7 +52,7 @@ Comptes et authentification, accès DB/réseau, stockage de tentatives, catalogu
 
 Une version est consommable lorsque chaque fonctionnalité annoncée possède contrat, validation, limites et tests de succès/erreur/indétermination pertinents ; une même définition et les mêmes versions rejouent une instance ; toutes les associations de questions survivent au réordonnancement ; la projection ne transporte aucune solution privée ; les états non démontrés restent explicites. L'adoption officielle nécessite aussi une preuve d'isolation terminable côté hôte et une intégration qui ignore les verdicts clients.
 
-Aujourd'hui : contrats rationnels natifs, parsing scalaire, génération integer/decimal/choice autonome et instance native entière à question unique sont livrés. Aucune correction élève, UI, migration des huit lignes ou adoption par les applications n'est livrée. Verdict de l'[audit](architecture-review.md) : **cohérente avec réserves**, sans validation universelle de l'architecture.
+Aujourd'hui : contrats rationnels natifs, parsing scalaire, génération integer/decimal/choice et instance native entière v1 sont livrés ; le Lot 5 bis ajoute la composition scalaire v2, sections, questions multiples et QCM avec attendus privés/projection. Groupes/computed/contraintes et figures avancées demeurent des cibles. Aucune correction élève, UI, migration des huit lignes ou adoption par les applications n'est livrée. Verdict de l'[audit](architecture-review.md) : **cohérente avec réserves**, sans validation universelle de l'architecture.
 
 ## Index de la référence
 

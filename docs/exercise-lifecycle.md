@@ -54,7 +54,7 @@ flowchart TD
 6. Construire et vérifier l'instance complète : définition/révision, versions, valeurs typées, sources nécessaires, affichage et attendus. Aucun échec ne renvoie une instance partiellement valide.
 7. Le backend conserve l'état officiel. `projectPublicInstance` sélectionne des champs affichables et détachés ; aucun spread de définition, `correct`, solution, seed, extensions, politique privée ou trace de génération. Un calcul élève possible à partir de l'énoncé ne constitue pas une fuite de champ privé.
 
-État réel : le pipeline natif v1 valide/génère les entiers, interpole trois champs texte, instancie une expression d'énoncé et un attendu rationnel de question unique ; snapshot/projection/rejeu testés. Graphe computed, contraintes intervariables et parcours de liste sont absents. La projection accepte un snapshot **officiel de confiance**, sans authentifier des objets privés fournis par le client.
+État réel : le pipeline natif v1 est conservé. Le Lot 5 bis ajoute le parcours de liste scalaire v2 : paramètres integer/decimal/choice communs, tous les éléments/questions/QCM, attendus par ID et projection/rejeu testés. Graphe computed et contraintes intervariables restent absents ; les étapes de groupes/computed du diagramme sont cibles. La projection accepte un snapshot **officiel de confiance**, sans authentifier des objets privés fournis par le client. Voir [profil et limites v2](adr/007-native-instantiation.md#lot-5-bis--composition-v2).
 
 ## Parcours élève et tentatives
 

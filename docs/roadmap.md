@@ -76,6 +76,8 @@ Ne rouvre pas la première famille v1 livrée ; prépare un schéma étendu dist
 
 ## Complément Lot 4 bis — Tuples et comparaisons bornées (proposé)
 
+Priorité utilisateur après le Lot 5 bis ([D31](decisions.md#d31--priorité-au-moteur-complet-avant-ui-confirmée-utilisateur)) : terminer le moteur avant toute UI. Ce complément est la prochaine intervention recommandée, puis computed/contraintes et données d'éléments du Lot 5, correction/formes, isolation/compatibilité/distribution. Les renderers et parcours avec UI restent différés ; aucun nouveau lot engagé par le seul commit du Lot 5 bis.
+
 Complément ciblé nécessaire pour la cible complète avant de figer le snapshot du Lot 5 ; les tirages scalaires existants ne nécessitent pas de réimplémentation. Il ne rouvre pas le Lot 4 livré et ne commence pas le Lot 5. Son besoin découle des deux modes de tuple et des contraintes intervariables, absents des contrats actuels. Aucune capacité nouvelle n'est disponible du seul fait de cette roadmap.
 
 - Objectif : un seul tuple ordonné, par choix complet ou tirages de composantes validés ensemble ; comparaisons simples entre valeurs scalaires, sans solveur.
@@ -90,6 +92,8 @@ Complément ciblé nécessaire pour la cible complète avant de figer le snapsho
 - Passage : contrat/génération de groupe revus avant Lot 5 ; pas de calcul dépendant, instance ou UI dans ce complément.
 
 ## Lot 5 — Substitution et instance affichable
+
+**Lot 5 bis livré le 10 octobre 2026** : composition scalaire v2, liste plate/sections, questions multiples avec attendus par ID, QCM simple/multiple, decimal/choice intégrés, projection par branche et tests ; v1/RNG conservés. [D30](decisions.md#d30--lot-5-bis--composition-scalaire-v2-retenue) et [ADR 007](adr/007-native-instantiation.md#lot-5-bis--composition-v2). Les tâches multiéléments/questions/QCM ci-dessous sont réalisées dans ce profil borné ; tuples/computed/graphe/conditions mathématiques restent absents et le snapshot avec groupes reste ouvert. Verdict **validé avec réserves**, cible complète non clôturée ; aucun 4 bis ni Lot 6 engagé.
 
 **Tranche native livrée le 10 octobre 2026 sur demande explicite** : `instantiateExercise`, substitution CortexJS contrôlée, attendu rationnel exact du trinôme 103, snapshot entier privé et `projectPublicInstance`, tests de rejeu et projection. [ADR 007](adr/007-native-instantiation.md) et [progress.md](progress.md) précisent les preuves et limites. La demande interdit de reconstruire tuples/computed/contraintes absents : ces objectifs étendus ci-dessous restent différés, aucun 4 bis lancé. Le contrat entier natif reste admis sans figer le snapshot étendu. Ce statut ne clôture pas la cible complète du Lot 5 décrite ci-dessous.
 
@@ -196,4 +200,4 @@ Séquentiel : décisions de contrats avant génération ; admissibilité raw ava
 
 Démos : Lot 5 affichage/rejeu sans verdict ; Lot 8 Python ↔ Node avec interruption réelle ; Lot 10 parcours étudiant complet.
 
-**Prochaine étape recommandée pour la cible étendue : revoir le contrat de composition/valeurs/groupes, puis développer séparément le complément 4 bis, sur nouvelle instruction.** Les tirages natifs du Lot 4 et l'instance native du Lot 5 restent disponibles. Stabiliser tuple, comparaisons et versionnement avant le Lot 5 étendu ; y livrer ensuite computed/domaines, contraintes mathématiques, liste d'éléments/questions et snapshot étendu. La tranche scalaire livrée sur demande au Lot 5 ne réalise pas ces extensions. Le Lot 6 nécessite une instruction distincte, des familles/bornes de comparaison et le contexte officiel serveur ; aucune correction commencée. Migration de comportements aux lots suivants. Aucun enchaînement automatique.
+**Prochaine étape recommandée pour la cible complète : revoir les contrats de valeurs/groupes, puis développer séparément le complément 4 bis, sur nouvelle instruction.** Composition scalaire, liste d'éléments/questions, sections/QCM et snapshot v2 sont désormais livrés au Lot 5 bis ; v1 et les tirages du Lot 4 restent disponibles. Stabiliser tuple, comparaisons et versionnement avant le complément du Lot 5 pour computed/domaines, contraintes mathématiques et snapshot avec groupes. Un premier Lot 6 rationnel peut se concevoir sur le profil scalaire livré, avec instruction distincte, familles/bornes de comparaison et contexte officiel serveur ; aucune correction commencée. Migration et isolation officielle aux lots suivants. Aucun enchaînement automatique.

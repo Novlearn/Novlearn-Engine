@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "kind": "composed",
+  "id": "quadratic-multiquestion-native",
+  "revision": "1",
+  "title": "Minimum du trinôme",
+  "parameters": [
+    { "name": "a", "kind": "integer", "min": 2, "max": 2, "exclusions": [] },
+    { "name": "b", "kind": "integer", "min": -4, "max": -4, "exclusions": [] },
+    { "name": "c", "kind": "integer", "min": 5, "max": 5, "exclusions": [] }
+  ],
+  "variables": [{ "name": "x", "domain": "real" }],
+  "elements": [
+    {
+      "id": "introduction",
+      "type": "text",
+      "text": "On considère une fonction de coefficient a=@a."
+    },
+    {
+      "id": "function",
+      "type": "expression",
+      "label": "f(x) =",
+      "latex": "ax^2+bx+c"
+    },
+    {
+      "id": "q-abscissa",
+      "type": "question",
+      "text": "Déterminer l'abscisse du minimum.",
+      "points": 1,
+      "response": { "format": "latex", "kind": "rational" },
+      "expectedLatex": "\\frac{-b}{2a}",
+      "policy": { "domain": "rational", "form": "value-only" }
+    },
+    {
+      "id": "q-minimum",
+      "type": "question",
+      "text": "Déterminer la valeur minimale.",
+      "points": 1,
+      "response": { "format": "latex", "kind": "rational" },
+      "expectedLatex": "c-\\frac{b^2}{4a}",
+      "policy": { "domain": "rational", "form": "value-only" }
+    },
+    {
+      "id": "conclusion",
+      "type": "text",
+      "text": "Vérifier avec les coefficients @a, @b et @c."
+    }
+  ],
+  "extensions": {
+    "provenance": "Synthetic native integration fixture, not a migrated historical exercise.",
+    "solution": { "privateMarker": "PRIVATE-SENTINEL" }
+  }
+}

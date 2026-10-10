@@ -1,11 +1,13 @@
 import type {
   ContractDiagnostic,
   ExerciseDefinitionV1,
+  ExerciseDefinitionV2,
   JsonObject,
   JsonValue,
   SubmissionV1,
   ValidationResult,
 } from './types.js';
+import { inspectComposition } from './composition.js';
 
 const MAX_TEXT = 4096;
 const MAX_ITEMS = 128;
@@ -286,9 +288,22 @@ export function inspectIntegerParameter(
 
 /** Structural validation only: no parsing, substitution or mathematical proof. */
 export function validateDefinition(
+  input: ExerciseDefinitionV1,
+): ValidationResult<ExerciseDefinitionV1>;
+export function validateDefinition(
+  input: ExerciseDefinitionV2,
+): ValidationResult<ExerciseDefinitionV2>;
+export function validateDefinition(
   input: unknown,
-): ValidationResult<ExerciseDefinitionV1> {
+): ValidationResult<ExerciseDefinitionV1 | ExerciseDefinitionV2>;
+export function validateDefinition(
+  input: unknown,
+): ValidationResult<ExerciseDefinitionV1 | ExerciseDefinitionV2> {
   return validate(input, (v, data) => {
+    if (record(data) && data.schemaVersion === 2 && data.kind === 'composed') {
+      inspectComposition(v, data);
+      return;
+    }
     const d = v.object(data, '', [
       'schemaVersion',
       'kind',

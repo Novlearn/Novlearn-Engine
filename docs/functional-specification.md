@@ -1,6 +1,6 @@
 # Spécification fonctionnelle
 
-Référence cible du 10 octobre 2026, sans modification des contrats réels. [Vision](exercise-engine-vision.md), [contrats](architecture.md), [couverture réelle](feature-coverage.md) et [parcours](exercise-lifecycle.md) font partie de la même référence. Les exemples marqués `draft` sont documentaires et refusés par les validateurs actuels.
+Référence cible du 10 octobre 2026. [Vision](exercise-engine-vision.md), [contrats](architecture.md), [couverture réelle](feature-coverage.md) et [parcours](exercise-lifecycle.md) font partie de la même référence. Les exemples marqués `draft` sont documentaires et refusés par les validateurs actuels. Lot 5 bis : le [contrat composé scalaire v2](adr/007-native-instantiation.md#lot-5-bis--composition-v2) réalise désormais liste/sections, texte/expression, questions multiples rationnelles ou polynomiales préparées et QCM texte/rationnel fermé. Les descriptions « absent natif » ci-dessous proviennent de l'inventaire initial v1 ; la matrice de couverture donne l'état actualisé. Les exigences de computed/groupes/contraintes/figures restent des cibles, sans support annoncé.
 
 ## 1. Document et questions
 

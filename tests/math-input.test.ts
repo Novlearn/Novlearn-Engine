@@ -153,6 +153,7 @@ describe('scalar-latex-v1 mathematical boundary', () => {
     expect(definition.ok).toBe(true);
     if (!definition.ok) return;
     const d = definition.value;
+    if (d.schemaVersion !== 1) throw new Error('Expected v1 fixture.');
     expect(
       parseMathInput(d.question.expectedLatex, {
         parameters: d.parameters.map((p) => p.name),

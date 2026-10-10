@@ -1,6 +1,6 @@
 # Architecture et contrats
 
-Référence consolidée le 10 octobre 2026. [Vision](exercise-engine-vision.md), [spécification](functional-specification.md), [parcours](exercise-lifecycle.md), [couverture](feature-coverage.md) et [audit critique](architecture-review.md) complètent ce document sans dupliquer les ADR de profils. Les schémas cibles restent documentaires ; les contrats v1 et le code ne sont pas modifiés.
+Référence consolidée le 10 octobre 2026. [Vision](exercise-engine-vision.md), [spécification](functional-specification.md), [parcours](exercise-lifecycle.md), [couverture](feature-coverage.md) et [audit critique](architecture-review.md) complètent ce document sans dupliquer les ADR de profils. Lot 5 bis : composition scalaire v2 désormais livrée, v1 conservé ; les schémas avec groupes/computed et exemples Draft restent documentaires. [API et limites v2](adr/007-native-instantiation.md#lot-5-bis--composition-v2).
 
 ## Frontières
 
@@ -16,6 +16,8 @@ Quatre modules logiques suffisent pour démarrer ; ce sont des responsabilités 
 | `grading`    | Comparaison par famille et politique de forme, preuves et verdict                       | Pas de vérité fournie par client          |
 
 `adapters/legacy` traite les enveloppes historiques ; `adapters/node` pourra traiter le transport et la supervision. Aucun builtin Node dans l'entrée portable. Ne pas exporter les objets ComputeEngine/boxed ; ils restent dans le contexte d'un travail. Source/raw conservés, formes dérivées calculées au besoin ; ne pas persister six représentations équivalentes.
+
+État Lot 5 bis : `src/contracts/composition.ts` valide les branches v2 en réutilisant la validation de paramètres du Lot 4. `src/instantiation.ts` conserve le pipeline v1 et ajoute le parcours composé après le même appel de génération ; `projectPublicInstance` sélectionne chaque branche et ses objets imbriqués. Six exports runtime, aucune nouvelle responsabilité de parsing/génération/correction/rendu. Définition/instances v2 typées dans `types.ts`, valeurs générées typées et attendus attachés aux IDs de questions. Les recommandations de snapshot avec groupes ci-dessous restent distinctes de ce snapshot scalaire livré.
 
 ## Parcours mathématique
 
@@ -95,17 +97,18 @@ Isoler hypothèses et déclarations par travail ; pas de singleton mutable parta
 
 ## Inventaire réel des modules
 
-| Fichiers                                         | Responsabilité actuelle                                                     | Preuves / limites                                                                 |
-| ------------------------------------------------ | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `src/index.ts`                                   | Six fonctions publiques et types de données                                 | Test import ESM/export privé ; pas d'API grading                                  |
-| `src/contracts/types.ts`                         | Contrats définition/soumission/instances v1 et paramètres/valeurs           | Types seuls ne prouvent pas un constructeur ni un validateur de tous les concepts |
-| `src/contracts/validation.ts`                    | JSON inerte, budgets, définition native et soumission, copies détachées     | Tests getters/cycles/aliases/versions/chemins ; validation structurelle           |
-| `src/contracts/parameters.ts`, `decimal-grid.ts` | Validation interne des tirages et encodage de grille                        | Aucun nouvel export public de validation des paramètres                           |
-| `src/math/input.ts`                              | Profil scalar-latex-v1, source/raw et contexte de symboles                  | Parsing synchrone sans calcul ni garantie de domaine                              |
-| `src/generation/random.ts`, `variables.ts`       | Mulberry32 et tirages typés integer/decimal/choice                          | parameters-v1, états locaux, golden vectors ; pas de graphe computed              |
-| `src/math/substitution.ts`                       | Substitution CortexJS et admission/calcul rationnel-polynomial ciblé        | Interne ; aucun service de calcul universel public                                |
-| `src/instantiation.ts`                           | Orchestration et projection par sélection                                   | Définition native entière, une question ; snapshot officiel requis                |
-| `tests/`                                         | Corpus, contrats, saisie, génération, instance/substitution et distribution | 8 fichiers Vitest ; pas de tests grading, UI, serveur ou migration                |
+| Fichiers                                         | Responsabilité actuelle                                                                 | Preuves / limites                                                                     |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `src/index.ts`                                   | Six fonctions publiques et types de données                                             | Test import ESM/export privé ; pas d'API grading                                      |
+| `src/contracts/types.ts`                         | Définition/instances v1 et composition scalaire v2, soumission LaTeX v1                 | Unions d'éléments/attendus et valeurs typées ; groupes/computed absents               |
+| `src/contracts/validation.ts`                    | JSON inerte, budgets, définition native et soumission, copies détachées                 | Tests getters/cycles/aliases/versions/chemins ; validation structurelle               |
+| `src/contracts/parameters.ts`, `decimal-grid.ts` | Validation interne des tirages et encodage de grille                                    | Aucun nouvel export public de validation des paramètres                               |
+| `src/contracts/composition.ts`                   | Validation structurelle du composé v2, IDs/sections/questions/options                   | Tests composition, métadonnées privées et paramètres du Lot 4 réutilisés              |
+| `src/math/input.ts`                              | Profil scalar-latex-v1, source/raw et contexte de symboles                              | Parsing synchrone sans calcul ni garantie de domaine                                  |
+| `src/generation/random.ts`, `variables.ts`       | Mulberry32 et tirages typés integer/decimal/choice                                      | parameters-v1, états locaux, golden vectors ; pas de graphe computed                  |
+| `src/math/substitution.ts`                       | Substitution CortexJS et admission/calcul rationnel-polynomial ciblé                    | Interne ; aucun service de calcul universel public                                    |
+| `src/instantiation.ts`                           | Orchestration v1/v2 et projection par sélection                                         | Multiquestion et QCM scalaires, snapshot officiel requis ; aucun grading              |
+| `tests/`                                         | Corpus, contrats, saisie, génération, instance/substitution/composition et distribution | 9 fichiers / 380 tests Vitest locaux ; pas de tests grading, UI, serveur ou migration |
 
 `contracts` valide les données, `math` interprète les mathématiques, `generation` gère valeurs/contraintes, `instantiation.ts` orchestre, futur `grading` statue par question. Ce découpage suffit ; pas de dossier/module vide par type d'élément, de registry de plugins ou de factories de services. Les futurs adaptateurs legacy et supervision Node restent séparés de l'entrée portable.
 

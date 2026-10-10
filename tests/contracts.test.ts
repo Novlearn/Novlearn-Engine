@@ -10,6 +10,7 @@ function definition(): ExerciseDefinitionV1 {
   const input: unknown = fixture;
   const result = validateDefinition(input);
   if (!result.ok) throw new Error(JSON.stringify(result.diagnostics));
+  if (result.value.schemaVersion !== 1) throw new Error('Expected v1 fixture.');
   return result.value;
 }
 

@@ -483,6 +483,8 @@ describe('contracts and Lot 3 integration', () => {
   it('generates native trinomial parameters, keeps x free and parses the expected source unchanged', () => {
     const checked = validateDefinition(fixture);
     if (!checked.ok) throw new Error('fixture invalid');
+    if (checked.value.schemaVersion !== 1)
+      throw new Error('Expected v1 fixture.');
     const before = JSON.stringify(checked.value);
     const result = generateVariables(checked.value.parameters, { seed: 42 });
     expect(result).toMatchObject({

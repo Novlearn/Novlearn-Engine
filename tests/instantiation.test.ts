@@ -15,6 +15,7 @@ import fixture from './fixtures/contracts/rational-minimum.definition.json' with
 function definition(): ExerciseDefinitionV1 {
   const result = validateDefinition(fixture);
   if (!result.ok) throw new Error('Invalid test fixture.');
+  if (result.value.schemaVersion !== 1) throw new Error('Expected v1 fixture.');
   return result.value;
 }
 function fixed(a = 2, b = -4, c = 3): ExerciseDefinitionV1 {
@@ -37,6 +38,8 @@ function instance(
     instanceId: 'opaque-server-id',
   });
   if (!result.ok) throw new Error(JSON.stringify(result.diagnostics));
+  if (result.value.schemaVersion !== 1)
+    throw new Error('Expected v1 instance.');
   return result.value;
 }
 
