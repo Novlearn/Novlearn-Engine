@@ -1,0 +1,43 @@
+{
+  "name": "novlearn-exercise-engine",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Independent NovLearn exercise engine foundations",
+  "type": "module",
+  "engines": {
+    "node": ">=24.19.0 <25",
+    "npm": ">=11.17.0 <12"
+  },
+  "packageManager": "npm@11.17.0",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && vitest run",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run build && npm run typecheck && npm run lint && npm run format:check && vitest run",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@cortex-js/compute-engine": "0.151.0"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vitest": "5.0.3",
+    "eslint": "10.12.0",
+    "typescript-eslint": "8.71.1",
+    "prettier": "3.9.10"
+  }
+}

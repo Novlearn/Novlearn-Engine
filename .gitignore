@@ -1,0 +1,32 @@
+# Dependencies and generated output
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+*.tgz
+
+# Local caches, logs and test artifacts
+.npm-cache/
+.cache/
+.vitest/
+.eslintcache
+*.log
+test-results/
+playwright-report/
+
+# Local tooling and credentials
+.codex/
+.aws/
+.idea/
+.vscode/
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+!.env.*.template
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
