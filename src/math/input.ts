@@ -105,7 +105,11 @@ export function parseMathInput(
   const names = [...parameters, ...variables];
   if (
     names.some(
-      (name) => !/^[a-z]$/.test(name) || name === 'e' || name === 'i',
+      (name) =>
+        name.length !== 1 ||
+        !/^[a-z]$/.test(name) ||
+        name === 'e' ||
+        name === 'i',
     ) ||
     new Set(names).size !== names.length
   )

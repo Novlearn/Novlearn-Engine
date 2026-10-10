@@ -2,7 +2,7 @@
 
 ## Frontières
 
-Un package TypeScript portable, indépendant des frameworks, utilisant CortexJS comme unique bibliothèque mathématique. Livraison ESM et `.d.ts`, point d'entrée racine explicite. Le Lot 2 exporte `validateDefinition` et `validateSubmission` pour les contrats natifs v1 ; aucun calcul mathématique encore implémenté. MathLive reste dans les applications ; la soumission actuelle conserve une saisie LaTeX brute. Une entrée MathJSON n'est pas acceptée par ce contrat initial.
+Un package TypeScript portable, indépendant des frameworks, utilisant CortexJS comme unique bibliothèque mathématique. Livraison ESM et `.d.ts`, point d'entrée racine explicite. Les Lots 2 à 4 exportent `validateDefinition`, `validateSubmission`, `parseMathInput` et `generateVariables` ; aucun calcul d'expression encore implémenté. MathLive reste dans les applications ; la soumission actuelle conserve une saisie LaTeX brute. Une entrée MathJSON n'est pas acceptée par ce contrat initial.
 
 Quatre modules logiques suffisent pour démarrer ; ce sont des responsabilités prévues, pas des dossiers vides créés :
 
@@ -41,7 +41,7 @@ Contrats JSON versionnés et validés runtime aux frontières ; unknown jusqu'à
 
 ## API minimale envisagée
 
-`validateDefinition` et `validateSubmission` sont les deux fonctions exportées (validation structurelle uniquement). Les autres opérations ci-dessous restent candidates pour les lots futurs :
+`validateDefinition` et `validateSubmission` effectuent la validation structurelle, `parseMathInput` conserve la syntaxe brute et `generateVariables` tire des paramètres typés. Cette dernière API est décrite dans ADR 006, sans construction d'instance. Les autres opérations ci-dessous restent candidates pour les lots futurs :
 
 | Besoin                 | Opération candidate  | Résultat conceptuel                                          |
 | ---------------------- | -------------------- | ------------------------------------------------------------ |

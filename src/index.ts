@@ -4,8 +4,11 @@ export {
 } from './contracts/validation.js';
 export type {
   ContractDiagnostic,
+  ChoiceParameterV1,
+  DecimalParameterV1,
   ExerciseDefinitionV1,
   IntegerParameterV1,
+  GenerationParameterV1,
   JsonObject,
   JsonValue,
   PrivateInstanceV1,
@@ -23,3 +26,10 @@ export type {
   MathInputResult,
   MathSyntax,
 } from './math/input.js';
+export { generateVariables } from './generation/variables.js';
+export type {
+  GenerateVariablesOptions,
+  GenerateVariablesResult,
+  GeneratedValueV1,
+  GenerationDiagnostic,
+} from './generation/variables.js';

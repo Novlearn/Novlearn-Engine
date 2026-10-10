@@ -9,9 +9,9 @@ Statut « retenue » = cohérente avec le cadrage et adoptée pour ce socle ; pa
 | D03 | Retenue    | Source originale/raw et restrictions avant réduction ; forme séparée de valeur. ADR 002.                                                                      |
 | D04 | Retenue    | Exact/heuristique/indéterminé/erreur explicites ; aucun faux incorrect par défaut.                                                                            |
 | D05 | Retenue    | Correction serveur et projection publique par allowlist ; pas de seed sensible publique. ADR 003.                                                             |
-| D06 | Retenue    | Génération future seedée et versionnée, échec explicite sur contraintes impossibles.                                                                          |
+| D06 | Retenue    | Génération de paramètres seedée et versionnée livrée au Lot 4 ; domaines vides et limites explicites, aucun fallback. ADR 006.                                |
 | D07 | Retenue    | Aucun `eval`, `new Function`, parseur LaTeX supplémentaire ou CAS parallèle.                                                                                  |
-| D08 | Retenue    | Socle seulement : pas de génération/correction/UI, publication désactivée.                                                                                    |
+| D08 | Retenue    | Périmètre limité au lot autorisé ; pas de correction/UI à ce stade, publication désactivée.                                                                   |
 | D09 | Provisoire | TS6.0.3 au lieu du TS7.0.2 POC : peer déclaré de typescript-eslint8.71.1 <6.1.0.                                                                              |
 | D10 | Provisoire | Rationnels/polynômes univariés bornés pour premier correcteur ; spécifier bornes et coefficients.                                                             |
 | D11 | Provisoire | CLI puis pool local comme expériences FastAPI ; aucun service imposé.                                                                                         |
@@ -19,12 +19,14 @@ Statut « retenue » = cohérente avec le cadrage et adoptée pour ce socle ; pa
 | D13 | Ouverte    | Domaines identiques ou domaine imposé, types numériques, tolérances et familles pédagogiques.                                                                 |
 | D14 | Ouverte    | Politique forme factorisée/réduite, cas triviaux et états de forme inconnue.                                                                                  |
 | D15 | Retenue    | Profil scalaire v1 : point ou `{,}` natif, virgule nue refusée, placeholders rejetés avant parsing. ADR 005.                                                  |
-| D16 | Ouverte    | RNG/seed encodage, stockage snapshot et ordre stable des tirages.                                                                                             |
+| D16 | Retenue    | Mulberry32 parameters-v1, seed uint32 canonique, ordre du tableau et singleton sans tirage figés. Snapshot au Lot 5. ADR 006.                                 |
 | D17 | Ouverte    | Transport production, budgets de ressources, SLO et contraintes déploiement.                                                                                  |
 | D18 | Ouverte    | Registre privé, licence, nom final, processus de release et compatibilité consommateurs.                                                                      |
 | D19 | Retenue    | Parsing CortexJS 0.151.0 `form:raw`, MathJSON public détaché, source conservée, contexte isolé par appel ; aucune évaluation ni garantie de domaine. ADR 005. |
 
 Les arbitrages entre agents et documents contradictoires figurent dans [analysis.md](analysis.md). Ne pas utiliser les 162 tests externes comme certification du moteur neuf. Les onze sondes polynomialCoefficients justifient un candidat borné, pas un correcteur général. La migration des tableaux/figures reste conditionnelle, sans transformation générique de noms.
+
+Lot 4 : génération native integer/decimal/choice et valeurs typées sérialisables, précision de grille explicite sans tolérance. Doublons et exclusions hors domaine refusés. Contrat d'exercice rationnel inchangé ; computed et contraintes entre paramètres restent au Lot 5. Décisions détaillées et versionnement dans [ADR 006](adr/006-deterministic-generation.md).
 
 ## Reprise du développement — 10 octobre 2026
 

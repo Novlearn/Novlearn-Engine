@@ -20,7 +20,7 @@ function record(value: JsonValue | undefined): value is JsonObject {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-class Validation {
+export class Validation {
   readonly diagnostics: ContractDiagnostic[] = [];
   private nodes = 0;
   private readonly ancestors = new Set<object>();
@@ -204,6 +204,7 @@ class Validation {
   symbol(value: JsonValue | undefined, path: string, names: Set<string>): void {
     if (
       typeof value !== 'string' ||
+      value.length !== 1 ||
       !/^[a-z]$/.test(value) ||
       value === 'e' ||
       value === 'i'
@@ -225,7 +226,7 @@ class Validation {
   }
 }
 
-function validate<T>(
+export function validate<T>(
   input: unknown,
   inspect: (v: Validation, data: JsonValue) => void,
 ): ValidationResult<T> {
@@ -243,7 +244,47 @@ function validate<T>(
   return { ok: true, value: data as T };
 }
 
-/** Structural validation only: no parsing, parameter substitution or proof of the expected answer. */
+/** Shared integer domain checks for definition and generation boundaries. */
+export function inspectIntegerParameter(
+  v: Validation,
+  p: JsonObject,
+  path: string,
+): void {
+  const minValid = v.integer(p.min, child(path, 'min'));
+  const maxValid = v.integer(p.max, child(path, 'max'));
+  const excluded = new Set<number>();
+  for (const [i, exclusion] of v
+    .list(p.exclusions, child(path, 'exclusions'))
+    .entries()) {
+    const exclusionPath = child(child(path, 'exclusions'), i);
+    if (!v.integer(exclusion, exclusionPath)) continue;
+    if (excluded.has(exclusion))
+      v.issue(exclusionPath, 'collision', 'Duplicate exclusion.');
+    excluded.add(exclusion);
+    if (
+      minValid &&
+      maxValid &&
+      typeof p.min === 'number' &&
+      typeof p.max === 'number' &&
+      (exclusion < p.min || exclusion > p.max)
+    ) {
+      v.issue(exclusionPath, 'value', 'Exclusion must lie within the range.');
+    }
+  }
+  if (
+    minValid &&
+    maxValid &&
+    typeof p.min === 'number' &&
+    typeof p.max === 'number'
+  ) {
+    if (p.min > p.max)
+      v.issue(path, 'impossible-constraints', 'Minimum exceeds maximum.');
+    else if (excluded.size >= p.max - p.min + 1)
+      v.issue(path, 'impossible-constraints', 'Every value is excluded.');
+  }
+}
+
+/** Structural validation only: no parsing, substitution or mathematical proof. */
 export function validateDefinition(
   input: unknown,
 ): ValidationResult<ExerciseDefinitionV1> {
@@ -279,42 +320,7 @@ export function validateDefinition(
       ]);
       v.symbol(p.name, child(path, 'name'), names);
       v.literal(p.kind, child(path, 'kind'), 'integer');
-      const minValid = v.integer(p.min, child(path, 'min'));
-      const maxValid = v.integer(p.max, child(path, 'max'));
-      const excluded = new Set<number>();
-      for (const [i, exclusion] of v
-        .list(p.exclusions, child(path, 'exclusions'))
-        .entries()) {
-        const exclusionPath = child(child(path, 'exclusions'), i);
-        if (!v.integer(exclusion, exclusionPath)) continue;
-        if (excluded.has(exclusion))
-          v.issue(exclusionPath, 'collision', 'Duplicate exclusion.');
-        excluded.add(exclusion);
-        if (
-          minValid &&
-          maxValid &&
-          typeof p.min === 'number' &&
-          typeof p.max === 'number' &&
-          (exclusion < p.min || exclusion > p.max)
-        ) {
-          v.issue(
-            exclusionPath,
-            'value',
-            'Exclusion must lie within the range.',
-          );
-        }
-      }
-      if (
-        minValid &&
-        maxValid &&
-        typeof p.min === 'number' &&
-        typeof p.max === 'number'
-      ) {
-        if (p.min > p.max)
-          v.issue(path, 'impossible-constraints', 'Minimum exceeds maximum.');
-        else if (excluded.size >= p.max - p.min + 1)
-          v.issue(path, 'impossible-constraints', 'Every value is excluded.');
-      }
+      inspectIntegerParameter(v, p, path);
     }
     for (const [index, value] of v
       .list(d.variables, '/variables', 16)

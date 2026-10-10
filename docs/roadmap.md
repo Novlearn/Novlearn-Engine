@@ -48,6 +48,8 @@ Objectif : caractériser CortexJS/MathLive. Livrables disponibles dans le dépô
 
 ## Lot 4 — Paramètres et RNG déterministe
 
+**Terminé le 10 octobre 2026** : API `generateVariables`, entiers du contrat natif, décimaux sur grille et choix numériques finis, Mulberry32/version `parameters-v1`, seed uint32 canonique, vecteurs figés et échecs bornés. Aucun tuple ou computed livré ; justifications et contrats additifs dans ADR 006, preuves locales dans progress.md.
+
 - Objectif : générer des valeurs avec contraintes et rejeu exact.
 - Fichiers : src/generation, tests/generation, ADR RNG et seed.
 - Dépendances : Lot 2 ; parallèle possible avec Lot 3 pour paramètres sans expression.
@@ -150,4 +152,4 @@ Séquentiel : décisions de contrats avant génération ; admissibilité raw ava
 
 Démos : Lot 5 affichage/rejeu sans verdict ; Lot 8 Python ↔ Node avec interruption réelle ; Lot 10 parcours étudiant complet.
 
-**Prochain lot recommandé : Lot 4, paramètres et RNG déterministe, après revue du Lot 3 et sur nouvelle instruction.** Le corpus est reçu et la frontière scalaire est disponible ; génération et migration de comportements restent aux lots suivants. Aucun enchaînement automatique.
+**Prochain lot recommandé : Lot 5, substitution et instance affichable, après revue du Lot 4 et sur nouvelle instruction.** Les tirages natifs sont disponibles. Contrats computed/domaines, calculs exacts, snapshot et projection restent à définir ; migration de comportements aux lots suivants. Aucun enchaînement automatique.

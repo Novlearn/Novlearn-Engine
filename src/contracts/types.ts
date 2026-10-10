@@ -11,6 +11,27 @@ export interface IntegerParameterV1 {
   exclusions: number[];
 }
 
+/** Exact decimal grid: coefficient / 10^precision, precision from 0 to 6. */
+export interface DecimalParameterV1 {
+  name: string;
+  kind: 'decimal';
+  min: number;
+  max: number;
+  precision: number;
+  exclusions: number[];
+}
+
+/** Unique finite numeric choices; duplicates are invalid, never implicit weights. */
+export interface ChoiceParameterV1 {
+  name: string;
+  kind: 'choice';
+  values: number[];
+}
+
+/** Generation contract; ExerciseDefinitionV1 remains the integer-only family. */
+export type GenerationParameterV1 =
+  IntegerParameterV1 | DecimalParameterV1 | ChoiceParameterV1;
+
 export interface VariableV1 {
   name: string;
   domain: 'real' | 'integer';

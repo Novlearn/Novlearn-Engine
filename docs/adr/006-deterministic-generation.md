@@ -1,0 +1,47 @@
+# ADR 006 — Génération de paramètres v1
+
+Statut : retenu, 10 octobre 2026, Lot 4. Aucun Lot 5 engagé.
+
+## Périmètre et contrats
+
+Inspection préalable : le Lot 3 fournit `parseMathInput` et son profil scalaire raw, avec 99 tests existants passants avant l'ajout des tests de génération. Le Lot 2 définit uniquement `IntegerParameterV1` dans `ExerciseDefinitionV1`, sans expression calculée ni relation entre paramètres. La roadmap réserve explicitement computed et substitution au Lot 5. Il n'existe donc pas de blocage pour les tirages ; ajouter un graphe computed et un contrat de domaine maintenant déplacerait le périmètre du lot suivant.
+
+Une seule fonction publique ajoutée : `generateVariables(definitions, { seed, generationVersion? })`. Les définitions sont validées depuis `unknown`, puis copiées par la frontière JSON inerte du Lot 2 ; les contrôles des entiers sont partagés avec `validateDefinition`. Le résultat est discriminé par `ok` : succès avec valeurs et métadonnées de rejeu, ou diagnostics avec codes et JSON Pointer, sans valeurs partielles. Options validées runtime également, sans coercition implicite. Aucun getter n'est exécuté ; classes, fonctions, cycles, tableaux creux, clés dangereuses et champs inconnus sont refusés. Pas de nouvelle dépendance.
+
+`GenerationParameterV1` réutilise les entiers et ajoute `DecimalParameterV1` et `ChoiceParameterV1`. Ce contrat de génération est piloté par `parameters-v1` ; ce n'est pas un schéma d'exercice historique. `ExerciseDefinitionV1` reste la première famille à paramètres entiers, et les DTO d'instance restent préparatoires. Les données décimales/choice ne peuvent pas encore être injectées dans cette définition rationnelle. Le Lot 5 devra décider explicitement comment construire le snapshot d'instance à partir des valeurs typées.
+
+Les noms restent ceux du contrat v1 : une lettre latine minuscule, hors e/i, unique, au plus 16 paramètres. Seule la liste de paramètres est tirée ; les variables libres comme x ne sont pas fournies au générateur. Il n'existe aucune expression à parser dans ce périmètre : aucune seconde implémentation de parsing/substitution n'est créée. Le test du trinôme compose validation, génération et parsing raw de l'attendu avec la vraie API du Lot 3, sans calculer cet attendu. CortexJS restera la voie du futur calcul mathématique.
+
+## RNG et stabilité
+
+Seed obligatoire : entier uint32 0…4294967295, ou son écriture décimale canonique (sans espace, signe, zéros initiaux ou exposant). -0 numérique est refusé. Pas de hash de chaînes arbitraires ni d'horloge. La seed de rejeu est stockée comme chaîne décimale ; seed numérique et chaîne canonique correspondante produisent exactement le même résultat.
+
+Algorithme figé : Mulberry32, état initial égal à la seed, addition modulo 2³² de `0x6d2b79f5`, mélange avec `Math.imul` et décalages uint32 ; voir `src/generation/random.ts`. Zéro est un état initial admis. Les opérations ECMAScript sont communes à Node et au navigateur, sans builtin Node ; les tests exécutés ici sont Node uniquement. Le PRNG n'est pas cryptographique et la seed/métadonnée de rejeu reste privée. Les applications serveur devront choisir et retrouver leurs propres seeds, sans faire confiance à celles d'un client.
+
+Un mot uint32 est transformé en rang dans 0…n−1 : rejeter les mots ≥ `2^32 - (2^32 % n)`, puis appliquer modulo n. Cela retire le biais du mapping modulo sur des mots uniformes, sans prétendre prouver la qualité statistique du PRNG. Aucun rejet pour les exclusions : sélectionner le rang dans le complément trié. Pas d'énumération de plages potentiellement grandes. Une liste de choix conserve l'ordre déclaré ; exclusions triées numériquement, ordre des clés d'objet sans effet. L'ordre du tableau des paramètres définit l'ordre des tirages. Une plage ou un choix réduit à une valeur ne consomme aucun mot. Chaque appel possède son propre état.
+
+128 mots au maximum par rang, 16 paramètres, donc au plus 2048 mots par appel validé. Épuiser ce budget retourne `limit`, sans fallback ni preuve d'impossibilité mathématique. Aucun paramètre de recherche générale n'est proposé, puisque les contraintes couvertes sont des domaines finis directement calculables. Les quatre seeds 0, 1, 42 et 4294967295 ont des vecteurs figés de mots et de résultats complets. Un changement de seed, algorithme, ordre, représentation ou règle de tirage exige une nouvelle version de génération ; conserver l'ancienne implémentation si le rejeu historique est nécessaire. La version moteur courante `0.0.0` est aussi incluse et contrôlée contre package.json en test. Les métadonnées seules ne remplacent pas la conservation immuable des définitions, de leur ordre et de leur révision.
+
+## Domaines et représentation
+
+| Type    | Domaine et garanties                                                                                                                                              | Valeur sérialisée                                                                      |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| integer | Bornes entières inclusives dans ±1 000 000 ; exclusions entières uniques dans la plage ; domaine non vide                                                         | `{kind:'integer', value}`                                                              |
+| decimal | Précision entière 0…6 ; bornes finies dans ±1 000 000 ; coefficients des bornes de grille dans ±1 000 000 000 ; exclusions uniques, sur grille et dans les bornes | `{kind:'decimal', coefficient, precision}`, valeur exacte `coefficient / 10^precision` |
+| choice  | 1…128 nombres JS finis, uniques ; ordre conservé ; pas de poids implicites ni de conversion depuis des chaînes                                                    | `{kind:'choice', value}`, nombre source conservé                                       |
+
+Exclusions : au plus 128 ; doublons et exclusions hors domaine sont des erreurs, jamais ignorés. 0 et -0 désignent le même choix/exclusion, donc leur double présence est refusée. Une valeur de sortie nulle est toujours 0, conformément au transport JSON qui ne distingue pas -0 ; les définitions du demandeur restent inchangées. Une liste vide de paramètres est valide et donne zéro tirage.
+
+Grille décimale : encoder **l'écriture décimale la plus courte** du nombre reçu (`Number.toString`), y compris notation scientifique, avec des BigInts internes pour déplacer le point. Les bornes non alignées sont intersectées avec la grille par ceil(min×10^p) et floor(max×10^p), selon cette écriture, sans multiplication flottante. Aucun BigInt en sortie. C'est une conversion de transport numérique, pas un parseur mathématique ni un système de nombres concurrençant CortexJS. Les coefficients restent des entiers sûrs. `0.29` à précision 2 vaut exactement coefficient 29 ; une exclusion `0.1+0.2` est hors grille à précision 1 et est refusée, sans snap/tolérance. Une grille sans point ou entièrement exclue produit `empty-domain`. La borne sur les coefficients limite le cardinal à 2 000 000 001, compatible avec le mapping uint32.
+
+Les choix copient des nombres finis sans calcul : aucune preuve d'exactitude rationnelle ou représentation de fraction ne leur est attribuée. Le résultat décimal est un encodage exact de grille, sans approximation numérique supplémentaire. Il n'existe pas de résultats calculés exacts/approximatifs dans ce lot ; une fraction ne sera donc jamais convertie prématurément en flottant ici.
+
+## Limites et passage au Lot 5
+
+Codes de génération : `invalid-definition`, `unsupported-type`, `invalid-bounds`, `empty-domain`, `invalid-options`, `unsupported-version`, `limit`. Les budgets JSON du Lot 2 sont conservés, dont 128 diagnostics au plus. Les erreurs de données non JSON restent `invalid-definition`, même lorsque leur chemin désigne une borne.
+
+Contraintes entre paramètres, expressions computed, dépendances/cycles, fractions calculées, contraintes de domaine après substitution et approximations : différés. Tout type computed ou champ de contrainte est explicitement refusé ; aucune chaîne JavaScript exécutée. Les bornes de a dans la fixture 103 garantissent a>0 et donc 2a≠0, sans analyse générique de formules. Seed 42 produit a=1, b=5, c=0. L'abscisse attendue est mathématiquement −5/2 ; cette valeur n'est **pas calculée par le générateur**. La valeur du minimum serait c−b²/(4a), distincte de l'abscisse.
+
+Inventaire : le corpus reçu contient des integer et computed, avec `choices:[]` et `decimals:2` même lorsqu'inactifs. Tuples/doublets/triplets/perfect_square sont des formats spécifiques observés dans les analyses du code historique, sans représentation canonique native ; aucune de ces familles n'est implémentée ou migrée. Les décimaux et choix ici sont des contrats natifs nouveaux, pas une migration de ces champs legacy.
+
+Aucun énoncé, instance, projection publique, correction, score, service ou catalogue migré. Pas de réseau/base dans le générateur. Pas de garantie d'isolation de calcul synchrone ou de deadline : ces questions restent au Lot 8. Aucun blocage des tirages entiers pour le Lot 5 ; avant computed, il faut définir le contrat d'expression, l'admissibilité/domaines avant réduction, les dépendances, les limites de calcul et une sérialisation exacte via CortexJS. Aucun Lot 5 lancé automatiquement.
