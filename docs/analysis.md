@@ -46,6 +46,10 @@ Calcul synchrone non préempté par Promise.race. Worker seul n'est pas une gara
 
 Convergence : séparation valeur/forme/domaine, seed privée quand sensible, aucun JavaScript legacy exécuté, aucun contrat JSON complet avant corpus.
 
+## Mise à jour après réception du corpus
+
+L'utilisateur a fourni `docs/exercises_rows.json` après l'analyse initiale : huit lignes de stockage, non huit fichiers indépendants. L'absence décrite ci-dessus est historique. Les trois agents natifs ont repris leurs analyses en lecture seule ; observations et arbitrages actuels dans [compatibility.md](compatibility.md), [ADR 004](adr/004-first-contract.md) et [progress.md](progress.md). Question 103 retenue pour le contrat natif rationnel v1, sans migration générale. Le principal reste seul auteur ; revue indépendante math/contrats/QA effectuée sur l'implémentation, deux défauts corrigés (accents, clés JSON non bornées). Aucune suite POC réexécutée et aucune conclusion de comparaison générale modifiée.
+
 ## Sources externes de référence
 
 - [Node : packages et exports](https://nodejs.org/api/packages.html)

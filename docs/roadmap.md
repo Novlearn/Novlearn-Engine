@@ -20,6 +20,8 @@ Objectif : caractériser CortexJS/MathLive. Livrables disponibles dans le dépô
 
 ## Lot 2 — Corpus et contrats de première famille
 
+**Terminé le 10 octobre 2026 après réception du corpus** : huit lignes conservées et classées, inventaire des 558 chemins, transcription native manuelle de la question 103, contrats v1 et validateurs structurels de définition/soumission. Revue indépendante et preuves locales (40 tests) dans [progress.md](progress.md). Aucune migration de comportement ni caractérisation du Lot 3 engagée dans ce lot.
+
 - Objectif : ancrer les contrats dans huit JSON réels et choisir une question minimale.
 - Fichiers : tests/fixtures/legacy, docs/compatibility.md, src/contracts, ADR de contrat.
 - Dépendances : Lot 1 ; fourniture autorisée des huit JSON avec provenance et politiques pédagogiques.
@@ -146,4 +148,4 @@ Séquentiel : décisions de contrats avant génération ; admissibilité raw ava
 
 Démos : Lot 5 affichage/rejeu sans verdict ; Lot 8 Python ↔ Node avec interruption réelle ; Lot 10 parcours étudiant complet.
 
-**Prochain lot recommandé : Lot 2, après obtention des huit JSON et revue de ce socle.** Ne pas le lancer dans cette mission.
+**Prochain lot recommandé : Lot 3, frontière mathématique et saisie, après revue du Lot 2.** Le corpus est désormais reçu ; génération et migration de comportements restent aux lots suivants. Ne pas lancer le Lot 3 automatiquement dans cette mission.

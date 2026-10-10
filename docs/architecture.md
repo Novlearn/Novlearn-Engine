@@ -2,7 +2,7 @@
 
 ## Frontières
 
-Un package TypeScript portable, indépendant des frameworks, utilisant CortexJS comme unique bibliothèque mathématique. Livraison ESM et `.d.ts`, point d'entrée racine explicite. Le socle ne publie encore aucune fonction métier. MathLive reste dans les applications ; le moteur reçoit une saisie LaTeX ou MathJSON selon un contrat futur validé.
+Un package TypeScript portable, indépendant des frameworks, utilisant CortexJS comme unique bibliothèque mathématique. Livraison ESM et `.d.ts`, point d'entrée racine explicite. Le Lot 2 exporte `validateDefinition` et `validateSubmission` pour les contrats natifs v1 ; aucun calcul mathématique encore implémenté. MathLive reste dans les applications ; la soumission actuelle conserve une saisie LaTeX brute. Une entrée MathJSON n'est pas acceptée par ce contrat initial.
 
 Quatre modules logiques suffisent pour démarrer ; ce sont des responsabilités prévues, pas des dossiers vides créés :
 
@@ -30,6 +30,8 @@ Candidats MVP : rationnels exacts et polynômes univariés de degré/taille born
 
 ## Modèle de données proposé, non gelé
 
+Le premier sous-ensemble v1 est maintenant défini dans `src/contracts/types.ts` et [ADR 004](adr/004-first-contract.md), à partir de la question 103 du corpus réel. La définition privée et la soumission disposent de validateurs structurels ; les DTO d'instance privée et publique restent préparatoires jusqu'au Lot 5. Les orientations générales suivantes ne promettent pas de fonctions déjà implémentées.
+
 - Définition privée : identité/révision, déclarations de paramètres et variables libres, contenus, attendus et politique de correction.
 - Instance privée : référence à la révision, version moteur et RNG, seed, tirages et données nécessaires au rejeu. Snapshot ou conservation immuable de la définition requis.
 - Projection publique : instance opaque, énoncés et options autorisés. Attendus, flags corrects et seed sensible exclus par construction.
@@ -39,7 +41,7 @@ Contrats JSON versionnés et validés runtime aux frontières ; unknown jusqu'à
 
 ## API minimale envisagée
 
-Ces noms sont des pistes de discussion, pas des signatures exportées :
+`validateDefinition` et `validateSubmission` sont les deux fonctions exportées (validation structurelle uniquement). Les autres opérations ci-dessous restent candidates pour les lots futurs :
 
 | Besoin                 | Opération candidate  | Résultat conceptuel                                          |
 | ---------------------- | -------------------- | ------------------------------------------------------------ |

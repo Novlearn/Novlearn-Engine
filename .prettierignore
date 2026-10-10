@@ -3,3 +3,6 @@ node_modules/
 dist/
 .npm-cache/
 .codex/
+# Historical corpus: preserve original bytes and nested JSON strings.
+docs/exercises_rows.json
+tests/fixtures/legacy/exercises_rows.original.json

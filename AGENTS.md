@@ -18,6 +18,6 @@ Correction officielle serveur, projection publique par sélection de champs, auc
 
 ## Travail et vérification
 
-Les huit JSON historiques manquent : ne pas inventer leur schéma ou annoncer leur migration. Distinguer source observée et proposition. Pour les travaux multi-agents demandés, analyses initiales en lecture seule ; désigner un seul auteur par fichier. La délégation n'est pas obligatoire pour toute modification future.
+Les huit lignes historiques sont reçues dans docs/exercises_rows.json ; conserver leurs octets et distinguer inventaire, transcription native et migration réelle. Ne pas annoncer une migration non exécutée. Distinguer source observée et proposition. Pour les travaux multi-agents demandés, analyses initiales en lecture seule ; désigner un seul auteur par fichier. La délégation n'est pas obligatoire pour toute modification future.
 
 Commandes : `npm.cmd ci`, `npm.cmd run check`, `npm.cmd pack --dry-run` sous PowerShell. Ajouter des tests pertinents pour les comportements critiques, y compris erreurs et indétermination. Mettre à jour décisions/progress et rapporter les commandes réellement exécutées ; ne jamais annoncer une CI distante ou suite navigateur non exécutée.

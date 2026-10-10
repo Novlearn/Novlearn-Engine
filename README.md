@@ -1,6 +1,6 @@
 # NovLearn Exercise Engine
 
-Fondations du moteur partagé TypeScript, initialisées le 10 octobre 2026. Ce dépôt est distinct du POC et n'implémente encore ni génération, ni correction, ni interface utilisateur. Le point d'entrée est volontairement vide ; aucun contrat métier n'est gelé.
+Moteur partagé TypeScript, initialisé le 10 octobre 2026. Ce dépôt est distinct du POC. Le Lot 2 fournit un premier contrat natif versionné et sa validation structurelle ; génération, parsing mathématique, correction et interface utilisateur restent à développer.
 
 Package ESM privé `novlearn-exercise-engine`, déclarations TypeScript et export racine uniquement. CortexJS 0.151.0 est la seule dépendance mathématique ; MathLive appartient aux interfaces des applications.
 
@@ -26,6 +26,27 @@ npm pack --dry-run
 - [État réel, vérifications et transmission](docs/progress.md)
 - [ADR](docs/adr/001-core-boundary.md)
 
-Les huit JSON historiques sont absents des emplacements inspectés. Leur analyse et les contrats de migration sont donc incomplets. Les tests du POC constituent des observations externes ; ils ne valident pas ce nouveau moteur.
+Les huit lignes historiques reçues dans `docs/exercises_rows.json` sont conservées avec leur empreinte et inventoriées dans [compatibility.md](docs/compatibility.md). Une question de minimum de trinôme (ligne 103) est transcrite manuellement pour le premier contrat de valeur rationnelle. Aucun adaptateur de migration des huit exercices n'est implémenté. Les tests du POC constituent des observations externes ; ils ne valident pas ce nouveau moteur.
+
+## API actuelle
+
+```ts
+import {
+  validateDefinition,
+  validateSubmission,
+} from 'novlearn-exercise-engine';
+
+const result = validateDefinition(input); // input: unknown
+if (result.ok) {
+  // Contrat natif v1 validé structurellement, copie détachée.
+  // Aucun parsing, calcul ou preuve mathématique effectué.
+  const definition = result.value;
+} else {
+  // Diagnostics avec chemins JSON Pointer.
+  const diagnostics = result.diagnostics;
+}
+```
+
+`validateSubmission` conserve le LaTeX brut (y compris incomplet) et refuse les champs client de seed, politique ou verdict. Un succès structurel n'est pas une autorisation de correction : le serveur doit retrouver l'instance officielle et appliquer la future frontière mathématique. Types `ExerciseDefinitionV1`, `SubmissionV1`, `PrivateInstanceV1` et `PublicInstanceV1` exportés ; les deux types d'instance restent préparatoires, sans constructeur, projection ou validateur runtime.
 
 La publication reste désactivée (`private: true`). Licence, nom/registre de distribution et premier contrat public seront décidés avant une release pilote.

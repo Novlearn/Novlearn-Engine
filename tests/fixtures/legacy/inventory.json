@@ -1,0 +1,3914 @@
+{
+  "source": "docs/exercises_rows.json",
+  "sha256": "0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae",
+  "bytes": 14583,
+  "rowIds": [1, 6, 36, 64, 78, 96, 103, 106],
+  "entries": [
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/created_at",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/chapter",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/difficulty",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/competences",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/content",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/app_title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/Is_Flash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/0/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1/content/points",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1/content/answerFormat",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/elements/1/content/correctAnswer",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "content",
+      "path": "/variables/0/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "competences",
+      "path": "",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 1,
+      "scope": "competences",
+      "path": "/0",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/created_at",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/chapter",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/difficulty",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/competences",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/content",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/app_title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/Is_Flash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/0/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1/content/points",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1/content/answerFormat",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/elements/1/content/correctAnswer",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "content",
+      "path": "/variables/0/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "competences",
+      "path": "",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 6,
+      "scope": "competences",
+      "path": "/0",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/created_at",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/chapter",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/difficulty",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/competences",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/content",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/app_title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/Is_Flash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/0/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/0/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/0/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/1/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/1/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/2/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/2/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/3",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/3/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/3/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/4",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/4/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/4/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/5",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/5/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/options/5/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/elements/1/content/multipleChoice",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/0/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/1/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/2/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "content",
+      "path": "/variables/3/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "competences",
+      "path": "",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 36,
+      "scope": "competences",
+      "path": "/0",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/created_at",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/chapter",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/difficulty",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/competences",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/content",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/app_title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/Is_Flash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/apptitle",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/0/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content/xMax",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content/xMin",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content/yMax",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content/yMin",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content/showGrid",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content/functions",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content/functions/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content/functions/0/color",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/1/content/functions/0/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2/content/points",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2/content/answerFormat",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/2/content/correctAnswer",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/0/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/0/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/1/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/1/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/2/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/2/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/3",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/3/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/3/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/4",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/4/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/4/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/5",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/5/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/options/5/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/elements/3/content/multipleChoice",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "content",
+      "path": "/variables",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "competences",
+      "path": "",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 64,
+      "scope": "competences",
+      "path": "/0",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/created_at",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/chapter",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/difficulty",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/competences",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/content",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/app_title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/Is_Flash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/isFlash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/0/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1/content/points",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1/content/answerFormat",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/1/content/correctAnswer",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/0/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/0/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/1/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/1/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/2/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/2/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/2/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/3",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/3/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/3/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/options/3/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/multipleChoice",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/2/content/multipleAnswers",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/0/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/0/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/1/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/1/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/2/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/options/2/correct",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/elements/3/content/multipleChoice",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/0/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/variables/1/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "content",
+      "path": "/needCalculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "competences",
+      "path": "",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "competences",
+      "path": "/0",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 78,
+      "scope": "competences",
+      "path": "/1",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/created_at",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/chapter",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/difficulty",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/competences",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/content",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/app_title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/Is_Flash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/0/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1/content/points",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1/content/answerFormat",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/elements/1/content/correctAnswer",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/0/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/1/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "content",
+      "path": "/variables/2/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "competences",
+      "path": "",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "competences",
+      "path": "/0",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 96,
+      "scope": "competences",
+      "path": "/1",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/created_at",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/chapter",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/difficulty",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/competences",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/content",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/app_title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/Is_Flash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/isFlash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/0/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content/xMax",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content/xMin",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content/yMax",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content/yMin",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content/showGrid",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content/functions",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content/functions/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content/functions/0/color",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/1/content/functions/0/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2/content/points",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2/content/answerFormat",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/elements/2/content/correctAnswer",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/0/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/1/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/variables/2/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "content",
+      "path": "/needCalculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "competences",
+      "path": "",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "competences",
+      "path": "/0",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "competences",
+      "path": "/1",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 103,
+      "scope": "competences",
+      "path": "/2",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/created_at",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/chapter",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/difficulty",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/competences",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/content",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/app_title",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/Is_Flash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/isFlash",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/0/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1/content/points",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1/content/answerFormat",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/1/content/correctAnswer",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2/content",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2/content/hint",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2/content/points",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2/content/question",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2/content/explanation",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2/content/answerFormat",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/elements/2/content/correctAnswer",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/0/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/1/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2",
+      "type": "object",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2/id",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2/max",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2/min",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2/name",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2/type",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2/choices",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2/decimals",
+      "type": "number",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2/exclusions",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/variables/2/expression",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "content",
+      "path": "/needCalculator",
+      "type": "boolean",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "competences",
+      "path": "",
+      "type": "array",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "competences",
+      "path": "/0",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "competences",
+      "path": "/1",
+      "type": "string",
+      "status": "preserved-original"
+    },
+    {
+      "rowId": 106,
+      "scope": "competences",
+      "path": "/2",
+      "type": "string",
+      "status": "preserved-original"
+    }
+  ]
+}
