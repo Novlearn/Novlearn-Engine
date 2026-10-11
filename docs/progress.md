@@ -1,5 +1,45 @@
 # État et transmission
 
+## Mission autonome V1 — M0 audit (11 octobre 2026)
+
+**Moteur non terminé.** Référence officielle `CDC_référence.md` confirmée par
+l'utilisateur ; fichier non suivi préexistant conservé, exclu des commits.
+Autorisation d'enchaîner les lots et commits locaux validés (D35), sans push,
+publication, production, base ou modification de dépôt voisin.
+
+État initial : branche main, HEAD `6c7a9d1`, seul CDC non suivi. Audit du texte de
+mission/CDC, instructions et documents, contrats/types/index, frontières math,
+validation/composition/instanciation et suites. Consolidation déjà réelle : six
+exports, schéma 5, un résolveur, une boucle atomique et une instanciation. Ne pas
+recommencer le refactor ; conserver tous les tests et vecteurs. Analyse indépendante
+initiale en lecture seule confirmant les principaux manques, aucun fichier délégué.
+
+Livrables M0 : matrice CDC-01–48 dans feature-coverage.md (statut réel, profil,
+contrat/tests/preuves/limites/lot/commit), ordre M0–M12 dans roadmap.md,
+D35 et README alignés avec la mission. Les anciens bilans restent historiques.
+Les noms longs, données avancées, correction/formes, vraie saisie MathLive,
+isolation/transport, adaptations et consommation externe restent à livrer.
+
+Vérifications réellement exécutées : `npm.cmd ci` PASS, 130 packages.
+Premier handle de check devenu introuvable sans sortie finale récupérable : non
+compté comme preuve. Nouvelle exécution avec journal local `.engine-check.log` :
+`npm.cmd run check` PASS, build/typecheck/lint/format et **540 tests / 14 fichiers**,
+Vitest 81,96 s. Aucun test navigateur/CI distante/consommateur tarball courant.
+`npm.cmd pack --dry-run` PASS : 58 fichiers, 49,3 kB / 216,6 kB, aucune publication.
+Import ESM : six exports attendus. Prettier ciblé et `git diff --check` PASS.
+SHA-256 du CDC `FFB97D8F1B3401E462DA6411D4DDE671A06D9522A6D745E28D06FB2F2E9459AE`
+et des deux corpus `0F4D1173A78F9BD41E88678704C212C5147627E7E5A42EE28EB398F25F41C3AE`
+inchangés. Lot documentaire seulement ; aucun module/test/dépendance modifié.
+Commit M0 : `docs(engine): align V1 mission with official specification` ;
+l'identifiant sera noté à l'ouverture de M1 après vérification Git.
+
+Prochaine unité : M1 (CDC-10/11), convention explicite de noms descriptifs via
+CortexJS, aucune réinterprétation des lettres juxtaposées, références de tuples,
+computed/contraintes/textes et conservation des vecteurs courts. Auteur unique
+des fichiers : agent principal. Critères : nouveaux tests parsing/références,
+cycles/collisions/erreurs, oracles recettes et instance/rejeu/projection, check/pack.
+L'objectif global reste actif jusqu'aux preuves de toutes les P0/P1.
+
 ## Consolidation architecturale canonique (11 octobre 2026)
 
 **Verdict : consolidation validée localement ; contrat unique schemaVersion 5,

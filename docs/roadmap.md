@@ -1,5 +1,36 @@
 # Roadmap exécutable
 
+## Mission V1 autorisée — ordre actuel et critères de passage
+
+Référence officielle : `../CDC_référence.md`, confirmée par l'utilisateur.
+La mission autonome remplace les anciennes restrictions d'enchaînement ci-dessous
+(D35). Les numéros M0–M12 désignent les lots du texte de mission ; les numéros
+5C/6A/6B/7–11 désignent ceux du chapitre 13 du CDC. Chaque lot se termine par
+tests appropriés, check complet, pack, revue du diff et commit local. Aucun push.
+
+| Lot mission / CDC    | Travail nécessaire et critère d'acceptation                                                                                                                                                           |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| M0 / fondations      | Vérifier la consolidation existante, état Git, six exports, tests ; matrice exhaustive P0/P1, documents alignés. Ne pas recréer V1–V4.                                                                |
+| M1 / compléments 1–5 | Noms descriptifs et références explicites CortexJS sans modifier la multiplication implicite ; recettes composées obligatoires, contraintes/dépendances/exactitude/rejeu/projection testés.           |
+| M2 / 5C              | Contrats, validation, références, substitution, données et tests des éléments prioritaires et avancés ; aucune interface React, aucun calcul analytique de graphe artificiel.                         |
+| M3 / 6A              | Correction par question numérique/discrète : rationnels, racines/constantes sous preuve, approximation explicite, infinis, QCM, texte et soumission sûre ; cinq états distincts.                      |
+| M4 / 6B              | Polynômes rationnels univariés, fractions rationnelles avec domaines, équations/solutions, ensembles/intervalles/unions sous profils exacts ; contre-exemples obligatoires.                           |
+| M5 / 7               | Politiques de forme indépendantes de la valeur : irréductible, développée/réduite/factorisée sous profils, formes acceptées, exact/approché et tolérances.                                            |
+| M6 / 6B              | Cas du lycée avec réponses connues ; log/exp/trig en parsing/substitution ; limite ln(x−a)/(x−a) à droite → −∞ et dérivées admises, sans solveur général.                                             |
+| M7 / 10 partiel      | Vraies sorties MathLive : clavier, collage, français, placeholders/incomplet, ensembles/intervalles ; banc isolé indépendant du cœur.                                                                 |
+| M8–M9 / 8            | Hôte Node terminable : quotas durée/mémoire/entrée/sortie/concurrence, crash/récupération, protocole JSON et exemple Python/FastAPI ; mesures p50/p95/mémoire/débit. Pas de service HTTP automatique. |
+| M10 / 9              | Adaptateurs explicites des huit lignes, provenance/brut/aliases/propriétés conservés, rapports/tests individuels ; incohérences bloquées explicitement, pas de JS historique exécuté.                 |
+| M11 / 10             | Scénarios complets isolés : historique → adaptation → génération → projection → saisie → correction officielle ; partiel/rejeu/falsification/erreur/timeout/confidentialité.                          |
+| M12 / 11             | Tarball installé et consommé en Node/TypeScript et bundler cible, contrats/exports/snapshots, audit sécurité/math/architecture et chaque exigence CDC. V1 seulement si toutes P0/P1 validées.         |
+
+Prochain travail après audit : M1 noms descriptifs puis M2 éléments. Les exigences
+de correction, données d'éléments et transport restent obligatoires malgré les
+profils bornés des lots anciens. Les décisions de licence/registre/adoption en
+production ne bloquent pas la livraison locale d'un package privé consommable.
+La matrice CDC et progress.md fournissent l'état réel et la procédure de reprise.
+
+## Référence historique des lots précédents
+
 état au 11 octobre 2026 après consolidation : package privé 0.1.0, schéma unique 5.
 Un contrat, un chemin de génération et d'instanciation, aucune API expérimentale
 maintenue. [D34](decisions.md#d34--consolidation-canonique-retenue-11-octobre-2026),
@@ -106,7 +137,9 @@ correction serveur officielle ; adaptation 9, démonstration 10, pilote 11.
 La compatibilité JSON historique est hors du chemin canonique. Chaque exercice
 converti exige capacités admises et rapport propre, aucune suppression de bloc.
 
-Une seule tranche autorisée à la fois. Domaines/source avant réduction, preuve
+Une seule tranche développée et validée à la fois, puis enchaînement autorisé par
+D35. Domaines/source avant réduction, preuve
 exacte avant verdict, définition/instance officielles avant correction, tests
 de terminaison avant adoption, intégration avant production. Travail UI/Admin
-séparé ; ni migration, service, Supabase, publication ou commit automatique.
+séparé ; ni migration de production, service injustifié, Supabase ou publication.
+Les adaptations locales et commits de lots validés sont autorisés par la mission.

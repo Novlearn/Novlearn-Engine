@@ -125,7 +125,8 @@ npm.cmd pack --dry-run
 ```
 
 check exécute build, typecheck, lint, format et Vitest sur l'entrée distribuée.
-Publication désactivée, aucun commit/migration/déploiement automatique.
+Publication désactivée. La mission V1 autorise les lots successifs et leurs
+commits locaux validés ; aucun push, migration de production ou déploiement.
 [Preuves locales](docs/progress.md).
 
 - [Vision](docs/exercise-engine-vision.md), [spécification](docs/functional-specification.md)

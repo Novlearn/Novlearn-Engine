@@ -1,6 +1,24 @@
 # Décisions
 
-**Priorité actuelle : D34 et ADR 008.** Les décisions de conservation des APIs expérimentales ci-dessous sont remplacées ; leurs profils mathématiques restent documentés historiquement.
+**Priorité actuelle : D35, cahier des charges V1 et D34/ADR 008.** Les décisions de conservation des APIs expérimentales ci-dessous sont remplacées ; leurs profils mathématiques restent documentés historiquement.
+
+## D35 — Mission autonome V1 et référence officielle (11 octobre 2026)
+
+L'utilisateur confirme que `CDC_référence.md` est le document officiel malgré le
+nom sans accents utilisé dans sa mission. Son contenu et ses octets restent
+intouchés. Le texte de mission autorise explicitement l'enchaînement des lots et
+les commits locaux après validation ; il remplace les restrictions antérieures
+sur un lot unique et les mentions documentaires « sur instruction distincte ».
+Aucun push, PR, déploiement, publication, SQL ou dépôt voisin modifié.
+
+La consolidation canonique existe déjà au commit `6c7a9d1` : la vérifier sans
+recréer les architectures historiques. La matrice CDC de feature-coverage.md
+pilote toutes les obligations P0/P1 ; aucun report ou rejet hors profil ne vaut
+livraison d'une obligation. P2 et responsabilités applicatives restent exclus.
+Les choix techniques locaux réversibles sont autorisés ; les contradictions
+pédagogiques historiques demandent une revue humaine avant conversion fidèle.
+Une analyse indépendante initiale en lecture seule a confirmé l'architecture
+unique et les manques de correction/éléments/isolation ; aucun fichier délégué.
 
 ## D33 — Complément Lot 5 : résolution calculée versionnée (retenue)
 
