@@ -1,5 +1,12 @@
 # Architecture et contrats canoniques
 
+Extension M8 : [ADR014](adr/014-isolated-node-host.md), sous-chemin Node optionnel
+distinct du cœur. Processus neuf et quota OS Windows10+/x64, deadline externe et
+watchdog natif, cleanup avant slot libéré. Protocole backend privé avec métriques,
+sans autorité navigateur. Types Node dev seulement ; aucun import Node dans la
+racine portable, sept exports runtime inchangés. Autres hôtes refusés sans quota OS
+validé. Transport applicatif/mesures M9 et scénarios M11 restent nécessaires.
+
 Extension M6 : [ADR 013](adr/013-school-known-answers.md). Profil public de lecture
 school-latex-v1, limites avec binding Cortex et mode display explicite des
 expressions d'énoncé. Fonctions numériques fermées sous contrôle de domaine avant
@@ -133,6 +140,7 @@ instantiationVersion redondant. Pas de rejeu promis entre artefacts non identifi
 Adaptateurs historiques futurs explicites hors fonctions principales, Lot 9.
 
 [Budgets/profils](functional-specification.md). Calculs synchrones/contextes isolés
-par appel, aucune deadline/mémoire préemptive prouvée. Timeout de promesse/Vitest
-ne coupe pas un calcul synchrone. Navigateur, CI distante et adoption demandent
+par appel ; deadline/quota OS/cleanup désormais qualifiés dans l'hôte optionnel M8.
+Timeout de promesse/Vitest seul ne coupe pas un calcul synchrone. Navigateur,
+CI distante et adoption demandent
 leurs preuves propres.

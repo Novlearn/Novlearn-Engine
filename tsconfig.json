@@ -5,6 +5,7 @@
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "lib": ["ES2023"],
+    "types": ["node"],
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,

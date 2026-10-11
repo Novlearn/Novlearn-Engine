@@ -20,6 +20,17 @@ pédagogiques historiques demandent une revue humaine avant conversion fidèle.
 Une analyse indépendante initiale en lecture seule a confirmé l'architecture
 unique et les manques de correction/éléments/isolation ; aucun fichier délégué.
 
+## D43 — M8 : processus neuf et quota OS hors cœur portable
+
+[ADR014](adr/014-isolated-node-host.md). Sous-chemin node-host distinct, JSON
+encodé borné, concurrence/file et deadline globale, sept opérations en whitelist
+sur canal backend privé. Windows10+/x64 : lanceur C# fixe compilé au build,
+Job Object assigné atomiquement, quotas mémoire engagée natives/heap séparés,
+watchdog indépendant et cleanup parent/worker prouvables. Pas de politique
+PowerShell modifiée ou commande d'exercice exécutée. Sans lanceur OS validé :
+unavailable, jamais fallback non borné. Types Node en développement seulement.
+Cette isolation ne valide ni transport FastAPI/production ni benchmarks M9.
+
 ## D42 — M7 : MathLive isolé et preuve par sortie réelle
 
 [Rapport du banc](mathlive-compatibility.md). Version 0.111.1 épinglée dans un

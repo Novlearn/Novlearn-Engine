@@ -31,7 +31,9 @@ pack102 fichiers et revue favorable. M5 formes pédagogiques validé : 1169 test
 M6 cas du lycée validé : 1250 tests/22 fichiers et pack110 ; 81 nouveaux tests,
 profils et limites dans ADR013. M7 validé : banc réel MathLive 0.111.1,
 45 observations et 125 nouveaux tests ; check1375/23 et pack110 PASS.
-Prochain lot M8 : hôte terminable, après commit M7.
+M7 commité 2c970d0. M8 validé : hôte Windows OS borné, processus mono-requête,
+30 tests ciblés ; check1405/24 et pack128 PASS, ADR014. M9 transport et
+mesures reste requis, sans serveur HTTP Node imposé.
 Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en

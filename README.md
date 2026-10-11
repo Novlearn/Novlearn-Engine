@@ -136,8 +136,15 @@ valeurs usuelles exactes et domaines logarithme/tangente contrôlés avant rédu
 L'exemple ln(x−a)/(x−a), x>a et limite droite attendue −∞ est testé, ainsi qu'une
 dérivée polynomiale connue. Aucune résolution générale ; hors preuve indéterminé.
 Formules de présentation à domaine non vérifié,
-nombres de rendu rationnels exacts. Pas de solveur général, de dessin ou d'isolation
-préemptive. [Couverture réelle](docs/feature-coverage.md).
+nombres de rendu rationnels exacts. Pas de solveur général ou de dessin.
+[Couverture réelle](docs/feature-coverage.md).
+
+Hôte optionnel [M8](docs/adr/014-isolated-node-host.md), sous-chemin `./node-host` :
+processus neuf, quota mémoire OS et deadline effective, concurrence/file/JSON
+bornés, crash/annulation/nettoyage. Windows10+/x64, Node24.19.x et .NET Framework4.x
+validés localement ; autres profils hôte refusés explicitement. Le cœur portable
+et ses sept exports sont indépendants de ce lanceur. Canal backend privé,
+aucun serveur HTTP ou snapshot client fiable ; transport Python/FastAPI au M9.
 
 ## Reproductibilité et rupture expérimentale
 

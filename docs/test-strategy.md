@@ -71,7 +71,14 @@ Identités usuelles contre oracles scolaires indépendants, domaines log/tangent
 avant réduction, inconnus, parsing explicite, substitutions négatives/décimales,
 relecture des cibles dirigées, attendu −∞, dérivée polynomiale connue et projection.
 
-Tests futurs : terminaison réelle/nettoyage/mémoire/concurrence au Lot 8, conversions exécutées
-au Lot 9, banc réel MathLive/HTTP falsifié/duel périmé au Lot 10, consommateur tarball
+M8 : [hôte Windows à quota OS](adr/014-isolated-node-host.md), tests de blocage
+synchrone réel/PID disparu, boucle parent bloquée, mort du parent, Buffer external
+hors heap, crash/OOM et requête suivante saine ; protocoles corrompus, quotas,
+file, annulation, close, environnement, spawn synchrone et opérations publiques.
+Fixtures de chaos privées, aucune opération de chaos distribuée. Sans lanceur OS
+qualifié, refus explicite ; tests Windows conditionnels, aucune preuve Linux.
+
+Tests futurs : transport Python/mesures M9, conversions exécutées
+au Lot 9, HTTP falsifié/duel périmé au Lot 10, consommateur tarball
 et bundler au Lot 11. CI Linux/Windows configurée, aucune exécution distante
 annoncée ici. Timeout Vitest/promesse ne préempte jamais le calcul synchrone.

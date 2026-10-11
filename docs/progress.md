@@ -1,5 +1,63 @@
 # État et transmission
 
+## M8 vérifié — isolation effective des calculs (12 octobre 2026)
+
+M7 commité **2c970d0**, 18 fichiers, 125 nouveaux tests ; check1375/23 et pack110
+PASS. Arbre propre hors CDC non suivi. README/progress/decisions et roadmap8 relus,
+CDC10.1/12.3 examinés. Root seul auteur ; analyses initiales indépendantes readonly.
+Hôte Node optionnel hors cœur portable, processus neuf par requête et pool de
+concurrence/file bornés. Pas de serveur HTTP ou correction applicative M9 anticipée.
+Quotas JSON entrée/sortie, deadline externe, crash/cleanup et reprise testés.
+Windows10+ : Job Object mémoire commit OS + kill-on-close, création atomique avec
+PROC_THREAD_ATTRIBUTE_JOB_LIST ; aucun worker.resourceLimits ou heap V8 seul
+annoncé quota OS. Plateformes sans lanceur mémoire OS validé refusées explicitement.
+Tests de blocage synchrone et allocations externes dans fixture de chaos privée,
+sans opération de chaos publique. Benchmark cold/warm au M9 avec transport.
+Implémentation : src/node-host/{executor,worker,protocol,index}, runtime/windows/job.cs,
+tools/copy-runtime.mjs, sous-chemin package et @types/node24.19.2 dev seulement.
+Lanceur C# compilé au build ; expérimentation PowerShell -File refusée par la
+politique locale, abandonnée sans modification de cette politique. Premier calcul
+réel réussi : 1,28s /61,9MB de mémoire engagée sous quota384MiB ; sondes seulement,
+pas benchmark. ADR014/D43/README/architecture/tests/couverture mis à jour.
+
+Premier ciblé : 26/27 PASS, fixture de création d'enfant n'interceptait pas spawn
+UNKNOWN synchrone sous ACTIVE_PROCESS1 ; fixture corrigée. Deuxième : 26/27 PASS,
+premier vrai parsing échoué (résultat réduit par l'assertion, cause précise non
+archivée), sondes suivantes parsing PASS à1,22s. Revue indépendante a identifié
+course de trames stdout : création désormais suspendue dans le Job atomique,
+started avant ResumeThread ; aucun orphelin avant assignation. Autre défaut démontré
+par revue : spawn synchrone non capturé, promesse rejetée et slot restant. Corrigé
+par unavailable immédiat, slot libéré et fixture de requête suivante saine.
+Options inconnues héritées du prototype corrigées avec Object.hasOwn et témoins.
+Troisième ciblé `npm.cmd run test -- --run tests/node-host.test.mjs` PASS **30/1**,
+17,90s avant dernier correctif Object.hasOwn ; build/typecheck/lint PASS.
+Allocations Buffer external au-delà heap refusées par quota OS, PID après blocage
+et parent mort absent, watchdog natif sous parent bloqué, reprise/queue/protocole
+et sept opérations privées prouvés par tests. Root seul auteur, fixtures de chaos
+privées sans API publique ou JS d'exercice exécuté.
+`npm.cmd ci --ignore-scripts --cache .npm-cache --no-audit --no-fund
+--fetch-retries=0 --fetch-timeout=15000` PASS,132 packages. Déclarations officielles
+@types/node24.19.2 et undici-types runtime de types seulement dans dev lock.
+Validation finale : `npm.cmd run check` PASS **1405 tests/24 fichiers**, 346,58s,
+build/types/lint/format compris. Revue indépendante finale favorable, corrections
+spawn et options vérifiées. Build reconstruit après nettoyage contrôlé des anciens
+assets générés : seulement job.cs/job.exe, aucun launch.ps1. Une commande erronée
+`node --test` a été refusée par le runner Vitest ; reprise avec le runner déclaré.
+Premier recontrôle ciblé lancé simultanément au prepack échoué (23 unavailable) :
+le build supprimait/recréait l'exécutable utilisé par les tests. Orchestration
+corrigée, contrôles dépendants séquentiels ; sonde native PASS, puis
+`npm.cmd exec -- vitest run tests/node-host.test.mjs` PASS **30/1**, 15,92s.
+Ce défaut de conduite des contrôles ne constitue pas une validation du premier essai.
+`npm.cmd pack --dry-run` PASS npmExit0 : **128 fichiers, 136,9kB /647,7kB**,
+SHA1 d2749ae256f7e447d679a3fbe8d200f713581bb4 ; ancien script exclu.
+Lint/format/diff PASS après reconstruction. Exports runtime : cœur sept fonctions,
+node-host createNodeHost seulement ; déclaration racine sans types CortexJS boxed
+ni builtin Node. CDC et deux copies historiques : SHA-256 inchangés.
+Limite : isolation démontrée Windows10+/x64 uniquement ; autres hôtes unavailable,
+aucune CI distante, adoption production, mesure p50/p95 ou preuve Linux annoncée.
+Reste : commit local M8, puis M9 transport Python/FastAPI et mesures réelles.
+M9 non commencé ; V1 complète non terminée (M9–M12 requis).
+
 ## M7 vérifié — compatibilité de saisie MathLive réelle
 
 M6 commité **066bca8**, 19 fichiers, 81 nouveaux tests ; check1250/22 et pack110
