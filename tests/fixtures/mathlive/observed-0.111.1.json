@@ -1,0 +1,627 @@
+{
+  "schemaVersion": 1,
+  "mathliveVersion": "0.111.1",
+  "locale": "fr",
+  "decimalSeparator": ",",
+  "capturedAt": "2026-10-11T18:03:35.960Z",
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+  "records": [
+    {
+      "id": "fraction",
+      "operation": "set-value",
+      "input": "\\frac{2}{4}",
+      "latex": "\\frac{2}{4}",
+      "expandedLatex": "\\frac24",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "root",
+      "operation": "set-value",
+      "input": "\\sqrt{8}/2",
+      "latex": "\\sqrt{8}/2",
+      "expandedLatex": "\\sqrt8/2",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "power",
+      "operation": "set-value",
+      "input": "2^{-3}",
+      "latex": "2^{-3}",
+      "expandedLatex": "2^{-3}",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "integer",
+      "operation": "set-value",
+      "input": "-17",
+      "latex": "-17",
+      "expandedLatex": "-17",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "decimal-point",
+      "operation": "set-value",
+      "input": "1.25",
+      "latex": "1.25",
+      "expandedLatex": "1.25",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "decimal-fr",
+      "operation": "set-value",
+      "input": "1{,}25",
+      "latex": "1{,}25",
+      "expandedLatex": "1{,}25",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "parentheses",
+      "operation": "set-value",
+      "input": "\\left(1+2\\right)",
+      "latex": "\\left(1+2\\right)",
+      "expandedLatex": "\\left(1+2\\right)",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "polynomial",
+      "operation": "set-value",
+      "input": "(x+1)(x-1)",
+      "latex": "(x+1)(x-1)",
+      "expandedLatex": "(x+1)(x-1)",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "pi",
+      "operation": "set-value",
+      "input": "\\pi",
+      "latex": "\\pi",
+      "expandedLatex": "\\pi",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "e",
+      "operation": "set-value",
+      "input": "e",
+      "latex": "e",
+      "expandedLatex": "e",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "positive-infinity",
+      "operation": "set-value",
+      "input": "+\\infty",
+      "latex": "+\\infty",
+      "expandedLatex": "+\\infty",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "negative-infinity",
+      "operation": "set-value",
+      "input": "-\\infty",
+      "latex": "-\\infty",
+      "expandedLatex": "-\\infty",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "interval-closed",
+      "operation": "set-value",
+      "input": "[1;2]",
+      "latex": "[1;2]",
+      "expandedLatex": "[1;2]",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "interval-right-open",
+      "operation": "set-value",
+      "input": "[1;2[",
+      "latex": "[1;2[",
+      "expandedLatex": "[1;2[",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "interval-left-open",
+      "operation": "set-value",
+      "input": "]1;2]",
+      "latex": "]1;2]",
+      "expandedLatex": "]1;2]",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "interval-open",
+      "operation": "set-value",
+      "input": "]1;2[",
+      "latex": "]1;2[",
+      "expandedLatex": "]1;2[",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "interval-infinity",
+      "operation": "set-value",
+      "input": "]-\\infty;2]",
+      "latex": "]-\\infty;2]",
+      "expandedLatex": "]-\\infty;2]",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "interval-union",
+      "operation": "set-value",
+      "input": "]-\\infty;0]\\cup[1;+\\infty[",
+      "latex": "]-\\infty;0]\\cup[1;+\\infty[",
+      "expandedLatex": "]-\\infty;0]\\cup[1;+\\infty[",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "interval-fr",
+      "operation": "set-value",
+      "input": "[1{,}2;3{,}4[",
+      "latex": "[1{,}2;3{,}4[",
+      "expandedLatex": "[1{,}2;3{,}4[",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "set",
+      "operation": "set-value",
+      "input": "\\{3,-2\\}",
+      "latex": "\\{3,-2\\}",
+      "expandedLatex": "\\{3,-2\\}",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "set-empty",
+      "operation": "set-value",
+      "input": "\\emptyset",
+      "latex": "\\emptyset",
+      "expandedLatex": "\\emptyset",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "set-semicolon",
+      "operation": "set-value",
+      "input": "\\{1;2\\}",
+      "latex": "\\{1;2\\}",
+      "expandedLatex": "\\{1;2\\}",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "set-decimal-singleton",
+      "operation": "set-value",
+      "input": "\\{1{,}2\\}",
+      "latex": "\\{1{,}2\\}",
+      "expandedLatex": "\\{1{,}2\\}",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "logarithm",
+      "operation": "set-value",
+      "input": "\\ln(e)",
+      "latex": "\\ln(e)",
+      "expandedLatex": "\\ln(e)",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "exponential",
+      "operation": "set-value",
+      "input": "\\exp(0)",
+      "latex": "\\exp(0)",
+      "expandedLatex": "\\exp(0)",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "sine",
+      "operation": "set-value",
+      "input": "\\sin(\\pi/6)",
+      "latex": "\\sin(\\pi/6)",
+      "expandedLatex": "\\sin(\\pi/6)",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "cosine",
+      "operation": "set-value",
+      "input": "\\cos(\\pi)",
+      "latex": "\\cos(\\pi)",
+      "expandedLatex": "\\cos(\\pi)",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "tangent",
+      "operation": "set-value",
+      "input": "\\tan(\\pi/4)",
+      "latex": "\\tan(\\pi/4)",
+      "expandedLatex": "\\tan(\\pi/4)",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "placeholder",
+      "operation": "set-value",
+      "input": "\\frac{1}{\\placeholder{}}",
+      "latex": "\\frac{1}{\\placeholder{}}",
+      "expandedLatex": "\\frac{1}{\\placeholder{}}",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "fraction-incomplete",
+      "operation": "set-value",
+      "input": "\\frac{1}{}",
+      "latex": "\\frac{1}{}",
+      "expandedLatex": "\\frac{1}{}",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "root-incomplete",
+      "operation": "set-value",
+      "input": "\\sqrt{}",
+      "latex": "\\sqrt{}",
+      "expandedLatex": "\\sqrt{}",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "power-incomplete",
+      "operation": "set-value",
+      "input": "2^{}",
+      "latex": "2^{}",
+      "expandedLatex": "2^{}",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "operator-incomplete",
+      "operation": "set-value",
+      "input": "1+",
+      "latex": "1+",
+      "expandedLatex": "1+",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "empty",
+      "operation": "set-value",
+      "input": "",
+      "latex": "",
+      "expandedLatex": "",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "undefined-log",
+      "operation": "set-value",
+      "input": "0\\ln(-1)",
+      "latex": "0\\ln(-1)",
+      "expandedLatex": "0\\ln(-1)",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "unknown-sine",
+      "operation": "set-value",
+      "input": "\\sin(1)",
+      "latex": "\\sin(1)",
+      "expandedLatex": "\\sin(1)",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "wrong-sign",
+      "operation": "set-value",
+      "input": "-1/2",
+      "latex": "-1/2",
+      "expandedLatex": "-1/2",
+      "prompts": [],
+      "events": []
+    },
+    {
+      "id": "keyboard-fr",
+      "operation": "keyboard",
+      "input": "",
+      "latex": "1{,}25",
+      "expandedLatex": "1{,}25",
+      "prompts": [],
+      "events": [
+        {
+          "type": "keydown",
+          "key": "1"
+        },
+        {
+          "type": "keydown",
+          "key": ","
+        },
+        {
+          "type": "keydown",
+          "key": "2"
+        },
+        {
+          "type": "keydown",
+          "key": "5"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ]
+    },
+    {
+      "id": "keyboard-fraction",
+      "operation": "keyboard",
+      "input": "",
+      "latex": "\\frac12",
+      "expandedLatex": "\\frac12",
+      "prompts": [],
+      "events": [
+        {
+          "type": "keydown",
+          "key": "1"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "keydown",
+          "key": "/"
+        },
+        {
+          "type": "keydown",
+          "key": "2"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ]
+    },
+    {
+      "id": "paste-fraction",
+      "operation": "paste",
+      "input": "",
+      "latex": "\\frac{3}{6}",
+      "expandedLatex": "\\frac36",
+      "prompts": [],
+      "events": [
+        {
+          "type": "paste",
+          "text": "\\frac{3}{6}"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ]
+    },
+    {
+      "id": "paste-wrapped",
+      "operation": "paste",
+      "input": "",
+      "latex": "\\sqrt{8}/2",
+      "expandedLatex": "\\sqrt8/2",
+      "prompts": [],
+      "events": [
+        {
+          "type": "paste",
+          "text": "$$\\sqrt{8}/2$$"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ]
+    },
+    {
+      "id": "keyboard-set-semicolon",
+      "operation": "keyboard",
+      "input": "",
+      "latex": "\\left\\lbrace1;2\\right\\rbrace",
+      "expandedLatex": "\\left\\lbrace1;2\\right\\rbrace",
+      "prompts": [],
+      "events": [
+        {
+          "type": "keydown",
+          "key": "{"
+        },
+        {
+          "type": "keydown",
+          "key": "1"
+        },
+        {
+          "type": "keydown",
+          "key": ";"
+        },
+        {
+          "type": "keydown",
+          "key": "2"
+        },
+        {
+          "type": "keydown",
+          "key": "}"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ]
+    },
+    {
+      "id": "keyboard-set-comma",
+      "operation": "keyboard",
+      "input": "",
+      "latex": "\\left\\lbrace1{,}2\\right\\rbrace",
+      "expandedLatex": "\\left\\lbrace1{,}2\\right\\rbrace",
+      "prompts": [],
+      "events": [
+        {
+          "type": "keydown",
+          "key": "{"
+        },
+        {
+          "type": "keydown",
+          "key": "1"
+        },
+        {
+          "type": "keydown",
+          "key": ","
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "keydown",
+          "key": "2"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "keydown",
+          "key": "}"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ]
+    },
+    {
+      "id": "keyboard-interval",
+      "operation": "keyboard",
+      "input": "",
+      "latex": "\\left\\lbrack1;2\\right\\rbrack",
+      "expandedLatex": "\\left\\lbrack1;2\\right\\rbrack",
+      "prompts": [],
+      "events": [
+        {
+          "type": "keydown",
+          "key": "["
+        },
+        {
+          "type": "keydown",
+          "key": "1"
+        },
+        {
+          "type": "keydown",
+          "key": ";"
+        },
+        {
+          "type": "keydown",
+          "key": "2"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "keydown",
+          "key": "]"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ]
+    },
+    {
+      "id": "virtual-fr",
+      "operation": "virtual-keyboard",
+      "input": "",
+      "latex": "7{,}5",
+      "expandedLatex": "7{,}5",
+      "prompts": [],
+      "events": [
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ]
+    }
+  ]
+}

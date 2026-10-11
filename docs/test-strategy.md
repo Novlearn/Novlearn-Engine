@@ -1,5 +1,10 @@
 # Stratégie de vérification
 
+M7 : [banc MathLive réel](mathlive-compatibility.md), 45 observations archivées,
+90 corrections depuis deux formats et 35 tests de provenance/régression. Clavier,
+collage et clavier virtuel effectivement utilisés, séparés des insertions API.
+Rejeu Vitest distinct de la séance navigateur ; aucune CI navigateur exécutée.
+
 M4 : algebra-grading/collection-grading depuis le package distribué, oracles
 BigInt d'expansion et signes/membership, coefficients mutés, solutions prescrites,
 trous raw/imposés, radicaux quadratiques, unions/contacts/fermetures. Indétermination,

@@ -29,7 +29,9 @@ M2 données d'éléments validé (666 tests). M3 correction numérique/discrète
 pack102 fichiers et revue favorable. M5 formes pédagogiques validé : 1169 tests/
 21 fichiers et pack110 ; factorisation complète sur ℚ confirmée par l'utilisateur.
 M6 cas du lycée validé : 1250 tests/22 fichiers et pack110 ; 81 nouveaux tests,
-profils et limites dans ADR013. Prochain lot M7 : banc réel MathLive isolé.
+profils et limites dans ADR013. M7 validé : banc réel MathLive 0.111.1,
+45 observations et 125 nouveaux tests ; check1375/23 et pack110 PASS.
+Prochain lot M8 : hôte terminable, après commit M7.
 Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en

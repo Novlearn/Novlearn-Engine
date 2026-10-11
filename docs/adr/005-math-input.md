@@ -1,5 +1,15 @@
 ﻿# ADR 005 — Frontière scalaire LaTeX v1
 
+## Extension M7 — observations MathLive réelles
+
+[Banc et preuves](../mathlive-compatibility.md) : MathLive 0.111.1 isolé,
+45 observations réelles API/clavier/collage/virtuel, deux sorties par observation.
+Admission des alias de délimiteurs via dictionnaire CortexJS local ; aucune
+réécriture. Garde lexicale de scripts vides (groupes/blancs/espaces échappés)
+avant raw, car Cortex peut les supprimer. Source de soumission intacte et budgets
+inchangés. Placeholder anonyme refusé même sans prompt ID. Tests supplémentaires
+de fermeture et décimal français ; parsing toujours distinct de valeur/domaine.
+
 ## Extension M1 — noms descriptifs (11 octobre 2026)
 
 D36 étend la grammaire à `[a-z][A-Za-z0-9]{0,31}` avec noms réservés exclus,

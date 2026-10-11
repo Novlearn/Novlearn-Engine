@@ -1,5 +1,42 @@
 # État et transmission
 
+## M7 vérifié — compatibilité de saisie MathLive réelle
+
+M6 commité **066bca8**, 19 fichiers, 81 nouveaux tests ; check1250/22 et pack110
+PASS. Arbre propre hors CDC non suivi avant M7. README/progress/decisions et lot
+M7/10 relus. Root seul auteur ; analyse initiale des conventions en lecture seule.
+Banc navigateur local exécuté avec MathLive 0.111.1 épinglé dans tools/mathlive,
+hors dépendances/distribution moteur. 45 observations : 37 API, 5 clavier physique,
+2 collages, 1 clavier virtuel ; deux sorties brutes, événements et image conservés
+dans tests/fixtures/mathlive et docs/fixtures/mathlive. Rapport dans
+mathlive-compatibility.md, ADR005/D42. Contrat et sept exports inchangés.
+Input complété pour aliases de collections via CortexJS ; scripts vides gardés
+avant réduction. Revue indépendante a trouvé un faux positif avec espace échappé
+dans un script vide : corrigé, cinq régressions et trois témoins non vides PASS.
+Revue favorable finale du correctif et des 16 fermetures croisées ; revue distincte
+de provenance et serveur local favorable. Root seul auteur de tous les fichiers.
+
+Commandes exécutées : installation épinglée npm (première tentative sandbox EACCES,
+puis téléchargement officiel autorisé) ; `npm.cmd ci --prefix tools/mathlive
+--ignore-scripts --no-audit --no-fund --cache .npm-cache --offline` PASS.
+`npm.cmd run test -- --run tests/mathlive-input.test.mjs tests/math-input.test.ts
+tests/collection-grading.test.ts` PASS 265/3 avant correction revue finale.
+Après correction : `npm.cmd run test -- --run tests/mathlive-input.test.mjs` PASS
+125/1, 48,76s. `npm.cmd run check` PASS **1375 tests/23 fichiers**, 461,34s,
+build/types/lint/format PASS ; format final documentaire réexécuté PASS.
+`npm.cmd pack --dry-run` PASS, npmExit=0, 110 fichiers, 117,9kB/583,0kB,
+SHA1 `3f6a1ba00587f90c7e54969b00eed16430ef59e9`. Première redirection PowerShell
+a signalé NativeCommandError sur les notices stderr malgré tarball à blanc produit ;
+commande directe réexécutée et code npm explicitement vérifié.
+Sept exports vérifiés, index.d.ts sans boxed/ComputeEngine/NumericValue,
+diff --check PASS ; CDC et deux copies corpus gardent leurs empreintes M0.
+Root ci M0, dépendances racine inchangées. Ni CI distante ni navigateur mobile,
+ni consommation de tarball installée. Aucun historique migré ou dépôt voisin écrit.
+
+Image et fixtures revues ; serveur local session42125 arrêté et port4317 sans
+écoute, onglet temporaire fermé. Reste : commit local M7 avec fichiers explicites
+(CDC exclu), puis préparer M8 hôte terminable. V1 M8–M12 reste obligatoire.
+
 ## M6 vérifié — cas du lycée avec réponses connues
 
 Dernier lot commité **M5 b64ae3d**, 1169 tests/21 fichiers et pack110 validés,

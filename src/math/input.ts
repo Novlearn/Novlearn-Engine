@@ -223,6 +223,26 @@ function parseInput<
     );
 
   // Lexical guards only: no rewriting or second mathematical parser.
+  // Cortex can discard an empty script even in raw form. This bounded lexical
+  // guard recognizes only whitespace/braces, without interpreting mathematics.
+  for (const script of source.matchAll(/[\^_]\s*\{/g)) {
+    let depth = 1;
+    for (
+      let index = script.index + script[0].length;
+      index < source.length;
+      index += 1
+    ) {
+      const char = source[index]!;
+      if (char === '{') depth += 1;
+      else if (char === '}') depth -= 1;
+      else if (char === '\\' && /\s/.test(source[index + 1] ?? '')) index += 1;
+      else if (!/\s/.test(char)) break;
+      if (depth === 0)
+        return fail('incomplete', 'Complétez l’exposant ou l’indice vide.', {
+          offset: script.index,
+        });
+    }
+  }
   const unfinishedDecimal = /\d(?:\{,\}|\.)(?!\d)/.exec(source);
   if (unfinishedDecimal)
     return fail('incomplete', 'Complétez la partie décimale du nombre.', {
@@ -242,7 +262,17 @@ function parseInput<
       !(algebra && ['le', 'leq', 'ge', 'geq', 'ne', 'neq'].includes(command)) &&
       !(
         collection &&
-        ['{', '}', 'cup', 'emptyset', 'varnothing'].includes(command)
+        [
+          '{',
+          '}',
+          'lbrace',
+          'rbrace',
+          'lbrack',
+          'rbrack',
+          'cup',
+          'emptyset',
+          'varnothing',
+        ].includes(command)
       ) &&
       ![',', ';', ':', '!', ' '].includes(command)
     )
@@ -291,30 +321,38 @@ function parseInput<
         [']', '[', true, true],
       ] as const;
       for (const [open, close, leftOpen, rightOpen] of brackets)
-        ce.latexSyntax?.addEntries?.([
-          {
-            kind: 'matchfix',
-            openTrigger: [open],
-            closeTrigger: [close],
-            parse: (_parser: unknown, body: MathSyntax): MathSyntax | null => {
-              const items = Array.isArray(body)
-                ? (body as MathSyntax[])
-                : undefined;
-              const pair = items?.[0] === 'Delimiter' ? items[1] : body;
-              if (
-                !Array.isArray(pair) ||
-                pair[0] !== 'Sequence' ||
-                pair.length !== 3
-              )
-                return ['Error', "'invalid-interval'"];
-              return [
-                'Interval',
-                leftOpen ? ['Open', pair[1]!] : pair[1]!,
-                rightOpen ? ['Open', pair[2]!] : pair[2]!,
-              ];
-            },
-          },
-        ]);
+        for (const opening of [open, open === '[' ? '\\lbrack' : '\\rbrack'])
+          for (const closing of [
+            close,
+            close === '[' ? '\\lbrack' : '\\rbrack',
+          ])
+            ce.latexSyntax?.addEntries?.([
+              {
+                kind: 'matchfix',
+                openTrigger: [opening],
+                closeTrigger: [closing],
+                parse: (
+                  _parser: unknown,
+                  body: MathSyntax,
+                ): MathSyntax | null => {
+                  const items = Array.isArray(body)
+                    ? (body as MathSyntax[])
+                    : undefined;
+                  const pair = items?.[0] === 'Delimiter' ? items[1] : body;
+                  if (
+                    !Array.isArray(pair) ||
+                    pair[0] !== 'Sequence' ||
+                    pair.length !== 3
+                  )
+                    return ['Error', "'invalid-interval'"];
+                  return [
+                    'Interval',
+                    leftOpen ? ['Open', pair[1]!] : pair[1]!,
+                    rightOpen ? ['Open', pair[2]!] : pair[2]!,
+                  ];
+                },
+              },
+            ]);
     }
     // Explicit named references only. CortexJS parses these dictionary entries;
     // bare letters retain their original juxtaposition/multiplication semantics.

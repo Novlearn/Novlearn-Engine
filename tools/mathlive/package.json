@@ -1,0 +1,13 @@
+{
+  "name": "novlearn-mathlive-bench",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Isolated browser input bench for M7; excluded from the portable engine package.",
+  "dependencies": {
+    "mathlive": "0.111.1"
+  },
+  "scripts": {
+    "start": "node server.mjs"
+  }
+}

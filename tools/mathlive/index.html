@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Banc MathLive — NovLearn Engine</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 950px;
+        margin: 32px auto;
+        padding: 0 16px;
+        color: #152535;
+        background: #fafbfc;
+      }
+      math-field {
+        display: block;
+        margin: 12px 0;
+        min-height: 60px;
+        font-size: 26px;
+        background: white;
+      }
+      label {
+        display: block;
+        margin-top: 12px;
+      }
+      textarea {
+        width: 100%;
+        font-size: 16px;
+        min-height: 50px;
+      }
+      button,
+      select,
+      input {
+        font: inherit;
+        margin: 6px 6px 6px 0;
+        padding: 8px;
+      }
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        padding: 12px;
+        background: #edf1f5;
+        max-height: 280px;
+        overflow-y: auto;
+      }
+    </style>
+    <script type="module" src="/bench.mjs"></script>
+  </head>
+  <body>
+    <h1>Banc de saisie MathLive</h1>
+    <p>
+      Corpus synthétique local. Le champ prépare uniquement du LaTeX ; la
+      correction officielle reste côté serveur.
+    </p>
+    <p id="status" role="status">Chargement…</p>
+    <math-field id="mf" aria-label="Saisie mathématique"></math-field>
+    <p>Sortie courante : <output id="current"></output></p>
+    <label for="source">LaTeX de test</label>
+    <textarea id="source"></textarea>
+    <button id="load">Charger le LaTeX</button>
+    <button id="clear">Vider le champ</button>
+    <button id="focus">Focaliser le champ</button>
+    <button id="keyboard">Afficher clavier virtuel</button>
+    <label for="case-id">Identifiant de l’observation</label>
+    <input id="case-id" value="keyboard-fr" />
+    <label for="operation">Chemin de saisie</label>
+    <select id="operation">
+      <option value="keyboard">Clavier physique</option>
+      <option value="paste">Collage LaTeX</option>
+      <option value="virtual-keyboard">Clavier virtuel</option>
+      <option value="set-value">Insertion API</option>
+    </select>
+    <button id="record">Lire et enregistrer</button>
+    <button id="corpus">Exécuter le corpus API</button>
+    <button id="save">Enregistrer le corpus local</button>
+    <h2>Observations brutes</h2>
+    <pre id="observations">[]</pre>
+  </body>
+</html>

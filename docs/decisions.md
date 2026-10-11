@@ -20,6 +20,17 @@ pédagogiques historiques demandent une revue humaine avant conversion fidèle.
 Une analyse indépendante initiale en lecture seule a confirmé l'architecture
 unique et les manques de correction/éléments/isolation ; aucun fichier délégué.
 
+## D42 — M7 : MathLive isolé et preuve par sortie réelle
+
+[Rapport du banc](mathlive-compatibility.md). Version 0.111.1 épinglée dans un
+package privé d'outillage, exclu de la distribution moteur. Captures distinctes
+API/clavier/collage/virtuel, sources brutes et événements conservés. Tests de
+correction depuis le package public avec attendus officiels indépendants.
+Alias de collections confiés à CortexJS ; scripts vides protégés lexicalement
+avant réduction. Aucun contrat concurrent, export supplémentaire, politique
+cliente, composant applicatif ou migration historique. Rejeu des fixtures ne
+vaut pas nouvelle suite navigateur ; profils et versions précis dans le rapport.
+
 ## D41 — M6 : fonctions fermées et attendus connus du lycée
 
 [ADR 013](adr/013-school-known-answers.md) : profil explicite school-latex-v1

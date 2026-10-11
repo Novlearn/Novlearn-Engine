@@ -141,6 +141,12 @@ préemptive. [Couverture réelle](docs/feature-coverage.md).
 
 ## Reproductibilité et rupture expérimentale
 
+[Compatibilité MathLive M7](docs/mathlive-compatibility.md) : banc isolé 0.111.1,
+45 observations réelles distinguant API, clavier, collage et clavier virtuel.
+Deux formats LaTeX rejoués dans le correcteur officiel, placeholders conservés,
+virgule française et alias d'ensembles/intervalles testés. Aucun MathLive dans le
+package moteur ; preuve limitée à cette version et aux profils documentés.
+
 Identité de génération : **mulberry32-rejection-v1**, flux local Mulberry32, rangs
 par rejet sans biais modulo, singleton sans tirage, ordre déclaré/tri stable.
 Définition/révision/ordre/budgets, seed uint32 normalisée, ID et artefacts moteur/

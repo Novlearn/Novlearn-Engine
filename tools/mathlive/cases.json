@@ -1,0 +1,261 @@
+[
+  {
+    "id": "fraction",
+    "input": "\\frac{2}{4}",
+    "kind": "rational",
+    "expected": "1/2",
+    "state": "correct"
+  },
+  {
+    "id": "root",
+    "input": "\\sqrt{8}/2",
+    "kind": "real",
+    "expected": "\\sqrt{2}",
+    "state": "correct"
+  },
+  {
+    "id": "power",
+    "input": "2^{-3}",
+    "kind": "rational",
+    "expected": "1/8",
+    "state": "correct"
+  },
+  {
+    "id": "integer",
+    "input": "-17",
+    "kind": "rational",
+    "expected": "-17",
+    "state": "correct"
+  },
+  {
+    "id": "decimal-point",
+    "input": "1.25",
+    "kind": "rational",
+    "expected": "5/4",
+    "state": "correct"
+  },
+  {
+    "id": "decimal-fr",
+    "input": "1{,}25",
+    "kind": "rational",
+    "expected": "5/4",
+    "state": "correct"
+  },
+  {
+    "id": "parentheses",
+    "input": "\\left(1+2\\right)",
+    "kind": "rational",
+    "expected": "3",
+    "state": "correct"
+  },
+  {
+    "id": "polynomial",
+    "input": "(x+1)(x-1)",
+    "kind": "expression",
+    "expected": "x^2-1",
+    "state": "correct"
+  },
+  {
+    "id": "pi",
+    "input": "\\pi",
+    "kind": "real",
+    "expected": "\\pi",
+    "state": "correct"
+  },
+  {
+    "id": "e",
+    "input": "e",
+    "kind": "real",
+    "expected": "e",
+    "state": "correct"
+  },
+  {
+    "id": "positive-infinity",
+    "input": "+\\infty",
+    "kind": "extended-real",
+    "expected": "+\\infty",
+    "state": "correct"
+  },
+  {
+    "id": "negative-infinity",
+    "input": "-\\infty",
+    "kind": "extended-real",
+    "expected": "-\\infty",
+    "state": "correct"
+  },
+  {
+    "id": "interval-closed",
+    "input": "[1;2]",
+    "kind": "intervals",
+    "expected": "[1;2]",
+    "state": "correct"
+  },
+  {
+    "id": "interval-right-open",
+    "input": "[1;2[",
+    "kind": "intervals",
+    "expected": "[1;2[",
+    "state": "correct"
+  },
+  {
+    "id": "interval-left-open",
+    "input": "]1;2]",
+    "kind": "intervals",
+    "expected": "]1;2]",
+    "state": "correct"
+  },
+  {
+    "id": "interval-open",
+    "input": "]1;2[",
+    "kind": "intervals",
+    "expected": "]1;2[",
+    "state": "correct"
+  },
+  {
+    "id": "interval-infinity",
+    "input": "]-\\infty;2]",
+    "kind": "intervals",
+    "expected": "]-\\infty;2]",
+    "state": "correct"
+  },
+  {
+    "id": "interval-union",
+    "input": "]-\\infty;0]\\cup[1;+\\infty[",
+    "kind": "intervals",
+    "expected": "]-\\infty;0]\\cup[1;+\\infty[",
+    "state": "correct"
+  },
+  {
+    "id": "interval-fr",
+    "input": "[1{,}2;3{,}4[",
+    "kind": "intervals",
+    "expected": "[6/5;17/5[",
+    "state": "correct"
+  },
+  {
+    "id": "set",
+    "input": "\\{3,-2\\}",
+    "kind": "set",
+    "expected": "\\{-2,3\\}",
+    "state": "correct"
+  },
+  {
+    "id": "set-empty",
+    "input": "\\emptyset",
+    "kind": "set",
+    "expected": "\\emptyset",
+    "state": "correct"
+  },
+  {
+    "id": "set-semicolon",
+    "input": "\\{1;2\\}",
+    "kind": "set",
+    "expected": "\\{1,2\\}",
+    "state": "correct"
+  },
+  {
+    "id": "set-decimal-singleton",
+    "input": "\\{1{,}2\\}",
+    "kind": "set",
+    "expected": "\\{6/5\\}",
+    "state": "correct"
+  },
+  {
+    "id": "logarithm",
+    "input": "\\ln(e)",
+    "kind": "real",
+    "expected": "1",
+    "state": "correct"
+  },
+  {
+    "id": "exponential",
+    "input": "\\exp(0)",
+    "kind": "real",
+    "expected": "1",
+    "state": "correct"
+  },
+  {
+    "id": "sine",
+    "input": "\\sin(\\pi/6)",
+    "kind": "real",
+    "expected": "1/2",
+    "state": "correct"
+  },
+  {
+    "id": "cosine",
+    "input": "\\cos(\\pi)",
+    "kind": "real",
+    "expected": "-1",
+    "state": "correct"
+  },
+  {
+    "id": "tangent",
+    "input": "\\tan(\\pi/4)",
+    "kind": "real",
+    "expected": "1",
+    "state": "correct"
+  },
+  {
+    "id": "placeholder",
+    "input": "\\frac{1}{\\placeholder{}}",
+    "kind": "rational",
+    "expected": "0",
+    "state": "invalid"
+  },
+  {
+    "id": "fraction-incomplete",
+    "input": "\\frac{1}{}",
+    "kind": "rational",
+    "expected": "0",
+    "state": "invalid"
+  },
+  {
+    "id": "root-incomplete",
+    "input": "\\sqrt{}",
+    "kind": "real",
+    "expected": "0",
+    "state": "invalid"
+  },
+  {
+    "id": "power-incomplete",
+    "input": "2^{}",
+    "kind": "rational",
+    "expected": "0",
+    "state": "invalid"
+  },
+  {
+    "id": "operator-incomplete",
+    "input": "1+",
+    "kind": "rational",
+    "expected": "0",
+    "state": "invalid"
+  },
+  {
+    "id": "empty",
+    "input": "",
+    "kind": "rational",
+    "expected": "0",
+    "state": "invalid"
+  },
+  {
+    "id": "undefined-log",
+    "input": "0\\ln(-1)",
+    "kind": "real",
+    "expected": "0",
+    "state": "invalid"
+  },
+  {
+    "id": "unknown-sine",
+    "input": "\\sin(1)",
+    "kind": "real",
+    "expected": "1",
+    "state": "indeterminate"
+  },
+  {
+    "id": "wrong-sign",
+    "input": "-1/2",
+    "kind": "rational",
+    "expected": "1/2",
+    "state": "incorrect"
+  }
+]
