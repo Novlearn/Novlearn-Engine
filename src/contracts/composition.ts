@@ -1,6 +1,7 @@
 import type { JsonValue, GenerationDefinition } from './types.js';
 import { Validation } from './validation.js';
 import { inspectGeneration, generationNames } from './generation.js';
+import { displayFields, inspectDisplayElement } from './display-validation.js';
 /** Structural composition checks on the already copied inert JSON. No math or RNG. */
 export function inspectComposition(v: Validation, data: JsonValue): void {
   const d = v.object(data, '', [
@@ -9,6 +10,7 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
     'id',
     'revision',
     'title',
+    'catalogue',
     'generation',
     'variables',
     'elements',
@@ -19,7 +21,57 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
   v.text(d.id, '/id', 128);
   v.text(d.revision, '/revision', 128);
   v.text(d.title, '/title');
+  if (d.catalogue !== undefined) {
+    const c = v.object(d.catalogue, '/catalogue', [
+      'chapter',
+      'difficulty',
+      'skills',
+      'exerciseType',
+      'needsCalculator',
+      'appTitle',
+    ]);
+    for (const key of ['chapter', 'appTitle'])
+      if (c[key] !== undefined)
+        v.text(c[key], `/catalogue/${key}`, 4096, key === 'appTitle');
+    if (
+      c.difficulty !== undefined &&
+      v.integer(c.difficulty, '/catalogue/difficulty') &&
+      c.difficulty < 1
+    )
+      v.issue(
+        '/catalogue/difficulty',
+        'value',
+        'Difficulty is a positive ordinal.',
+      );
+    if (c.skills !== undefined) {
+      const ids = new Set<string>();
+      v.list(c.skills, '/catalogue/skills', 64).forEach((value, index) => {
+        v.text(value, `/catalogue/skills/${index}`, 128);
+        if (typeof value === 'string') {
+          if (ids.has(value))
+            v.issue(
+              `/catalogue/skills/${index}`,
+              'collision',
+              'Duplicate skill identifier.',
+            );
+          ids.add(value);
+        }
+      });
+    }
+    if (
+      c.exerciseType !== undefined &&
+      c.exerciseType !== 'flash' &&
+      c.exerciseType !== 'classic'
+    )
+      v.issue('/catalogue/exerciseType', 'value', 'Expected flash or classic.');
+    if (
+      c.needsCalculator !== undefined &&
+      typeof c.needsCalculator !== 'boolean'
+    )
+      v.issue('/catalogue/needsCalculator', 'type', 'Expected a boolean.');
+  }
   const names = new Set<string>();
+  const variableDomains = new Map<string, string>();
   // Share the same inert structural inspector without reconstructing older schemas.
   const local = new Validation();
   inspectGeneration(local, d.generation ?? null);
@@ -36,6 +88,11 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
     const path = `/variables/${index}`;
     const variable = v.object(value, path, ['name', 'domain']);
     v.symbol(variable.name, `${path}/name`, names);
+    if (
+      typeof variable.name === 'string' &&
+      typeof variable.domain === 'string'
+    )
+      variableDomains.set(variable.name, variable.domain);
     if (variable.domain !== 'real' && variable.domain !== 'integer')
       v.issue(`${path}/domain`, 'value', 'Expected real or integer.');
   }
@@ -49,6 +106,8 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
   metadata(d.extensions, '/extensions');
   const ids = new Set<string>();
   const sections = new Set<string>();
+  const questions = new Set<string>();
+  const questionReferences: { value: JsonValue; path: string }[] = [];
   const references: { value: JsonValue; path: string }[] = [];
   const uniqueId = (
     value: JsonValue | undefined,
@@ -76,10 +135,26 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
         : tag === 'expression'
           ? ['latex', 'label']
           : tag === 'question'
-            ? ['text', 'points', 'response', 'expectedLatex', 'policy']
+            ? [
+                'text',
+                'points',
+                'response',
+                'expectedLatex',
+                'policy',
+                'keyboard',
+              ]
             : tag === 'mcq'
-              ? ['text', 'points', 'mode', 'options', 'expectedOptionIds']
-              : [];
+              ? [
+                  'text',
+                  'points',
+                  'mode',
+                  'options',
+                  'expectedOptionIds',
+                  'keyboard',
+                ]
+              : typeof tag === 'string' && Object.hasOwn(displayFields, tag)
+                ? displayFields[tag]!
+                : [];
     const e = v.object(value, path, [...common, ...fields]);
     uniqueId(e.id, `${path}/id`, ids);
     metadata(e.extensions, `${path}/extensions`);
@@ -93,13 +168,35 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
           'Sections are flat and cannot belong to another section.',
         );
     }
-    if (tag === 'text' || tag === 'section') {
+    if (typeof tag === 'string' && Object.hasOwn(displayFields, tag)) {
+      inspectDisplayElement(v, e, path, variableDomains);
+      if (
+        (tag === 'hint' || tag === 'explanation') &&
+        e.questionId !== undefined
+      )
+        questionReferences.push({
+          value: e.questionId,
+          path: `${path}/questionId`,
+        });
+    } else if (tag === 'text' || tag === 'section') {
       v.text(e.text, `${path}/text`);
       if (tag === 'section' && typeof e.id === 'string') sections.add(e.id);
     } else if (tag === 'expression') {
       v.text(e.latex, `${path}/latex`);
       if (e.label !== undefined) v.text(e.label, `${path}/label`);
     } else if (tag === 'question' || tag === 'mcq') {
+      if (
+        e.keyboard !== undefined &&
+        ![
+          'numeric',
+          'algebraic',
+          'fractions-roots',
+          'sets-intervals',
+          'mcq',
+        ].some((hint) => hint === e.keyboard)
+      )
+        v.issue(`${path}/keyboard`, 'value', 'Unsupported keyboard hint.');
+      if (typeof e.id === 'string') questions.add(e.id);
       v.text(e.text, `${path}/text`);
       if (
         !v.integer(e.points, `${path}/points`) ||
@@ -196,10 +293,13 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
       v.issue(
         `${path}/type`,
         'unsupported-type',
-        'Unsupported element; only text, section, expression, question and mcq are instantiable.',
+        'Unsupported element; no data or behavior is silently discarded.',
       );
   }
   for (const reference of references)
     if (typeof reference.value === 'string' && !sections.has(reference.value))
       v.issue(reference.path, 'value', 'Referenced section does not exist.');
+  for (const reference of questionReferences)
+    if (typeof reference.value === 'string' && !questions.has(reference.value))
+      v.issue(reference.path, 'value', 'Referenced question does not exist.');
 }

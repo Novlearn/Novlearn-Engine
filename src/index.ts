@@ -23,6 +23,8 @@ export type {
   AnswerSubmission,
   ElementIdentity,
   OptionContent,
+  KeyboardHint,
+  CatalogueMetadata,
   ExerciseElement,
   QuestionDefinition,
   AnswerDefinition,
@@ -38,6 +40,18 @@ export type {
   ValidationResult,
 } from './contracts/types.js';
 export { parseMathInput } from './math/input.js';
+export type {
+  NumericField,
+  RenderNumber,
+  RichFragment,
+  Endpoint,
+  PlotWindow,
+  TableCell,
+  DisplayElementData,
+  DisplayElement,
+  PublicDisplayElement,
+  PrivateDisplayElement,
+} from './contracts/elements.js';
 export type {
   MathInputContext,
   MathInputDiagnostic,

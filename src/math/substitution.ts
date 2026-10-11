@@ -21,7 +21,7 @@ export interface InstantiationMathDiagnostic {
   symbol?: string;
 }
 
-class MathFailure extends Error {
+export class MathFailure extends Error {
   constructor(readonly diagnostic: InstantiationMathDiagnostic) {
     super(diagnostic.message);
   }
@@ -59,7 +59,7 @@ function fail(
 }
 
 /** Convert numeric encodings, without rewriting algebra or substituting symbols. */
-function encode(
+export function encode(
   node: MathSyntax,
   path: string,
   depth = 0,
@@ -87,7 +87,7 @@ function encode(
 }
 
 /** Shared lexical numeric admission. Guards do not transform mathematical source. */
-function admitSource(source: string, path: string): void {
+export function admitSource(source: string, path: string): void {
   // Digits inside explicit identifier spellings are not numeric literals.
   // This is a lexical admission guard only: source is never rewritten.
   const references = [
@@ -119,6 +119,31 @@ function admitSource(source: string, path: string): void {
       path,
     );
   }
+}
+
+/** Resolve symbolic juxtaposition before numeric insertion in either admission path. */
+export function explicitProducts(
+  ce: ComputeEngine,
+  syntax: MathSyntax,
+  path: string,
+) {
+  return ce.box(syntax, { form: 'raw' }).map(
+    (expression) => {
+      if (expression.operator !== 'InvisibleOperator') return expression;
+      if (expression.symbols.length === 0)
+        fail(
+          'unsupported',
+          path,
+          'Numeric juxtaposition is ambiguous; use explicit multiplication.',
+        );
+      const syntax = expression.json;
+      if (!Array.isArray(syntax))
+        fail('substitution-failed', path, 'Unexpected product representation.');
+      const items = syntax as readonly MathSyntax[];
+      return ce.function('Multiply', items.slice(1), { form: 'raw' });
+    },
+    { canonical: false, recursive: true },
+  );
 }
 
 /** One arithmetic profile for preparation and admission after substitution. */
@@ -257,20 +282,7 @@ export function instantiateMath(
     // Resolve symbolic juxtaposition BEFORE inserting numbers: CortexJS otherwise
     // interprets integer + rational juxtaposition as a mixed number. Numeric-only
     // juxtaposition is ambiguous in this native profile and requires explicit cdot.
-    const explicit = ce.box(encoded, { form: 'raw' }).map(
-      (expression) => {
-        if (expression.operator !== 'InvisibleOperator') return expression;
-        if (expression.symbols.length === 0)
-          fail(
-            'unsupported',
-            path,
-            'Numeric juxtaposition is ambiguous; use explicit multiplication.',
-          );
-        const syntax = expression.json as readonly MathSyntax[];
-        return ce.function('Multiply', syntax.slice(1), { form: 'raw' });
-      },
-      { canonical: false, recursive: true },
-    );
+    const explicit = explicitProducts(ce, encoded, path);
     const substituted = explicit.subs(replacements, { canonical: false });
     const raw = substituted.json;
     const rational = (node: MathSyntax, nodePath: string): RationalValue => {

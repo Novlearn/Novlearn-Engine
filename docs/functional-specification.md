@@ -42,8 +42,12 @@ d'options livré. La projection sélectionne chaque branche, mode/response/optio
 sans attendus/flags/politiques/traces/extensions/seed. Prose équivalente ou options
 symboliques non comparables ne sont pas réputées distinguées mathématiquement.
 
-Tout élément avancé ci-dessous est **cible non livrée**. Les fiches décrivent besoins,
-sources observées et lot futur, sans implémentation ou renderer implicite.
+Données natives M2 : [ADR 009](adr/009-display-elements.md) définit les contrats
+effectivement validés/instanciables, leurs profils et leur projection. Catalogue
+privé typé et keyboard facultatif disponibles. Les fiches ci-dessous conservent
+l'inventaire des besoins et observations avant M2 ; leurs mentions « absent natif »
+décrivent cet état antérieur. Les options historiques dépassant les contrats natifs
+restent à adapter explicitement en M10 ; aucun renderer ou migration implicite.
 
 ### Graphe de fonction — mathématique et interaction de vue
 
@@ -109,7 +113,11 @@ sources observées et lot futur, sans implémentation ou renderer implicite.
 - Réponse/rendu/Admin : points sans correction implicite ; réponse complexe par contrat de question spécifique. Renderer axes/labels, Admin coordonnées/options ; aucun atan2 métier divergent pour une réponse officielle.
 - État/lot : Creator, absent élève/natif ; complément Lot 5/adaptation 9/UI, format complexe par complément Lot 6.
 
-Figures géométriques génériques, images ou autres blocs non identifiés restent **inconnus** au regard du catalogue réel, sans nouveau discriminant inventé. Relations/systèmes et suite constituent les formes supplémentaires réellement observées ; introduction/conclusion ne justifient pas un moteur propre.
+Le CDC prioritaire exige désormais geometry : contrat minimal de points et
+segment/droite/cercle/polygone livré en M2 malgré l'inventaire ancien incomplet.
+Images et autres blocs non identifiés restent inconnus ; aucun discriminant
+générique absorbant leurs champs. Relations/systèmes/suites ont des contrats
+natifs documentés ; introduction/conclusion utilisent les textes existants.
 
 ## 3. Génération et contraintes
 

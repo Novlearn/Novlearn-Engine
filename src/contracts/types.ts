@@ -120,12 +120,27 @@ export interface ElementIdentity {
 export type OptionContent =
   { format: 'text'; text: string } | { format: 'latex'; latex: string };
 
+/** Optional UI advice, never mathematical or grading authority. */
+export type KeyboardHint =
+  'numeric' | 'algebraic' | 'fractions-roots' | 'sets-intervals' | 'mcq';
+/** Catalogue data are stored privately; publication/search/progression stay external. */
+export interface CatalogueMetadata {
+  chapter?: string;
+  difficulty?: number;
+  skills?: string[];
+  exerciseType?: 'flash' | 'classic';
+  needsCalculator?: boolean;
+  appTitle?: string;
+}
+
 export type ExerciseElement =
+  | import('./elements.js').DisplayElement
   | (ElementIdentity & { type: 'text'; text: string })
   | (ElementIdentity & { type: 'section'; text: string })
   | (ElementIdentity & { type: 'expression'; latex: string; label?: string })
   | (ElementIdentity & {
       type: 'question';
+      keyboard?: KeyboardHint;
       text: string;
       points: number;
       response: { format: 'latex'; kind: 'rational' | 'expression' };
@@ -134,6 +149,7 @@ export type ExerciseElement =
     })
   | (ElementIdentity & {
       type: 'mcq';
+      keyboard?: KeyboardHint;
       text: string;
       points: number;
       mode: 'single' | 'multiple';
@@ -157,12 +173,14 @@ export interface ExerciseDefinition {
   id: string;
   revision: string;
   title: string;
+  catalogue?: CatalogueMetadata;
   generation: GenerationDefinition;
   variables: FreeVariableDefinition[];
   elements: ExerciseElement[];
   extensions?: JsonObject;
 }
 export type PublicElement =
+  | import('./elements.js').PublicDisplayElement
   | { id: string; sectionId?: string; type: 'text'; text: string }
   | { id: string; sectionId?: string; type: 'section'; text: string }
   | {
@@ -176,6 +194,7 @@ export type PublicElement =
       id: string;
       sectionId?: string;
       type: 'question';
+      keyboard?: KeyboardHint;
       text: string;
       points: number;
       response: { format: 'latex'; kind: 'rational' | 'expression' };
@@ -184,6 +203,7 @@ export type PublicElement =
       id: string;
       sectionId?: string;
       type: 'mcq';
+      keyboard?: KeyboardHint;
       text: string;
       points: number;
       mode: 'single' | 'multiple';
@@ -197,6 +217,7 @@ export type ExpectedAnswer =
 
 /** Expected data stays attached to the question ID, never its array index. */
 export type PrivateElement =
+  | import('./elements.js').PrivateDisplayElement
   | Extract<PublicElement, { type: 'text' | 'section' }>
   | (Extract<PublicElement, { type: 'expression' }> & {
       math: InstantiatedMath;

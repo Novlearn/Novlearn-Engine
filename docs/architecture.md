@@ -1,5 +1,10 @@
 # Architecture et contrats canoniques
 
+Extension M2 : [ADR 009](adr/009-display-elements.md), contracts/elements,
+inspection spécialisée, mapper de champs partagé et contrôles exacts des données
+prescrites. Présentation raw Cortex séparée de l'admission exacte, domaine non
+vérifié explicite. Catalogue/aides/traces privés, clavier UI non autoritaire.
+
 Référence au 11 octobre 2026 : package privé 0.1.0, schemaVersion 5,
 [ADR 008](adr/008-canonical-consolidation.md). Les enveloppes expérimentales ne sont
 plus implémentées. [Inventaire initial](consolidation.md).

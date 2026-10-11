@@ -1,5 +1,11 @@
 # Stratégie de vérification
 
+M2 : display-elements.test.ts qualifie toutes les données avancées, leurs références,
+ordres/valeurs/probabilités exacts, domaines non vérifiés, relations imbriquées,
+getters, échecs atomiques et projection sous injection de secrets. Fixtures
+synthétiques et seul graphe observé 64 transcrit manuellement : aucun test de
+rendu ni migration complète annoncé.
+
 M1 : named-parameters.test.ts qualifie la convention descriptive CortexJS, lettres
 juxtaposées conservées, noms/digits/unités/propriétés héritées/espaces/réservés,
 références et cycles avant RNG, tuples/restrictions/contraintes et instance privée/

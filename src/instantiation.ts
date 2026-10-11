@@ -16,6 +16,30 @@ import type {
 } from './generation/variables.js';
 import { instantiateMath } from './math/substitution.js';
 import type { InstantiationMathDiagnostic } from './math/substitution.js';
+import { MathFailure } from './math/substitution.js';
+import { instantiateDisplayMath } from './math/display.js';
+import { checkDisplayData } from './math/display-data-checks.js';
+import { mapDisplayData } from './display-elements.js';
+import { displayFields } from './contracts/display-validation.js';
+import type {
+  DisplayElement,
+  PrivateDisplayElement,
+} from './contracts/elements.js';
+import type { ExerciseElement } from './contracts/types.js';
+
+function isDisplayElement(element: ExerciseElement): element is DisplayElement {
+  return Object.hasOwn(displayFields, element.type);
+}
+function isPrivateDisplayElement(
+  element: PrivateElement,
+): element is PrivateDisplayElement {
+  return Object.hasOwn(displayFields, element.type);
+}
+class ElementFailure extends Error {
+  constructor(readonly diagnostics: InstantiationDiagnostic[]) {
+    super('Display element could not be instantiated.');
+  }
+}
 export interface InstantiateExerciseOptions extends GenerateVariablesOptions {
   instanceId: string;
 }
@@ -151,7 +175,9 @@ export function projectPublicInstance(
     schemaVersion: 5,
     instanceId: instance.instanceId,
     title: instance.title,
-    elements: instance.elements.map(projectElement),
+    elements: instance.elements
+      .map(projectElement)
+      .filter((e): e is PublicElement => e !== undefined),
   };
 }
 /** Exact decimal spelling for prose; no rounded quotient enters templates. */
@@ -193,6 +219,10 @@ function instantiateElements(
     const path = `/elements/${index}`;
     const identity = {
       id: element.id,
+      ...((element.type === 'question' || element.type === 'mcq') &&
+      element.keyboard !== undefined
+        ? { keyboard: element.keyboard }
+        : {}),
       ...(element.sectionId === undefined
         ? {}
         : { sectionId: element.sectionId }),
@@ -209,6 +239,107 @@ function instantiateElements(
           : {}),
       })),
     });
+    if (isDisplayElement(element)) {
+      const mathFields: PrivateDisplayElement['mathFields'] = [];
+      const formulaContext =
+        element.type === 'function-graph'
+          ? { ...context, variables: [element.variable] }
+          : element.type === 'sequence-graph' &&
+              element.sequence.mode !== 'points'
+            ? {
+                ...context,
+                variables:
+                  element.sequence.mode === 'explicit'
+                    ? [element.sequence.indexVariable]
+                    : [
+                        element.sequence.indexVariable,
+                        element.sequence.termVariable,
+                      ],
+              }
+            : context;
+      try {
+        const data = mapDisplayData(
+          element,
+          {
+            number(value, fieldPath) {
+              const result = instantiateMath(
+                value.latex,
+                context,
+                generated.values,
+                `${fieldPath}/latex`,
+                true,
+              );
+              if (!result.ok)
+                throw new ElementFailure(
+                  result.diagnostics.map((d) => ({ ...d, stage: 'statement' })),
+                );
+              if (!result.exact)
+                throw new MathFailure({
+                  code: 'not-calculable',
+                  path: fieldPath,
+                  message: 'Exact numeric render data required.',
+                });
+              mathFields.push({
+                path: `${fieldPath}/latex`,
+                math: result.value,
+                admission: 'exact-rational',
+              });
+              return {
+                numerator: result.exact.numerator,
+                denominator: result.exact.denominator,
+                latex: result.value.displayLatex,
+              };
+            },
+            text(source, fieldPath) {
+              const result = textTemplate(source, parameters, fieldPath);
+              if (!result.ok) throw new ElementFailure(result.diagnostics);
+              return result.value;
+            },
+            formula(source, fieldPath, relation) {
+              const result = instantiateDisplayMath(
+                source,
+                formulaContext,
+                generated.values,
+                fieldPath,
+                relation,
+              );
+              if (!result.ok)
+                throw new ElementFailure(
+                  result.diagnostics.map((d) => ({ ...d, stage: 'statement' })),
+                );
+              mathFields.push({
+                path: fieldPath,
+                math: result.value,
+                admission: 'display-only',
+              });
+              return result.value.displayLatex;
+            },
+          },
+          path,
+        );
+        checkDisplayData(data, path);
+        elements.push({
+          ...identity,
+          ...data,
+          formulaDomain: 'unverified',
+          mathFields,
+        });
+      } catch (error) {
+        if (error instanceof ElementFailure)
+          return failElement(error.diagnostics);
+        if (error instanceof MathFailure)
+          return failElement([{ ...error.diagnostic, stage: 'statement' }]);
+        return failElement([
+          {
+            code: 'substitution-failed',
+            path,
+            stage: 'statement',
+            message: 'Display element could not be instantiated.',
+          },
+        ]);
+      }
+      continue;
+    }
     if (element.type === 'expression') {
       const math = instantiateMath(
         element.latex,
@@ -382,13 +513,42 @@ function instantiateElements(
       };
 }
 /** Fresh objects at every public level, including nested QCM options and response. */
-function projectElement(element: PrivateElement): PublicElement {
+function projectElement(element: PrivateElement): PublicElement | undefined {
   const identity = {
     id: element.id,
+    ...((element.type === 'question' || element.type === 'mcq') &&
+    element.keyboard !== undefined
+      ? { keyboard: element.keyboard }
+      : {}),
     ...(element.sectionId === undefined
       ? {}
       : { sectionId: element.sectionId }),
   };
+  if (isPrivateDisplayElement(element)) {
+    if (element.type === 'hint' || element.type === 'explanation')
+      return undefined;
+    const data = mapDisplayData(
+      element,
+      {
+        number(value) {
+          return {
+            numerator: value.numerator,
+            denominator: value.denominator,
+            latex: value.latex,
+          };
+        },
+        text(value) {
+          return value;
+        },
+        formula(value) {
+          return value;
+        },
+      },
+      '',
+    );
+    if (data.type === 'hint' || data.type === 'explanation') return undefined;
+    return { ...identity, ...data, formulaDomain: 'unverified' };
+  }
   switch (element.type) {
     case 'text':
     case 'section':

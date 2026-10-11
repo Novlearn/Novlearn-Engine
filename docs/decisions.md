@@ -45,6 +45,24 @@ Recettes obligatoires testées par composition/oracles BigInt, pas par générat
 spécifiques. Les majuscules initiales/soulignés/scopes locaux restent hors profil ;
 leurs historiques exigent une conversion explicite avec provenance au lot M10.
 
+## D37 — Données de présentation, M2 (11 octobre 2026)
+
+CDC 2.1/6.5/8/9 : [ADR 009](adr/009-display-elements.md). Unions de données pour
+les familles prioritaires/avancées ; catalogue privé typé et keyboard non autoritaire.
+Formules raw Cortex sans réduction/évaluation, admission interne display-latex-v1,
+domaine explicitement non vérifié. Nombres de rendu rationnels exacts par le
+parcours existant. Relations binaires avec membres scalaires uniquement.
+Données prescrites, ordre/cardinal/références/cohérence contrôlés ; aucun sampling
+ou calcul analytique. Issues probabilistes disjointes, somme ≤1 (=1 si exhaustive).
+Variations non strictes, valeurs définies finies, limites unilatérales et faits
+contradictoires refusés. Aides/corrections instanciées privées, retirées du public.
+Sélection partagée de champs imbriqués, traces privées et échecs atomiques.
+
+Le CDC prioritaire autorise geometry minimal malgré l'ancien catalogue incomplet.
+Fixtures synthétiques distinctes des sources ; graphe 64 transcrit manuellement,
+aucune adaptation/migration complète. Propriétés historiques hors contrat dans le
+brut pour M10, jamais supprimées silencieusement. Aucun arbitrage bloquant en M2.
+
 ## D33 — Complément Lot 5 : résolution calculée versionnée (retenue)
 
 Demande du 11 octobre 2026. `GenerationDefinitionV3` / `variables-v3` ajoute computed (`name`, `latex`, restrictions facultatives) et des opérandes `{latex}` aux six comparaisons. `ExerciseDefinitionV4` / `composed-instance-v4` consomme ce contexte commun. Les contrats historiques restent inchangés. Calculs rationnels fermés du profil existant, source conservée, résultat `{kind:'rational',numerator,denominator}` même pour une fraction décimale ; aucun quotient flottant. Provenance : définition officielle, liaisons de tuples et liste ordonnée `{name,dependencies}` des calculs, sans deuxième copie des valeurs.

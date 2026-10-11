@@ -1,5 +1,47 @@
 # État et transmission
 
+## Mission autonome V1 — M2 données d'éléments validé (11 octobre 2026)
+
+Lot précédent : M1 `8ef7de5`, 592 tests validés. M2 validé, auteur
+principal unique ; analyses/revues indépendantes en lecture seule. D37/ADR 009.
+Catalogue privé typé, indication clavier sans autorité ; rich-text, équations/
+systèmes, hints/explanations privés, graphes/suites, signes/variations/valeurs/
+statistiques, arbres, vecteurs/geometry/plan complexe. Contrats/validation/refs/
+substitution/projection et diagnostics, aucune UI ou migration automatique.
+
+Fichiers : nouveaux contracts/elements et display-validation, display-elements,
+math/display et display-data-checks, tests/display-elements, ADR 009 ; adaptations
+composition/types/index/instantiation/input/substitution, README et docs actuels.
+Formules raw sans évaluation/réduction, domaine public unverified ; nombres de
+rendu rationnels exacts, admission shared et contextes/scopes isolés. Aides retirées
+du public, objets imbriqués reconstruits par sélection. Ancien profil d'attendus
+et vecteurs conservés. Corpus huit lignes inchangé ; seul graphe 64 testé par
+transcription native manuelle, autres fixtures synthétiques identifiées.
+
+Revue corrigée : booléens imbriqués/chaînes dans scalaires/relations, wrappers
+transparents ; variation contradictoire/valeur définie infinie/limites impossibles,
+droite dégénérée après substitution, probabilités partielles dépassant 1.
+Commandes intermédiaires build/typecheck/lint PASS. Première tranche 79/79 PASS,
+puis 98/98 PASS sur deux fichiers (67 display + 31 substitution), Vitest 32,55 s.
+Une erreur de narrowing TS intermédiaire corrigée ; build/typecheck/lint suivants
+PASS. Six régressions de variations infinies ajoutées ensuite. Premier check
+complet PASS : **665 tests / 16 fichiers**, Vitest 147,78 s. Revue finale favorable.
+Audit principal complémentaire : les choices insérés dans les formules doivent
+passer par l'encodeur exact comme les autres champs ; garde ajoutée avec
+régression fraction 0.5 et précision hors budget. Première assertion du nouveau
+test attendait 1/2 réduit ; ajustée à 5/10 raw, conformément à la présentation
+sans réduction. Check alors interrompu, non compté. Test ciblé de la garde PASS
+(1,61 s), puis `npm.cmd run check` final PASS : **666 tests / 16 fichiers**,
+Vitest 116,83 s, build/typecheck/lint/format. Aucun test supprimé.
+`npm.cmd pack --dry-run` PASS : **82 fichiers, 71,9 kB / 337,4 kB**, aucune
+publication. Import ESM six exports, `git diff --check` PASS, empreintes des huit
+lignes/copied fixture et CDC identiques au M0. Aucune CI distante, suite navigateur
+ou consommation tarball courante annoncée. Commit local :
+`feat(elements): instantiate typed presentation data safely`.
+
+Prochain lot : M3 contrats de soumission/correction numérique/discrète. V1 non terminée ;
+M3–M12 et toutes leurs exigences restent obligatoires.
+
 ## Mission autonome V1 — M1 génération/instanciation validé (11 octobre 2026)
 
 M0 livré au commit `e072a57` sur main ; seul CDC utilisateur non suivi avant M1.

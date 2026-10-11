@@ -4,6 +4,11 @@ Référence fonctionnelle actualisée le 11 octobre 2026 après consolidation du
 
 ## Objectif
 
+Données M2 disponibles : éléments avancés et fragments riches, aides/corrections
+privées, catalogue typé et clavier indicatif. [Profils](adr/009-display-elements.md).
+Formules à domaine non vérifié, nombres de rendu rationnels exacts ; aucune UI,
+correction élève ou migration historique complète livrée par ce lot.
+
 `novlearn-exercise-engine` décrit, valide, génère, instancie et, à terme, corrige des exercices mathématiques composés de plusieurs éléments et questions. NovLearn élève, le futur Admin, Colyseus et d'éventuelles applications mobiles consomment les mêmes contrats et les mêmes règles mathématiques. Chaque consommateur utilise uniquement les capacités effectivement annoncées pour sa version.
 
 Un exercice est un document pédagogique ordonné, pas nécessairement une question unique. Les variables communes sont générées une fois pour une instance et alimentent tous ses énoncés, figures et attendus. Chaque question est identifiée et corrigible indépendamment. Une correction officielle dépend d'une définition publiée et d'une instance retrouvées côté serveur, jamais d'un verdict, d'une politique ou d'une seed apportés par l'élève.

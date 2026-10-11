@@ -29,9 +29,9 @@ export interface MathInputDiagnostic {
   offset?: number;
 }
 
-export type MathInputResult = {
+type ParsedMathInput<P extends string> = {
   source: string;
-  profile: 'scalar-latex-v1';
+  profile: P;
 } & (
   | {
       ok: true;
@@ -44,6 +44,7 @@ export type MathInputResult = {
     }
   | { ok: false; diagnostics: MathInputDiagnostic[] }
 );
+export type MathInputResult = ParsedMathInput<'scalar-latex-v1'>;
 
 const commands = new Set([
   'frac',
@@ -77,18 +78,67 @@ const operators = new Set([
   'Delimiter',
 ]);
 const constants = new Set(['Pi', 'ExponentialE']);
+const displayCommands = new Set([
+  'sin',
+  'cos',
+  'tan',
+  'ln',
+  'log',
+  'exp',
+  'abs',
+  'lvert',
+  'rvert',
+  'le',
+  'leq',
+  'ge',
+  'geq',
+  'ne',
+  'neq',
+]);
+const displayOperators = new Set([
+  'Sin',
+  'Cos',
+  'Tan',
+  'Ln',
+  'Log',
+  'Exp',
+  'Abs',
+  'Equal',
+  'NotEqual',
+  'Less',
+  'LessEqual',
+  'Greater',
+  'GreaterEqual',
+]);
 
 /** Parsing/admissibility only. Success proves neither a domain nor a value. */
 export function parseMathInput(
   source: string,
   context: MathInputContext = {},
 ): MathInputResult {
-  const base = { source, profile: 'scalar-latex-v1' as const };
+  return parseInput(source, context, 'scalar-latex-v1');
+}
+
+/** Internal presentation admission only; no public grading capability is implied. */
+export function parseDisplayInput(
+  source: string,
+  context: MathInputContext,
+): ParsedMathInput<'display-latex-v1'> {
+  return parseInput(source, context, 'display-latex-v1');
+}
+
+function parseInput<P extends 'scalar-latex-v1' | 'display-latex-v1'>(
+  source: string,
+  context: MathInputContext,
+  profile: P,
+): ParsedMathInput<P> {
+  const display = profile === 'display-latex-v1';
+  const base = { source, profile };
   const fail = (
     code: MathInputDiagnostic['code'],
     message: string,
     detail: Omit<MathInputDiagnostic, 'code' | 'message'> = {},
-  ): MathInputResult => ({
+  ): ParsedMathInput<P> => ({
     ...base,
     ok: false,
     diagnostics: [{ code, message, ...detail }],
@@ -126,7 +176,11 @@ export function parseMathInput(
       return fail('incomplete', 'Complétez le champ de saisie vide.', {
         offset: match.index,
       });
-    if (!commands.has(command) && ![',', ';', ':', '!', ' '].includes(command))
+    if (
+      !commands.has(command) &&
+      !(display && displayCommands.has(command)) &&
+      ![',', ';', ':', '!', ' '].includes(command)
+    )
       return fail(
         'unsupported',
         'Cette commande LaTeX ne fait pas partie du profil scalaire.',
@@ -255,7 +309,10 @@ export function parseMathInput(
           );
           return;
         }
-        if (typeof head !== 'string' || !operators.has(head)) {
+        if (
+          typeof head !== 'string' ||
+          (!operators.has(head) && !(display && displayOperators.has(head)))
+        ) {
           // Inspect nested parser errors before reporting unsupported containers.
           for (let i = 1; i < node.length; i += 1)
             visit(node[i], `${path}/${i}`, depth + 1);

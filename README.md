@@ -92,7 +92,10 @@ références descriptives explicites `\mathrm{delta}`, `\mathrm{r1}`,
 Candidat complet retiré si faux, budgets explicites, aucun fallback.
 Erreur, indétermination, domaine prouvé vide et recherche épuisée sont distincts.
 
-Liste plate : texte, section, expression, question, QCM simple/multiple. Valeurs
+Liste plate : texte, section, expression, question, QCM simple/multiple. Les données
+avancées (graphes/suites/tableaux/arbres/vecteurs/figures/plan complexe/systèmes),
+fragments riches et aides privées sont décrits dans [ADR 009](docs/adr/009-display-elements.md).
+Catalogue typé privé et indication clavier sans autorité mathématique. Valeurs
 partagées, attendu par ID, sources/raw/substitutions privés conservés. @a et @@
 dans les textes/labels ; LaTeX natif et substitution CortexJS dans les formules.
 La soumission reste LaTeX brut par question ; transport/correction QCM et
@@ -102,7 +105,8 @@ Profil rationnel/polynomial : ratios/intermédiaires ≤10^9, AST 128 nœuds/pro
 16, degré ≤16, puissances entières 0–16 avec domaine contrôlé avant réduction.
 Un choix fini n'est pas automatiquement utilisable dans le profil exact.
 Racines/constantes parsables selon [ADR 005](docs/adr/005-math-input.md), sans
-évaluation/correction implicite. Pas de solveur, d'éléments avancés ou d'isolation
+évaluation/correction implicite. Formules de présentation à domaine non vérifié,
+nombres de rendu rationnels exacts. Pas de solveur, de dessin ou d'isolation
 préemptive. [Couverture réelle](docs/feature-coverage.md).
 
 ## Reproductibilité et rupture expérimentale
