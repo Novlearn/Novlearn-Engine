@@ -1,5 +1,11 @@
 # Spécification fonctionnelle
 
+M3 livré : [ADR 010](adr/010-numeric-grading.md), questions numériques fermées et
+discrètes ; real/extended-real/text, soumissions latex/text/selection et correction
+officielle par IDs. Le profil rationnel/polynomial de génération reste distinct.
+Les familles algébriques, formes, fonctions connues, isolation et adaptation des
+lots suivants demeurent obligatoires pour la V1.
+
 Référence actuelle au 11 octobre 2026, après [consolidation](consolidation.md).
 Contrat canonique schemaVersion 5 ; package privé 0.1.0. Le cahier des charges
 CDC_référence.md reste une cible plus large, préservée en octets. Cette mission
@@ -178,7 +184,9 @@ réduction. Expression polynomiale : degré structurel ≤16 ; rationnels fermé
 intermédiaires ≤10^9 ; AST ≤128 nœuds/profondeur 16 ; puissances entières 0–16 sous
 contrôle de non-nullité pour puissance zéro. Décimaux jusqu'à six places, chiffres
 groupés et juxtaposition numérique ambiguë refusés. x/x, 0/x, 0^0, racines,
-irrationnels, fonctions partielles et solveurs hors profil d'évaluation.
+irrationnels, fonctions partielles et solveurs hors du profil rationnel/polynomial
+de génération. Les réponses numériques fermées M3 ont leur admission réelle
+spécialisée avant réduction, documentée dans ADR 010.
 
 Parsing scalar-latex-v1 reste plus large : sources préservées, racines et Pi/
 ExponentialE parsables mais aucune preuve d'évaluation/domaine. Point et {,} décimaux,
@@ -188,26 +196,26 @@ JSON : sources/textes ≤4096 unités UTF-16, IDs/révision/clés ≤128, profon
 ≤10000 nœuds, collections ≤128. ≤128 éléments et ≤64 options/sélection QCM. Le
 snapshot agrégé peut être refusé malgré des champs individuellement admis.
 
-AnswerSubmission reprend seulement le transport LaTeX brut sous schéma 5 : IDs et
-source, même incomplète. Aucun seed/policy/verdict client. Association à l'instance
-officielle, transport QCM et CorrectionResult nécessitent leurs futurs contrats.
+AnswerSubmission transporte LaTeX/texte brut ou sélection d'IDs sous schéma 5,
+source même incomplète. Aucun seed/policy/verdict client. gradeAnswer associe les
+IDs à l'instance officielle et rend CorrectionResult, sans authentifier sa provenance.
 Validation structurelle ≠ parsing/domaine/preuve ; previews multi-seeds ne prouvent
 pas toutes les générations. Corps synchrone, aucun timeout préemptif démontré.
 
 Correction cible : soumission structurée → association officielle → parsing → admissibilité et domaine → preuve de valeur → politique de réponse/forme → résultat. Recueillir les témoins de forme sur source/raw **avant réduction** ; statuer séparément sur la forme après preuve de valeur. Le serveur fournit format, attendu, tolérance et politique.
 
-| Famille / politique            | Règle cible et tests requis                                                                                                                       | État / lot                                   |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| Rationnel exact, forme libre   | Rapports exacts bornés ; 2/4 et 1/2 même valeur ; différences démontrées                                                                          | Attendu calculé, correction absente ; 6      |
-| Fraction irréductible          | Valeur distincte de forme ; 2/4 valeur correcte mais forme non conforme ; signes/dénominateur/notation définis                                    | Absent ; 7                                   |
-| Polynôme rationnel univarié    | Admissibilité raw, degré/coefficient bornés et preuve exacte ; variable au dénominateur refusée/indéterminée                                      | Candidat documenté, pas correcteur ; 6       |
-| Développée/réduite/factorisée  | Définir exemples acceptés/refusés, facteurs triviaux et signes ; source/raw, pas simple égalité canonique                                         | Absent ; 7 après arbitrages pédagogiques     |
-| Approximation                  | Permission explicite, précision/arrondi, tolérances absolue/relative et unité ; aucune conversion d'une égalité numérique en identité universelle | Absent ; complément 6 motivé par corpus      |
-| Intervalle                     | Ordre des bornes, ouvert/fermé, infinis autorisés aux extrémités sans fermeture ; vide/unions à spécifier                                         | Absent ; complément 6/9 selon famille        |
-| Ensemble                       | Valeurs admises, ordre ignoré et doublons selon politique explicite ; vide/singleton ; preuve élément par élément                                 | Absent ; complément 6/9                      |
-| QCM simple/multiple            | Ensemble exact d'IDs, cardinal/mode ; options affichées indépendantes de leur position ; pas de crédit partiel implicite                          | Absent ; complément discret 6 après 5 étendu |
-| Texte                          | Politique explicite de comparaison ; pas d'assimilation silencieuse texte/expression                                                              | Absent ; complément ciblé                    |
-| Complexe / solution d'équation | Format/convention/domaine et méthode exacte par famille ; résoudre distinct de comparer                                                           | Absent ; complément ciblé après besoin       |
+| Famille / politique            | Règle cible et tests requis                                                                                                   | État / lot                               |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Rationnel exact, forme libre   | Rapports exacts bornés ; 2/4 et 1/2 même valeur ; différences démontrées                                                      | IT M3, preuve Cortex exacte              |
+| Fraction irréductible          | Valeur distincte de forme ; 2/4 valeur correcte mais forme non conforme ; signes/dénominateur/notation définis                | Absent ; 7                               |
+| Polynôme rationnel univarié    | Admissibilité raw, degré/coefficient bornés et preuve exacte ; variable au dénominateur refusée/indéterminée                  | Candidat documenté, pas correcteur ; 6   |
+| Développée/réduite/factorisée  | Définir exemples acceptés/refusés, facteurs triviaux et signes ; source/raw, pas simple égalité canonique                     | Absent ; 7 après arbitrages pédagogiques |
+| Approximation                  | A+R\|attendu\| officiel inclusif, chaînes décimales exactes ; identité ou bornes certifiées, frontière inconnue indéterminée  | IT M3 par profil, formes M5              |
+| Intervalle                     | Ordre des bornes, ouvert/fermé, infinis autorisés aux extrémités sans fermeture ; vide/unions à spécifier                     | Absent ; complément 6/9 selon famille    |
+| Ensemble                       | Valeurs admises, ordre ignoré et doublons selon politique explicite ; vide/singleton ; preuve élément par élément             | Absent ; complément 6/9                  |
+| QCM simple/multiple            | Ensemble exact d'IDs, cardinal/mode ; options affichées indépendantes de leur position ; pas de crédit partiel implicite      | IT M3, erreurs et permutations testées   |
+| Texte                          | Variantes autorisées, comparaison stricte/normalisation explicitement configurée ; accents conservés, pas de sémantique libre | IT M3                                    |
+| Complexe / solution d'équation | Format/convention/domaine et méthode exacte par famille ; résoudre distinct de comparer                                       | Absent ; complément ciblé après besoin   |
 
 Décision utilisateur : pour les futures expressions symboliques, **mêmes domaines par défaut** ; une question peut imposer explicitement le domaine de comparaison. `x/x` et `1` ne sont donc pas identiques par défaut. Sous domaine imposé x≠0, une future méthode pourrait démontrer l'équivalence ; elle doit aussi prouver que les deux expressions y sont définies. Cette décision ne crée aucun extracteur universel de domaine. Le premier correcteur rationnel/polynomial doit rester dans ses familles bornées, domaines inconnus → indétermination.
 
@@ -217,7 +225,7 @@ Une expression mathématiquement valable mais hors famille supportée n'est pas 
 
 ## 5. Évolutions et limites
 
-Correcteur/formes, isolation/transport, adaptation et adoption restent à livrer
+Correcteur algébrique/formes, fonctions connues, isolation/transport, adaptation et adoption restent à livrer
 selon la roadmap de mission. Pas de serveur, UI, SQL ou dépendance supplémentaire.
 Anciennes APIs
 expérimentales refusées et snapshots non rejouables ; futur adaptateur explicite.

@@ -24,7 +24,8 @@ tests appropriés, check complet, pack, revue du diff et commit local. Aucun pus
 | M12 / 11             | Tarball installé et consommé en Node/TypeScript et bundler cible, contrats/exports/snapshots, audit sécurité/math/architecture et chaque exigence CDC. V1 seulement si toutes P0/P1 validées.         |
 
 M0 validé au commit `e072a57`, M1 au commit `8ef7de5` (592 tests).
-M2 données d'éléments validé (666 tests), puis M3 correction numérique/discrète.
+M2 données d'éléments validé (666 tests). M3 correction numérique/discrète validé
+(817 tests et pack), puis M4 algèbre/ensembles/domaines.
 Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en

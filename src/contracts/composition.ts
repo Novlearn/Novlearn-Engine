@@ -2,6 +2,7 @@ import type { JsonValue, GenerationDefinition } from './types.js';
 import { Validation } from './validation.js';
 import { inspectGeneration, generationNames } from './generation.js';
 import { displayFields, inspectDisplayElement } from './display-validation.js';
+import { inspectQuestionAnswer } from './answer-validation.js';
 /** Structural composition checks on the already copied inert JSON. No math or RNG. */
 export function inspectComposition(v: Validation, data: JsonValue): void {
   const d = v.object(data, '', [
@@ -140,6 +141,7 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
                 'points',
                 'response',
                 'expectedLatex',
+                'expectedTexts',
                 'policy',
                 'keyboard',
               ]
@@ -209,25 +211,7 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
           'Points must be a positive integer.',
         );
       if (tag === 'question') {
-        v.text(e.expectedLatex, `${path}/expectedLatex`);
-        const response = v.object(e.response, `${path}/response`, [
-          'format',
-          'kind',
-        ]);
-        v.literal(response.format, `${path}/response/format`, 'latex');
-        if (response.kind !== 'rational' && response.kind !== 'expression')
-          v.issue(
-            `${path}/response/kind`,
-            'value',
-            'Expected rational or expression.',
-          );
-        const policy = v.object(e.policy, `${path}/policy`, ['domain', 'form']);
-        v.literal(
-          policy.domain,
-          `${path}/policy/domain`,
-          response.kind === 'expression' ? 'polynomial' : 'rational',
-        );
-        v.literal(policy.form, `${path}/policy/form`, 'value-only');
+        inspectQuestionAnswer(v, e, path);
       } else {
         if (e.mode !== 'single' && e.mode !== 'multiple')
           v.issue(`${path}/mode`, 'value', 'Expected single or multiple.');

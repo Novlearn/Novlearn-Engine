@@ -1,5 +1,13 @@
 # Stratégie de vérification
 
+M3 : grading.test.ts teste correction officielle par IDs, nombres exacts, racines,
+constantes, tolérances inclusives, infinis, QCM et texte ; cinq états et récupération
+des pannes box/parse. Oracles BigInt de numeric-constant-bounds certifient les deux
+bornes π/e indépendamment de Cortex. Contre-exemples raw, profil indéterminé,
+politique client, getters, projection sous canaris, templates/rejeu/JSON et sept
+exports. Gardes de types ajustées dans deux tests de fixtures mathématiques ;
+exception du parseur attend désormais technical-error, sans retirer de test.
+
 M2 : display-elements.test.ts qualifie toutes les données avancées, leurs références,
 ordres/valeurs/probabilités exacts, domaines non vérifiés, relations imbriquées,
 getters, échecs atomiques et projection sous injection de secrets. Fixtures
@@ -28,7 +36,7 @@ internes en suites isolées. [Bilan](progress.md), [support](feature-coverage.md
 | Projection           | Secrets injectés dans chaque branche et objet imbriqué, allowlist et copies détachées                                   |
 | Rejeu                | Générations et snapshot complets figés dans reference-vectors.json, JSON/seed normalisée/artefacts, immutabilité        |
 | Corpus               | Deux copies byte-identiques, hash connu, inventaire/8 rapports ; transcription ≠ migration                              |
-| Distribution         | Build/types/import Node, six exports runtime, chemins internes refusés, packaging local                                 |
+| Distribution         | Build/types/import Node, sept exports runtime, chemins internes refusés, packaging local                                |
 
 Les goldens protègent la stabilité, pas la vérité mathématique à eux seuls : garder
 les assertions indépendantes. Les tests de limites ne certifient pas les capacités
@@ -39,8 +47,8 @@ Suites tuples/computed nommées par comportement, aucun orchestrateur historique
 exercé. Les sept cas d'anciens profils devenus inadéquats sont remplacés par refus
 ou assertions positives du format canonique, avec tests de choix finis conservés.
 
-Tests futurs : vrais positifs/négatifs/inconnus de correction/forme/domaines au Lot
-6/7, terminaison réelle/nettoyage/mémoire/concurrence au Lot 8, conversions exécutées
+Tests futurs : correction algébrique et formes/domaines M4/M5, fonctions/cas connus
+M6, terminaison réelle/nettoyage/mémoire/concurrence au Lot 8, conversions exécutées
 au Lot 9, banc réel MathLive/HTTP falsifié/duel périmé au Lot 10, consommateur tarball
 et bundler au Lot 11. CI Linux/Windows configurée, aucune exécution distante
 annoncée ici. Timeout Vitest/promesse ne préempte jamais le calcul synchrone.

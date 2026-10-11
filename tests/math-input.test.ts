@@ -143,7 +143,7 @@ describe('scalar-latex-v1 mathematical boundary', () => {
     try {
       expect(parseMathInput('1')).toMatchObject({
         ok: false,
-        diagnostics: [{ code: 'invalid-syntax' }],
+        diagnostics: [{ code: 'technical-error' }],
       });
     } finally {
       mock.mockRestore();
@@ -155,8 +155,11 @@ describe('scalar-latex-v1 mathematical boundary', () => {
     if (!definition.ok) return;
     const d = definition.value;
     if (d.schemaVersion !== 5) throw new Error('Expected canonical fixture.');
+    const expectedLatex = element(d, 'question').expectedLatex;
+    if (expectedLatex === undefined)
+      throw new Error('Expected a math fixture.');
     expect(
-      parseMathInput(element(d, 'question').expectedLatex, {
+      parseMathInput(expectedLatex, {
         parameters: d.generation.definitions.flatMap((p) =>
           p.kind === 'tuple' ? p.components.map((c) => c.name) : [p.name],
         ),
@@ -170,7 +173,7 @@ describe('scalar-latex-v1 mathematical boundary', () => {
       answer: { format: 'latex', source: '\\placeholder{}' },
     });
     expect(submission.ok).toBe(true);
-    if (submission.ok)
+    if (submission.ok && submission.value.answer.format !== 'selection')
       expect(parseMathInput(submission.value.answer.source).ok).toBe(false);
   });
 });

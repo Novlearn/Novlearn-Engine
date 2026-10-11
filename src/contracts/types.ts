@@ -107,8 +107,34 @@ export interface AnswerSubmission {
   instanceId: string;
   questionId: string;
   /** Original input, including empty or incomplete input; parsing is a later step. */
-  answer: { format: 'latex'; source: string };
+  answer:
+    | { format: 'latex' | 'text'; source: string }
+    | { format: 'selection'; optionIds: string[] };
 }
+
+export interface QuestionResponse {
+  format: 'latex' | 'text';
+  kind: 'rational' | 'real' | 'extended-real' | 'expression' | 'text';
+}
+/** Inclusive tolerance: absolute + relative * abs(expected); exact decimal strings. */
+export type NumericComparison =
+  | { mode: 'exact' }
+  | { mode: 'approximate'; absolute: string; relative: string };
+export interface TextNormalization {
+  trim?: boolean;
+  collapseWhitespace?: boolean;
+  ignoreCase?: boolean;
+  unicodeNFC?: boolean;
+}
+export interface GradingPolicy {
+  domain: 'rational' | 'real' | 'extended-real' | 'polynomial' | 'text';
+  form: 'value-only';
+  comparison?: NumericComparison;
+  normalization?: TextNormalization;
+}
+export type QuestionExpectedSource =
+  | { expectedLatex: string; expectedTexts?: never }
+  | { expectedTexts: string[]; expectedLatex?: never };
 
 export interface ElementIdentity {
   id: string;
@@ -143,10 +169,9 @@ export type ExerciseElement =
       keyboard?: KeyboardHint;
       text: string;
       points: number;
-      response: { format: 'latex'; kind: 'rational' | 'expression' };
-      expectedLatex: string;
-      policy: { domain: 'rational' | 'polynomial'; form: 'value-only' };
-    })
+      response: QuestionResponse;
+      policy: GradingPolicy;
+    } & QuestionExpectedSource)
   | (ElementIdentity & {
       type: 'mcq';
       keyboard?: KeyboardHint;
@@ -162,10 +187,11 @@ export type QuestionDefinition = Extract<
   { type: 'question' | 'mcq' }
 >;
 export type AnswerDefinition =
-  | Pick<
+  | (Pick<
       Extract<QuestionDefinition, { type: 'question' }>,
-      'response' | 'expectedLatex' | 'policy'
-    >
+      'response' | 'policy'
+    > &
+      QuestionExpectedSource)
   | Pick<Extract<QuestionDefinition, { type: 'mcq' }>, 'expectedOptionIds'>;
 export interface ExerciseDefinition {
   schemaVersion: 5;
@@ -197,7 +223,7 @@ export type PublicElement =
       keyboard?: KeyboardHint;
       text: string;
       points: number;
-      response: { format: 'latex'; kind: 'rational' | 'expression' };
+      response: QuestionResponse;
     }
   | {
       id: string;
@@ -213,6 +239,8 @@ export type PublicElement =
 export type ExpectedAnswer =
   | { kind: 'rational'; math: InstantiatedMath; value: RationalValue }
   | { kind: 'expression'; math: InstantiatedMath }
+  | { kind: 'real'; math: InstantiatedMath }
+  | { kind: 'text'; variants: string[] }
   | { kind: 'selection'; optionIds: string[] };
 
 /** Expected data stays attached to the question ID, never its array index. */
@@ -224,7 +252,7 @@ export type PrivateElement =
     })
   | (Extract<PublicElement, { type: 'question' }> & {
       expected: Exclude<ExpectedAnswer, { kind: 'selection' }>;
-      policy: { domain: 'rational' | 'polynomial'; form: 'value-only' };
+      policy: GradingPolicy;
     })
   | (Extract<PublicElement, { type: 'mcq' }> & {
       expected: Extract<ExpectedAnswer, { kind: 'selection' }>;

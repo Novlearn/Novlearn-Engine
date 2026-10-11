@@ -301,8 +301,40 @@ export function validateSubmission(
     v.version(d.schemaVersion);
     v.text(d.instanceId, '/instanceId', 128);
     v.text(d.questionId, '/questionId', 128);
-    const answer = v.object(d.answer, '/answer', ['format', 'source']);
-    v.literal(answer.format, '/answer/format', 'latex');
-    v.text(answer.source, '/answer/source', MAX_TEXT, true);
+    const answer = v.object(d.answer, '/answer', [
+      'format',
+      'source',
+      'optionIds',
+    ]);
+    if (answer.format === 'selection') {
+      if (answer.source !== undefined)
+        v.issue(
+          '/answer/source',
+          'unknown-field',
+          'Selections cannot carry source.',
+        );
+      const seen = new Set<string>();
+      v.list(answer.optionIds, '/answer/optionIds', 64).forEach((id, i) => {
+        v.text(id, `/answer/optionIds/${i}`, 128);
+        if (typeof id === 'string') {
+          if (seen.has(id))
+            v.issue(
+              `/answer/optionIds/${i}`,
+              'collision',
+              'Duplicate selected ID.',
+            );
+          seen.add(id);
+        }
+      });
+    } else if (answer.format === 'latex' || answer.format === 'text') {
+      v.text(answer.source, '/answer/source', MAX_TEXT, true);
+      if (answer.optionIds !== undefined)
+        v.issue(
+          '/answer/optionIds',
+          'unknown-field',
+          'Source answers cannot carry selections.',
+        );
+    } else
+      v.issue('/answer/format', 'value', 'Expected latex, text or selection.');
   });
 }

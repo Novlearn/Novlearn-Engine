@@ -515,15 +515,15 @@ describe('contracts and Lot 3 integration', () => {
       },
     });
     expect(result).not.toHaveProperty('values.x');
-    const parsed = parseMathInput(
-      element(checked.value, 'question').expectedLatex,
-      {
-        parameters: checked.value.generation.definitions.flatMap((p) =>
-          p.kind === 'tuple' ? p.components.map((c) => c.name) : [p.name],
-        ),
-        variables: checked.value.variables.map((v) => v.name),
-      },
-    );
+    const expectedLatex = element(checked.value, 'question').expectedLatex;
+    if (expectedLatex === undefined)
+      throw new Error('Expected a math fixture.');
+    const parsed = parseMathInput(expectedLatex, {
+      parameters: checked.value.generation.definitions.flatMap((p) =>
+        p.kind === 'tuple' ? p.components.map((c) => c.name) : [p.name],
+      ),
+      variables: checked.value.variables.map((v) => v.name),
+    });
     expect(parsed).toMatchObject({
       ok: true,
       source: element(checked.value, 'question').expectedLatex,

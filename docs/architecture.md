@@ -1,5 +1,11 @@
 # Architecture et contrats canoniques
 
+Extension M3 : [ADR 010](adr/010-numeric-grading.md), grading et math/numeric.
+Soumission latex/text/selection ; gradeAnswer officiel par IDs, cinq états et
+valeur/comparaison/forme/proof distincts. NumericComparison exacte ou tolérance
+officielle inclusive ; QuestionResponse et expectedLatex/expectedTexts validés
+ensemble. Réels fermés, infinis typés et correction discrète documentés par profil.
+
 Extension M2 : [ADR 009](adr/009-display-elements.md), contracts/elements,
 inspection spécialisée, mapper de champs partagé et contrôles exacts des données
 prescrites. Présentation raw Cortex séparée de l'admission exacte, domaine non
@@ -25,14 +31,14 @@ creux ou clés dangereuses. Champs inconnus refusés ; extensions privées conse
 | QuestionDefinition     | Branches question/mcq ; ID d'élément = ID de question                                                                     |
 | AnswerDefinition       | Champs privés d'attendu/format/politique ou IDs attendus QCM                                                              |
 | GeneratedValue         | Integer:value, decimal:coefficient/precision, choice:value, RationalValue:numerator/denominator                           |
-| ExpectedAnswer         | Rationnel exact et trace ; expression polynomiale préparée et trace ; sélection d'IDs                                     |
+| ExpectedAnswer         | Rationnel exact/trace, réel fermé/trace, expression préparée/trace, variantes texte, sélection d'IDs                      |
 | ExerciseInstance       | Définition détachée, engineVersion, generation(version/seed/draws/attempts/values/groups/computed), title/elements privés |
 | PublicInstance         | schemaVersion/instanceId/title/elements sélectionnés et détachés                                                          |
-| AnswerSubmission       | schemaVersion:5, instanceId/questionId, answer:{format:latex,source} même vide/incomplète                                 |
-| CorrectionResult       | Futur Lot 6/7 ; aucun export ni correcteur fictif                                                                         |
+| AnswerSubmission       | schemaVersion:5, instanceId/questionId, latex/text/source ou selection/optionIds, même vide/incomplète                    |
+| CorrectionResult       | schemaVersion:5, IDs, state/value/comparison/form/proof/code ; aucune trace/attendu privé                                 |
 
-Question : text/points, response:{format:latex,kind:rational|expression}, expectedLatex,
-policy:{domain:rational|polynomial,form:value-only}, cohérence contrôlée runtime.
+Question : text/points, response, expectedLatex ou expectedTexts et GradingPolicy,
+cohérence format/kind/domaine contrôlée runtime ; forme value-only jusqu'au M5.
 QCM : mode single/multiple, options avec IDs et contenu texte/LaTeX rationnel fermé,
 expectedOptionIds privés. Collisions exactes de valeurs/affichages refusées.
 Sections plates référencées par ID, indépendamment de leur position.
@@ -63,7 +69,9 @@ prototype, composantes adressées par leurs noms plats (D36). Source/raw conserv
 | math/substitution.ts            | Admission/domaine avant réduction, substitution CortexJS, rationnel exact/affichage polynomial bornés  |
 | math/comparison.ts              | Ordre exact de nombres fermés ; undefined reste indéterminé                                            |
 | instantiation.ts                | Validation, un appel generateVariables, parcours d'éléments, snapshot complet/projection               |
-| index.ts                        | Export racine portable : six fonctions et types détachés                                               |
+| math/numeric.ts                 | Admission réelle fermée, témoins exacts Cortex, bornes constantes et tolérances inclusives             |
+| grading.ts                      | Correction par IDs officiels ; cinq états, QCM/texte et comparaison numérique sous preuve              |
+| index.ts                        | Export racine portable : sept fonctions et types détachés                                              |
 
 Aucune conversion vers un ancien schéma. Résolution obligatoire même sans computed,
 seule sa liste est vide. L'instanciation ne recalcule pas les dépendances par question.
@@ -96,11 +104,12 @@ Parsing, évaluation, comparaison numérique, correction et preuve universelle d
 | generateVariables     | Contrat canonique depuis unknown + seed/version unique facultative → values/groups/computed/replay ou diagnostics |
 | instantiateExercise   | Définition depuis unknown + instanceId/seed/version de génération facultative → ExerciseInstance ou diagnostics   |
 | projectPublicInstance | ExerciseInstance officielle → PublicInstance                                                                      |
+| gradeAnswer           | ExerciseInstance officielle + soumission unknown → CorrectionResult par question                                  |
 
 Pas de validateur public de snapshots arbitraires : projection ne prouve pas
 provenance. Serveur retrouve état officiel et refuse autorité client sur seed/
 politique/verdict. Accès, publication, persistance, points/progression et duels
-relèvent des applications. Correction/formes aux Lots 6/7 ; transport FastAPI/hôte
+relèvent des applications. Correction algébrique/formes aux M4/M5 ; transport FastAPI/hôte
 terminable mesurés au Lot 8, sans service imposé. Rendu React/MathLive séparé.
 
 Schéma 5 : structure/policies ; révision : identité pédagogique immuable ; moteur

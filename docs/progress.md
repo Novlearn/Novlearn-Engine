@@ -1,5 +1,59 @@
 # État et transmission
 
+## Mission autonome V1 — M3 correction numérique/discrète validé (11 octobre 2026)
+
+Dernier lot livré : **M2 `d8a39a2`**, précédé de M1 `8ef7de5` et M0 `e072a57`.
+Branche main ; CDC utilisateur seul non suivi après commit M2. Référence officielle
+accentuée confirmée, aucune nouvelle permission requise pour M3. V1 active.
+
+README, progress/decisions/roadmap relus pour M3, CDC 4.1/4.2/5/7.1/7.2/7.7,
+contrats de soumission/attendus/validation et frontière de substitution examinés.
+Analyse indépendante initiale en lecture seule terminée ; auteur principal unique.
+Sept exports runtime avec gradeAnswer ; D38/ADR 010. Questions réelles/infinies/
+texte et soumissions latex/text/selection, politiques officielles et cinq états.
+
+Profil de preuve implémenté et testé : ratios exacts et q√d réels via les
+NumericValue Cortex isExact et !isComplex ; comparaisons exactes seulement entre
+deux valeurs ainsi établies. SDK local exact-numeric-value.d.ts confirme sa forme
+canonique/comparaisons exactes ; sondes de revue √(1/2) et 3√8/4 positives.
+Sommes de radicaux incompatibles restent symboliques, jamais fausses par défaut.
+π/e : identité structurelle après admission/domaine, ou différence encadrée sous
+profil documenté ; aucune confiance universelle en isEqual/isIdenticallyEqual ou
+API dont le nom contient exact mais applique une tolérance/échantillonnage.
+Source décimale encodée avant réduction, sqrt(-1)^2 refusé au sous-terme réel,
+infinis reconnus dans AST explicitement saisi, jamais après 1/0 évalué.
+
+Tolérance officielle A+R|attendu| inclusive, identités fermées, radicaux de même
+base et encadrements affines monoconstante π/e avec oracle indépendant BigInt.
+QCM par ensemble d'IDs ; variantes texte strictes/normalisation optionnelle.
+Valeur within-tolerance distincte d'une égalité exacte, infini comparé spécialement.
+Domaines raw avant réduction, preuve inconnue indéterminée ; panne parsing
+technical-error distincte des MathJSON Error. Canaris/projection/types/rejeu/JSON.
+
+Build/typecheck/lint intermédiaires PASS. Premier ciblé 137/142, cinq échecs :
+produit implicite devant radical refusé (corrigé sans admettre nombre mixte),
+oracle/roundtrip liés, assertion de frontière π ajustée au cas réellement croisé.
+Une erreur de narrowing TS et une parenthèse de test corrigées. Ciblés suivants :
+176/176 puis 181/181 sur grading/constant-bounds/substitution. Revue lecture seule
+sans faux verdict/fuite, trois lacunes complétées : identité sous tolérance,
+attendu nul sous bornes et exception parsing élève. Dernier ciblé après correctifs :
+**241 tests / 4 fichiers PASS, 29,13 s**, avec math-input. Aucun test supprimé.
+Revue finale indépendante favorable : aucun faux verdict/fuite observé, appels
+exacts filtrés et limites documentées, aucune écriture/suite globale déléguée.
+`npm.cmd run check` final PASS : **817 tests / 18 fichiers, 173,84 s**,
+build/typecheck/lint/format. `npm.cmd pack --dry-run` PASS (code npm 0 explicite) :
+**94 fichiers, 86,5 kB / 413,2 kB**, SHA1
+573debebb11857877fbd0295304c5c11dd79db52. Première enveloppe PowerShell avait signalé
+code 1 malgré tarball-dry-run affiché ; réexécution avec code npm explicite 0,
+aucune publication. Import ESM sept exports, types publics sans boxed, diff check
+PASS, empreintes CDC/corpus/copie originales inchangées. npm ci avait été exécuté
+au M0, dépendances/lock inchangés depuis. Aucune CI distante, navigateur ou
+consommation tarball courante annoncée. Commit local du lot :
+`feat(grading): prove numeric and discrete answers from official instances`.
+La V1 reste active ; prochain lot M4, puis M5–M12 obligatoires.
+Isolation préemptive et adoption officielle restent M8 ; aucun service/transport/UI
+ou modification des voisins autorisé par ce travail. Aucun arbitrage bloquant M3.
+
 ## Mission autonome V1 — M2 données d'éléments validé (11 octobre 2026)
 
 Lot précédent : M1 `8ef7de5`, 592 tests validés. M2 validé, auteur

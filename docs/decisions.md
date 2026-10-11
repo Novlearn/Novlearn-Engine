@@ -63,6 +63,20 @@ Fixtures synthétiques distinctes des sources ; graphe 64 transcrit manuellement
 aucune adaptation/migration complète. Propriétés historiques hors contrat dans le
 brut pour M10, jamais supprimées silencieusement. Aucun arbitrage bloquant en M2.
 
+## D38 — Correction numérique/discrète officielle, M3 (11 octobre 2026)
+
+[ADR 010](adr/010-numeric-grading.md). Sept fonctions publiques, gradeAnswer depuis
+snapshot serveur de confiance et soumission inerte, par IDs stables. Cinq états,
+valeur/comparaison/forme/méthode distinctes ; différence prouvée seule devient
+incorrect. Soumissions latex/text/selection sans autorité client. Ratios et q√d
+exacts Cortex, identités fermées à feuilles exactes, bornes certifiées π/e affines
+monoconstante ; aucune preuve universelle par isEqual/isIdenticallyEqual/float.
+Domaines raw avant réduction ; ±∞ explicitement saisis en extended-real seulement.
+Tolérance officielle A+R|attendu| inclusive, décimaux exacts, frontière non prouvée
+indéterminée ; texte strict/variantes/normalisation explicite, QCM par ensembles
+d'IDs. Aucun nouveau parseur/CAS, dépendance ou autorisation de correction officielle
+sans l'isolation du M8. Formes, familles algébriques et autres lots V1 restent requis.
+
 ## D33 — Complément Lot 5 : résolution calculée versionnée (retenue)
 
 Demande du 11 octobre 2026. `GenerationDefinitionV3` / `variables-v3` ajoute computed (`name`, `latex`, restrictions facultatives) et des opérandes `{latex}` aux six comparaisons. `ExerciseDefinitionV4` / `composed-instance-v4` consomme ce contexte commun. Les contrats historiques restent inchangés. Calculs rationnels fermés du profil existant, source conservée, résultat `{kind:'rational',numerator,denominator}` même pour une fraction décimale ; aucun quotient flottant. Provenance : définition officielle, liaisons de tuples et liste ordonnée `{name,dependencies}` des calculs, sans deuxième copie des valeurs.

@@ -10,6 +10,7 @@ dépendance mathématique ; frameworks et MathLive appartiennent aux application
 ```ts
 import {
   generateVariables,
+  gradeAnswer,
   instantiateExercise,
   projectPublicInstance,
 } from 'novlearn-exercise-engine';
@@ -71,12 +72,18 @@ const result = instantiateExercise(definition, {
 if (result.ok) {
   const official = result.value; // Snapshot privé à conserver côté serveur.
   const display = projectPublicInstance(official);
+  const correction = gradeAnswer(official, {
+    schemaVersion: 5,
+    instanceId: official.instanceId,
+    questionId: 'q',
+    answer: { format: 'latex', source: '13' },
+  });
   // Aucun attendu, politique, définition, seed ou trace privée dans display.
 }
 ```
 
-Six fonctions publiques : validateDefinition, validateSubmission, parseMathInput,
-generateVariables, instantiateExercise, projectPublicInstance.
+Sept fonctions publiques : validateDefinition, validateSubmission, parseMathInput,
+generateVariables, instantiateExercise, projectPublicInstance, gradeAnswer.
 [Architecture et contrats](docs/architecture.md). Aucun type public expérimental
 ExerciseDefinitionV1/V2/V3/V4 conservé.
 
@@ -98,14 +105,20 @@ fragments riches et aides privées sont décrits dans [ADR 009](docs/adr/009-dis
 Catalogue typé privé et indication clavier sans autorité mathématique. Valeurs
 partagées, attendu par ID, sources/raw/substitutions privés conservés. @a et @@
 dans les textes/labels ; LaTeX natif et substitution CortexJS dans les formules.
-La soumission reste LaTeX brut par question ; transport/correction QCM et
-CorrectionResult restent aux Lots 6/7.
+Soumission LaTeX/texte brut ou sélection d'IDs QCM par question. `gradeAnswer`
+corrige depuis le snapshot officiel : cinq états, valeur/comparaison/forme/preuve
+séparées. [Profil numérique et discret M3](docs/adr/010-numeric-grading.md).
+Rationnels, q√d exacts, identités fermées/encadrements certifiés π/e, tolérance
+absolue/relative officielle inclusive et ±∞ typés ; différences non prouvées
+indéterminées. QCM par ensemble d'IDs, texte strict/variantes et normalisation
+explicite. Politiques, attendus et tolérances demeurent privés.
 
 Profil rationnel/polynomial : ratios/intermédiaires ≤10^9, AST 128 nœuds/profondeur
 16, degré ≤16, puissances entières 0–16 avec domaine contrôlé avant réduction.
 Un choix fini n'est pas automatiquement utilisable dans le profil exact.
-Racines/constantes parsables selon [ADR 005](docs/adr/005-math-input.md), sans
-évaluation/correction implicite. Formules de présentation à domaine non vérifié,
+Parsing public selon [ADR 005](docs/adr/005-math-input.md), distinct du profil
+numérique fermé M3 ; correction algébrique et formes pédagogiques aux M4/M5.
+Formules de présentation à domaine non vérifié,
 nombres de rendu rationnels exacts. Pas de solveur, de dessin ou d'isolation
 préemptive. [Couverture réelle](docs/feature-coverage.md).
 

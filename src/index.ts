@@ -21,6 +21,11 @@ export type {
   RationalValue,
   InstantiatedMath,
   AnswerSubmission,
+  QuestionResponse,
+  QuestionExpectedSource,
+  NumericComparison,
+  TextNormalization,
+  GradingPolicy,
   ElementIdentity,
   OptionContent,
   KeyboardHint,
@@ -39,6 +44,8 @@ export type {
   ContractDiagnostic,
   ValidationResult,
 } from './contracts/types.js';
+export { gradeAnswer } from './grading.js';
+export type { CorrectionResult, CorrectionState } from './grading.js';
 export { parseMathInput } from './math/input.js';
 export type {
   NumericField,

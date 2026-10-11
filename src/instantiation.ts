@@ -17,6 +17,7 @@ import type {
 import { instantiateMath } from './math/substitution.js';
 import type { InstantiationMathDiagnostic } from './math/substitution.js';
 import { MathFailure } from './math/substitution.js';
+import { prepareNumeric } from './math/numeric.js';
 import { instantiateDisplayMath } from './math/display.js';
 import { checkDisplayData } from './math/display-data-checks.js';
 import { mapDisplayData } from './display-elements.js';
@@ -371,6 +372,54 @@ function instantiateElements(
     if (element.type === 'text' || element.type === 'section') {
       elements.push({ ...identity, type: element.type, text: text.value });
     } else if (element.type === 'question') {
+      if (element.expectedLatex === undefined) {
+        const variants: string[] = [];
+        for (const [i, source] of element.expectedTexts.entries()) {
+          const value = textTemplate(
+            source,
+            parameters,
+            `${path}/expectedTexts/${i}`,
+          );
+          if (!value.ok) return failElement(value.diagnostics);
+          variants.push(value.value);
+        }
+        elements.push({
+          ...identity,
+          type: 'question',
+          text: text.value,
+          points: element.points,
+          response: { format: 'text', kind: 'text' },
+          policy: element.policy,
+          expected: { kind: 'text', variants },
+        });
+        continue;
+      }
+      if (
+        element.response.kind === 'real' ||
+        element.response.kind === 'extended-real'
+      ) {
+        const numeric = prepareNumeric(
+          element.expectedLatex,
+          context,
+          generated.values,
+          `${path}/expectedLatex`,
+          element.response.kind === 'extended-real',
+        );
+        if (!numeric.ok)
+          return failElement(
+            numeric.diagnostics.map((d) => ({ ...d, stage: 'expected' })),
+          );
+        elements.push({
+          ...identity,
+          type: 'question',
+          text: text.value,
+          points: element.points,
+          response: { format: 'latex', kind: element.response.kind },
+          policy: element.policy,
+          expected: { kind: 'real', math: numeric.value.math },
+        });
+        continue;
+      }
       const math = instantiateMath(
         element.expectedLatex,
         context,
@@ -566,7 +615,10 @@ function projectElement(element: PrivateElement): PublicElement | undefined {
         type: 'question',
         text: element.text,
         points: element.points,
-        response: { format: 'latex', kind: element.response.kind },
+        response: {
+          format: element.response.format,
+          kind: element.response.kind,
+        },
       };
     case 'mcq':
       return {

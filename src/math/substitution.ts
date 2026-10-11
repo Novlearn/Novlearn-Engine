@@ -126,11 +126,28 @@ export function explicitProducts(
   ce: ComputeEngine,
   syntax: MathSyntax,
   path: string,
+  allowRadicalProducts = false,
 ) {
   return ce.box(syntax, { form: 'raw' }).map(
     (expression) => {
       if (expression.operator !== 'InvisibleOperator') return expression;
-      if (expression.symbols.length === 0)
+      const raw = expression.json;
+      const factors = Array.isArray(raw) ? (raw as MathSyntax[]).slice(1) : [];
+      const radicalFactor = (node: MathSyntax): boolean =>
+        Array.isArray(node) &&
+        (node[0] === 'Sqrt' ||
+          node[0] === 'Root' ||
+          (node[0] === 'Delimiter' &&
+            node.length === 2 &&
+            radicalFactor(node[1]!)));
+      if (
+        expression.symbols.length === 0 &&
+        !(
+          allowRadicalProducts &&
+          Array.isArray(raw) &&
+          factors.some(radicalFactor)
+        )
+      )
         fail(
           'unsupported',
           path,

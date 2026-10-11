@@ -5,6 +5,7 @@ describe('built package boundary', () => {
   it('loads through the public ESM export without browser globals', () => {
     expect(Object.keys(engine).sort()).toEqual([
       'generateVariables',
+      'gradeAnswer',
       'instantiateExercise',
       'parseMathInput',
       'projectPublicInstance',

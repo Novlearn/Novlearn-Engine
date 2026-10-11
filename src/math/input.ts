@@ -20,6 +20,7 @@ export interface MathInputDiagnostic {
     | 'unknown-symbol'
     | 'unsupported'
     | 'limit'
+    | 'technical-error'
     | 'invalid-context';
   message: string;
   /** JSON Pointer into syntax, when available. */
@@ -127,12 +128,16 @@ export function parseDisplayInput(
   return parseInput(source, context, 'display-latex-v1');
 }
 
-function parseInput<P extends 'scalar-latex-v1' | 'display-latex-v1'>(
-  source: string,
-  context: MathInputContext,
-  profile: P,
-): ParsedMathInput<P> {
+/** Internal closed numeric response profile; explicit infinities are admitted for later type checks. */
+export function parseNumericInput(source: string, context: MathInputContext) {
+  return parseInput(source, context, 'numeric-latex-v1');
+}
+
+function parseInput<
+  P extends 'scalar-latex-v1' | 'display-latex-v1' | 'numeric-latex-v1',
+>(source: string, context: MathInputContext, profile: P): ParsedMathInput<P> {
   const display = profile === 'display-latex-v1';
+  const numeric = profile === 'numeric-latex-v1';
   const base = { source, profile };
   const fail = (
     code: MathInputDiagnostic['code'],
@@ -213,6 +218,10 @@ function parseInput<P extends 'scalar-latex-v1' | 'display-latex-v1'>(
   try {
     // A new context per call, with no assignments, canonicalization or evaluation.
     const ce = new ComputeEngine();
+    if (numeric)
+      ce.latexSyntax?.addEntries?.([
+        { kind: 'expression', latexTrigger: 'e', parse: 'ExponentialE' },
+      ]);
     // Explicit named references only. CortexJS parses these dictionary entries;
     // bare letters retain their original juxtaposition/multiplication semantics.
     // Expression entries also avoid the library interpreting e.g. kg as a unit.
@@ -265,7 +274,11 @@ function parseInput<P extends 'scalar-latex-v1' | 'display-latex-v1'>(
       if (typeof node === 'string') {
         if (parameters.includes(node)) found.parameters.add(node);
         else if (variables.includes(node)) found.variables.add(node);
-        else if (constants.has(node)) found.constants.add(node);
+        else if (
+          constants.has(node) ||
+          (numeric && ['PositiveInfinity', 'NegativeInfinity'].includes(node))
+        )
+          found.constants.add(node);
         else if (node === 'Nothing')
           issue('incomplete', 'Expression vide ou incomplète.', path);
         else if (
@@ -354,8 +367,8 @@ function parseInput<P extends 'scalar-latex-v1' | 'display-latex-v1'>(
     };
   } catch {
     return fail(
-      'invalid-syntax',
-      'La bibliothèque ne peut pas parser cette saisie.',
+      'technical-error',
+      'La bibliothèque a échoué pendant le parsing de cette saisie.',
     );
   }
 }
