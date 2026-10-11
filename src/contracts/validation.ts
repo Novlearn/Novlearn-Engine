@@ -7,6 +7,7 @@ import type {
   ValidationResult,
 } from './types.js';
 import { inspectComposition } from './composition.js';
+import { isMathName } from './names.js';
 
 const MAX_TEXT = 4096;
 const MAX_ITEMS = 128;
@@ -203,17 +204,11 @@ export class Validation {
   }
 
   symbol(value: JsonValue | undefined, path: string, names: Set<string>): void {
-    if (
-      typeof value !== 'string' ||
-      value.length !== 1 ||
-      !/^[a-z]$/.test(value) ||
-      value === 'e' ||
-      value === 'i'
-    ) {
+    if (!isMathName(value)) {
       this.issue(
         path,
         'value',
-        'Expected one lower-case Latin symbol, excluding e and i.',
+        'Expected 1–32 Latin letters/digits starting with a lower-case letter, excluding reserved names.',
       );
       return;
     }

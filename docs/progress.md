@@ -1,5 +1,45 @@
 # État et transmission
 
+## Mission autonome V1 — M1 génération/instanciation validé (11 octobre 2026)
+
+M0 livré au commit `e072a57` sur main ; seul CDC utilisateur non suivi avant M1.
+M1 couvre CDC-10/11 : D36, grammaire partagée 1–32 caractères et références
+`\mathrm{nom}` déclarées au dictionnaire CortexJS local, sans modifier juxtaposition,
+RNG/schéma/API. Scalaires/composantes/computed/contraintes/inconnues/textes/
+QCM/réponses utilisent le même contexte. Source et données privées conservées.
+
+Fichiers : contracts/names (nouveau), validation ; math/input/substitution ;
+generation/candidates (bornes propres) ; named-parameters.test.ts (nouveau),
+adaptations de six suites existantes pour les noms désormais supportés et codes
+de diagnostic correspondants. Aucun test supprimé ni vecteur modifié. README,
+decisions/architecture/vision/spécification/couverture/roadmap/stratégie et ADR 005.
+Auteur unique des fichiers : agent principal ; revue indépendante en lecture seule.
+
+Recettes avec oracles BigInt : carrés, chaînes, trinômes à racines entières et
+discriminants carrés, carrés de binômes, Pythagore construit m>n ; pas de CAS ou
+générateur spécialisé. Tests de source/rejeu/JSON/projection et atomiques conservés.
+La revue a trouvé trois cas corrigés : infinity réservé sans distinction de casse,
+héritage Object.prototype dans bornes/substitution, espaces admis dans les noms
+que les gardes numériques doivent distinguer de nombres. Régressions dédiées.
+
+Vérifications intermédiaires : build/typecheck/lint PASS. Première tranche ciblée :
+135/137 tests, assertions de tableaux de diagnostics et budget de test corrigés ;
+tranche noms 31/31 PASS. Check intermédiaire 572/574 : deux anciennes assertions
+de noms/diagnostics devenues obsolètes, ajustées sans retirer leurs contrôles.
+Après revue et corrections, 52 nouveaux tests noms + 31 substitution = **83/83 PASS**
+sur deux fichiers, Vitest 13,40 s. `npm.cmd run check` final PASS : compilation,
+types, lint, format et **592 tests / 15 fichiers**, Vitest 83,35 s.
+`npm.cmd pack --dry-run` PASS : 62 fichiers, 50,4 kB / 219,9 kB.
+Exports ESM inchangés (six), originaux historiques et CDC inchangés ;
+`git diff --check` PASS. Aucune CI distante, suite navigateur ou consommation
+tarball annoncée. Commit local : `feat(generation): support explicit descriptive parameter names`.
+
+Limites : première lettre minuscule, ASCII sans soulignés, réservés D36 ; pas de
+réinterprétation de noms nus, profil rationnel/polynomial et budgets inchangés.
+Aucune correction élève, MathLive réel, isolation ou adaptation livrée par M1.
+Prochain lot : M2 éléments (CDC-02/30/34–38), contrats
+de données/substitution/validation/projection/tests, aucune UI. Objectif V1 actif.
+
 ## Mission autonome V1 — M0 audit (11 octobre 2026)
 
 **Moteur non terminé.** Référence officielle `CDC_référence.md` confirmée par

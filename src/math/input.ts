@@ -1,5 +1,6 @@
 ﻿import { ComputeEngine } from '@cortex-js/compute-engine';
 import type { MathJsonExpression } from '@cortex-js/compute-engine/math-json';
+import { isMathName } from '../contracts/names.js';
 
 /** Detached MathJSON, never a boxed CortexJS object. */
 export type MathSyntax = MathJsonExpression;
@@ -60,6 +61,7 @@ const commands = new Set([
   'infty',
   'quad',
   'qquad',
+  'mathrm',
 ]);
 const operators = new Set([
   'Add',
@@ -104,18 +106,12 @@ export function parseMathInput(
     );
   const names = [...parameters, ...variables];
   if (
-    names.some(
-      (name) =>
-        name.length !== 1 ||
-        !/^[a-z]$/.test(name) ||
-        name === 'e' ||
-        name === 'i',
-    ) ||
+    names.some((name) => !isMathName(name)) ||
     new Set(names).size !== names.length
   )
     return fail(
       'invalid-context',
-      'Les noms doivent être des lettres minuscules distinctes, hors e et i.',
+      'Les noms doivent être distincts, comporter 1–32 lettres/chiffres, commencer par une minuscule et ne pas être réservés.',
     );
 
   // Lexical guards only: no rewriting or second mathematical parser.
@@ -163,6 +159,16 @@ export function parseMathInput(
   try {
     // A new context per call, with no assignments, canonicalization or evaluation.
     const ce = new ComputeEngine();
+    // Explicit named references only. CortexJS parses these dictionary entries;
+    // bare letters retain their original juxtaposition/multiplication semantics.
+    // Expression entries also avoid the library interpreting e.g. kg as a unit.
+    ce.latexSyntax?.addEntries?.(
+      names.map((name) => ({
+        kind: 'expression',
+        latexTrigger: `\\mathrm{${name}}`,
+        parse: name,
+      })),
+    );
     ce.latexOptions.decimalSeparator = '{,}';
     const expression = ce.parse(source, { form: 'raw' });
     const syntax = expression.json;

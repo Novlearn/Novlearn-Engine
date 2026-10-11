@@ -20,6 +20,31 @@ pédagogiques historiques demandent une revue humaine avant conversion fidèle.
 Une analyse indépendante initiale en lecture seule a confirmé l'architecture
 unique et les manques de correction/éléments/isolation ; aucun fichier délégué.
 
+## D36 — Références descriptives explicites, M1 (11 octobre 2026)
+
+CDC 3.5 : identifiants de 1–32 caractères, première lettre latine minuscule puis
+lettres ASCII/chiffres. Paramètres scalaires, composantes, computed et inconnues
+libres utilisent la même grammaire ; collisions et budgets existants conservés.
+Réservés : e/i, sin/cos/tan/ln/exp/sqrt, constructor/prototype et infinity sans
+distinction de casse (priorité constante observée dans CortexJS).
+
+Formules : `\mathrm{nom}`. Chaque appel de parsing ajoute des entrées `expression`
+au dictionnaire CortexJS local pour les seuls noms déclarés. Cela évite les alias
+d'unité (kg) ou de fonction (length), sans remplacer du LaTeX ni réinterpréter
+`ab`, `delta` ou `r1` nus. Textes et opérandes structurés référencent les noms
+directement (`@nom`, `{variable:'nom'}`). Les composantes de tuples restent plates.
+Les chiffres d'un nom ne sont pas des littéraux numériques ; espaces admis par
+Cortex dans ce wrapper exemptés des gardes numériques, source inchangée.
+
+Aucun nouveau contrat concurrent, export, bibliothèque, algorithme RNG ou schéma.
+Extension additive du schéma 5 ; vecteurs courts conservés sans réécriture.
+Les dictionnaires de substitution sont sans prototype et les bornes statiques
+vérifient les propriétés propres : un nom valide comme toString ne doit pas être
+confondu avec une propriété héritée. Limites de domaine/calcul inchangées.
+Recettes obligatoires testées par composition/oracles BigInt, pas par générateurs
+spécifiques. Les majuscules initiales/soulignés/scopes locaux restent hors profil ;
+leurs historiques exigent une conversion explicite avec provenance au lot M10.
+
 ## D33 — Complément Lot 5 : résolution calculée versionnée (retenue)
 
 Demande du 11 octobre 2026. `GenerationDefinitionV3` / `variables-v3` ajoute computed (`name`, `latex`, restrictions facultatives) et des opérandes `{latex}` aux six comparaisons. `ExerciseDefinitionV4` / `composed-instance-v4` consomme ce contexte commun. Les contrats historiques restent inchangés. Calculs rationnels fermés du profil existant, source conservée, résultat `{kind:'rational',numerator,denominator}` même pour une fraction décimale ; aucun quotient flottant. Provenance : définition officielle, liaisons de tuples et liste ordonnée `{name,dependencies}` des calculs, sans deuxième copie des valeurs.

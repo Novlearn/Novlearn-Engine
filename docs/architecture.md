@@ -36,6 +36,12 @@ Les valeurs résident une fois dans generation.values. groups lie IDs et noms
 ordonnés de composantes ; computed lie noms et dépendances dans l'ordre calculé.
 Attendus dans chaque question identifiée, aucun tableau parallèle concurrent.
 
+Noms : grammaire bornée partagée dans contracts/names.ts, 1–32 lettres/chiffres
+avec minuscule initiale, noms réservés exclus. Références mathématiques explicites
+`\mathrm{delta}`/`\mathrm{r1}`/`\mathrm{xSommet}` via dictionnaire CortexJS local ;
+lettres juxtaposées inchangées. Paramètres/inconnues distincts, substitutions sans
+prototype, composantes adressées par leurs noms plats (D36). Source/raw conservés.
+
 ## Structure réelle
 
 | Module                          | Travail                                                                                                |

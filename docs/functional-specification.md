@@ -3,7 +3,8 @@
 Référence actuelle au 11 octobre 2026, après [consolidation](consolidation.md).
 Contrat canonique schemaVersion 5 ; package privé 0.1.0. Le cahier des charges
 CDC_référence.md reste une cible plus large, préservée en octets. Cette mission
-conserve les capacités livrées, sans engager les fonctionnalités manquantes.
+conserve les capacités livrées ; la mission V1 autorise la réalisation progressive
+des manques (D35). M1 étend les noms descriptifs (D36), sans nouveau moteur.
 [Contrats/APIs](architecture.md), [preuves et limites](feature-coverage.md).
 
 ## 1. Document et questions
@@ -128,10 +129,11 @@ maxAttempts/maxDraws obligatoires. Trois familles : scalaires (integer/decimal/c
   RationalValue exact, y compris entier/décimal fini ; restrictions facultatives
   integer/rational, bornes/exclusions exactes, sans clamp/réparation.
 
-Noms : une lettre latine minuscule hors e/i, distincts des variables libres ; IDs de
-tuples distincts des noms. ≤16 déclarations/valeurs résolues et ≤16 variables libres.
-Noms longs delta/r1/xSommet différés : aucune réinterprétation de multiplication
-implicite. Exemples natifs utilisent r/s pour les racines pédagogiques.
+Noms : 1–32 lettres/chiffres ASCII avec minuscule initiale, réservés exclus (D36),
+distincts des variables libres ; IDs de tuples distincts des noms. ≤16 déclarations/
+valeurs résolues et ≤16 variables libres. `\mathrm{delta}`, `\mathrm{r1}` et
+`\mathrm{xSommet}` sont des références explicites via CortexJS ; les lettres nues
+gardent la multiplication implicite, sans conversion du LaTeX historique.
 
 Préparation et tri topologique stable avant RNG ; références inconnues, cycles et
 profils invalides diagnostiqués. Tirages dans l'ordre des seules déclarations
@@ -207,7 +209,8 @@ Une expression mathématiquement valable mais hors famille supportée n'est pas 
 
 ## 5. Évolutions et limites
 
-Correcteur/formes 6/7, isolation/transport 8, adaptation 9 et adoption 10/11 restent
-non engagés. Pas de serveur, UI, SQL ou dépendance supplémentaire. Anciennes APIs
+Correcteur/formes, isolation/transport, adaptation et adoption restent à livrer
+selon la roadmap de mission. Pas de serveur, UI, SQL ou dépendance supplémentaire.
+Anciennes APIs
 expérimentales refusées et snapshots non rejouables ; futur adaptateur explicite.
 Corpus original intact, transcription de 103 distincte de migration complète.

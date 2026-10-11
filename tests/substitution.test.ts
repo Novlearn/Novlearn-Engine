@@ -79,7 +79,7 @@ describe('bounded CortexJS substitution', () => {
     });
     expect(
       instantiateMath('a', { parameters: ['ab'] }, values, '/field', true),
-    ).toMatchObject({ ok: false, diagnostics: [{ code: 'invalid-context' }] });
+    ).toMatchObject({ ok: false, diagnostics: [{ code: 'unknown-symbol' }] });
   });
   it('accepts a closed, nonzero denominator without cancelling an unknown domain', () => {
     expect(math('(x+1)/(b-a)', false)).toMatchObject({ ok: true });

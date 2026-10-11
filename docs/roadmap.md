@@ -23,7 +23,8 @@ tests appropriés, check complet, pack, revue du diff et commit local. Aucun pus
 | M11 / 10             | Scénarios complets isolés : historique → adaptation → génération → projection → saisie → correction officielle ; partiel/rejeu/falsification/erreur/timeout/confidentialité.                          |
 | M12 / 11             | Tarball installé et consommé en Node/TypeScript et bundler cible, contrats/exports/snapshots, audit sécurité/math/architecture et chaque exigence CDC. V1 seulement si toutes P0/P1 validées.         |
 
-Prochain travail après audit : M1 noms descriptifs puis M2 éléments. Les exigences
+M0 validé au commit `e072a57`. M1 noms descriptifs validé (592 tests), puis M2 éléments.
+Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en
 production ne bloquent pas la livraison locale d'un package privé consommable.

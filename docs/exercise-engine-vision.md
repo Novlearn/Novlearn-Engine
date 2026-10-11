@@ -52,7 +52,7 @@ Comptes et authentification, accès DB/réseau, stockage de tentatives, catalogu
 
 Une version est consommable lorsque chaque fonctionnalité annoncée possède contrat, validation, limites et tests de succès/erreur/indétermination pertinents ; une même définition et les mêmes versions rejouent une instance ; toutes les associations de questions survivent au réordonnancement ; la projection ne transporte aucune solution privée ; les états non démontrés restent explicites. L'adoption officielle nécessite aussi une preuve d'isolation terminable côté hôte et une intégration qui ignore les verdicts clients.
 
-Aujourd'hui : contrat canonique, parsing scalaire, génération integer/decimal/choice/tuple/computed, dépendances et contraintes exactes bornées, instance composée multiquestion/QCM, projection et vecteurs reproductibles. Correction élève, éléments avancés, noms longs, UI, isolation terminable, migration/adoption restent différés. Les anciens prototypes ne sont plus des APIs disponibles.
+Aujourd'hui : contrat canonique, parsing scalaire avec références descriptives explicites, génération integer/decimal/choice/tuple/computed, dépendances et contraintes exactes bornées, instance composée multiquestion/QCM, projection et vecteurs reproductibles. Correction élève, éléments avancés, UI, isolation terminable, migration/adoption restent à livrer. La mission V1 autorise leurs lots successifs (D35) ; les anciens prototypes ne sont plus des APIs disponibles.
 
 ## Index de la référence
 

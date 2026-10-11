@@ -85,8 +85,11 @@ ExerciseDefinitionV1/V2/V3/V4 conservé.
 Integer, decimal exact sur grille, choix numériques finis avec exclusions, tuples
 ordonnés de 2 à 8 composantes (choix de lignes ou génération), computed rationnels,
 dépendances/cycles et six comparaisons avec opérandes variable/constant/latex.
-Noms mathématiques : lettres minuscules hors e/i, paramètres et variables libres
-disjoints. Candidat complet retiré si faux, budgets explicites, aucun fallback.
+Noms mathématiques : 1–32 lettres/chiffres, première lettre minuscule et noms
+réservés exclus ; paramètres et variables libres disjoints. Dans les formules,
+références descriptives explicites `\mathrm{delta}`, `\mathrm{r1}`,
+`\mathrm{xSommet}` ; `ab` reste le produit a×b. Textes : `@delta` et `@@`.
+Candidat complet retiré si faux, budgets explicites, aucun fallback.
 Erreur, indétermination, domaine prouvé vide et recherche épuisée sont distincts.
 
 Liste plate : texte, section, expression, question, QCM simple/multiple. Valeurs

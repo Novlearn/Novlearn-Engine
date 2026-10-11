@@ -558,7 +558,7 @@ describe('untrusted tuple and comparison contracts', () => {
   it.each([
     [{ name: 'a', kind: 'computed', source: '2*b' }, 'invalid-definition'],
     [
-      { name: 'x1', kind: 'integer', min: 1, max: 2, exclusions: [] },
+      { name: 'x_1', kind: 'integer', min: 1, max: 2, exclusions: [] },
       'invalid-definition',
     ],
     [

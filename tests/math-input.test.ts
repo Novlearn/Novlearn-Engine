@@ -120,7 +120,7 @@ describe('scalar-latex-v1 mathematical boundary', () => {
   it.each([
     { parameters: ['a'], variables: ['a'] },
     { variables: ['e'] },
-    { parameters: ['ab'] },
+    { parameters: ['a_b'] },
     { variables: ['Pi'] },
   ])('rejects invalid contexts %j', (ctx) => {
     expect(parseMathInput('1', ctx)).toMatchObject({

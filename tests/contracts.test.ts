@@ -161,7 +161,7 @@ describe('native rational-value definition contract', () => {
     );
   });
 
-  it.each(['e', 'i', 'a b', 'u0', '__proto__', 'sin'])(
+  it.each(['e', 'i', 'a b', 'u_0', '__proto__', 'sin'])(
     'rejects reserved or unsupported symbols %s',
     (name) => {
       rejected(

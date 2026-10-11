@@ -186,8 +186,8 @@ export function generateCandidates(
       if (
         'latex' in c.left ||
         'latex' in c.right ||
-        ('variable' in c.left && !bounds[c.left.variable]) ||
-        ('variable' in c.right && !bounds[c.right.variable])
+        ('variable' in c.left && !Object.hasOwn(bounds, c.left.variable)) ||
+        ('variable' in c.right && !Object.hasOwn(bounds, c.right.variable))
       )
         continue;
       const a = operandBounds(c.left),

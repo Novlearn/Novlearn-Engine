@@ -174,8 +174,8 @@ describe('computed exact values and dependency resolution', () => {
     ],
     [[integer('a'), computed('a', '2')], 'invalid-definition'],
     [[computed('a', '2'), computed('a', '3')], 'invalid-definition'],
-    [[computed('delta', '2')], 'invalid-definition'],
-    [[computed('r1', '2')], 'invalid-definition'],
+    [[computed('delta_value', '2')], 'invalid-definition'],
+    [[computed('r_1', '2')], 'invalid-definition'],
   ] as const)(
     'rejects references, cycles and names before any attempt %#',
     (definitions, code) => {

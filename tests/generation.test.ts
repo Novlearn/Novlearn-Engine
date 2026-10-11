@@ -553,7 +553,7 @@ describe('contracts and Lot 3 integration', () => {
   it('rejects unmodelled constraints and symbol collisions', () => {
     failed([{ ...integer(), constraint: 'a>0' }], 'invalid-definition');
     failed([integer(), integer()], 'invalid-definition');
-    for (const name of ['e', 'i', 'xSommet', '__proto__', 'a\n'])
+    for (const name of ['e', 'i', 'x_Sommet', '__proto__', 'a\n'])
       failed([integer({ name })], 'invalid-definition');
     expect(parseMathInput('a', { parameters: ['a\n'] }).ok).toBe(false);
     expect(

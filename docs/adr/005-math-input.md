@@ -1,6 +1,26 @@
 ﻿# ADR 005 — Frontière scalaire LaTeX v1
 
-Statut : retenu, 10 octobre 2026, pour le Lot 3 seulement.
+## Extension M1 — noms descriptifs (11 octobre 2026)
+
+D36 étend la grammaire à `[a-z][A-Za-z0-9]{0,31}` avec noms réservés exclus,
+paramètres et variables libres distincts. `\mathrm{nom}` passe par le dictionnaire
+CortexJS de chaque appel, entrées `expression` littérales et déclarées ; aucun
+second parseur ou remplacement algébrique. `ab` reste a×b, `\mathrm{ab}` le nom
+déclaré. Le nom infinity est réservé indépendamment de sa casse, conformément aux
+sondes de la version épinglée. Les espaces qu'accepte Cortex dans les wrappers
+n'affectent pas l'exactitude de leurs chiffres ; source conservée intégralement.
+
+La [documentation officielle sur les symboles personnalisés](https://cortexjs.io/compute-engine/guides/augmenting/)
+documente les wrappers multilettres. L'API réellement utilisée est
+`ce.latexSyntax.addEntries` des déclarations installées 0.151.0, vérifiée par
+sondes locales ; `kind:'symbol'` ne suffit pas à supplanter les alias d'unités,
+`kind:'expression'` fonctionne sur les profils testés. Pas de dictionnaire global,
+assignation, évaluation ou canonicalisation au parsing. Les garanties/budgets de
+scalar-latex-v1 et les vecteurs courts restent inchangés ; extension additive.
+
+Les sections ci-dessous décrivent la livraison historique du Lot 3 avant M1.
+
+Statut historique : retenu, 10 octobre 2026, pour le Lot 3 seulement.
 
 `parseMathInput(source, context)` ajoute une seule entrée au package. Résultat discriminé par `ok`, source intégrale sur succès et échec, profil `scalar-latex-v1`, MathJSON détaché et symboles classés, ou diagnostics bornés. Les noms sont les lettres minuscules du contrat v1, hors e/i, au plus 16 paramètres et 16 variables disjoints. Le contexte est explicite et ne porte aucune valeur ; aucun nom inconnu n'est implicitement déclaré. Les opérateurs intégrés sont distingués des symboles ; Pi et ExponentialE sont les seules constantes admises. i/e nus sont inconnus, ImaginaryUnit et les infinis hors profil.
 

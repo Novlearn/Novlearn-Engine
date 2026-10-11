@@ -88,15 +88,28 @@ function encode(
 
 /** Shared lexical numeric admission. Guards do not transform mathematical source. */
 function admitSource(source: string, path: string): void {
-  if (/\d(?:\s|\\[,;:! ]|\\(?:quad|qquad)\s*)+\d/.test(source))
-    fail(
-      'unsupported',
-      path,
-      'Grouped numeric digits require an ungrouped literal in this profile.',
-    );
+  // Digits inside explicit identifier spellings are not numeric literals.
+  // This is a lexical admission guard only: source is never rewritten.
+  const references = [
+    ...source.matchAll(
+      /\\mathrm\s*\{(?:\s|\\ )*[a-z](?:[A-Za-z0-9\s]|\\ )*\}/g,
+    ),
+  ].map((match) => [match.index, match.index + match[0].length] as const);
+  const insideReference = (offset: number): boolean =>
+    references.some(([start, end]) => offset >= start && offset < end);
+  for (const match of source.matchAll(
+    /\d(?:\s|\\[,;:! ]|\\(?:quad|qquad)\s*)+\d/g,
+  ))
+    if (!insideReference(match.index))
+      fail(
+        'unsupported',
+        path,
+        'Grouped numeric digits require an ungrouped literal in this profile.',
+      );
   for (const match of source.matchAll(
     /(\d+(?:\.(\d+)|\{,\}(\d+))?|\.(\d+))(?:[eE]([+-]?\d+))?/g,
   )) {
+    if (insideReference(match.index)) continue;
     const fraction = match[2] ?? match[3] ?? match[4] ?? '';
     if (fraction.length > 6)
       fail('limit', path, 'Source decimal precision exceeds six places.');
@@ -228,7 +241,7 @@ export function instantiateMath(
     const ce = new ComputeEngine();
     ce.iterationLimit = 1024;
     ce.recursionLimit = 64;
-    const replacements: Record<string, MathSyntax> = {};
+    const replacements = Object.create(null) as Record<string, MathSyntax>;
     for (const name of parsed.symbols.parameters) {
       const value = values[name];
       if (!value)

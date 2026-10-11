@@ -1,5 +1,12 @@
 # Stratégie de vérification
 
+M1 : named-parameters.test.ts qualifie la convention descriptive CortexJS, lettres
+juxtaposées conservées, noms/digits/unités/propriétés héritées/espaces/réservés,
+références et cycles avant RNG, tuples/restrictions/contraintes et instance privée/
+publique/rejeu. Oracles BigInt pour binôme, trinôme/discriminant, carré/chaîne et
+Pythagore construit. Tests historiques de rejet des anciens noms remplacés par
+des noms réellement invalides, sans retirer les comportements critiques.
+
 Référence canonique schemaVersion 5. Exécuter npm.cmd ci, npm.cmd run check et
 npm.cmd pack --dry-run sous PowerShell ; rapporter les commandes réellement
 exécutées. Tests depuis l'entrée distribuée, injections de limites via modules
