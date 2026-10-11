@@ -77,6 +77,16 @@ indéterminée ; texte strict/variantes/normalisation explicite, QCM par ensembl
 d'IDs. Aucun nouveau parseur/CAS, dépendance ou autorisation de correction officielle
 sans l'isolation du M8. Formes, familles algébriques et autres lots V1 restent requis.
 
+## D39 — Preuves univariées, domaines et collections, M4 (11 octobre 2026)
+
+[ADR 011](adr/011-algebra-collections.md). Coefficients/produits croisés Cortex
+exacts, restrictions raw avant réduction, mêmes domaines par défaut et domaine
+cofini imposé. Relations degré 0–2 comparées par solutions, ensembles/intervalles
+français/unions et bornes quadratiques sous preuve. CorrectionResult sépare
+domaine et valeurs sur domaine commun ; inconnus indéterminés. Sept exports et
+schéma 5 ; aucun boxed public, parseur/CAS ajouté, solveur général ou préemption.
+Formes M5, fonctions M6 et autres lots V1 restent requis.
+
 ## D33 — Complément Lot 5 : résolution calculée versionnée (retenue)
 
 Demande du 11 octobre 2026. `GenerationDefinitionV3` / `variables-v3` ajoute computed (`name`, `latex`, restrictions facultatives) et des opérandes `{latex}` aux six comparaisons. `ExerciseDefinitionV4` / `composed-instance-v4` consomme ce contexte commun. Les contrats historiques restent inchangés. Calculs rationnels fermés du profil existant, source conservée, résultat `{kind:'rational',numerator,denominator}` même pour une fraction décimale ; aucun quotient flottant. Provenance : définition officielle, liaisons de tuples et liste ordonnée `{name,dependencies}` des calculs, sans deuxième copie des valeurs.

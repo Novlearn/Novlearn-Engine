@@ -25,7 +25,8 @@ tests appropriés, check complet, pack, revue du diff et commit local. Aucun pus
 
 M0 validé au commit `e072a57`, M1 au commit `8ef7de5` (592 tests).
 M2 données d'éléments validé (666 tests). M3 correction numérique/discrète validé
-(817 tests et pack), puis M4 algèbre/ensembles/domaines.
+(817 tests et pack). M4 algèbre/ensembles/domaines vérifié : 1031 tests/20 fichiers,
+pack102 fichiers et revue favorable. Prochain lot M5 : formes pédagogiques.
 Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en

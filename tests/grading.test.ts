@@ -753,7 +753,7 @@ describe('M3 official authority, projection, immutability and failures', () => {
     }
     expect(gradeAnswer(i, submission('2')).state).toBe('incorrect');
   });
-  it('never fabricates an algebraic verdict before M4', () => {
+  it('uses the M4 exact polynomial proof for the existing expression contract', () => {
     const q: ExerciseElement = {
       id: 'numeric',
       type: 'question',
@@ -768,8 +768,9 @@ describe('M3 official authority, projection, immutability and failures', () => {
     const i = instantiateExercise(d, { seed: 0, instanceId: 'official' });
     if (!i.ok) throw new Error('Fixture');
     expect(gradeAnswer(i.value, submission('x+1'))).toMatchObject({
-      state: 'indeterminate',
-      value: 'unknown',
+      state: 'correct',
+      value: 'equal',
+      proof: 'exact-polynomial',
     });
   });
 });

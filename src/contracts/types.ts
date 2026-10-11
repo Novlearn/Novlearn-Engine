@@ -114,7 +114,19 @@ export interface AnswerSubmission {
 
 export interface QuestionResponse {
   format: 'latex' | 'text';
-  kind: 'rational' | 'real' | 'extended-real' | 'expression' | 'text';
+  kind:
+    | 'rational'
+    | 'real'
+    | 'extended-real'
+    | 'expression'
+    | 'text'
+    | 'rational-expression'
+    | 'equation'
+    | 'inequality'
+    | 'set'
+    | 'intervals';
+  /** Official univariate algebra scope; required if several variables are declared. */
+  variable?: string;
 }
 /** Inclusive tolerance: absolute + relative * abs(expected); exact decimal strings. */
 export type NumericComparison =
@@ -127,10 +139,22 @@ export interface TextNormalization {
   unicodeNFC?: boolean;
 }
 export interface GradingPolicy {
-  domain: 'rational' | 'real' | 'extended-real' | 'polynomial' | 'text';
+  domain:
+    | 'rational'
+    | 'real'
+    | 'extended-real'
+    | 'polynomial'
+    | 'text'
+    | 'rational-function'
+    | 'equation'
+    | 'inequality'
+    | 'set'
+    | 'intervals';
   form: 'value-only';
   comparison?: NumericComparison;
   normalization?: TextNormalization;
+  /** Explicit cofinite real comparison domain, never inferred from cancellation. */
+  comparisonDomain?: { variable: string; excludedLatex: string[] };
 }
 export type QuestionExpectedSource =
   | { expectedLatex: string; expectedTexts?: never }
@@ -240,6 +264,8 @@ export type ExpectedAnswer =
   | { kind: 'rational'; math: InstantiatedMath; value: RationalValue }
   | { kind: 'expression'; math: InstantiatedMath }
   | { kind: 'real'; math: InstantiatedMath }
+  | { kind: 'algebra'; math: InstantiatedMath }
+  | { kind: 'collection'; math: InstantiatedMath }
   | { kind: 'text'; variants: string[] }
   | { kind: 'selection'; optionIds: string[] };
 

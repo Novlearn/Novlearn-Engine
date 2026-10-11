@@ -51,7 +51,7 @@ function boundedInteger(value: unknown): boolean {
   );
 }
 /** Recognize the exact real q sqrt(d) lane; floats never acquire an exact claim. */
-function exactNumber(
+export function exactNumber(
   expression: Expression,
   inputBudget = false,
 ): Exact | undefined {
@@ -116,6 +116,71 @@ export function exactOrder(a: Exact, b: Exact): -1 | 0 | 1 | undefined {
   if (a.lt(b) === true) return -1;
   if (a.gt(b) === true) return 1;
   return undefined;
+}
+/** Cortex establishes an affine polynomial in ONE radical; exact order proves its sign. */
+function affineRadicalSign(expression: Expression): -1 | 0 | 1 | undefined {
+  const ce = new ComputeEngine();
+  ce.iterationLimit = 1024;
+  ce.recursionLimit = 64;
+  const radicals = new Set<number>();
+  let unsupported = false;
+  const transformed = ce.box(expression.json).map(
+    (candidate) => {
+      const exact = exactNumber(candidate);
+      if (typeof exact !== 'object') return candidate;
+      const witness = exact.asExact;
+      if (
+        !witness ||
+        !('radical' in witness) ||
+        typeof witness.radical !== 'number'
+      ) {
+        unsupported = true;
+        return candidate;
+      }
+      const radical = witness.radical;
+      if (radical === 1) return candidate;
+      radicals.add(radical);
+      const coefficient = ce
+        .box(['Divide', candidate.json, ['Sqrt', radical]])
+        .evaluate();
+      if (!coefficient.toRational() || exactNumber(coefficient) === undefined) {
+        unsupported = true;
+        return candidate;
+      }
+      return ce.function('Multiply', [coefficient, 'z'], { form: 'raw' });
+    },
+    { canonical: false, recursive: true },
+  );
+  if (unsupported || radicals.size > 1) return undefined;
+  const coefficients = transformed.canonical.polynomialCoefficients('z');
+  if (!coefficients || coefficients.length > 2) return undefined;
+  if (coefficients.length === 1) {
+    const constant = coefficients[0]!.evaluate();
+    const exact = constant.toRational() ? exactNumber(constant) : undefined;
+    return exact === undefined ? undefined : exactOrder(exact, 0);
+  }
+  if (radicals.size !== 1) return undefined;
+  const [slope, offset] = coefficients.map((c) => c.evaluate());
+  if (!slope || !offset || !slope.toRational() || !offset.toRational())
+    return undefined;
+  const term = exactNumber(
+    ce.box(['Multiply', slope.json, ['Sqrt', [...radicals][0]!]]).evaluate(),
+  );
+  const negativeOffset = exactNumber(
+    ce.box(['Negate', offset.json]).evaluate(),
+  );
+  return term === undefined || negativeOffset === undefined
+    ? undefined
+    : exactOrder(term, negativeOffset);
+}
+function expressionOrder(a: Expression, b: Expression): -1 | 0 | 1 | undefined {
+  const aa = exactNumber(a.evaluate());
+  const bb = exactNumber(b.evaluate());
+  if (aa !== undefined && bb !== undefined) return exactOrder(aa, bb);
+  const ce = new ComputeEngine();
+  ce.iterationLimit = 1024;
+  ce.recursionLimit = 64;
+  return affineRadicalSign(ce.box(['Subtract', a.json, b.json]));
 }
 function exactSign(value: Exact): -1 | 0 | 1 | undefined {
   return typeof value === 'number'
@@ -248,6 +313,8 @@ export function prepareNumeric(
       const expression = ce.box(node, { form: 'raw' }).canonical;
       const exact = exactNumber(expression.evaluate(), true);
       if (exact !== undefined) return exactSign(exact);
+      const affineSign = affineRadicalSign(expression);
+      if (affineSign !== undefined) return affineSign;
       const b = constantBounds(expression);
       if (!b) return undefined;
       const lo = exactNumber(b[0])!;
@@ -409,10 +476,29 @@ export interface NumericVerdict {
   equal: boolean | undefined;
   proof:
     | 'exact-number'
+    | 'quadratic-number'
     | 'closed-identity'
     | 'certified-bounds'
     | 'explicit-infinity'
     | 'none';
+}
+export function numericOrder(
+  a: PreparedNumeric,
+  b: PreparedNumeric,
+): -1 | 0 | 1 | undefined {
+  if (a.infinity !== undefined || b.infinity !== undefined) {
+    if (a.infinity === b.infinity) return 0;
+    return a.infinity === -1 || b.infinity === 1 ? -1 : 1;
+  }
+  const exact = expressionOrder(a.expression, b.expression);
+  if (exact !== undefined) return exact;
+  if (
+    exactStructure(a.expression) &&
+    exactStructure(b.expression) &&
+    a.expression.isSame(b.expression)
+  )
+    return 0;
+  return boundedOrder(a, b);
 }
 export function compareNumeric(
   student: PreparedNumeric,
@@ -438,6 +524,12 @@ export function compareNumeric(
       student.expression.isSame(expected.expression)
     )
       return { equal: true, proof: 'closed-identity' };
+    const quadraticOrder = expressionOrder(
+      student.expression,
+      expected.expression,
+    );
+    if (quadraticOrder !== undefined)
+      return { equal: quadraticOrder === 0, proof: 'quadratic-number' };
     const order = boundedOrder(student, expected);
     return {
       equal: order === undefined ? undefined : order === 0,

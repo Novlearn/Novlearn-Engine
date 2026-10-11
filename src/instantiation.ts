@@ -18,6 +18,13 @@ import { instantiateMath } from './math/substitution.js';
 import type { InstantiationMathDiagnostic } from './math/substitution.js';
 import { MathFailure } from './math/substitution.js';
 import { prepareNumeric } from './math/numeric.js';
+import {
+  algebraKind,
+  prepareAlgebra,
+  prepareComparisonDomain,
+  exclusionsCovered,
+} from './math/algebra.js';
+import { prepareCollection } from './math/collections.js';
 import { instantiateDisplayMath } from './math/display.js';
 import { checkDisplayData } from './math/display-data-checks.js';
 import { mapDisplayData } from './display-elements.js';
@@ -395,6 +402,99 @@ function instantiateElements(
         continue;
       }
       if (
+        element.response.kind === 'set' ||
+        element.response.kind === 'intervals'
+      ) {
+        const collection = prepareCollection(
+          element.expectedLatex,
+          { parameters: context.parameters },
+          generated.values,
+          `${path}/expectedLatex`,
+          element.response.kind,
+        );
+        if (!collection.ok)
+          return failElement(
+            collection.diagnostics.map((d) => ({ ...d, stage: 'expected' })),
+          );
+        elements.push({
+          ...identity,
+          type: 'question',
+          text: text.value,
+          points: element.points,
+          response: { format: 'latex', kind: element.response.kind },
+          policy: element.policy,
+          expected: { kind: 'collection', math: collection.value.math },
+        });
+        continue;
+      }
+      const algebraProfile = algebraKind(element.response.kind);
+      if (algebraProfile !== undefined) {
+        const variable =
+          element.response.variable ?? context.variables[0] ?? 'z';
+        const algebra = prepareAlgebra(
+          element.expectedLatex,
+          {
+            parameters: context.parameters,
+            variables: context.variables.includes(variable) ? [variable] : [],
+          },
+          generated.values,
+          `${path}/expectedLatex`,
+          variable,
+          algebraProfile,
+        );
+        if (!algebra.ok)
+          return failElement(
+            algebra.diagnostics.map((d) => ({ ...d, stage: 'expected' })),
+          );
+        if (element.policy.comparisonDomain !== undefined) {
+          const domain = prepareComparisonDomain(
+            element.policy.comparisonDomain.excludedLatex,
+            context.parameters,
+            generated.values,
+            `${path}/policy/comparisonDomain/excludedLatex`,
+          );
+          if (!domain.ok)
+            return failElement(
+              domain.diagnostics.map((d) => ({ ...d, stage: 'expected' })),
+            );
+          const covered = exclusionsCovered(
+            algebra.value.exclusions,
+            domain.value,
+          );
+          if (covered !== true)
+            return failElement([
+              {
+                code:
+                  covered === false ? 'undefined-expression' : 'not-calculable',
+                path: `${path}/expectedLatex`,
+                stage: 'expected',
+                message:
+                  'The expected answer is not proved defined throughout the imposed domain.',
+              },
+            ]);
+        }
+        elements.push({
+          ...identity,
+          type: 'question',
+          text: text.value,
+          points: element.points,
+          response: {
+            format: 'latex',
+            kind: element.response.kind,
+            ...(element.response.variable === undefined
+              ? {}
+              : { variable: element.response.variable }),
+          },
+          policy: element.policy,
+          expected: {
+            kind:
+              element.response.kind === 'expression' ? 'expression' : 'algebra',
+            math: algebra.value.math,
+          },
+        });
+        continue;
+      }
+      if (
         element.response.kind === 'real' ||
         element.response.kind === 'extended-real'
       ) {
@@ -618,6 +718,9 @@ function projectElement(element: PrivateElement): PublicElement | undefined {
         response: {
           format: element.response.format,
           kind: element.response.kind,
+          ...(element.response.variable === undefined
+            ? {}
+            : { variable: element.response.variable }),
         },
       };
     case 'mcq':

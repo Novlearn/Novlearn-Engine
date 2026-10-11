@@ -211,7 +211,7 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
           'Points must be a positive integer.',
         );
       if (tag === 'question') {
-        inspectQuestionAnswer(v, e, path);
+        inspectQuestionAnswer(v, e, path, variableDomains);
       } else {
         if (e.mode !== 'single' && e.mode !== 'multiple')
           v.issue(`${path}/mode`, 'value', 'Expected single or multiple.');

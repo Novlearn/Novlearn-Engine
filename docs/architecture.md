@@ -1,5 +1,11 @@
 # Architecture et contrats canoniques
 
+Extension M4 : [ADR 011](adr/011-algebra-collections.md), math/algebra et
+math/collections sous le correcteur commun. Polynômes/fractions univariés,
+relations degré 0–2, ensembles/intervalles, restrictions raw et domaine imposé.
+CorrectionResult.domain séparé, equal-on-common-domain distingue domaine et
+valeur. ExpectedAnswer algebra/collection porte uniquement une trace JSON.
+
 Extension M3 : [ADR 010](adr/010-numeric-grading.md), grading et math/numeric.
 Soumission latex/text/selection ; gradeAnswer officiel par IDs, cinq états et
 valeur/comparaison/forme/proof distincts. NumericComparison exacte ou tolérance
@@ -35,7 +41,7 @@ creux ou clés dangereuses. Champs inconnus refusés ; extensions privées conse
 | ExerciseInstance       | Définition détachée, engineVersion, generation(version/seed/draws/attempts/values/groups/computed), title/elements privés |
 | PublicInstance         | schemaVersion/instanceId/title/elements sélectionnés et détachés                                                          |
 | AnswerSubmission       | schemaVersion:5, instanceId/questionId, latex/text/source ou selection/optionIds, même vide/incomplète                    |
-| CorrectionResult       | schemaVersion:5, IDs, state/value/comparison/form/proof/code ; aucune trace/attendu privé                                 |
+| CorrectionResult       | schemaVersion:5, IDs, state/value/comparison/form/domain/proof/code ; aucune trace/attendu privé                          |
 
 Question : text/points, response, expectedLatex ou expectedTexts et GradingPolicy,
 cohérence format/kind/domaine contrôlée runtime ; forme value-only jusqu'au M5.
@@ -65,12 +71,14 @@ prototype, composantes adressées par leurs noms plats (D36). Source/raw conserv
 | generation/candidates.ts        | Une boucle atomique : plans, preuves simples d'impossibilité, tirages, calculs, comparaisons, budgets  |
 | generation/scalar.ts, random.ts | Rangs et PRNG locaux, sans état global/horloge                                                         |
 | contracts/decimal-grid.ts       | Encodage exact de grille, aucune algèbre                                                               |
-| math/input.ts                   | Parsing scalaire raw et symboles ; aucun calcul/preuve de domaine                                      |
+| math/input.ts                   | Parsing Cortex raw, dictionnaires locaux par profil ; aucune preuve de domaine                         |
 | math/substitution.ts            | Admission/domaine avant réduction, substitution CortexJS, rationnel exact/affichage polynomial bornés  |
 | math/comparison.ts              | Ordre exact de nombres fermés ; undefined reste indéterminé                                            |
 | instantiation.ts                | Validation, un appel generateVariables, parcours d'éléments, snapshot complet/projection               |
 | math/numeric.ts                 | Admission réelle fermée, témoins exacts Cortex, bornes constantes et tolérances inclusives             |
-| grading.ts                      | Correction par IDs officiels ; cinq états, QCM/texte et comparaison numérique sous preuve              |
+| grading.ts                      | Correction par IDs officiels ; cinq états, numérique/discret/algèbre/collections sous preuve           |
+| math/algebra.ts                 | Coefficients/produits croisés Cortex exacts, domaines raw, solutions degré0–2                          |
+| math/collections.ts             | Ensembles et intervalles/unions normalisés par preuves exactes de bornes                               |
 | index.ts                        | Export racine portable : sept fonctions et types détachés                                              |
 
 Aucune conversion vers un ancien schéma. Résolution obligatoire même sans computed,
@@ -109,7 +117,7 @@ Parsing, évaluation, comparaison numérique, correction et preuve universelle d
 Pas de validateur public de snapshots arbitraires : projection ne prouve pas
 provenance. Serveur retrouve état officiel et refuse autorité client sur seed/
 politique/verdict. Accès, publication, persistance, points/progression et duels
-relèvent des applications. Correction algébrique/formes aux M4/M5 ; transport FastAPI/hôte
+relèvent des applications. Formes au M5 et fonctions au M6 ; transport FastAPI/hôte
 terminable mesurés au Lot 8, sans service imposé. Rendu React/MathLive séparé.
 
 Schéma 5 : structure/policies ; révision : identité pédagogique immuable ; moteur

@@ -1,5 +1,12 @@
 # Stratégie de vérification
 
+M4 : algebra-grading/collection-grading depuis le package distribué, oracles
+BigInt d'expansion et signes/membership, coefficients mutés, solutions prescrites,
+trous raw/imposés, radicaux quadratiques, unions/contacts/fermetures. Indétermination,
+échecs atomiques, projection sous canaris, JSON/paramètres/variables et récupération
+de panne. Juxtaposition mixte refusée même avec variable ; exposants multidigits
+testés avec accolades LaTeX. [Profil et budgets](adr/011-algebra-collections.md).
+
 M3 : grading.test.ts teste correction officielle par IDs, nombres exacts, racines,
 constantes, tolérances inclusives, infinis, QCM et texte ; cinq états et récupération
 des pannes box/parse. Oracles BigInt de numeric-constant-bounds certifient les deux
@@ -47,7 +54,7 @@ Suites tuples/computed nommées par comportement, aucun orchestrateur historique
 exercé. Les sept cas d'anciens profils devenus inadéquats sont remplacés par refus
 ou assertions positives du format canonique, avec tests de choix finis conservés.
 
-Tests futurs : correction algébrique et formes/domaines M4/M5, fonctions/cas connus
+Tests futurs : formes M5, fonctions/cas connus
 M6, terminaison réelle/nettoyage/mémoire/concurrence au Lot 8, conversions exécutées
 au Lot 9, banc réel MathLive/HTTP falsifié/duel périmé au Lot 10, consommateur tarball
 et bundler au Lot 11. CI Linux/Windows configurée, aucune exécution distante

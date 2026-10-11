@@ -15,14 +15,59 @@ export function inspectQuestionAnswer(
   v: Validation,
   e: JsonObject,
   path: string,
+  variables: ReadonlyMap<string, string> = new Map(),
 ): void {
-  const response = v.object(e.response, `${path}/response`, ['format', 'kind']);
+  const response = v.object(e.response, `${path}/response`, [
+    'format',
+    'kind',
+    'variable',
+  ]);
   const kind = response.kind;
-  const domain = kind === 'expression' ? 'polynomial' : kind;
-  if (
-    !['rational', 'real', 'extended-real', 'expression', 'text'].some(
-      (k) => k === kind,
+  const algebra = [
+    'expression',
+    'rational-expression',
+    'equation',
+    'inequality',
+  ].some((k) => k === kind);
+  const domain =
+    kind === 'expression'
+      ? 'polynomial'
+      : kind === 'rational-expression'
+        ? 'rational-function'
+        : kind;
+  if (response.variable !== undefined) {
+    if (
+      !algebra ||
+      typeof response.variable !== 'string' ||
+      variables.get(response.variable) !== 'real'
     )
+      v.issue(
+        `${path}/response/variable`,
+        'value',
+        'Expected a declared real variable for univariate algebra.',
+      );
+  } else if (
+    algebra &&
+    (variables.size > 1 || [...variables.values()].some((d) => d !== 'real'))
+  )
+    v.issue(
+      `${path}/response/variable`,
+      'value',
+      'An explicit declared real variable is required.',
+    );
+  if (
+    ![
+      'rational',
+      'real',
+      'extended-real',
+      'expression',
+      'text',
+      'rational-expression',
+      'equation',
+      'inequality',
+      'set',
+      'intervals',
+    ].some((k) => k === kind)
   )
     v.issue(`${path}/response/kind`, 'value', 'Unsupported question response.');
   v.literal(
@@ -59,11 +104,12 @@ export function inspectQuestionAnswer(
     'form',
     'comparison',
     'normalization',
+    'comparisonDomain',
   ]);
   v.literal(p.domain, `${path}/policy/domain`, String(domain));
   v.literal(p.form, `${path}/policy/form`, 'value-only');
   if (p.comparison !== undefined) {
-    if (kind === 'expression' || kind === 'text')
+    if (!['rational', 'real', 'extended-real'].some((k) => k === kind))
       v.issue(
         `${path}/policy/comparison`,
         'value',
@@ -96,6 +142,31 @@ export function inspectQuestionAnswer(
         'value',
         'Expected exact or approximate.',
       );
+  }
+  if (p.comparisonDomain !== undefined) {
+    const d = v.object(p.comparisonDomain, `${path}/policy/comparisonDomain`, [
+      'variable',
+      'excludedLatex',
+    ]);
+    const variable = response.variable ?? [...variables.keys()][0];
+    if (
+      !algebra ||
+      d.variable !== variable ||
+      typeof d.variable !== 'string' ||
+      variables.get(d.variable) !== 'real'
+    )
+      v.issue(
+        `${path}/policy/comparisonDomain/variable`,
+        'value',
+        'An imposed real domain must refer to the official algebra variable.',
+      );
+    v.list(
+      d.excludedLatex,
+      `${path}/policy/comparisonDomain/excludedLatex`,
+      64,
+    ).forEach((s, i) =>
+      v.text(s, `${path}/policy/comparisonDomain/excludedLatex/${i}`),
+    );
   }
   if (p.normalization !== undefined) {
     if (kind !== 'text')

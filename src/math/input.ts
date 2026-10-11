@@ -132,12 +132,28 @@ export function parseDisplayInput(
 export function parseNumericInput(source: string, context: MathInputContext) {
   return parseInput(source, context, 'numeric-latex-v1');
 }
+export function parseAlgebraInput(source: string, context: MathInputContext) {
+  return parseInput(source, context, 'algebra-latex-v1');
+}
+export function parseCollectionInput(
+  source: string,
+  context: MathInputContext,
+) {
+  return parseInput(source, context, 'collection-latex-v1');
+}
 
 function parseInput<
-  P extends 'scalar-latex-v1' | 'display-latex-v1' | 'numeric-latex-v1',
+  P extends
+    | 'scalar-latex-v1'
+    | 'display-latex-v1'
+    | 'numeric-latex-v1'
+    | 'algebra-latex-v1'
+    | 'collection-latex-v1',
 >(source: string, context: MathInputContext, profile: P): ParsedMathInput<P> {
   const display = profile === 'display-latex-v1';
   const numeric = profile === 'numeric-latex-v1';
+  const collection = profile === 'collection-latex-v1';
+  const algebra = profile === 'algebra-latex-v1';
   const base = { source, profile };
   const fail = (
     code: MathInputDiagnostic['code'],
@@ -184,6 +200,11 @@ function parseInput<
     if (
       !commands.has(command) &&
       !(display && displayCommands.has(command)) &&
+      !(algebra && ['le', 'leq', 'ge', 'geq', 'ne', 'neq'].includes(command)) &&
+      !(
+        collection &&
+        ['{', '}', 'cup', 'emptyset', 'varnothing'].includes(command)
+      ) &&
       ![',', ';', ':', '!', ' '].includes(command)
     )
       return fail(
@@ -201,6 +222,7 @@ function parseInput<
       });
     if (
       char === ',' &&
+      !collection &&
       source[index - 1] !== '\\' &&
       source.slice(index - 1, index + 2) !== '{,}'
     )
@@ -218,10 +240,43 @@ function parseInput<
   try {
     // A new context per call, with no assignments, canonicalization or evaluation.
     const ce = new ComputeEngine();
-    if (numeric)
+    if (numeric || collection)
       ce.latexSyntax?.addEntries?.([
         { kind: 'expression', latexTrigger: 'e', parse: 'ExponentialE' },
       ]);
+    if (collection) {
+      const brackets = [
+        ['[', ']', false, false],
+        ['[', '[', false, true],
+        [']', ']', true, false],
+        [']', '[', true, true],
+      ] as const;
+      for (const [open, close, leftOpen, rightOpen] of brackets)
+        ce.latexSyntax?.addEntries?.([
+          {
+            kind: 'matchfix',
+            openTrigger: [open],
+            closeTrigger: [close],
+            parse: (_parser: unknown, body: MathSyntax): MathSyntax | null => {
+              const items = Array.isArray(body)
+                ? (body as MathSyntax[])
+                : undefined;
+              const pair = items?.[0] === 'Delimiter' ? items[1] : body;
+              if (
+                !Array.isArray(pair) ||
+                pair[0] !== 'Sequence' ||
+                pair.length !== 3
+              )
+                return ['Error', "'invalid-interval'"];
+              return [
+                'Interval',
+                leftOpen ? ['Open', pair[1]!] : pair[1]!,
+                rightOpen ? ['Open', pair[2]!] : pair[2]!,
+              ];
+            },
+          },
+        ]);
+    }
     // Explicit named references only. CortexJS parses these dictionary entries;
     // bare letters retain their original juxtaposition/multiplication semantics.
     // Expression entries also avoid the library interpreting e.g. kg as a unit.
@@ -276,7 +331,12 @@ function parseInput<
         else if (variables.includes(node)) found.variables.add(node);
         else if (
           constants.has(node) ||
-          (numeric && ['PositiveInfinity', 'NegativeInfinity'].includes(node))
+          ((numeric || collection) &&
+            [
+              'PositiveInfinity',
+              'NegativeInfinity',
+              ...(collection ? ['EmptySet'] : []),
+            ].includes(node))
         )
           found.constants.add(node);
         else if (node === 'Nothing')
@@ -324,7 +384,30 @@ function parseInput<
         }
         if (
           typeof head !== 'string' ||
-          (!operators.has(head) && !(display && displayOperators.has(head)))
+          (!operators.has(head) &&
+            !(display && displayOperators.has(head)) &&
+            !(
+              algebra &&
+              [
+                'Equal',
+                'NotEqual',
+                'Less',
+                'LessEqual',
+                'Greater',
+                'GreaterEqual',
+              ].includes(head)
+            ) &&
+            !(
+              collection &&
+              [
+                'Set',
+                'Interval',
+                'Open',
+                'Union',
+                'Sequence',
+                'Delimiter',
+              ].includes(head)
+            ))
         ) {
           // Inspect nested parser errors before reporting unsupported containers.
           for (let i = 1; i < node.length; i += 1)
@@ -337,8 +420,10 @@ function parseInput<
             );
           return;
         }
-        for (let i = 1; i < node.length; i += 1)
+        for (let i = 1; i < node.length; i += 1) {
+          if (collection && head === 'Delimiter' && i === 2) continue;
           visit(node[i], `${path}/${i}`, depth + 1);
+        }
         return;
       }
       if (

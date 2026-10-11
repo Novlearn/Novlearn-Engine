@@ -140,6 +140,21 @@ export function explicitProducts(
           (node[0] === 'Delimiter' &&
             node.length === 2 &&
             radicalFactor(node[1]!)));
+      // A trailing variable does not disambiguate a mixed number prefix such as 1\frac{1}{2}x.
+      for (let i = 1; i < factors.length; i++) {
+        const a = factors[i - 1]!,
+          b = factors[i]!;
+        if (
+          ce.box(a, { form: 'raw' }).symbols.length === 0 &&
+          ce.box(b, { form: 'raw' }).symbols.length === 0 &&
+          !(allowRadicalProducts && (radicalFactor(a) || radicalFactor(b)))
+        )
+          fail(
+            'unsupported',
+            path,
+            'Adjacent numeric factors are ambiguous; use explicit multiplication.',
+          );
+      }
       if (
         expression.symbols.length === 0 &&
         !(
@@ -161,6 +176,35 @@ export function explicitProducts(
     },
     { canonical: false, recursive: true },
   );
+}
+
+/** Shared exact insertion into a raw Cortex expression for specialized response profiles. */
+export function substituteParameters(
+  ce: ComputeEngine,
+  syntax: MathSyntax,
+  parameters: readonly string[],
+  values: Readonly<Record<string, GeneratedValue>>,
+  path: string,
+  allowRadicalProducts = false,
+) {
+  const replacements = Object.create(null) as Record<string, MathSyntax>;
+  for (const name of parameters) {
+    const value = values[name];
+    if (!value)
+      fail('missing-variable', path, `Missing generated parameter ${name}.`);
+    replacements[name] =
+      value.kind === 'rational'
+        ? ['Rational', value.numerator, value.denominator]
+        : value.kind === 'decimal'
+          ? ['Rational', value.coefficient, 10 ** value.precision]
+          : encode(value.value, path);
+  }
+  return explicitProducts(
+    ce,
+    encode(syntax, path),
+    path,
+    allowRadicalProducts,
+  ).subs(replacements, { canonical: false });
 }
 
 /** One arithmetic profile for preparation and admission after substitution. */

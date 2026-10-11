@@ -1,5 +1,47 @@
 # État et transmission
 
+## Mission autonome V1 — M4 algèbre/domaines/collections vérifié (11 octobre 2026)
+
+Dernier lot committé avant M4 : M3 **5d45d77**, M2 d8a39a2, M1 8ef7de5, M0 e072a57.
+Branche main ; CDC accentué confirmé et corpus original inchangés. README,
+progress/decisions/roadmap et CDC 4.2–4.4, 5.2–5.3, 6.2, 7.3–7.4 relus.
+Root seul auteur ; analyses/revues indépendantes en lecture seule favorables.
+
+Livré : QuestionResponse et politiques algébriques/collections, variable
+officielle univariée, traces JSON algebra/collection et comparisonDomain cofini.
+Polynômes/fractions par coefficients/produits croisés Cortex exacts, restrictions
+raw conservées, domaines complets ou imposés prouvés ; equation/inequality
+degré0–2 par solutions, ensembles/vide/intervalles FR/unions/bornes quadratiques.
+CorrectionResult domaine séparé et equal-on-common-domain ; projections sélectionnées.
+D39/ADR 011 ; nouveaux math/algebra, math/collections, deux suites M4. Contrats/
+validation, instanciation, grading, input/numeric/substitution et docs adaptés.
+Fixture M3 expression maintenant prouvée, aucun test critique supprimé.
+
+Première passe ciblée : 16 échecs/273, puis collections 3/88 ; leading zeros,
+groupements, relecture scalaire et fixtures multi-exposants LaTeX corrigés.
+Ciblé suivant : **391 tests/4 fichiers PASS, 221,41 s**, grading/substitution inclus.
+Premier check complet : **1029/1030 PASS, 371,66 s** ; un affichage 2x devenu
+2\cdot x. Options Cortex d'écriture explicite limitées au toLatex de relecture
+interne ; affichage par défaut préservé. Composition ciblée : **77/77 PASS, 39,19 s**.
+Une relance check arrêtée au format de deux chaînes d'appels ; seconde passe
+Prettier et format:check PASS. **Dernier npm.cmd run check PASS : 1031 tests /
+20 fichiers, 443,40 s**, build/typecheck/lint/format inclus. +214 tests M4.
+
+**npm.cmd pack --dry-run PASS**, code npm0 explicite : 102 fichiers, 105,3 kB
+compressés / 517,7 kB décompressés, SHA1 e37975ebc11f4792432f8a60c54541e52399ac02.
+Import ESM sept exports, racine d.ts sans boxed/CE/NumericValue et diff-check PASS.
+CDC SHA256 FFB97D8F1B3401E462DA6411D4DDE671A06D9522A6D745E28D06FB2F2E9459AE ;
+corpus/copie 0F4D1173A78F9BD41E88678704C212C5147627E7E5A42EE28EB398F25F41C3AE inchangés.
+ci exécuté M0, aucune dépendance/lock modifiée. Aucun navigateur MathLive,
+CI distante, consommation tarball, adaptation/migration historique annoncé.
+
+Limites ADR 011 : coefficients rationnels, degréstructurel16/proof32, relations
+effectives0–2, extraction de trous degree0–2 ou produits/puissances raw, AST128/
+profondeur16 et plafonds64 cumulés ; radicaux incompatibles indéterminés. Aucune
+préemption ni CAS/parseur supplémentaire. V1 non terminée : M5–M12 requis.
+Clôture immédiate par commit local `feat(grading): prove algebra and collections with preserved domains` ;
+aucun push. Puis M5 formes pédagogiques, après lecture des documents/critères.
+
 ## Mission autonome V1 — M3 correction numérique/discrète validé (11 octobre 2026)
 
 Dernier lot livré : **M2 `d8a39a2`**, précédé de M1 `8ef7de5` et M0 `e072a57`.

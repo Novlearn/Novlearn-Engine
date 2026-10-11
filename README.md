@@ -113,13 +113,20 @@ absolue/relative officielle inclusive et ±∞ typés ; différences non prouvé
 indéterminées. QCM par ensemble d'IDs, texte strict/variantes et normalisation
 explicite. Politiques, attendus et tolérances demeurent privés.
 
+M4 : [preuves algébriques, domaines et collections](docs/adr/011-algebra-collections.md).
+Polynômes rationnels univariés, fractions avec trous raw conservés et domaine
+cofini imposé ; équations/inéquations degré 0–2 comparées par solutions. Ensembles
+finis/vide, intervalles français/unions/bornes infinies et quadratiques.
+Valeurs sur domaine commun distinguées de l'égalité sur mêmes domaines : x/x
+contre 1 refusé par défaut, accepté sous domaine officiel excluant zéro.
+
 Profil rationnel/polynomial : ratios/intermédiaires ≤10^9, AST 128 nœuds/profondeur
 16, degré ≤16, puissances entières 0–16 avec domaine contrôlé avant réduction.
 Un choix fini n'est pas automatiquement utilisable dans le profil exact.
 Parsing public selon [ADR 005](docs/adr/005-math-input.md), distinct du profil
-numérique fermé M3 ; correction algébrique et formes pédagogiques aux M4/M5.
+numérique fermé M3 ; profils algébriques M4 internes au correcteur, formes au M5.
 Formules de présentation à domaine non vérifié,
-nombres de rendu rationnels exacts. Pas de solveur, de dessin ou d'isolation
+nombres de rendu rationnels exacts. Pas de solveur général, de dessin ou d'isolation
 préemptive. [Couverture réelle](docs/feature-coverage.md).
 
 ## Reproductibilité et rupture expérimentale
