@@ -20,6 +20,17 @@ pédagogiques historiques demandent une revue humaine avant conversion fidèle.
 Une analyse indépendante initiale en lecture seule a confirmé l'architecture
 unique et les manques de correction/éléments/isolation ; aucun fichier délégué.
 
+## D41 — M6 : fonctions fermées et attendus connus du lycée
+
+[ADR 013](adr/013-school-known-answers.md) : profil explicite school-latex-v1
+pour lecture de fonctions/limites ; mode display d'expression séparé du parcours
+polynomial existant. Substitution raw et domaine non vérifié de présentation.
+Numérique fermé : domaines avant réduction, valeurs exactes/identités fermées,
+pôles tangente prouvés ; indétermination en l'absence de preuve. Exemple obligatoire
+ln(x−a)/(x−a), x>a et limite droite attendue −∞ démontré par fixture native
+synthétique, sans résolution ni migration historique. Dérivées attendues admises
+par M4 ; aucun opérateur/solveur de dérivation ajouté. Sept exports runtime.
+
 ## D36 — Références descriptives explicites, M1 (11 octobre 2026)
 
 CDC 3.5 : identifiants de 1–32 caractères, première lettre latine minuscule puis

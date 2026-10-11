@@ -61,8 +61,12 @@ Oracles PGCD entier et discriminant quadratique indépendants ; inconnus propag�
 Les huit cas de l'oracle quadratique sont individualisés pour respecter le timeout
 Vitest sans prétendre interrompre Cortex. [Règles](adr/012-pedagogical-forms.md).
 
-Tests futurs : fonctions/cas connus
-M6, terminaison réelle/nettoyage/mémoire/concurrence au Lot 8, conversions exécutées
+M6 : school-math.test.ts, fixture native synthétique sans migration historique.
+Identités usuelles contre oracles scolaires indépendants, domaines log/tangente
+avant réduction, inconnus, parsing explicite, substitutions négatives/décimales,
+relecture des cibles dirigées, attendu −∞, dérivée polynomiale connue et projection.
+
+Tests futurs : terminaison réelle/nettoyage/mémoire/concurrence au Lot 8, conversions exécutées
 au Lot 9, banc réel MathLive/HTTP falsifié/duel périmé au Lot 10, consommateur tarball
 et bundler au Lot 11. CI Linux/Windows configurée, aucune exécution distante
 annoncée ici. Timeout Vitest/promesse ne préempte jamais le calcul synchrone.

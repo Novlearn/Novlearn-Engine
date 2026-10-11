@@ -1,5 +1,10 @@
 # Architecture et contrats canoniques
 
+Extension M6 : [ADR 013](adr/013-school-known-answers.md). Profil public de lecture
+school-latex-v1, limites avec binding Cortex et mode display explicite des
+expressions d'énoncé. Fonctions numériques fermées sous contrôle de domaine avant
+réduction ; le correcteur et les sept exports runtime restent communs.
+
 Extension M4 : [ADR 011](adr/011-algebra-collections.md), math/algebra et
 math/collections sous le correcteur commun. Polynômes/fractions univariés,
 relations degré 0–2, ensembles/intervalles, restrictions raw et domaine imposé.

@@ -65,6 +65,7 @@ export type {
   MathInputContext,
   MathInputDiagnostic,
   MathInputResult,
+  MathInputProfile,
   MathSyntax,
 } from './math/input.js';
 export { generateVariables } from './generation/variables.js';

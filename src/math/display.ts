@@ -77,7 +77,12 @@ export function instantiateDisplayMath(
             ? ['Rational', value.coefficient, 10 ** value.precision]
             : encode(value.value, path);
     }
-    const expression = explicitProducts(ce, encode(parsed.syntax, path), path);
+    const expression = explicitProducts(
+      ce,
+      encode(parsed.syntax, path),
+      path,
+      true,
+    );
     const substituted = expression.subs(replacements, { canonical: false });
     let count = 0;
     const bounded = (node: MathSyntax, depth: number): boolean => {
@@ -88,7 +93,22 @@ export function instantiateDisplayMath(
     };
     if (!bounded(substituted.json, 0))
       return fail('limit', 'Display math exceeds 128 nodes or depth 16.');
-    const displayLatex = substituted.toLatex();
+    // Cortex's ungrouped negative directed targets serialize as -2^{+},
+    // which reparses as a pseudo-inverse. Group only the rendering AST.
+    const rendered = substituted.map(
+      (expression) => {
+        const raw = expression.json;
+        if (!Array.isArray(raw) || raw[0] !== 'Limit' || raw.length !== 4)
+          return expression;
+        const items = raw as readonly MathSyntax[];
+        return ce.box(
+          ['Limit', items[1]!, ['Delimiter', items[2]!], items[3]!],
+          { form: 'raw' },
+        );
+      },
+      { canonical: false, recursive: true },
+    );
+    const displayLatex = rendered.toLatex();
     if (displayLatex.length > 4096)
       return fail('limit', 'Display LaTeX exceeds 4096 characters.');
     return {

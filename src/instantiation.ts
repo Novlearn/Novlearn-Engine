@@ -350,13 +350,9 @@ function instantiateElements(
       continue;
     }
     if (element.type === 'expression') {
-      const math = instantiateMath(
-        element.latex,
-        context,
-        generated.values,
-        `${path}/latex`,
-        false,
-      );
+      const math = (
+        element.mode === 'display' ? instantiateDisplayMath : instantiateMath
+      )(element.latex, context, generated.values, `${path}/latex`, false);
       if (!math.ok)
         return failElement(
           math.diagnostics.map((d) => ({ ...d, stage: 'statement' })),
@@ -371,6 +367,9 @@ function instantiateElements(
         type: 'expression',
         latex: math.value.displayLatex,
         math: math.value,
+        ...(element.mode === 'display'
+          ? { formulaDomain: 'unverified' as const }
+          : {}),
         ...(label?.ok ? { label: label.value } : {}),
       });
       continue;
@@ -726,6 +725,9 @@ function projectElement(element: PrivateElement): PublicElement | undefined {
         ...identity,
         type: 'expression',
         latex: element.latex,
+        ...(element.formulaDomain === 'unverified'
+          ? { formulaDomain: 'unverified' as const }
+          : {}),
         ...(element.label === undefined ? {} : { label: element.label }),
       };
     case 'question':

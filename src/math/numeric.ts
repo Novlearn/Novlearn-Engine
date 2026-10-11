@@ -310,6 +310,13 @@ export function prepareNumeric(
       };
     }
     const signOf = (node: MathSyntax): -1 | 0 | 1 | undefined => {
+      // Descendants have already been admitted by inspect(). A real exponential
+      // is strictly positive, even when its value stays symbolic.
+      if (Array.isArray(node)) {
+        if (node[0] === 'Delimiter') return signOf(node[1]!);
+        if (node[0] === 'Exp') return 1;
+        if (node[0] === 'Power' && signOf(node[1]!) === 1) return 1;
+      }
       const expression = ce.box(node, { form: 'raw' }).canonical;
       const exact = exactNumber(expression.evaluate(), true);
       if (exact !== undefined) return exactSign(exact);
@@ -331,14 +338,30 @@ export function prepareNumeric(
       const items = node as MathSyntax[];
       const head = items[0];
       const args = items.slice(1);
-      const unary = ['Negate', 'Sqrt', 'Square', 'Delimiter'];
+      const unary = [
+        'Negate',
+        'Sqrt',
+        'Square',
+        'Delimiter',
+        'Ln',
+        'Lb',
+        'Lg',
+        'Exp',
+        'Sin',
+        'Cos',
+        'Tan',
+      ];
       const binary = ['Divide', 'Rational', 'Power', 'Root', 'Subtract'];
       if (
         (unary.includes(String(head)) && args.length !== 1) ||
         (binary.includes(String(head)) && args.length !== 2) ||
         (!unary.includes(String(head)) &&
           !binary.includes(String(head)) &&
-          !(head === 'Add' || head === 'Multiply'))
+          !(
+            head === 'Add' ||
+            head === 'Multiply' ||
+            (head === 'Log' && (args.length === 1 || args.length === 2))
+          ))
       )
         fail(
           'unsupported',
@@ -348,6 +371,56 @@ export function prepareNumeric(
       if ((head === 'Add' || head === 'Multiply') && args.length < 2)
         fail('unsupported', p, 'An arithmetic operation requires operands.');
       args.forEach((a, i) => inspect(a, `${p}/${i + 1}`));
+      if (head === 'Ln' || head === 'Log' || head === 'Lb' || head === 'Lg') {
+        const positive = (argument: MathSyntax): void => {
+          const sign = signOf(argument);
+          if (sign === 0 || sign === -1)
+            fail(
+              'undefined-expression',
+              p,
+              'A real logarithm requires a strictly positive argument and base.',
+            );
+          if (sign === undefined)
+            fail('not-calculable', p, 'The logarithm domain is not proved.');
+        };
+        positive(args[0]!);
+        if (head === 'Log' && args.length === 2) {
+          positive(args[1]!);
+          const base = exactNumber(ce.box(args[1]!).evaluate(), true);
+          const order =
+            base === undefined
+              ? signOf(['Subtract', args[1]!, 1])
+              : exactOrder(base, 1);
+          if (order === 0)
+            fail(
+              'undefined-expression',
+              p,
+              'A logarithm base must differ from one.',
+            );
+          if (order === undefined)
+            fail(
+              'not-calculable',
+              p,
+              'The logarithm base is not proved different from one.',
+            );
+        }
+      }
+      if (head === 'Tan') {
+        const cosine = exactNumber(ce.box(['Cos', args[0]!]).evaluate(), true);
+        const sign = cosine === undefined ? undefined : exactSign(cosine);
+        if (sign === 0)
+          fail(
+            'undefined-expression',
+            p,
+            'Tangent is undefined at a proved cosine zero.',
+          );
+        if (sign === undefined)
+          fail(
+            'not-calculable',
+            p,
+            'A nonzero cosine is not proved for this tangent argument.',
+          );
+      }
       if (head === 'Divide' || head === 'Rational') {
         const s = signOf(args[1]!);
         if (s === 0)

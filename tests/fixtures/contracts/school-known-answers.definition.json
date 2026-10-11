@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 5,
+  "kind": "composed",
+  "id": "school-known-answers-native",
+  "revision": "1",
+  "title": "Limite et dérivée avec attendus connus",
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [
+      { "name": "a", "kind": "integer", "min": 2, "max": 2, "exclusions": [] }
+    ],
+    "constraints": [],
+    "maxAttempts": 128,
+    "maxDraws": 4096
+  },
+  "variables": [{ "name": "x", "domain": "real" }],
+  "elements": [
+    {
+      "id": "domain",
+      "type": "text",
+      "text": "Pour x>@a, on considère f(x) :"
+    },
+    {
+      "id": "function",
+      "type": "expression",
+      "mode": "display",
+      "latex": "\\frac{\\ln(x-a)}{x-a}",
+      "label": "f(x) ="
+    },
+    {
+      "id": "limit",
+      "type": "expression",
+      "mode": "display",
+      "latex": "\\lim_{x\\to a^+}\\frac{\\ln(x-a)}{x-a}"
+    },
+    {
+      "id": "q-limit",
+      "type": "question",
+      "text": "Donner la limite à droite en @a.",
+      "points": 1,
+      "response": { "format": "latex", "kind": "extended-real" },
+      "expectedLatex": "-\\infty",
+      "policy": { "domain": "extended-real", "form": "value-only" }
+    },
+    {
+      "id": "polynomial",
+      "type": "expression",
+      "latex": "ax^2+3x",
+      "label": "g(x) ="
+    },
+    {
+      "id": "q-derivative",
+      "type": "question",
+      "text": "Donner une expression de g′(x).",
+      "points": 1,
+      "response": { "format": "latex", "kind": "expression", "variable": "x" },
+      "expectedLatex": "2ax+3",
+      "policy": { "domain": "polynomial", "form": "value-only" }
+    },
+    {
+      "id": "q-value",
+      "type": "question",
+      "text": "Calculer sin(π/6).",
+      "points": 1,
+      "response": { "format": "latex", "kind": "real" },
+      "expectedLatex": "\\sin(\\pi/6)",
+      "policy": { "domain": "real", "form": "value-only" }
+    }
+  ],
+  "extensions": {
+    "provenance": "Synthetic native fixture; not a historical adaptation or migration.",
+    "privateMarker": "PRIVATE-M6"
+  }
+}

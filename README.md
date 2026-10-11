@@ -129,6 +129,12 @@ M5 : [formes pédagogiques](docs/adr/012-pedagogical-forms.md) sur syntaxe origi
 fraction irréductible, développée/réduite et factorisation complète sur ℚ bornée.
 Familles alternatives ou références LaTeX privées certifiées ; valeur égale et
 forme non conforme restent distinctes. Forme inconnue conserve l'indétermination.
+M6 : [fonctions et réponses connues](docs/adr/013-school-known-answers.md).
+`parseMathInput(source, context, 'school-latex-v1')` lit log/exp/trig et limites ;
+`expression.mode:'display'` substitue sans preuve de domaine. Correction des
+valeurs usuelles exactes et domaines logarithme/tangente contrôlés avant réduction.
+L'exemple ln(x−a)/(x−a), x>a et limite droite attendue −∞ est testé, ainsi qu'une
+dérivée polynomiale connue. Aucune résolution générale ; hors preuve indéterminé.
 Formules de présentation à domaine non vérifié,
 nombres de rendu rationnels exacts. Pas de solveur général, de dessin ou d'isolation
 préemptive. [Couverture réelle](docs/feature-coverage.md).

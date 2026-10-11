@@ -45,7 +45,8 @@ type ParsedMathInput<P extends string> = {
     }
   | { ok: false; diagnostics: MathInputDiagnostic[] }
 );
-export type MathInputResult = ParsedMathInput<'scalar-latex-v1'>;
+export type MathInputProfile = 'scalar-latex-v1' | 'school-latex-v1';
+export type MathInputResult = ParsedMathInput<MathInputProfile>;
 
 const commands = new Set([
   'frac',
@@ -79,6 +80,17 @@ const operators = new Set([
   'Delimiter',
 ]);
 const constants = new Set(['Pi', 'ExponentialE']);
+const functionCommands = new Set(['sin', 'cos', 'tan', 'ln', 'log', 'exp']);
+const functionOperators = new Set([
+  'Sin',
+  'Cos',
+  'Tan',
+  'Ln',
+  'Log',
+  'Lb',
+  'Lg',
+  'Exp',
+]);
 const displayCommands = new Set([
   'sin',
   'cos',
@@ -115,9 +127,31 @@ const displayOperators = new Set([
 /** Parsing/admissibility only. Success proves neither a domain nor a value. */
 export function parseMathInput(
   source: string,
+  context?: MathInputContext,
+): ParsedMathInput<'scalar-latex-v1'>;
+export function parseMathInput(
+  source: string,
+  context: MathInputContext | undefined,
+  profile: MathInputProfile,
+): MathInputResult;
+export function parseMathInput(
+  source: string,
   context: MathInputContext = {},
+  profile: MathInputProfile = 'scalar-latex-v1',
 ): MathInputResult {
-  return parseInput(source, context, 'scalar-latex-v1');
+  if (profile !== 'scalar-latex-v1' && profile !== 'school-latex-v1')
+    return {
+      source,
+      profile,
+      ok: false,
+      diagnostics: [
+        {
+          code: 'invalid-context',
+          message: 'Unknown mathematical input profile.',
+        },
+      ],
+    };
+  return parseInput(source, context, profile);
 }
 
 /** Internal presentation admission only; no public grading capability is implied. */
@@ -145,12 +179,15 @@ export function parseCollectionInput(
 function parseInput<
   P extends
     | 'scalar-latex-v1'
+    | 'school-latex-v1'
     | 'display-latex-v1'
     | 'numeric-latex-v1'
     | 'algebra-latex-v1'
     | 'collection-latex-v1',
 >(source: string, context: MathInputContext, profile: P): ParsedMathInput<P> {
   const display = profile === 'display-latex-v1';
+  const school = profile === 'school-latex-v1';
+  const presentation = display || school;
   const numeric = profile === 'numeric-latex-v1';
   const collection = profile === 'collection-latex-v1';
   const algebra = profile === 'algebra-latex-v1';
@@ -200,6 +237,8 @@ function parseInput<
     if (
       !commands.has(command) &&
       !(display && displayCommands.has(command)) &&
+      !((presentation || numeric) && functionCommands.has(command)) &&
+      !(presentation && ['lim', 'to', 'rightarrow'].includes(command)) &&
       !(algebra && ['le', 'leq', 'ge', 'geq', 'ne', 'neq'].includes(command)) &&
       !(
         collection &&
@@ -240,7 +279,7 @@ function parseInput<
   try {
     // A new context per call, with no assignments, canonicalization or evaluation.
     const ce = new ComputeEngine();
-    if (numeric || collection)
+    if (numeric || collection || presentation)
       ce.latexSyntax?.addEntries?.([
         { kind: 'expression', latexTrigger: 'e', parse: 'ExponentialE' },
       ]);
@@ -331,7 +370,7 @@ function parseInput<
         else if (variables.includes(node)) found.variables.add(node);
         else if (
           constants.has(node) ||
-          ((numeric || collection) &&
+          ((numeric || collection || presentation) &&
             [
               'PositiveInfinity',
               'NegativeInfinity',
@@ -382,10 +421,46 @@ function parseInput<
           );
           return;
         }
+        if (presentation && head === 'Limit') {
+          const fn = node[1];
+          if (
+            !Array.isArray(fn) ||
+            fn[0] !== 'Function' ||
+            fn.length !== 3 ||
+            typeof fn[2] !== 'string' ||
+            !variables.includes(fn[2]) ||
+            (node.length !== 3 && node.length !== 4) ||
+            (node.length === 4 && node[3] !== 1 && node[3] !== -1)
+          ) {
+            for (let i = 1; i < node.length; i += 1)
+              visit(node[i], `${path}/${i}`, depth + 1);
+            issue(
+              'unsupported',
+              'A limit requires a declared free variable and an optional direction +1 or -1.',
+              path,
+            );
+            return;
+          }
+          visit(fn[1], `${path}/1/1`, depth + 2);
+          visit(fn[2], `${path}/1/2`, depth + 2);
+          visit(node[2], `${path}/2`, depth + 1);
+          const freeTarget = (target: unknown): boolean =>
+            typeof target === 'string'
+              ? variables.includes(target)
+              : Array.isArray(target) && target.slice(1).some(freeTarget);
+          if (freeTarget(node[2]))
+            issue(
+              'unsupported',
+              'A limit target must be closed after parameter substitution.',
+              `${path}/2`,
+            );
+          return;
+        }
         if (
           typeof head !== 'string' ||
           (!operators.has(head) &&
             !(display && displayOperators.has(head)) &&
+            !((presentation || numeric) && functionOperators.has(head)) &&
             !(
               algebra &&
               [

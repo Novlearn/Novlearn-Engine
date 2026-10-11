@@ -1,5 +1,46 @@
 # État et transmission
 
+## M6 vérifié — cas du lycée avec réponses connues
+
+Dernier lot commité **M5 b64ae3d**, 1169 tests/21 fichiers et pack110 validés,
+138 nouveaux tests ; arbre propre hors CDC utilisateur non suivi. M4 1836dbb.
+README/progress/decisions et lot M6/6B relus, CDC4.2/4.3/7.3/7.5 examiné.
+Root seul auteur ; deux analyses initiales en lecture seule (preuves numériques
+fermées et représentation d'énoncés limite/dérivée) demandées.
+Parsing/substitution de fonctions déjà disponible dans display M2 : ne pas refaire.
+À vérifier/compléter : parsing public, expression d'énoncé générale, cas connu
+ln(x−a)/(x−a), domaine x>a et limite droite attendue −∞ ; dérivées admises par
+M4 et hors profil indéterminées. Numériques log/exp/trig seulement sous certificats
+exacts fermés documentés, domaines avant réduction ; aucune preuve par flottants.
+Aucune implémentation M6 annoncée validée, dépendance ajoutée ou lot M7 commencé.
+V1 M6–M12 reste requise.
+
+Implémentation M6 en vérification : profil school-latex-v1, expression.mode display,
+contrats/validation/projection, Limit binding déclaré et cible fermée, numérique
+Ln/Log/Lb/Lg/Exp/Sin/Cos/Tan avec domaines avant réduction, produits de fonctions
+nommées sans admettre les préfixes de nombres mixtes. ADR013/D41 et docs mis à jour.
+75 tests M6 ciblés PASS après correction d'un test : les paramètres servent aux
+attendus officiels, pas de noms de paramètres privés dans une réponse élève.
+239 tests/4 fichiers ciblés : premier passage 238 PASS/1 échec sur ce test corrigé.
+Premier passage 67 : 62 PASS/5 échecs (Lb non admis, produit nommé trop restrictif,
+cible a² classée à tort comme direction), puis 67/67 PASS après corrections.
+Revue indépendante numérique : 16 sondes PASS, aucun faux positif trouvé.
+Revue binding/projection : sérialisation des cibles négatives dirigées identifiée
+comme incorrecte. Corrigée via groupement du seul AST de rendu, traces privées
+intactes ; tests de relecture ajoutés pour deux directions et cibles fractionnaires.
+81 tests M6 présents. `npm.cmd run check` PASS **1250 tests/22 fichiers**, durée
+289,62s, build/typecheck/lint/format PASS. `npm.cmd pack --dry-run` PASS code0,
+110 fichiers, 117,2kB compressés/580,1kB décompressés, SHA1
+`c8bd074cd5cb8062f954be971de0423d925fbd17`. Sept exports runtime vérifiés, root
+index.d.ts sans boxed/ComputeEngine/NumericValue. `git diff --check` PASS.
+Revue du correctif de rendu : dix sondes dirigées entières/fractionnaires PASS,
+aucun défaut restant identifié. Matrice CDC13/32/39, roadmap et docs alignées.
+Empreintes CDC et deux copies du corpus identiques aux valeurs M0 ; aucun corpus,
+dépôt voisin, dépendance, SQL, push, PR ou déploiement modifié. Root seul auteur.
+Aucune CI distante, suite navigateur MathLive ou consommation de tarball exécutée
+dans M6. Packaging à blanc uniquement. Aucun exercice historique migré.
+Commit local M6 à créer après revue finale ; ensuite M7, V1 M7–M12 reste requise.
+
 ## M5 vérifié — formes pédagogiques (11 octobre 2026)
 
 M4 commité **1836dbb**, 1031 tests/20 fichiers et pack final validés. Main propre

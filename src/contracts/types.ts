@@ -195,7 +195,12 @@ export type ExerciseElement =
   | import('./elements.js').DisplayElement
   | (ElementIdentity & { type: 'text'; text: string })
   | (ElementIdentity & { type: 'section'; text: string })
-  | (ElementIdentity & { type: 'expression'; latex: string; label?: string })
+  | (ElementIdentity & {
+      type: 'expression';
+      latex: string;
+      label?: string;
+      mode?: 'display';
+    })
   | (ElementIdentity & {
       type: 'question';
       keyboard?: KeyboardHint;
@@ -247,6 +252,7 @@ export type PublicElement =
       type: 'expression';
       latex: string;
       label?: string;
+      formulaDomain?: 'unverified';
     }
   | {
       id: string;

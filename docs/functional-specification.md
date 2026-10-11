@@ -225,6 +225,14 @@ Une expression mathématiquement valable mais hors famille supportée n'est pas 
 
 ## 5. Évolutions et limites
 
+M6, [ADR 013](adr/013-school-known-answers.md) : profil public school-latex-v1
+pour lire fonctions usuelles et limites ; expression mode display substituée
+sans évaluation et avec domaine unverified. Réponses numériques fermées sous
+preuve exacte, domaines logarithmiques et pôles connus de tangente avant réduction.
+La limite droite de ln(x−a)/(x−a), x>a, utilise un attendu officiel −∞ ; une
+dérivée polynomiale connue est comparée par M4. Aucun solveur ajouté. Les valeurs
+ou domaines non prouvés restent indéterminés, y compris tan(1).
+
 Fonctions connues, isolation/transport, adaptation et adoption restent à livrer
 selon la roadmap de mission. Pas de serveur, UI, SQL ou dépendance supplémentaire.
 Anciennes APIs

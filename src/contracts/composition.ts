@@ -134,7 +134,7 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
       tag === 'text' || tag === 'section'
         ? ['text']
         : tag === 'expression'
-          ? ['latex', 'label']
+          ? ['latex', 'label', 'mode']
           : tag === 'question'
             ? [
                 'text',
@@ -186,6 +186,12 @@ export function inspectComposition(v: Validation, data: JsonValue): void {
     } else if (tag === 'expression') {
       v.text(e.latex, `${path}/latex`);
       if (e.label !== undefined) v.text(e.label, `${path}/label`);
+      if (e.mode !== undefined && e.mode !== 'display')
+        v.issue(
+          `${path}/mode`,
+          'value',
+          'The optional expression mode must be display.',
+        );
     } else if (tag === 'question' || tag === 'mcq') {
       if (
         e.keyboard !== undefined &&

@@ -126,20 +126,30 @@ export function explicitProducts(
   ce: ComputeEngine,
   syntax: MathSyntax,
   path: string,
-  allowRadicalProducts = false,
+  allowNamedFunctionProducts = false,
 ) {
   return ce.box(syntax, { form: 'raw' }).map(
     (expression) => {
       if (expression.operator !== 'InvisibleOperator') return expression;
       const raw = expression.json;
       const factors = Array.isArray(raw) ? (raw as MathSyntax[]).slice(1) : [];
-      const radicalFactor = (node: MathSyntax): boolean =>
+      const namedFunctionFactor = (node: MathSyntax): boolean =>
         Array.isArray(node) &&
-        (node[0] === 'Sqrt' ||
-          node[0] === 'Root' ||
+        ([
+          'Sqrt',
+          'Root',
+          'Ln',
+          'Log',
+          'Lb',
+          'Lg',
+          'Exp',
+          'Sin',
+          'Cos',
+          'Tan',
+        ].includes(String(node[0])) ||
           (node[0] === 'Delimiter' &&
             node.length === 2 &&
-            radicalFactor(node[1]!)));
+            namedFunctionFactor(node[1]!)));
       // A trailing variable does not disambiguate a mixed number prefix such as 1\frac{1}{2}x.
       for (let i = 1; i < factors.length; i++) {
         const a = factors[i - 1]!,
@@ -147,7 +157,10 @@ export function explicitProducts(
         if (
           ce.box(a, { form: 'raw' }).symbols.length === 0 &&
           ce.box(b, { form: 'raw' }).symbols.length === 0 &&
-          !(allowRadicalProducts && (radicalFactor(a) || radicalFactor(b)))
+          !(
+            allowNamedFunctionProducts &&
+            (namedFunctionFactor(a) || namedFunctionFactor(b))
+          )
         )
           fail(
             'unsupported',
@@ -158,9 +171,9 @@ export function explicitProducts(
       if (
         expression.symbols.length === 0 &&
         !(
-          allowRadicalProducts &&
+          allowNamedFunctionProducts &&
           Array.isArray(raw) &&
-          factors.some(radicalFactor)
+          factors.some(namedFunctionFactor)
         )
       )
         fail(
@@ -185,7 +198,7 @@ export function substituteParameters(
   parameters: readonly string[],
   values: Readonly<Record<string, GeneratedValue>>,
   path: string,
-  allowRadicalProducts = false,
+  allowNamedFunctionProducts = false,
 ) {
   const replacements = Object.create(null) as Record<string, MathSyntax>;
   for (const name of parameters) {
@@ -203,7 +216,7 @@ export function substituteParameters(
     ce,
     encode(syntax, path),
     path,
-    allowRadicalProducts,
+    allowNamedFunctionProducts,
   ).subs(replacements, { canonical: false });
 }
 
