@@ -18,6 +18,7 @@ import { instantiateMath } from './math/substitution.js';
 import type { InstantiationMathDiagnostic } from './math/substitution.js';
 import { MathFailure } from './math/substitution.js';
 import { prepareNumeric } from './math/numeric.js';
+import { prepareFormReferences } from './math/form-references.js';
 import {
   algebraKind,
   prepareAlgebra,
@@ -379,6 +380,24 @@ function instantiateElements(
     if (element.type === 'text' || element.type === 'section') {
       elements.push({ ...identity, type: element.type, text: text.value });
     } else if (element.type === 'question') {
+      if (
+        element.expectedLatex !== undefined &&
+        typeof element.policy.form === 'object' &&
+        element.policy.form.kind === 'accepted-latex'
+      ) {
+        const forms = prepareFormReferences(
+          element.policy.form,
+          element.expectedLatex,
+          context,
+          generated.values,
+          element.response.variable ?? context.variables[0] ?? 'z',
+          element.response.kind === 'expression',
+        );
+        if (!forms.ok)
+          return failElement(
+            forms.diagnostics.map((d) => ({ ...d, stage: 'expected' })),
+          );
+      }
       if (element.expectedLatex === undefined) {
         const variants: string[] = [];
         for (const [i, source] of element.expectedTexts.entries()) {

@@ -87,6 +87,19 @@ domaine et valeurs sur domaine commun ; inconnus indéterminés. Sept exports et
 schéma 5 ; aucun boxed public, parseur/CAS ajouté, solveur général ou préemption.
 Formes M5, fonctions M6 et autres lots V1 restent requis.
 
+## D40 — Formes originales et factorisation complète sur ℚ, M5 (11 octobre 2026)
+
+L'utilisateur tranche D14 pour une factorisation complète sur ℚ sous profil
+borné. [ADR 012](adr/012-pedagogical-forms.md) définit fractions, formes
+développées/réduites, facteurs triviaux, signes et inconnus. Témoins sur syntaxe
+originale ; PGCD et discriminant exacts Cortex ; aucune reconnaissance universelle.
+Facteurs degré ≥3 indéterminés, scalaire non nul unité sur ℚ sans extraction du
+contenu entier. Alternatives de familles OU ou références LaTeX privées certifiées
+en valeur/domaine. CorrectionResult forme séparée, valeur égale conservée quand
+seule la forme échoue. Tolérances M3 inchangées ; schéma5/sept exports préservés.
+Validation complète M5 : 1169 tests/21 fichiers et pack PASS ; aucune migration
+historique ni nouveau CAS.
+
 ## D33 — Complément Lot 5 : résolution calculée versionnée (retenue)
 
 Demande du 11 octobre 2026. `GenerationDefinitionV3` / `variables-v3` ajoute computed (`name`, `latex`, restrictions facultatives) et des opérandes `{latex}` aux six comparaisons. `ExerciseDefinitionV4` / `composed-instance-v4` consomme ce contexte commun. Les contrats historiques restent inchangés. Calculs rationnels fermés du profil existant, source conservée, résultat `{kind:'rational',numerator,denominator}` même pour une fraction décimale ; aucun quotient flottant. Provenance : définition officielle, liaisons de tuples et liste ordonnée `{name,dependencies}` des calculs, sans deuxième copie des valeurs.
@@ -110,7 +123,7 @@ Statut « retenue » = cohérente avec le cadrage et adoptée pour ce socle ; pa
 | D11 | Provisoire             | CLI puis pool local comme expériences FastAPI ; aucun service imposé.                                                                                                                                                        |
 | D12 | Retenue                | Contrat natif v1 de valeur rationnelle sur question 103 ; aliases et autres familles différés. ADR 004.                                                                                                                      |
 | D13 | Partiellement tranchée | Même domaine par défaut avec domaine imposé explicite par question confirmé sous D27 ; types numériques, tolérances et nouvelles familles pédagogiques restent ouverts.                                                      |
-| D14 | Ouverte                | Politique forme factorisée/réduite, cas triviaux et états de forme inconnue.                                                                                                                                                 |
+| D14 | Retenue sous profil M5 | Factorisation complète sur Q confirmée utilisateur ; formes, cas triviaux et inconnus explicités sous D40/ADR 012.                                                                                                           |
 | D15 | Retenue                | Profil scalaire v1 : point ou `{,}` natif, virgule nue refusée, placeholders rejetés avant parsing. ADR 005.                                                                                                                 |
 | D16 | Retenue                | Mulberry32 parameters-v1, seed uint32 canonique, ordre du tableau et singleton sans tirage figés. Snapshot au Lot 5. ADR 006.                                                                                                |
 | D17 | Ouverte                | Transport production, budgets de ressources, SLO et contraintes déploiement.                                                                                                                                                 |

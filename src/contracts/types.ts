@@ -138,6 +138,14 @@ export interface TextNormalization {
   ignoreCase?: boolean;
   unicodeNFC?: boolean;
 }
+/** Structural families checked on the original syntax, within a bounded profile. */
+export type AtomicForm =
+  'irreducible-fraction' | 'expanded' | 'reduced' | 'factorized';
+export type FormPolicy =
+  | 'value-only'
+  | AtomicForm
+  | { kind: 'accepted-forms'; anyOf: AtomicForm[] }
+  | { kind: 'accepted-latex'; latex: string[] };
 export interface GradingPolicy {
   domain:
     | 'rational'
@@ -150,7 +158,7 @@ export interface GradingPolicy {
     | 'inequality'
     | 'set'
     | 'intervals';
-  form: 'value-only';
+  form: FormPolicy;
   comparison?: NumericComparison;
   normalization?: TextNormalization;
   /** Explicit cofinite real comparison domain, never inferred from cancellation. */

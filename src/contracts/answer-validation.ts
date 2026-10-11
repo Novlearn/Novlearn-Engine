@@ -107,7 +107,82 @@ export function inspectQuestionAnswer(
     'comparisonDomain',
   ]);
   v.literal(p.domain, `${path}/policy/domain`, String(domain));
-  v.literal(p.form, `${path}/policy/form`, 'value-only');
+  const families = [
+    'irreducible-fraction',
+    'expanded',
+    'reduced',
+    'factorized',
+  ];
+  const inspectForm = (form: unknown, formPath: string): void => {
+    if (!families.some((f) => f === form)) {
+      v.issue(
+        formPath,
+        'value',
+        'Expected a supported structural form family.',
+      );
+      return;
+    }
+    if (
+      form === 'irreducible-fraction'
+        ? !['rational', 'real'].some((k) => k === kind)
+        : kind !== 'expression'
+    )
+      v.issue(
+        formPath,
+        'value',
+        'Form family is incompatible with the response profile.',
+      );
+  };
+  if (p.form !== 'value-only') {
+    if (typeof p.form === 'string') inspectForm(p.form, `${path}/policy/form`);
+    else {
+      const form = v.object(p.form, `${path}/policy/form`, [
+        'kind',
+        'anyOf',
+        'latex',
+      ]);
+      if (form.kind === 'accepted-latex') {
+        if (!['rational', 'real', 'expression'].some((k) => k === kind))
+          v.issue(
+            `${path}/policy/form`,
+            'value',
+            'Explicit forms require a finite numeric or polynomial response.',
+          );
+        const sources = v.list(form.latex, `${path}/policy/form/latex`, 16);
+        if (!sources.length)
+          v.issue(
+            `${path}/policy/form/latex`,
+            'value',
+            'At least one explicit form is required.',
+          );
+        sources.forEach((s, i) => v.text(s, `${path}/policy/form/latex/${i}`));
+        if (form.anyOf !== undefined)
+          v.issue(
+            `${path}/policy/form/anyOf`,
+            'unknown-field',
+            'Explicit forms do not carry family choices.',
+          );
+      } else {
+        v.literal(form.kind, `${path}/policy/form/kind`, 'accepted-forms');
+        const choices = v.list(form.anyOf, `${path}/policy/form/anyOf`, 4);
+        if (!choices.length || new Set(choices).size !== choices.length)
+          v.issue(
+            `${path}/policy/form/anyOf`,
+            'value',
+            'Expected one to four distinct form families.',
+          );
+        choices.forEach((f, i) =>
+          inspectForm(f, `${path}/policy/form/anyOf/${i}`),
+        );
+        if (form.latex !== undefined)
+          v.issue(
+            `${path}/policy/form/latex`,
+            'unknown-field',
+            'Family choices do not carry explicit forms.',
+          );
+      }
+    }
+  }
   if (p.comparison !== undefined) {
     if (!['rational', 'real', 'extended-real'].some((k) => k === kind))
       v.issue(

@@ -44,7 +44,8 @@ creux ou clés dangereuses. Champs inconnus refusés ; extensions privées conse
 | CorrectionResult       | schemaVersion:5, IDs, state/value/comparison/form/domain/proof/code ; aucune trace/attendu privé                          |
 
 Question : text/points, response, expectedLatex ou expectedTexts et GradingPolicy,
-cohérence format/kind/domaine contrôlée runtime ; forme value-only jusqu'au M5.
+cohérence format/kind/domaine contrôlée runtime ; FormPolicy M5 sur syntaxe
+originale, familles ou références explicites privées, selon [ADR 012](adr/012-pedagogical-forms.md).
 QCM : mode single/multiple, options avec IDs et contenu texte/LaTeX rationnel fermé,
 expectedOptionIds privés. Collisions exactes de valeurs/affichages refusées.
 Sections plates référencées par ID, indépendamment de leur position.
@@ -117,7 +118,7 @@ Parsing, évaluation, comparaison numérique, correction et preuve universelle d
 Pas de validateur public de snapshots arbitraires : projection ne prouve pas
 provenance. Serveur retrouve état officiel et refuse autorité client sur seed/
 politique/verdict. Accès, publication, persistance, points/progression et duels
-relèvent des applications. Formes au M5 et fonctions au M6 ; transport FastAPI/hôte
+relèvent des applications. Formes M5 bornées, fonctions au M6 ; transport FastAPI/hôte
 terminable mesurés au Lot 8, sans service imposé. Rendu React/MathLive séparé.
 
 Schéma 5 : structure/policies ; révision : identité pédagogique immuable ; moteur

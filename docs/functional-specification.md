@@ -3,7 +3,7 @@
 M3 livré : [ADR 010](adr/010-numeric-grading.md), questions numériques fermées et
 discrètes ; real/extended-real/text, soumissions latex/text/selection et correction
 officielle par IDs. Le profil rationnel/polynomial de génération reste distinct.
-Les familles algébriques, formes, fonctions connues, isolation et adaptation des
+Les fonctions connues, isolation et adaptation des
 lots suivants demeurent obligatoires pour la V1.
 
 Référence actuelle au 11 octobre 2026, après [consolidation](consolidation.md).
@@ -204,18 +204,18 @@ pas toutes les générations. Corps synchrone, aucun timeout préemptif démontr
 
 Correction cible : soumission structurée → association officielle → parsing → admissibilité et domaine → preuve de valeur → politique de réponse/forme → résultat. Recueillir les témoins de forme sur source/raw **avant réduction** ; statuer séparément sur la forme après preuve de valeur. Le serveur fournit format, attendu, tolérance et politique.
 
-| Famille / politique           | Règle cible et tests requis                                                                                                   | État / lot                               |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| Rationnel exact, forme libre  | Rapports exacts bornés ; 2/4 et 1/2 même valeur ; différences démontrées                                                      | IT M3, preuve Cortex exacte              |
-| Fraction irréductible         | Valeur distincte de forme ; 2/4 valeur correcte mais forme non conforme ; signes/dénominateur/notation définis                | Absent ; 7                               |
-| Polynôme rationnel univarié   | Admissibilité raw, degré/coefficient bornés et preuve exacte ; variable au dénominateur refusée/indéterminée                  | IT M4, coefficients rationnels exacts    |
-| Développée/réduite/factorisée | Définir exemples acceptés/refusés, facteurs triviaux et signes ; source/raw, pas simple égalité canonique                     | Absent ; 7 après arbitrages pédagogiques |
-| Approximation                 | A+R\|attendu\| officiel inclusif, chaînes décimales exactes ; identité ou bornes certifiées, frontière inconnue indéterminée  | IT M3 par profil, formes M5              |
-| Intervalle                    | Ordre des bornes, ouvert/fermé, infinis autorisés aux extrémités sans fermeture ; vide/unions à spécifier                     | IT M4, intervalles/unions sous preuve    |
-| Ensemble                      | Valeurs admises, ordre ignoré et doublons selon politique explicite ; vide/singleton ; preuve élément par élément             | IT M4, ordre/doublons ignorés            |
-| QCM simple/multiple           | Ensemble exact d'IDs, cardinal/mode ; options affichées indépendantes de leur position ; pas de crédit partiel implicite      | IT M3, erreurs et permutations testées   |
-| Texte                         | Variantes autorisées, comparaison stricte/normalisation explicitement configurée ; accents conservés, pas de sémantique libre | IT M3                                    |
-| Solutions equation/inequality | Type de réponse explicite, solutions degré0–2 ou ensembles connus, domaines respectés                                         | IT M4 ; complex general hors périmètre   |
+| Famille / politique           | Règle cible et tests requis                                                                                                   | État / lot                             |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| Rationnel exact, forme libre  | Rapports exacts bornés ; 2/4 et 1/2 même valeur ; différences démontrées                                                      | IT M3, preuve Cortex exacte            |
+| Fraction irréductible         | Valeur distincte de forme, entier/fraction littérale et PGCD exact, signes/groupements explicites                             | IT M5 validé ; ADR 012                 |
+| Polynôme rationnel univarié   | Admissibilité raw, degré/coefficient bornés et preuve exacte ; variable au dénominateur refusée/indéterminée                  | IT M4, coefficients rationnels exacts  |
+| Développée/réduite/factorisée | Syntaxe originale, monômes/degrés distincts, irréductibilité complète sur Q bornée ; inconnus conservés                       | IT M5 validé ; ADR 012                 |
+| Approximation                 | A+R\|attendu\| officiel inclusif, chaînes décimales exactes ; identité ou bornes certifiées, frontière inconnue indéterminée  | IT M3 par profil, formes M5            |
+| Intervalle                    | Ordre des bornes, ouvert/fermé, infinis autorisés aux extrémités sans fermeture ; vide/unions à spécifier                     | IT M4, intervalles/unions sous preuve  |
+| Ensemble                      | Valeurs admises, ordre ignoré et doublons selon politique explicite ; vide/singleton ; preuve élément par élément             | IT M4, ordre/doublons ignorés          |
+| QCM simple/multiple           | Ensemble exact d'IDs, cardinal/mode ; options affichées indépendantes de leur position ; pas de crédit partiel implicite      | IT M3, erreurs et permutations testées |
+| Texte                         | Variantes autorisées, comparaison stricte/normalisation explicitement configurée ; accents conservés, pas de sémantique libre | IT M3                                  |
+| Solutions equation/inequality | Type de réponse explicite, solutions degré0–2 ou ensembles connus, domaines respectés                                         | IT M4 ; complex general hors périmètre |
 
 Décision utilisateur : pour les expressions symboliques, **mêmes domaines par défaut** (M4 implémenté, ADR 011) ; une question peut imposer explicitement le domaine de comparaison. `x/x` et `1` ne sont donc pas identiques par défaut. Sous domaine imposé x≠0, le profil M4 peut démontrer l'équivalence ; elle doit aussi prouver que les deux expressions y sont définies. Cette décision ne crée aucun extracteur universel de domaine. Le premier correcteur rationnel/polynomial doit rester dans ses familles bornées, domaines inconnus → indétermination.
 
@@ -225,7 +225,7 @@ Une expression mathématiquement valable mais hors famille supportée n'est pas 
 
 ## 5. Évolutions et limites
 
-Formes, fonctions connues, isolation/transport, adaptation et adoption restent à livrer
+Fonctions connues, isolation/transport, adaptation et adoption restent à livrer
 selon la roadmap de mission. Pas de serveur, UI, SQL ou dépendance supplémentaire.
 Anciennes APIs
 expérimentales refusées et snapshots non rejouables ; futur adaptateur explicite.

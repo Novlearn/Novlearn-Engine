@@ -2,6 +2,8 @@ import type { ExerciseInstance, TextNormalization } from './contracts/types.js';
 import { validateSubmission } from './contracts/validation.js';
 import { compareNumeric, prepareNumeric } from './math/numeric.js';
 import { toleranceSyntax } from './contracts/answer-validation.js';
+import { checkForm } from './math/forms.js';
+import { prepareFormReferences } from './math/form-references.js';
 import {
   algebraKind,
   prepareAlgebra,
@@ -50,7 +52,7 @@ export interface CorrectionResult {
     | 'outside-tolerance'
     | 'unknown';
   comparison: 'exact' | 'approximate' | 'discrete' | 'none';
-  form: 'not-required' | 'unknown';
+  form: 'not-required' | 'conforming' | 'nonconforming' | 'unknown';
   domain: 'same' | 'different' | 'restricted' | 'unknown' | 'not-applicable';
   proof:
     | 'exact-number'
@@ -84,33 +86,49 @@ export function gradeAnswer(
   let comparison: CorrectionResult['comparison'] = 'none';
   let domain: CorrectionResult['domain'] = 'not-applicable';
   let valueOverride: CorrectionResult['value'] | undefined;
+  let form: CorrectionResult['form'] | undefined;
+  let formCode: string | undefined;
   const result = (
     state: CorrectionState,
     code: string,
     proof: CorrectionResult['proof'] = 'none',
-  ): CorrectionResult => ({
-    schemaVersion: 5,
-    instanceId: instance.instanceId,
-    questionId,
-    state,
-    value:
-      valueOverride ??
-      (state === 'correct'
-        ? comparison === 'approximate'
-          ? 'within-tolerance'
-          : 'equal'
-        : state === 'incorrect'
+  ): CorrectionResult => {
+    if (
+      state === 'correct' &&
+      (form === 'nonconforming' || form === 'unknown')
+    ) {
+      valueOverride =
+        comparison === 'approximate' ? 'within-tolerance' : 'equal';
+      state = form === 'nonconforming' ? 'incorrect' : 'indeterminate';
+      code = formCode ?? 'form-proof';
+    }
+    return {
+      schemaVersion: 5,
+      instanceId: instance.instanceId,
+      questionId,
+      state,
+      value:
+        valueOverride ??
+        (state === 'correct'
           ? comparison === 'approximate'
-            ? 'outside-tolerance'
-            : 'different'
+            ? 'within-tolerance'
+            : 'equal'
+          : state === 'incorrect'
+            ? comparison === 'approximate'
+              ? 'outside-tolerance'
+              : 'different'
+            : 'unknown'),
+      comparison,
+      domain,
+      form:
+        form ??
+        (state === 'correct' || state === 'incorrect'
+          ? 'not-required'
           : 'unknown'),
-    comparison,
-    domain,
-    form:
-      state === 'correct' || state === 'incorrect' ? 'not-required' : 'unknown',
-    proof,
-    code,
-  });
+      proof,
+      code,
+    };
+  };
   try {
     const checked = validateSubmission(submission);
     if (!checked.ok) return result('invalid', 'submission-contract');
@@ -160,8 +178,69 @@ export function gradeAnswer(
     )
       return result('invalid', 'answer-format');
     if (!s.answer.source.trim()) return result('invalid', 'empty-answer');
-    if (q.policy.form !== 'value-only')
+    const formPolicy = q.policy.form;
+    const knownForms = [
+      'irreducible-fraction',
+      'expanded',
+      'reduced',
+      'factorized',
+    ];
+    const choices =
+      typeof formPolicy === 'string'
+        ? [formPolicy]
+        : formPolicy?.kind === 'accepted-forms'
+          ? formPolicy.anyOf
+          : [];
+    if (
+      formPolicy !== 'value-only' &&
+      (typeof formPolicy !== 'object' ||
+        formPolicy.kind !== 'accepted-latex') &&
+      (!Array.isArray(choices) ||
+        choices.length < 1 ||
+        choices.length > 4 ||
+        new Set(choices).size !== choices.length ||
+        choices.some(
+          (f) =>
+            !knownForms.includes(f) ||
+            (f === 'irreducible-fraction'
+              ? !['rational', 'real'].includes(q.response.kind)
+              : q.response.kind !== 'expression'),
+        ))
+    )
       return result('error', 'official-policy');
+    if (
+      typeof formPolicy === 'object' &&
+      formPolicy.kind !== 'accepted-forms' &&
+      formPolicy.kind !== 'accepted-latex'
+    )
+      return result('error', 'official-policy');
+    if (
+      typeof formPolicy === 'object' &&
+      formPolicy.kind === 'accepted-latex' &&
+      (!Array.isArray(formPolicy.latex) ||
+        formPolicy.latex.length < 1 ||
+        formPolicy.latex.length > 16 ||
+        formPolicy.latex.some(
+          (s) => typeof s !== 'string' || !s.trim() || s.length > 4096,
+        ) ||
+        !['rational', 'real', 'expression'].includes(q.response.kind))
+    )
+      return result('error', 'official-policy');
+    let references: Parameters<typeof checkForm>[3] = [];
+    const inspectForm = (
+      syntax: Parameters<typeof checkForm>[1],
+      variable?: string,
+    ): void => {
+      if (formPolicy === 'value-only') return;
+      const witness = checkForm(formPolicy, syntax, variable, references);
+      form =
+        witness.conforms === true
+          ? 'conforming'
+          : witness.conforms === false
+            ? 'nonconforming'
+            : 'unknown';
+      formCode = witness.code;
+    };
     if (q.expected.kind === 'text') {
       if (
         q.response.kind !== 'text' ||
@@ -218,6 +297,16 @@ export function gradeAnswer(
         profile,
       );
       if (!expected.ok) return result('error', 'official-expected');
+      const forms = prepareFormReferences(
+        formPolicy,
+        q.expected.math.source,
+        { parameters, variables },
+        instance.generation.values,
+        variable,
+        true,
+      );
+      if (!forms.ok) return result('error', 'official-forms');
+      references = forms.value;
       const student = prepareAlgebra(
         s.answer.source,
         { variables },
@@ -231,6 +320,7 @@ export function gradeAnswer(
           mathFailureState(student.diagnostics),
           student.diagnostics[0]?.code ?? 'algebra-profile',
         );
+      inspectForm(student.value.math.syntax, variable);
       let imposed;
       if (q.policy.comparisonDomain !== undefined) {
         if (
@@ -380,6 +470,16 @@ export function gradeAnswer(
       q.response.kind === 'extended-real',
     );
     if (!expected.ok) return result('error', 'official-expected');
+    const forms = prepareFormReferences(
+      formPolicy,
+      q.expected.math.source,
+      { parameters: Object.keys(instance.generation.values) },
+      instance.generation.values,
+      'z',
+      false,
+    );
+    if (!forms.ok) return result('error', 'official-forms');
+    references = forms.value;
     if (q.expected.kind === 'rational') {
       const expectedRatio = expected.value.expression.evaluate().toRational();
       if (
@@ -417,6 +517,7 @@ export function gradeAnswer(
       return result('invalid', codes[0] ?? 'invalid-math');
     }
     comparison = q.policy.comparison?.mode ?? 'exact';
+    inspectForm(student.value.math.syntax);
     const verdict = compareNumeric(
       student.value,
       expected.value,

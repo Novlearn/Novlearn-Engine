@@ -1,5 +1,50 @@
 # État et transmission
 
+## M5 vérifié — formes pédagogiques (11 octobre 2026)
+
+M4 commité **1836dbb**, 1031 tests/20 fichiers et pack final validés. Main propre
+hors CDC utilisateur non suivi avant M5. README/progress/decisions et lot M5/7
+de roadmap relus, CDC 7.6 et mission M5 examinés. Root seul auteur, analyse
+initiale indépendante en lecture seule demandée.
+Implémenté : types FormPolicy/AtomicForm, validation des familles et alternatives,
+math/forms et form-references, grading valeur/forme séparées, certification de
+références à l'instanciation. ADR012/D40, README/architecture/spécification/matrice/
+roadmap/tests mis à jour. Root seul auteur de tous ces fichiers. Aucun changement
+de dépendance, CDC ou corpus. Exact/approché réutilise M3.
+
+Arbitrage utilisateur reçu : **factorisation complète sur ℚ, sous profil borné**.
+Unités non nulles, linéaires et constantes triviaux ; facteurs quadratiques par
+discriminant exact, degré≥3 inconnu. Syntaxe originale, inconnus indéterminés et
+politique officielle uniquement. Références privées 1–16 certifiées valeur/domaine.
+Revues indépendantes lecture seule : signe de Subtract et coefficient inconnu,
+puis doubles signes dans quotients/coefficients corrigés avec régressions.
+
+Ciblés réellement exécutés : 65/66 puis 215/215 PASS ; 87/87 puis 100/100 PASS.
+Ciblé élargi 387/388 (110,22s), seul timeout d'un oracle regroupant huit cas ;
+individualisés sans retirer d'assertion. Ciblé suivant **123/123 PASS (53,12s)**.
+Une relance après nouveaux signes : erreur de type reduce, corrigée avec type
+générique explicite et build PASS ; 132/133 (59,05s), fixture LaTeX mal groupée
+au dénominateur corrigée. **npm.cmd run check en cours**, build/typecheck/lint/
+format déjà PASS ; première suite complète interrompue après nouvelle correction
+des zéros signés signalée par revue. Reprise finale à lire dans .m5-check-final.log.
+SuiteM5 138 nouveaux tests. Diff-check et trois SHA256 immuables PASS.
+Une relance s'est arrêtée au format : log de pack nommé .json, en UTF16
+PowerShell ; renommé .m5-pack.log ignoré, puis check relancé. Pack provisoire
+code0 : 110 fichiers, 114777/567238 octets, SHA1
+192d589e6304320b65f89382a8ee3d733374f4df ; sera refait après corrections finales.
+**Dernier npm.cmd run check PASS : 1169 tests /21 fichiers, 389,34s**, build,
+typecheck, lint et format inclus. **Pack final PASS** code npm0 : 110 fichiers,
+114,9kB /567,6kB, SHA1 5a2c8bc8fff01a1c8b39fc2acf9372e230d6c1df. Sept exports
+runtime, racine d.ts sans boxed/ComputeEngine/NumericValue ; hashes CDC/corpus
+inchangés. Revues indépendantes finales favorables et cinq sondes zéro signées PASS.
+Deux sondes manuelles PGCD : panne → error ; inconnu → indeterminate/value equal,
+pas d'incorrect arbitraire. Ces sondes ne sont pas comptées comme tests Vitest.
+ci exécuté M0, dépendances inchangées. Aucun navigateur/CI distante/tarball installé/
+migration historique annoncé. Clôture par commit local
+`feat(grading): enforce original-syntax pedagogical forms`, puis M6.
+V1 non terminée : M6–M12 encore requis ; prochaine reprise cas du lycée connus,
+parsing/substitution de fonctions et correction bornée, sans solveur universel.
+
 ## Mission autonome V1 — M4 algèbre/domaines/collections vérifié (11 octobre 2026)
 
 Dernier lot committé avant M4 : M3 **5d45d77**, M2 d8a39a2, M1 8ef7de5, M0 e072a57.

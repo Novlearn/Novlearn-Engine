@@ -26,7 +26,9 @@ tests appropriés, check complet, pack, revue du diff et commit local. Aucun pus
 M0 validé au commit `e072a57`, M1 au commit `8ef7de5` (592 tests).
 M2 données d'éléments validé (666 tests). M3 correction numérique/discrète validé
 (817 tests et pack). M4 algèbre/ensembles/domaines vérifié : 1031 tests/20 fichiers,
-pack102 fichiers et revue favorable. Prochain lot M5 : formes pédagogiques.
+pack102 fichiers et revue favorable. M5 formes pédagogiques validé : 1169 tests/
+21 fichiers et pack110 ; factorisation complète sur ℚ confirmée par l'utilisateur.
+Prochain lot M6 : cas du lycée avec réponses attendues connues.
 Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en
@@ -76,7 +78,8 @@ Complément discret ciblé après instance QCM : comparaison exacte de l'ensembl
 ## Lot 7 — Formes pédagogiques minimales
 
 - Objectif : distinguer valeur correcte et forme demandée sur les familles nécessaires.
-- Fichiers : src/grading/forms, tests/grading/forms, docs/form-policies.md.
+- Fichiers livrés M5 : src/math/forms.ts, form-references.ts, tests/forms.test.ts,
+  contrats/grading/instantiation et ADR 012 ; 138 nouveaux tests et validation PASS.
 - Dépendances : Lots 3, 6 ; règles de forme approuvées.
 - Tâches : une politique à la fois, fraction irréductible puis développée/réduite si corpus requis ; définir factorisation triviale et ambiguïtés avant extension.
 - Tests obligatoires : 2/4 vs 1/2, 2(x+1), x+x+2, parenthèses/unité/signe, forme non reconnue → indeterminate.
@@ -84,6 +87,10 @@ Complément discret ciblé après instance QCM : comparaison exacte de l'ensembl
 - Risques : attentes pédagogiques divergentes et témoins perdus.
 - Livrables : politiques versionnées et verdict forme.
 - Passage : exemples acceptés/refusés validés pédagogiquement.
+
+M5 : factorisation complète sur ℚ confirmée utilisateur, unités/linéaires/zéro
+et degré ≥3 inconnus documentés dans D40/ADR 012. Alternatives de familles et
+références officielles certifiées en valeur/domaine. Aucun nouveau CAS/parseur.
 
 ## Lot 8 — Isolation et interface FastAPI
 

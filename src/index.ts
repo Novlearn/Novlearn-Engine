@@ -26,6 +26,8 @@ export type {
   NumericComparison,
   TextNormalization,
   GradingPolicy,
+  AtomicForm,
+  FormPolicy,
   ElementIdentity,
   OptionContent,
   KeyboardHint,

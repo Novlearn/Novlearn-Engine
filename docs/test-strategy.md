@@ -54,7 +54,14 @@ Suites tuples/computed nommées par comportement, aucun orchestrateur historique
 exercé. Les sept cas d'anciens profils devenus inadéquats sont remplacés par refus
 ou assertions positives du format canonique, avec tests de choix finis conservés.
 
-Tests futurs : formes M5, fonctions/cas connus
+M5 : forms.test.ts conserve la syntaxe originale, valeur et forme distinctes,
+régressions signe de soustraction/doubles signes dans quotients/coefficients,
+unités/zéro/décimaux, alternatives officielles certifiées et projection.
+Oracles PGCD entier et discriminant quadratique indépendants ; inconnus propagés.
+Les huit cas de l'oracle quadratique sont individualisés pour respecter le timeout
+Vitest sans prétendre interrompre Cortex. [Règles](adr/012-pedagogical-forms.md).
+
+Tests futurs : fonctions/cas connus
 M6, terminaison réelle/nettoyage/mémoire/concurrence au Lot 8, conversions exécutées
 au Lot 9, banc réel MathLive/HTTP falsifié/duel périmé au Lot 10, consommateur tarball
 et bundler au Lot 11. CI Linux/Windows configurée, aucune exécution distante

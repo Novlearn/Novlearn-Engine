@@ -124,7 +124,11 @@ Profil rationnel/polynomial : ratios/intermédiaires ≤10^9, AST 128 nœuds/pro
 16, degré ≤16, puissances entières 0–16 avec domaine contrôlé avant réduction.
 Un choix fini n'est pas automatiquement utilisable dans le profil exact.
 Parsing public selon [ADR 005](docs/adr/005-math-input.md), distinct du profil
-numérique fermé M3 ; profils algébriques M4 internes au correcteur, formes au M5.
+numérique fermé M3 ; profils algébriques M4 internes au correcteur.
+M5 : [formes pédagogiques](docs/adr/012-pedagogical-forms.md) sur syntaxe originale,
+fraction irréductible, développée/réduite et factorisation complète sur ℚ bornée.
+Familles alternatives ou références LaTeX privées certifiées ; valeur égale et
+forme non conforme restent distinctes. Forme inconnue conserve l'indétermination.
 Formules de présentation à domaine non vérifié,
 nombres de rendu rationnels exacts. Pas de solveur général, de dessin ou d'isolation
 préemptive. [Couverture réelle](docs/feature-coverage.md).
