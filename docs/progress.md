@@ -1,6 +1,31 @@
 # État et transmission
 
-## M12 validé — commit final à créer
+## Livraison V1 locale achevée — M12 commité
+
+Commit de livraison : **008d0ce78c93ae698f794180618d38402f87a216**.
+Les lots M0 à M12 sont terminés. Les 46 exigences P0/P1 de la matrice CDC
+sont validées sur les profils documentés. Aucun arbitrage V1 ne reste ouvert.
+Le CDC officiel reste intact et non suivi par Git ; aucun autre fichier de
+travail n'est en attente après l'enregistrement documentaire de cette livraison.
+Les sections suivantes conservent les preuves et états intermédiaires historiques.
+
+| Lot | Commit  | Résultat livré                                                 |
+| --- | ------- | -------------------------------------------------------------- |
+| M0  | e072a57 | Audit du socle canonique et alignement CDC                     |
+| M1  | 8ef7de5 | Génération déterministe et paramètres descriptifs              |
+| M2  | d8a39a2 | Données typées des éléments avancés                            |
+| M3  | 5d45d77 | Correction numérique et discrète                               |
+| M4  | 1836dbb | Algèbre, domaines et collections                               |
+| M5  | b64ae3d | Formes pédagogiques sur syntaxe originale                      |
+| M6  | 066bca8 | Fonctions du lycée et réponses connues                         |
+| M7  | 2c970d0 | Compatibilité MathLive réellement observée                     |
+| M8  | 6f62be7 | Hôte Node isolé et borné                                       |
+| M9  | 00e9a1a | Transport privé Python/FastAPI et isolation Linux              |
+| M10 | 63e43f7 | Adaptation exécutée des huit historiques                       |
+| M11 | 41a8ef2 | Parcours réel MathLive/FastAPI, reprise et duel                |
+| M12 | 008d0ce | Artefacts consommés, persistance/rejeu/rollback et audit final |
+
+### Vérifications finales
 
 Check complet Linux **1501PASS/32WindowsSKIP**,28fichiersPASS/1SKIP(29),
 **478,61s**, exit0. Build/types/lint/format inclus ; root types/lint/diff PASS.
@@ -25,8 +50,8 @@ L'hôte de l'archive Linux installée a également exécuté un vrai parseMathIn
 sous 384 MiB/pids64 : 1744,509 ms, pic cgroup partagé 191963136 octets, PASS.
 CDC SHAFFB97D…59AE et deuxoriginaux SHA0F4D…C3AE inchangés ; golden canonical
 `git diff e072a57 HEAD` vide. Pas de CI distante, publication, déploiement ou SQL.
-Reste uniquement revue du diff/stage explicite/commit local et enregistrement du
-hash final. Verdict prêt : V1locale sur les profils documentés, limites dansrelease.
+Revue du diff, stage explicite et commit local effectués. Verdict : V1 locale
+livrée sur les profils documentés ; limites et adoption dans [release](release.md).
 
 ### Travail M12 et preuves de préparation conservés
 
@@ -74,9 +99,10 @@ vérifiés git ls-remote, smoke ajouté, aucuneCIdistante exécutée. Types/lint
 
 Documentationrelease/adoption/audit etmatrice pointparpoint achevées ;
 consommateurLinux/checkcomplet/pack/revues terminés comme indiqué ci-dessus.
-Commit final encore à créer. Aucunprocessuscommandesactif actuellement.
+Cette préparation a abouti au commit M12 indiqué en tête de ce document.
+Aucun processus de commande ou serveur de banc encore actif.
 
-## M11 validé — commit à créer
+## Archive M11 — validation avant commit 41a8ef2
 
 Vérification complète Linux `npm run check` **1494PASS/32WindowsSKIP**,
 27fichiersPASS/1SKIP(28), **505,23s**, exit0 ; build/types/lint/format inclus.

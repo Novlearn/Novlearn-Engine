@@ -49,8 +49,8 @@ checkglobal1494PASS/32WindowsSKIP505,23s et pack153 ; commit41a8ef2.
 M12 validé : consommateurstarballs Windows/Linux/TS/bundle/navigateur réels,
 enveloppepersistante etdeuxarchives pourrejeu/rollback avec11corruptionsrefusées.
 Check1501PASS/32WindowsSKIP478,61s,13Python et12contrôlesOSLinux PASS, pack157.
-Audit48lignes/46P0P1 validées, profils/limites/adoption explicites ; commit final
-à enregistrer. Aucun lot futur requis pour la V1 locale, P2 et production séparés.
+Audit48lignes/46P0P1 validées, profils/limites/adoption explicites ; commit008d0ce.
+Aucun lot futur requis pour la V1 locale, P2 et production séparés.
 Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en
