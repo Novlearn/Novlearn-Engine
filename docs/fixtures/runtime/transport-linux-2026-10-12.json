@@ -1,0 +1,355 @@
+{
+  "reportVersion": 1,
+  "date": "2026-10-12T07:41:35+0000",
+  "python": "3.11.2",
+  "os": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+  "processor": "",
+  "node": "v24.19.0",
+  "cortex": "0.151.0",
+  "memoryMiB": 384,
+  "heapMiB": 128,
+  "mathDeadlineMs": 5000,
+  "workload": "parseMathInput school-free polynomial x^2+2x+1; fresh worker each time",
+  "percentiles": "nearest rank, small local sample; not a production SLO",
+  "scenarios": [
+    {
+      "persistentSupervisor": false,
+      "size": 1,
+      "count": 20,
+      "durationSeconds": 26.999330340999904,
+      "requestsPerSecond": 0.7407591131854462,
+      "p50Ms": 1334.2385099999774,
+      "p95Ms": 1468.7020010001106,
+      "maxScopeCgroupBytes": 91746304,
+      "maxSupervisorRssBytes": 53579776,
+      "samples": [
+        {
+          "elapsedMs": 1299.3644270000004,
+          "peakCgroupBytes": 90398720,
+          "supervisorRssBytes": 53334016
+        },
+        {
+          "elapsedMs": 1271.2088060000042,
+          "peakCgroupBytes": 90427392,
+          "supervisorRssBytes": 53526528
+        },
+        {
+          "elapsedMs": 1322.5374460000694,
+          "peakCgroupBytes": 90890240,
+          "supervisorRssBytes": 53448704
+        },
+        {
+          "elapsedMs": 1331.1400269999467,
+          "peakCgroupBytes": 90890240,
+          "supervisorRssBytes": 53329920
+        },
+        {
+          "elapsedMs": 1342.3389559998213,
+          "peakCgroupBytes": 90890240,
+          "supervisorRssBytes": 53252096
+        },
+        {
+          "elapsedMs": 1342.2195929999816,
+          "peakCgroupBytes": 90988544,
+          "supervisorRssBytes": 53297152
+        },
+        {
+          "elapsedMs": 1334.2385099999774,
+          "peakCgroupBytes": 91496448,
+          "supervisorRssBytes": 53309440
+        },
+        {
+          "elapsedMs": 1468.7020010001106,
+          "peakCgroupBytes": 91496448,
+          "supervisorRssBytes": 53252096
+        },
+        {
+          "elapsedMs": 1370.2970850001748,
+          "peakCgroupBytes": 91496448,
+          "supervisorRssBytes": 53415936
+        },
+        {
+          "elapsedMs": 1461.8317980000484,
+          "peakCgroupBytes": 91496448,
+          "supervisorRssBytes": 53579776
+        },
+        {
+          "elapsedMs": 1406.1455080000087,
+          "peakCgroupBytes": 91496448,
+          "supervisorRssBytes": 53415936
+        },
+        {
+          "elapsedMs": 1353.0740270000479,
+          "peakCgroupBytes": 91631616,
+          "supervisorRssBytes": 53317632
+        },
+        {
+          "elapsedMs": 1344.5777809999981,
+          "peakCgroupBytes": 91631616,
+          "supervisorRssBytes": 53284864
+        },
+        {
+          "elapsedMs": 1210.064998000007,
+          "peakCgroupBytes": 91631616,
+          "supervisorRssBytes": 53182464
+        },
+        {
+          "elapsedMs": 1542.053438000039,
+          "peakCgroupBytes": 91631616,
+          "supervisorRssBytes": 53452800
+        },
+        {
+          "elapsedMs": 1312.3519160001251,
+          "peakCgroupBytes": 91631616,
+          "supervisorRssBytes": 53407744
+        },
+        {
+          "elapsedMs": 1314.716886999804,
+          "peakCgroupBytes": 91746304,
+          "supervisorRssBytes": 53526528
+        },
+        {
+          "elapsedMs": 1348.1021820000478,
+          "peakCgroupBytes": 91746304,
+          "supervisorRssBytes": 53276672
+        },
+        {
+          "elapsedMs": 1294.6637789998476,
+          "peakCgroupBytes": 91746304,
+          "supervisorRssBytes": 53268480
+        },
+        {
+          "elapsedMs": 1327.9935400000795,
+          "peakCgroupBytes": 91746304,
+          "supervisorRssBytes": 53149696
+        }
+      ]
+    },
+    {
+      "persistentSupervisor": true,
+      "size": 1,
+      "count": 20,
+      "durationSeconds": 24.876504362000105,
+      "requestsPerSecond": 0.8039714788284656,
+      "p50Ms": 1238.6190540000825,
+      "p95Ms": 1280.9999359999438,
+      "maxScopeCgroupBytes": 93712384,
+      "maxSupervisorRssBytes": 55578624,
+      "samples": [
+        {
+          "elapsedMs": 1137.67250900014,
+          "peakCgroupBytes": 91746304,
+          "supervisorRssBytes": 53399552
+        },
+        {
+          "elapsedMs": 1280.9999359999438,
+          "peakCgroupBytes": 91746304,
+          "supervisorRssBytes": 53661696
+        },
+        {
+          "elapsedMs": 1194.5499930000096,
+          "peakCgroupBytes": 91746304,
+          "supervisorRssBytes": 53792768
+        },
+        {
+          "elapsedMs": 1212.7944010001102,
+          "peakCgroupBytes": 91746304,
+          "supervisorRssBytes": 53792768
+        },
+        {
+          "elapsedMs": 1253.5321079999449,
+          "peakCgroupBytes": 92610560,
+          "supervisorRssBytes": 54317056
+        },
+        {
+          "elapsedMs": 1238.6190540000825,
+          "peakCgroupBytes": 92901376,
+          "supervisorRssBytes": 54710272
+        },
+        {
+          "elapsedMs": 1262.6383209999403,
+          "peakCgroupBytes": 93036544,
+          "supervisorRssBytes": 54710272
+        },
+        {
+          "elapsedMs": 1211.0751230000005,
+          "peakCgroupBytes": 93036544,
+          "supervisorRssBytes": 54841344
+        },
+        {
+          "elapsedMs": 1250.4067039999427,
+          "peakCgroupBytes": 93036544,
+          "supervisorRssBytes": 54841344
+        },
+        {
+          "elapsedMs": 1263.4413020000466,
+          "peakCgroupBytes": 93036544,
+          "supervisorRssBytes": 54841344
+        },
+        {
+          "elapsedMs": 1208.8329939999767,
+          "peakCgroupBytes": 93036544,
+          "supervisorRssBytes": 54841344
+        },
+        {
+          "elapsedMs": 1255.6354700000156,
+          "peakCgroupBytes": 93036544,
+          "supervisorRssBytes": 54841344
+        },
+        {
+          "elapsedMs": 1225.5328969999937,
+          "peakCgroupBytes": 93036544,
+          "supervisorRssBytes": 54841344
+        },
+        {
+          "elapsedMs": 1247.215664000123,
+          "peakCgroupBytes": 93036544,
+          "supervisorRssBytes": 55103488
+        },
+        {
+          "elapsedMs": 1215.6879730000583,
+          "peakCgroupBytes": 93241344,
+          "supervisorRssBytes": 55103488
+        },
+        {
+          "elapsedMs": 1233.827847999919,
+          "peakCgroupBytes": 93241344,
+          "supervisorRssBytes": 55103488
+        },
+        {
+          "elapsedMs": 1275.462576999871,
+          "peakCgroupBytes": 93241344,
+          "supervisorRssBytes": 55103488
+        },
+        {
+          "elapsedMs": 1435.1423430000523,
+          "peakCgroupBytes": 93241344,
+          "supervisorRssBytes": 55578624
+        },
+        {
+          "elapsedMs": 1231.4083129999744,
+          "peakCgroupBytes": 93712384,
+          "supervisorRssBytes": 55578624
+        },
+        {
+          "elapsedMs": 1240.247755999917,
+          "peakCgroupBytes": 93712384,
+          "supervisorRssBytes": 55578624
+        }
+      ]
+    },
+    {
+      "persistentSupervisor": true,
+      "size": 2,
+      "count": 20,
+      "durationSeconds": 11.443497254000022,
+      "requestsPerSecond": 1.7477174639954662,
+      "p50Ms": 1133.900722999897,
+      "p95Ms": 1211.71110399996,
+      "maxScopeCgroupBytes": 170328064,
+      "maxSupervisorRssBytes": 54521856,
+      "samples": [
+        {
+          "elapsedMs": 1097.4238660000992,
+          "peakCgroupBytes": 167796736,
+          "supervisorRssBytes": 53018624
+        },
+        {
+          "elapsedMs": 1097.403598000028,
+          "peakCgroupBytes": 167796736,
+          "supervisorRssBytes": 53080064
+        },
+        {
+          "elapsedMs": 1205.2208640000117,
+          "peakCgroupBytes": 167796736,
+          "supervisorRssBytes": 53149696
+        },
+        {
+          "elapsedMs": 1211.71110399996,
+          "peakCgroupBytes": 167796736,
+          "supervisorRssBytes": 53080064
+        },
+        {
+          "elapsedMs": 1100.2418350001335,
+          "peakCgroupBytes": 167796736,
+          "supervisorRssBytes": 53280768
+        },
+        {
+          "elapsedMs": 1100.6371089999902,
+          "peakCgroupBytes": 167796736,
+          "supervisorRssBytes": 53211136
+        },
+        {
+          "elapsedMs": 1088.234593000152,
+          "peakCgroupBytes": 167817216,
+          "supervisorRssBytes": 53473280
+        },
+        {
+          "elapsedMs": 1091.0278759999983,
+          "peakCgroupBytes": 167817216,
+          "supervisorRssBytes": 53411840
+        },
+        {
+          "elapsedMs": 1112.4857290001273,
+          "peakCgroupBytes": 169201664,
+          "supervisorRssBytes": 53997568
+        },
+        {
+          "elapsedMs": 1137.9915669999718,
+          "peakCgroupBytes": 169201664,
+          "supervisorRssBytes": 54095872
+        },
+        {
+          "elapsedMs": 1179.6098759998586,
+          "peakCgroupBytes": 169242624,
+          "supervisorRssBytes": 54259712
+        },
+        {
+          "elapsedMs": 1182.838133000132,
+          "peakCgroupBytes": 169242624,
+          "supervisorRssBytes": 54358016
+        },
+        {
+          "elapsedMs": 1173.8572589999876,
+          "peakCgroupBytes": 169242624,
+          "supervisorRssBytes": 54358016
+        },
+        {
+          "elapsedMs": 1174.716589999889,
+          "peakCgroupBytes": 169242624,
+          "supervisorRssBytes": 54259712
+        },
+        {
+          "elapsedMs": 1133.900722999897,
+          "peakCgroupBytes": 170328064,
+          "supervisorRssBytes": 54390784
+        },
+        {
+          "elapsedMs": 1141.6706420000082,
+          "peakCgroupBytes": 170328064,
+          "supervisorRssBytes": 54489088
+        },
+        {
+          "elapsedMs": 1207.9851999999391,
+          "peakCgroupBytes": 170328064,
+          "supervisorRssBytes": 54521856
+        },
+        {
+          "elapsedMs": 1222.8525069999705,
+          "peakCgroupBytes": 170328064,
+          "supervisorRssBytes": 54489088
+        },
+        {
+          "elapsedMs": 1074.6857230001297,
+          "peakCgroupBytes": 170328064,
+          "supervisorRssBytes": 54521856
+        },
+        {
+          "elapsedMs": 1080.0018669999645,
+          "peakCgroupBytes": 170328064,
+          "supervisorRssBytes": 54489088
+        }
+      ]
+    }
+  ]
+}

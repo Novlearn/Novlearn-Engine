@@ -1,5 +1,14 @@
 # Stratégie de vérification
 
+M9 : 10 tests CLI Vitest, 7 tests Python/FastAPI autonomes, tools/check-linux.mjs
+avec 12 contrôles sous scope cgroupv2 borné. Quotas absents/swap autorisé refusés
+avant PID worker ; Linux sans privilèges, réseau coupé, mounts readonly et cache
+éphémère. Interruption synchrone sous parent bloqué, mémoire via compteurs OS,
+fork bloqué, cleanup parent mort et récupération après heap/crash/protocole.
+Les tests propres à Windows sont distincts ; politique OS du poste refuse
+actuellement les binaires reconstruits. Aucun skip ajouté pour masquer ce refus.
+Suite package Linux et checks Windows disponibles rapportés séparément.
+
 M7 : [banc MathLive réel](mathlive-compatibility.md), 45 observations archivées,
 90 corrections depuis deux formats et 35 tests de provenance/régression. Clavier,
 collage et clavier virtuel effectivement utilisés, séparés des insertions API.

@@ -3,6 +3,8 @@ node_modules/
 dist/
 coverage/
 *.tsbuildinfo
+__pycache__/
+*.pyc
 *.tgz
 
 # Local caches, logs and test artifacts

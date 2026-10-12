@@ -5,7 +5,12 @@ distinct du cœur. Processus neuf et quota OS Windows10+/x64, deadline externe e
 watchdog natif, cleanup avant slot libéré. Protocole backend privé avec métriques,
 sans autorité navigateur. Types Node dev seulement ; aucun import Node dans la
 racine portable, sept exports runtime inchangés. Autres hôtes refusés sans quota OS
-validé. Transport applicatif/mesures M9 et scénarios M11 restent nécessaires.
+validé. M9 : [ADR015](adr/015-private-python-transport.md), CLI/bridge privé Python
+et exemple FastAPI avec provenance/TTL ; scope cgroupv2 Linux existant borné,
+quota partagé et peakCgroupBytes distinct du commit Windows. Contrôle OS Windows
+du poste refuse actuellement le lanceur reconstruit ; aucun contournement.
+M9 vérifié sous ce profil Linux ; scénarios M11 et adoption applicative restent
+nécessaires. Le résultat et le slot attendent cleanup, sans SLO strict de fermeture.
 
 Extension M6 : [ADR 013](adr/013-school-known-answers.md). Profil public de lecture
 school-latex-v1, limites avec binding Cortex et mode display explicite des

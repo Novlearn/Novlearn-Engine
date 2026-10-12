@@ -31,6 +31,14 @@ await cp(
   new URL('../dist/node-host/windows/', import.meta.url),
   { recursive: true },
 );
+await mkdir(new URL('../dist/node-host/linux/', import.meta.url), {
+  recursive: true,
+});
+await cp(
+  new URL('../runtime/linux/', import.meta.url),
+  new URL('../dist/node-host/linux/', import.meta.url),
+  { recursive: true },
+);
 if (process.platform === 'win32' && process.arch === 'x64') {
   const compiler = join(
     process.env.SystemRoot ?? 'C:/Windows',

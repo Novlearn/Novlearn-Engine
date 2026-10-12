@@ -8,7 +8,7 @@ export type {
   NodeHost,
 } from './executor.js';
 export type { EngineRequest, EngineOperation } from './protocol.js';
-/** Windows 10+/x64 OS quota adapter. Other platforms fail closed, never run unbounded. */
+/** Windows Job / Linux x64 bounded-cgroup adapter. Missing OS quotas fail closed. */
 export function createNodeHost(limits: Partial<HostLimits> = {}): NodeHost {
   return createExecutor(new URL('./worker.js', import.meta.url), limits);
 }

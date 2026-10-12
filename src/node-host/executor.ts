@@ -38,6 +38,8 @@ export interface HostMetrics {
   queuedMs: number;
   workerPid?: number;
   peakCommittedBytes?: number;
+  /** Linux scope-wide cgroup charge peak, including supervisor/other workers. */
+  peakCgroupBytes?: number;
 }
 export type HostResult = { requestId: string | null; metrics: HostMetrics } & (
   { ok: true; value: JsonValue } | { ok: false; error: HostError }
@@ -111,10 +113,16 @@ export function createExecutor(
   options: Partial<HostLimits> = {},
 ): NodeHost {
   const quota = limits(options);
-  const launcher = fileURLToPath(new URL('./windows/job.exe', import.meta.url));
-  let available = process.platform === 'win32' && process.arch === 'x64';
+  const linux = process.platform === 'linux' && process.arch === 'x64';
+  const launcher = linux
+    ? '/usr/bin/python3'
+    : fileURLToPath(new URL('./windows/job.exe', import.meta.url));
+  const script = fileURLToPath(new URL('./linux/job.py', import.meta.url));
+  let available =
+    linux || (process.platform === 'win32' && process.arch === 'x64');
   try {
     accessSync(launcher);
+    if (linux) accessSync(script);
   } catch {
     available = false;
   }
@@ -175,6 +183,7 @@ export function createExecutor(
       child = spawn(
         launcher,
         [
+          ...(linux ? [script] : []),
           process.execPath,
           fileURLToPath(worker),
           String(quota.memoryMiB * 1048576),
@@ -283,13 +292,25 @@ export function createExecutor(
             finished.runtime !== 1 ||
             finished.event !== 'finished' ||
             finished.pid !== work.pid ||
-            !Number.isSafeInteger(finished.peakCommittedBytes) ||
-            (finished.peakCommittedBytes as number) < 0 ||
-            (finished.peakCommittedBytes as number) > quota.memoryMiB * 1048576
+            !Number.isSafeInteger(
+              finished[linux ? 'peakCgroupBytes' : 'peakCommittedBytes'],
+            ) ||
+            (finished[
+              linux ? 'peakCgroupBytes' : 'peakCommittedBytes'
+            ] as number) < 0
           )
             throw new Error();
-          measurement.peakCommittedBytes =
-            finished.peakCommittedBytes as number;
+          if (linux)
+            measurement.peakCgroupBytes = finished.peakCgroupBytes as number;
+          else {
+            if (
+              (finished.peakCommittedBytes as number) >
+              quota.memoryMiB * 1048576
+            )
+              throw new Error();
+            measurement.peakCommittedBytes =
+              finished.peakCommittedBytes as number;
+          }
           if (code !== 0 || finished.exitCode !== 0) result = fail('crash');
           else if (
             !object(response) ||

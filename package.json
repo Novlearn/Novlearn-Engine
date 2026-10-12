@@ -24,6 +24,9 @@
     "README.md"
   ],
   "sideEffects": false,
+  "bin": {
+    "novlearn-engine": "./dist/node-host/cli.js"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node tools/copy-runtime.mjs",
     "typecheck": "tsc --noEmit",

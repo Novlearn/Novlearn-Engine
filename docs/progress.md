@@ -1,5 +1,89 @@
 # État et transmission
 
+## M9 vérifié — transport privé Python/FastAPI et profil Linux
+
+M8 commité **6f62be7**, 22 fichiers, check1405/24 et pack128 PASS ; arbre propre
+hors CDC avant M9. README/progress/decisions/roadmap8 et CDC10.1/12.3 relus.
+Root seul auteur ; analyses initiales et revues indépendantes readonly.
+[ADR015](adr/015-private-python-transport.md) regroupe protocole, preuves et limites.
+Sources voisines lecture seule : backend Linux/systemd, Python3.11+, FastAPI0.128.0,
+Node20 configuré (incompatible24.19.x), pas de pont Node observé. Aucune source
+voisine, secret, configuration système/backend/production modifié.
+
+Implémentation vérifiée sous profil Linux : CLI UTF8 strict/version1, bin novlearn-engine,
+bridge asyncio pool borné/annulation/corruption/reprise et exemple FastAPI depuis
+registre/snapshot officiel, ownership/TTL, source/raw et projection communes.
+7 tests Python Windows PASS9,809s avant dernier préflight ; 10 tests CLI PASS2,63s.
+Double annulation/close partagé et JSON1e999/versionbool/errorlist corrigés et
+revus indépendamment. Lint/typecheck/build intermédiaires PASS. Cache Python
+officiel3.13.12 local vérifié SHA25676f238f606250c87c6beac75dccd35ee99070a13490555936abb6cb64ecce3d0,
+FastAPI0.128.0/Pydantic2.12.0/httpx0.27.0 installés seulement dans .cache.
+Tests Python nécessitent ici exécution escaladée (cache installé non lisible sous
+runner restreint) ; jamais réussite annoncée pour import refusé. Caches Python
+ignorés par Git ; .cache explicitement ignoré par eslint/prettier après EPERM.
+
+Benchmark60appels au repos : froid1slot p50/p95723/993ms,1,31req/s ; superviseur
+persistant1slot612/806ms,1,53req/s ; deux859/1211ms,2,13req/s. Workers tous neufs,
+deux slots préchauffés ; échantillons dans docs/fixtures/runtime, ADR015.
+Premier essai pollué par téléchargement Docker conservé au cache, non retenu.
+Ces mesures ne sont pas un SLO général ni une preuve production/Linux.
+
+Extension Linux en validation : runtime/linux/job.py stdlib, executor métrique
+peakCgroupBytes distincte du commit Windows, build copie script. Cgroupv2 existant
+borné obligatoire ; swap0/pids<=64, refus avant calcul sinon. Fork dans scope
+hérité, parent-death avec race check/barrière, watchdog indépendant, seccomp fork
+bloqué/threads autorisés. Premier parsing vrai PASS1,117s/pic77,67MB. Shutdown
+Python daemonstdin fatal corrigé par os._exit après nettoyage/flush.
+Docker Desktop déjà installé démarré pour banc local ; image officielle Node
+24.19.0-bookworm digest4196d66a565c6f195728d9952f161f4adfe2ad753052a08b7ec7f1c5a6bda42b.
+Conteneurs éphémères --init/nonroot/readonly/networknone/capdropall/nonewprivileges,
+384MiB sans swap/pids32 ; aucun service applicatif déployé.
+tools/check-linux.mjs : **12 contrôles PASS**, dont watchdog sous superviseur
+bloqué, fork interdit et PID après parent mort absent. Quotas absents/swap permis
+refusés avant worker. Preuve mémoire : pic402653184octets, max38/oom1/oom_kill1,
+crash935ms lors du dernier passage puis requête saine. Autres passages sous
+pression kernel : timeout demandé10s, nettoyage18,25s ; aucun SLO strict de
+réponse annoncé. Heap fatal V8 observé puis watchdog5s, PID supprimé/reprise saine.
+Risques reapedPID/x32 corrigés, préflight Python3.11/memory.peak/Node sans
+setid-capabilities ajoutés ; source relue indépendamment et 12 contrôles repassés.
+RLIMIT_CORE0 ; core dumper externe OS non certifié. Essai RLIMIT_DATA abandonné
+(réservation virtuelle V8 refusée), jamais substitué au cgroup obligatoire.
+
+Reprise : contrôle d'application Windows bloque les exécutables reconstruits,
+confirmation PowerShell explicite ; **3 échecs/1 erreur sur7 tests Python**.
+Aucune politique changée ni contournement. Les mesures/tests Windows précédents
+décrivent leur contexte historique, pas la qualification actuelle de ce poste.
+Copie isolée Linux de sources dans .cache/m9-linux-validation, npm11.17.0
+ci132packages PASS, `npm run check` PASS **1383 tests/24 fichiers**,
+**32 tests Windows non exécutés** (30 hôte +2CLI, conditions préexistantes),445,99s.
+Build/types/lint/format compris ; aucune CI distante. Les derniers gardes natifs
+ont ensuite les 12 checks Linux PASS, code mathématique inchangé.
+Python/FastAPI Linux3.11.2 **7 tests PASS18,362s** après correctif OverflowError
+sur métrique JSON10^400 (protocol-error) ; priorité source/authority/annulation
+double/close concurrent et reprise prouvées. Build/types/lint/format locaux PASS
+après revue ; format exécuté escaladé, cache toujours EPERM en runner restreint.
+Benchmark Linux60appels au repos : froid1slot p50/p951334/1469ms,0,74req/s ;
+persistant1slot1239/1281ms,0,80req/s ; deux1134/1212ms,1,75req/s.
+Pics du scope complet91,75/93,71/170,33MB (pas commit workerWindows) ; échantillons
+bruts archivés. Pool2 retenu, pas de worker math/Cortex persistant ni HTTP Node.
+Revues finales favorables pour profil Linux, six cas BPF et ABI étrangère
+contrôlés par revue readonly ; délais de cleanup/Windows explicitement exclus
+des garanties non démontrées. Core toujours sept exports ; node-host createNodeHost.
+
+Fichiers en cours : .gitignore/.prettierignore/eslint.config, package/lock,
+src/node-host/{cli,executor}, runtime/linux/job.py, tools/{copy-runtime,check-linux,
+bench-transport}, examples/python, tests CLI/integration/fixture transport,
+ADR015/benchmark et ce bilan. CDC/corpus toujours exclus/intacts.
+Pack final `npm.cmd pack --dry-run` PASS npmExit0 : **133 fichiers,
+142,5kB /665,6kB**, SHA1 9ba6ee1f8965f3414889df3cb06414cd728f5db8.
+README/package/dist uniquement, bin CLI et scriptLinux inclus ; aucun corpus,
+fixture de chaos, exemple/framework ou benchmark distribué. Sept exports cœur,
+createNodeHost seul sous-chemin, déclaration racine sans boxed/builtinNode ;
+format/diff finaux PASS. CDC/deux copies historiques SHA-256 inchangés.
+Reste : commit local M9, puis M10–M12.
+Moteur V1 non terminé ; ni serveurNovlearn/Node20/unité systemd actuelle qualifiés,
+ni tarball installé dans consommateur externe (M12), migration ou UI annoncés.
+
 ## M8 vérifié — isolation effective des calculs (12 octobre 2026)
 
 M7 commité **2c970d0**, 18 fichiers, 125 nouveaux tests ; check1375/23 et pack110

@@ -20,6 +20,18 @@ pédagogiques historiques demandent une revue humaine avant conversion fidèle.
 Une analyse indépendante initiale en lecture seule a confirmé l'architecture
 unique et les manques de correction/éléments/isolation ; aucun fichier délégué.
 
+## D44 — M9 vérifié : transport privé et profil Linux observé
+
+[ADR015](adr/015-private-python-transport.md). CLI versionnée sans HTTP Node,
+bridge Python borné et exemple FastAPI autonome. Définition/seed/instance officielles
+choisies côté backend ; client soumet uniquement sa question/réponse. Pool conserve
+le superviseur, jamais le contexte mathématique ; mesures locales cold/warm explicites.
+Lecture seule backend Linux/systemd justifie lanceur Linux stdlib sous cgroupv2
+déjà borné, sans modification de production ou dépendance mathématique.
+7 tests PythonLinux/12 checks OS/check1383PASS avec32Windows non exécutés et
+bench60 valident ce profil. Cleanup sous pression sans SLO strict, Windows actuel
+refusé par AppControl ; aucune qualification de l'unité/Node20 de production.
+
 ## D43 — M8 : processus neuf et quota OS hors cœur portable
 
 [ADR014](adr/014-isolated-node-host.md). Sous-chemin node-host distinct, JSON

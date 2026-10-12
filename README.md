@@ -142,9 +142,14 @@ nombres de rendu rationnels exacts. Pas de solveur général ou de dessin.
 Hôte optionnel [M8](docs/adr/014-isolated-node-host.md), sous-chemin `./node-host` :
 processus neuf, quota mémoire OS et deadline effective, concurrence/file/JSON
 bornés, crash/annulation/nettoyage. Windows10+/x64, Node24.19.x et .NET Framework4.x
-validés localement ; autres profils hôte refusés explicitement. Le cœur portable
-et ses sept exports sont indépendants de ce lanceur. Canal backend privé,
-aucun serveur HTTP ou snapshot client fiable ; transport Python/FastAPI au M9.
+mesurés M8 lorsque la politique OS autorise le lanceur ; le contrôle d'application
+du poste refuse désormais les binaires reconstruits, avec résultat unavailable.
+Profil Linuxx86_64/Python3.11+ sous cgroupv2 déjà borné, quotas absents refusés.
+Le cœur portable et ses sept exports sont indépendants de ces lanceurs.
+[Transport privé M9](docs/adr/015-private-python-transport.md) : CLI JSON versionnée
+`novlearn-engine`, exemple Python/FastAPI dans examples/python, pool borné et
+snapshot officiel choisi côté serveur. Aucun serveur HTTP Node. M9 vérifié sous profil Linux,
+limites du scope mémoire partagé et temps de nettoyage détaillés dans l'ADR.
 
 ## Reproductibilité et rupture expérimentale
 

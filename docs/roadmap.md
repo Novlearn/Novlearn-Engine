@@ -32,8 +32,11 @@ M6 cas du lycée validé : 1250 tests/22 fichiers et pack110 ; 81 nouveaux tests
 profils et limites dans ADR013. M7 validé : banc réel MathLive 0.111.1,
 45 observations et 125 nouveaux tests ; check1375/23 et pack110 PASS.
 M7 commité 2c970d0. M8 validé : hôte Windows OS borné, processus mono-requête,
-30 tests ciblés ; check1405/24 et pack128 PASS, ADR014. M9 transport et
-mesures reste requis, sans serveur HTTP Node imposé.
+30 tests ciblés ; check1405/24 et pack128 PASS, ADR014, commit6f62be7.
+M9 vérifié sous profil Linux : CLI privée, bridge Python/FastAPI, benchmarks réels,
+12 contrôles Linux, 7 tests Python et check1383PASS/32WindowsSKIP ; ADR015.
+Contrôle OS Windows actuel refusant le lanceur, ancien benchmark explicitement
+historique. Aucun serveur HTTP Node imposé ; pack final/commit encore requis.
 Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en

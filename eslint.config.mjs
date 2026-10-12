@@ -1,7 +1,15 @@
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist/**', 'node_modules/**', '.npm-cache/**', '.codex/**'] },
+  {
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      '.npm-cache/**',
+      '.cache/**',
+      '.codex/**',
+    ],
+  },
   ...tseslint.configs.recommended,
   {
     files: ['**/*.ts', '**/*.mjs'],

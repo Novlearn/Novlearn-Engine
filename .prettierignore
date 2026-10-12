@@ -2,6 +2,7 @@ package-lock.json
 node_modules/
 dist/
 .npm-cache/
+.cache/
 .codex/
 # Historical corpus: preserve original bytes and nested JSON strings.
 docs/exercises_rows.json
