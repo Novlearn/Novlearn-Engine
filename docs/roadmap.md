@@ -36,7 +36,12 @@ M7 commité 2c970d0. M8 validé : hôte Windows OS borné, processus mono-requê
 M9 vérifié sous profil Linux : CLI privée, bridge Python/FastAPI, benchmarks réels,
 12 contrôles Linux, 7 tests Python et check1383PASS/32WindowsSKIP ; ADR015.
 Contrôle OS Windows actuel refusant le lanceur, ancien benchmark explicitement
-historique. Aucun serveur HTTP Node imposé ; pack final/commit encore requis.
+historique. Aucun serveur HTTP Node imposé ; M9 commité00e9a1a, pack133 PASS.
+M10 validé : huit adaptations exécutées, original/mappings558,
+arbitrages utilisateur et profil106 borné ; ADR016. Hôte privé permet également
+la conversion dans un worker neuf, aucun import HTTP ou migration de production.
+Check1482PASS/32WindowsSKIP,26 fichiers/27,465,43s et pack153 ; revues indépendantes
+favorables, preuves injectivité/positivité exponentielles et indétermination incluses.
 Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en

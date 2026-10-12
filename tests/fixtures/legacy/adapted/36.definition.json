@@ -1,0 +1,293 @@
+{
+  "schemaVersion": 5,
+  "kind": "composed",
+  "id": "36",
+  "revision": "legacy-reviewed-v1:0f4d1173",
+  "title": "QCM asymptote à une fonction 2",
+  "catalogue": {
+    "chapter": "Limites et continuité",
+    "skills": ["Identifier une asymptote horizontale/verticale"],
+    "exerciseType": "flash",
+    "needsCalculator": false,
+    "appTitle": "QCM asymptote à une fonction"
+  },
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [
+      {
+        "name": "a",
+        "kind": "integer",
+        "min": -10,
+        "max": 10,
+        "exclusions": []
+      },
+      {
+        "name": "b",
+        "kind": "computed",
+        "latex": "(\\mathrm{a})^2+1"
+      },
+      {
+        "name": "c",
+        "kind": "computed",
+        "latex": "2\\mathrm{a}"
+      },
+      {
+        "name": "d",
+        "kind": "computed",
+        "latex": "-\\mathrm{a}"
+      }
+    ],
+    "constraints": [
+      {
+        "kind": "comparison",
+        "left": {
+          "variable": "a"
+        },
+        "operator": "!=",
+        "right": {
+          "constant": 0
+        }
+      }
+    ],
+    "maxAttempts": 128,
+    "maxDraws": 10000
+  },
+  "variables": [],
+  "elements": [
+    {
+      "id": "1768401681114",
+      "type": "text",
+      "text": "Soit une fonction $f$ définie par: $f(x) = \\frac{x sin(x) + x^{3}}{(x^{2} + @c x +@b)}$",
+      "extensions": {
+        "legacyPath": "/elements/0",
+        "legacy": {
+          "text": "Soit une fonction $f$ définie par: $f(x) = \\frac{x sin(x) + x^{3}}{(x^{2} + @c x +@b)}$"
+        }
+      }
+    },
+    {
+      "id": "1770822520613",
+      "type": "mcq",
+      "text": "Parmi ces propositions lesquelles sont justes ? (Plusieurs réponses sont possibles) ",
+      "points": 1,
+      "mode": "multiple",
+      "options": [
+        {
+          "id": "1",
+          "content": {
+            "format": "text",
+            "text": "La courbe représentative de la fonction f admet une asymptote verticale en $x=@d$"
+          }
+        },
+        {
+          "id": "2",
+          "content": {
+            "format": "text",
+            "text": "La courbe représentative de la fonction f admet une asymptote verticale en $x=@a$"
+          }
+        },
+        {
+          "id": "legacy-option-1-2",
+          "content": {
+            "format": "text",
+            "text": "La courbe représentative de la fonction f admet une asymptote horizontale en $x=@a$"
+          }
+        },
+        {
+          "id": "legacy-option-1-3",
+          "content": {
+            "format": "text",
+            "text": "La droite d'équation $y=1$ est une asymptote horizontale à la courbe représentative de la fonction f en $+\\infty$"
+          }
+        },
+        {
+          "id": "legacy-option-1-4",
+          "content": {
+            "format": "text",
+            "text": "La courbe représentative de la fonction f admet une asymptote verticale en $+\\infty$"
+          }
+        },
+        {
+          "id": "legacy-option-1-5",
+          "content": {
+            "format": "text",
+            "text": "Aucune des réponses précédentes n'est juste"
+          }
+        }
+      ],
+      "expectedOptionIds": ["legacy-option-1-5"],
+      "extensions": {
+        "legacyPath": "/elements/1",
+        "legacy": {
+          "hint": "@d",
+          "options": [
+            {
+              "id": 1,
+              "text": "La courbe représentative de la fonction f admet une asymptote verticale en $x=@d$",
+              "correct": false
+            },
+            {
+              "id": 2,
+              "text": "La courbe représentative de la fonction f admet une asymptote verticale en $x=@a$",
+              "correct": false
+            },
+            {
+              "text": "La courbe représentative de la fonction f admet une asymptote horizontale en $x=@a$",
+              "correct": false
+            },
+            {
+              "text": "La droite d'équation $y=1$ est une asymptote horizontale à la courbe représentative de la fonction f en $+\\infty$",
+              "correct": false
+            },
+            {
+              "text": "La courbe représentative de la fonction f admet une asymptote verticale en $+\\infty$",
+              "correct": false
+            },
+            {
+              "text": "Aucune des réponses précédentes n'est juste",
+              "correct": true
+            }
+          ],
+          "question": "Parmi ces propositions lesquelles sont justes ? (Plusieurs réponses sont possibles) ",
+          "explanation": "D'une part le dénominateur ne s'annule pas : $(x^{2} + @c x +@b) = (x + @a) ^{2} +1 > 0$. Ainsi la fonction $f$ est continue sur $\\mathbb{R}$ et donc sa courbe représentative n'admet aucune asymptote verticale.\n$\\newline$\nDe plus, $\\lim_{x \\to +\\infty} f(x) = +\\infty$ donc la courbe représentative de la fonction f n'admet aucune asymptote horizontale en $+\\infty$",
+          "multipleChoice": true
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "legacy": {
+      "adapterVersion": "legacy-to-canonical-v1",
+      "sourceFormat": "database-row-v1",
+      "original": {
+        "id": 36,
+        "created_at": "2026-02-11 15:34:24.237795+00",
+        "title": "QCM asymptote à une fonction 2",
+        "chapter": "Limites et continuité",
+        "difficulty": "Moyen",
+        "competences": "[\"Identifier une asymptote horizontale/verticale\"]",
+        "content": "{\"elements\": [{\"id\": 1768401681114, \"type\": \"text\", \"content\": {\"text\": \"Soit une fonction $f$ définie par: $f(x) = \\\\frac{x sin(x) + x^{3}}{(x^{2} + @c x +@b)}$\"}}, {\"id\": 1770822520613, \"type\": \"mcq\", \"content\": {\"hint\": \"@d\", \"options\": [{\"id\": 1, \"text\": \"La courbe représentative de la fonction f admet une asymptote verticale en $x=@d$\", \"correct\": false}, {\"id\": 2, \"text\": \"La courbe représentative de la fonction f admet une asymptote verticale en $x=@a$\", \"correct\": false}, {\"text\": \"La courbe représentative de la fonction f admet une asymptote horizontale en $x=@a$\", \"correct\": false}, {\"text\": \"La droite d'équation $y=1$ est une asymptote horizontale à la courbe représentative de la fonction f en $+\\\\infty$\", \"correct\": false}, {\"text\": \"La courbe représentative de la fonction f admet une asymptote verticale en $+\\\\infty$\", \"correct\": false}, {\"text\": \"Aucune des réponses précédentes n'est juste\", \"correct\": true}], \"question\": \"Parmi ces propositions lesquelles sont justes ? (Plusieurs réponses sont possibles) \", \"explanation\": \"D'une part le dénominateur ne s'annule pas : $(x^{2} + @c x +@b) = (x + @a) ^{2} +1 > 0$. Ainsi la fonction $f$ est continue sur $\\\\mathbb{R}$ et donc sa courbe représentative n'admet aucune asymptote verticale.\\n$\\\\newline$\\nDe plus, $\\\\lim_{x \\\\to +\\\\infty} f(x) = +\\\\infty$ donc la courbe représentative de la fonction f n'admet aucune asymptote horizontale en $+\\\\infty$\", \"multipleChoice\": true}}], \"variables\": [{\"id\": 1770822146599, \"max\": 10, \"min\": -10, \"name\": \"a\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}, {\"id\": 1770822146769, \"max\": 10, \"min\": 1, \"name\": \"b\", \"type\": \"computed\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"(@a)^2 +1\"}, {\"id\": 1770822147233, \"max\": 10, \"min\": 1, \"name\": \"c\", \"type\": \"computed\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"2*@a\"}, {\"id\": 1770822752735, \"max\": 10, \"min\": 1, \"name\": \"d\", \"type\": \"computed\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"-1*@a \"}]}",
+        "app_title": "QCM asymptote à une fonction",
+        "Is_Flash": true,
+        "Need_Calculator": false
+      },
+      "decodedContent": {
+        "elements": [
+          {
+            "id": 1768401681114,
+            "type": "text",
+            "content": {
+              "text": "Soit une fonction $f$ définie par: $f(x) = \\frac{x sin(x) + x^{3}}{(x^{2} + @c x +@b)}$"
+            }
+          },
+          {
+            "id": 1770822520613,
+            "type": "mcq",
+            "content": {
+              "hint": "@d",
+              "options": [
+                {
+                  "id": 1,
+                  "text": "La courbe représentative de la fonction f admet une asymptote verticale en $x=@d$",
+                  "correct": false
+                },
+                {
+                  "id": 2,
+                  "text": "La courbe représentative de la fonction f admet une asymptote verticale en $x=@a$",
+                  "correct": false
+                },
+                {
+                  "text": "La courbe représentative de la fonction f admet une asymptote horizontale en $x=@a$",
+                  "correct": false
+                },
+                {
+                  "text": "La droite d'équation $y=1$ est une asymptote horizontale à la courbe représentative de la fonction f en $+\\infty$",
+                  "correct": false
+                },
+                {
+                  "text": "La courbe représentative de la fonction f admet une asymptote verticale en $+\\infty$",
+                  "correct": false
+                },
+                {
+                  "text": "Aucune des réponses précédentes n'est juste",
+                  "correct": true
+                }
+              ],
+              "question": "Parmi ces propositions lesquelles sont justes ? (Plusieurs réponses sont possibles) ",
+              "explanation": "D'une part le dénominateur ne s'annule pas : $(x^{2} + @c x +@b) = (x + @a) ^{2} +1 > 0$. Ainsi la fonction $f$ est continue sur $\\mathbb{R}$ et donc sa courbe représentative n'admet aucune asymptote verticale.\n$\\newline$\nDe plus, $\\lim_{x \\to +\\infty} f(x) = +\\infty$ donc la courbe représentative de la fonction f n'admet aucune asymptote horizontale en $+\\infty$",
+              "multipleChoice": true
+            }
+          }
+        ],
+        "variables": [
+          {
+            "id": 1770822146599,
+            "max": 10,
+            "min": -10,
+            "name": "a",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": ""
+          },
+          {
+            "id": 1770822146769,
+            "max": 10,
+            "min": 1,
+            "name": "b",
+            "type": "computed",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": "(@a)^2 +1"
+          },
+          {
+            "id": 1770822147233,
+            "max": 10,
+            "min": 1,
+            "name": "c",
+            "type": "computed",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": "2*@a"
+          },
+          {
+            "id": 1770822752735,
+            "max": 10,
+            "min": 1,
+            "name": "d",
+            "type": "computed",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": "-1*@a "
+          }
+        ]
+      },
+      "decodedCompetences": ["Identifier une asymptote horizontale/verticale"],
+      "recipe": {
+        "revision": "legacy-reviewed-v1:0f4d1173",
+        "defaults": "observed-creator-v1",
+        "variables": [],
+        "questions": {},
+        "constraints": [
+          {
+            "kind": "comparison",
+            "left": {
+              "variable": "a"
+            },
+            "operator": "!=",
+            "right": {
+              "constant": 0
+            }
+          }
+        ],
+        "decisions": [
+          "User approved a != 0 to retain original MCQ options without collisions; sampled domain reduced."
+        ]
+      }
+    }
+  }
+}

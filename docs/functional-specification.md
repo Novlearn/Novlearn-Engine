@@ -1,12 +1,13 @@
 # Spécification fonctionnelle
 
-M3 livré : [ADR 010](adr/010-numeric-grading.md), questions numériques fermées et
-discrètes ; real/extended-real/text, soumissions latex/text/selection et correction
-officielle par IDs. Le profil rationnel/polynomial de génération reste distinct.
-Les fonctions connues, isolation et adaptation des
-lots suivants demeurent obligatoires pour la V1.
+M0–M9 livrés : génération/éléments/correction bornées, formes, cas connus du lycée,
+MathLive et hôte isolé/transport privé. M10 validé : huit adaptations
+réelles, recettes/mappings privés et profil log-affine-positive sur x>0 pour106,
+avec forme power-of-e. [ADR016](adr/016-reviewed-legacy-adaptation.md).
+Le profil rationnel/polynomial de génération reste distinct. Démonstration
+intégrée M11 et consommation/audit final M12 demeurent obligatoires pour la V1.
 
-Référence actuelle au 11 octobre 2026, après [consolidation](consolidation.md).
+Référence actuelle au 12 octobre 2026, après [consolidation](consolidation.md).
 Contrat canonique schemaVersion 5 ; package privé 0.1.0. Le cahier des charges
 CDC_référence.md reste une cible plus large, préservée en octets. Cette mission
 conserve les capacités livrées ; la mission V1 autorise la réalisation progressive
@@ -33,7 +34,8 @@ ces deux dernières étant différées avec les scopes locaux/workflows.
 
 ## 2. Éléments : contrat commun et inventaire
 
-Branches actuelles, unions discriminées à champs précis :
+Socle ci-dessous : unions discriminées à champs précis ; les profils étendus
+de réponses M3–M10 sont définis par leurs ADR et la matrice de couverture.
 
 | Élément        | Définition / instance                                                                                                                                                      |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -53,7 +55,8 @@ effectivement validés/instanciables, leurs profils et leur projection. Catalogu
 privé typé et keyboard facultatif disponibles. Les fiches ci-dessous conservent
 l'inventaire des besoins et observations avant M2 ; leurs mentions « absent natif »
 décrivent cet état antérieur. Les options historiques dépassant les contrats natifs
-restent à adapter explicitement en M10 ; aucun renderer ou migration implicite.
+sont adaptés explicitement en M10 pour les huit documents reçus ; les autres
+formats inconnus restent bloqués. Aucun renderer ou migration implicite.
 
 ### Graphe de fonction — mathématique et interaction de vue
 
@@ -233,8 +236,10 @@ La limite droite de ln(x−a)/(x−a), x>a, utilise un attendu officiel −∞ ;
 dérivée polynomiale connue est comparée par M4. Aucun solveur ajouté. Les valeurs
 ou domaines non prouvés restent indéterminés, y compris tan(1).
 
-Fonctions connues, isolation/transport, adaptation et adoption restent à livrer
-selon la roadmap de mission. Pas de serveur, UI, SQL ou dépendance supplémentaire.
+Fonctions connues et isolation/transport livrés M6/M8/M9 ; adaptation explicite M10
+validée, adoption/démonstration M11 et audit M12 encore requis. Pas de
+déploiement de serveur applicatif, UI de production ou SQL ajouté au cœur.
 Anciennes APIs
-expérimentales refusées et snapshots non rejouables ; futur adaptateur explicite.
-Corpus original intact, transcription de 103 distincte de migration complète.
+expérimentales refusées et snapshots non rejouables ; adaptateur explicite ./legacy.
+Corpus original intact, transcriptions manuelles64/103 distinctes des conversions
+complètes exécutées en M10. Aucune migration de production.

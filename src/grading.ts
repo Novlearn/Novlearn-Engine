@@ -1,6 +1,7 @@
 import type { ExerciseInstance, TextNormalization } from './contracts/types.js';
 import { validateSubmission } from './contracts/validation.js';
 import { compareNumeric, prepareNumeric } from './math/numeric.js';
+import { prepareLogAffine, compareLogAffine } from './math/log-affine.js';
 import { toleranceSyntax } from './contracts/answer-validation.js';
 import { checkForm } from './math/forms.js';
 import { prepareFormReferences } from './math/form-references.js';
@@ -60,9 +61,12 @@ export interface CorrectionResult {
     | 'closed-identity'
     | 'certified-bounds'
     | 'explicit-infinity'
+    | 'exponential-injectivity'
+    | 'positive-exponential'
     | 'selection'
     | 'text'
     | 'exact-polynomial'
+    | 'exact-log-affine'
     | 'rational-cross-products'
     | 'domain'
     | 'solution-set'
@@ -184,6 +188,7 @@ export function gradeAnswer(
       'expanded',
       'reduced',
       'factorized',
+      'power-of-e',
     ];
     const choices =
       typeof formPolicy === 'string'
@@ -202,9 +207,11 @@ export function gradeAnswer(
         choices.some(
           (f) =>
             !knownForms.includes(f) ||
-            (f === 'irreducible-fraction'
-              ? !['rational', 'real'].includes(q.response.kind)
-              : q.response.kind !== 'expression'),
+            (f === 'power-of-e'
+              ? q.response.kind !== 'real'
+              : f === 'irreducible-fraction'
+                ? !['rational', 'real'].includes(q.response.kind)
+                : q.response.kind !== 'expression'),
         ))
     )
       return result('error', 'official-policy');
@@ -258,6 +265,56 @@ export function gradeAnswer(
         equal ? 'correct' : 'incorrect',
         equal ? 'text-equal' : 'text-different',
         'text',
+      );
+    }
+    if (q.response.kind === 'log-affine-positive') {
+      domain = 'unknown';
+      const variable = q.response.variable;
+      if (
+        !variable ||
+        !instance.definition.variables.some(
+          (v) => v.name === variable && v.domain === 'real',
+        ) ||
+        q.policy.domain !== 'log-affine-positive' ||
+        q.policy.form !== 'value-only' ||
+        q.policy.comparison !== undefined ||
+        q.policy.comparisonDomain !== undefined ||
+        q.policy.normalization !== undefined ||
+        q.expected.kind !== 'log-affine-positive'
+      )
+        return result('error', 'official-log-affine');
+      const expected = prepareLogAffine(
+        q.expected.math.source,
+        {
+          parameters: Object.keys(instance.generation.values),
+          variables: [variable],
+        },
+        instance.generation.values,
+        '/expected',
+        variable,
+      );
+      if (!expected.ok) return result('error', 'official-log-affine');
+      const student = prepareLogAffine(
+        s.answer.source,
+        { variables: [variable] },
+        {},
+        '/answer',
+        variable,
+      );
+      if (!student.ok)
+        return result(
+          mathFailureState(student.diagnostics),
+          student.diagnostics[0]?.code ?? 'log-affine-admission',
+        );
+      comparison = 'exact';
+      domain = 'restricted';
+      const equal = compareLogAffine(student.value, expected.value);
+      if (equal === undefined)
+        return result('indeterminate', 'log-affine-proof');
+      return result(
+        equal ? 'correct' : 'incorrect',
+        equal ? 'log-affine-equal' : 'log-affine-different',
+        'exact-log-affine',
       );
     }
     const profile = algebraKind(q.response.kind);

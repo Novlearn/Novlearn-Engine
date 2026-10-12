@@ -1,0 +1,385 @@
+{
+  "adapterVersion": "legacy-to-canonical-v1",
+  "sourceFormat": "database-row-v1",
+  "classification": "adaptable",
+  "original": {
+    "id": 96,
+    "created_at": "2026-04-29 14:11:13.660632+00",
+    "title": "Raisonnement par récurrence suite",
+    "chapter": "Suites numériques",
+    "difficulty": "Difficile",
+    "competences": "[\"Démontrer une propriété par récurrence\",\"Manipuler les inégalités sur les suites\"]",
+    "content": "{\"elements\": [{\"id\": 1780003000001, \"type\": \"text\", \"content\": {\"text\": \"Soit la suite $(u_n)$ définie par $u_0 = @u0$ et $\\\\forall n \\\\in \\\\mathbb{N}$, $u_{n+1} = \\\\frac{1}{2} u_n + @k$.\\n\\nOn admet que la suite est croissante et majorée par $@L$.\"}}, {\"id\": 1780003000002, \"type\": \"question\", \"content\": {\"hint\": \"Si $(u_n)$ est croissante et majorée, elle converge. La limite $\\\\ell$ vérifie $\\\\ell = \\\\frac{1}{2}\\\\ell + @k$.\", \"points\": 1, \"question\": \"Quelle est la limite de la suite $(u_n)$ ?\", \"explanation\": \"La suite converge vers $\\\\ell$ qui vérifie $\\\\ell = \\\\frac{\\\\ell}{2} + @k$, soit $\\\\frac{\\\\ell}{2} = @k$, donc $\\\\ell = 2 \\\\times @k = @L$.\", \"answerFormat\": \"number\", \"correctAnswer\": \"2*@k\"}}], \"variables\": [{\"id\": 1780003000010, \"max\": 8, \"min\": 1, \"name\": \"k\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}, {\"id\": 1780003000011, \"max\": 16, \"min\": 2, \"name\": \"L\", \"type\": \"computed\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"2*@k\"}, {\"id\": 1780003000012, \"max\": 3, \"min\": 0, \"name\": \"u0\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}]}",
+    "app_title": "Limite par récurrence",
+    "Is_Flash": false,
+    "Need_Calculator": false
+  },
+  "mappings": [
+    {
+      "scope": "row",
+      "path": "",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/id",
+      "disposition": "mapped",
+      "target": "/id"
+    },
+    {
+      "scope": "row",
+      "path": "/created_at",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/title",
+      "disposition": "mapped",
+      "target": "/title"
+    },
+    {
+      "scope": "row",
+      "path": "/chapter",
+      "disposition": "mapped",
+      "target": "/catalogue/chapter"
+    },
+    {
+      "scope": "row",
+      "path": "/difficulty",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/competences",
+      "disposition": "mapped",
+      "target": "/catalogue/skills"
+    },
+    {
+      "scope": "row",
+      "path": "/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/app_title",
+      "disposition": "mapped",
+      "target": "/catalogue/appTitle"
+    },
+    {
+      "scope": "row",
+      "path": "/Is_Flash",
+      "disposition": "mapped",
+      "target": "/catalogue/exerciseType"
+    },
+    {
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "disposition": "mapped",
+      "target": "/catalogue/needsCalculator"
+    },
+    {
+      "scope": "content",
+      "path": "",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/id",
+      "disposition": "mapped",
+      "target": "/elements/0/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/type",
+      "disposition": "mapped",
+      "target": "/elements/0/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "disposition": "mapped",
+      "target": "/elements/0/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/id",
+      "disposition": "mapped",
+      "target": "/elements/1/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/type",
+      "disposition": "mapped",
+      "target": "/elements/1/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/hint",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/points",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/question",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/explanation",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/answerFormat",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/correctAnswer",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/variables",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/max",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/min",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/name",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0/name"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/type",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0/kind"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/choices",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/decimals",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/exclusions",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/expression",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/max",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/min",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/name",
+      "disposition": "mapped",
+      "target": "/generation/definitions/1/name"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/type",
+      "disposition": "mapped",
+      "target": "/generation/definitions/1/kind"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/choices",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/decimals",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/exclusions",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/expression",
+      "disposition": "mapped",
+      "target": "/generation/definitions/1"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2/max",
+      "disposition": "mapped",
+      "target": "/generation/definitions/2"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2/min",
+      "disposition": "mapped",
+      "target": "/generation/definitions/2"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2/name",
+      "disposition": "mapped",
+      "target": "/generation/definitions/2/name"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2/type",
+      "disposition": "mapped",
+      "target": "/generation/definitions/2/kind"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2/choices",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2/decimals",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2/exclusions",
+      "disposition": "mapped",
+      "target": "/generation/definitions/2"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/2/expression",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "competences",
+      "path": "",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "competences",
+      "path": "/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "competences",
+      "path": "/1",
+      "disposition": "preserved-private"
+    }
+  ],
+  "decisions": [
+    "User approved u0 <= 2k to retain growth/boundedness statement; sampled domain reduced.",
+    "Mechanical canonical parameter alias L -> limitValue; original spelling preserved.",
+    "/variables/1: stored min/max/choices/decimals inactive in observed computed generators; preserved privately"
+  ],
+  "diagnostics": [],
+  "productionMigration": false,
+  "sourceHash": "0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae",
+  "verification": {
+    "status": "passed",
+    "seed": 42,
+    "instanceId": "legacy-96-proof",
+    "corrections": [
+      {
+        "schemaVersion": 5,
+        "instanceId": "legacy-96-proof",
+        "questionId": "1780003000002",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "exact",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "exact-number",
+        "code": "numeric-equal"
+      }
+    ]
+  }
+}

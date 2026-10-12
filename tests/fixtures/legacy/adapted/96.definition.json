@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 5,
+  "kind": "composed",
+  "id": "96",
+  "revision": "legacy-reviewed-v1:0f4d1173",
+  "title": "Raisonnement par récurrence suite",
+  "catalogue": {
+    "chapter": "Suites numériques",
+    "skills": [
+      "Démontrer une propriété par récurrence",
+      "Manipuler les inégalités sur les suites"
+    ],
+    "exerciseType": "classic",
+    "needsCalculator": false,
+    "appTitle": "Limite par récurrence"
+  },
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [
+      {
+        "name": "k",
+        "kind": "integer",
+        "min": 1,
+        "max": 8,
+        "exclusions": []
+      },
+      {
+        "name": "limitValue",
+        "kind": "computed",
+        "latex": "2\\mathrm{k}"
+      },
+      {
+        "name": "u0",
+        "kind": "integer",
+        "min": 0,
+        "max": 3,
+        "exclusions": []
+      }
+    ],
+    "constraints": [
+      {
+        "kind": "comparison",
+        "left": {
+          "variable": "u0"
+        },
+        "operator": "<=",
+        "right": {
+          "variable": "limitValue"
+        }
+      }
+    ],
+    "maxAttempts": 128,
+    "maxDraws": 10000
+  },
+  "variables": [],
+  "elements": [
+    {
+      "id": "1780003000001",
+      "type": "text",
+      "text": "Soit la suite $(u_n)$ définie par $u_0 = @u0$ et $\\forall n \\in \\mathbb{N}$, $u_{n+1} = \\frac{1}{2} u_n + @k$.\n\nOn admet que la suite est croissante et majorée par $@limitValue$.",
+      "extensions": {
+        "legacyPath": "/elements/0",
+        "legacy": {
+          "text": "Soit la suite $(u_n)$ définie par $u_0 = @u0$ et $\\forall n \\in \\mathbb{N}$, $u_{n+1} = \\frac{1}{2} u_n + @k$.\n\nOn admet que la suite est croissante et majorée par $@L$."
+        }
+      }
+    },
+    {
+      "id": "1780003000002",
+      "type": "question",
+      "text": "Quelle est la limite de la suite $(u_n)$ ?",
+      "points": 1,
+      "response": {
+        "format": "latex",
+        "kind": "rational"
+      },
+      "policy": {
+        "domain": "rational",
+        "form": "value-only"
+      },
+      "expectedLatex": "2\\mathrm{k}",
+      "extensions": {
+        "legacyPath": "/elements/1",
+        "legacy": {
+          "hint": "Si $(u_n)$ est croissante et majorée, elle converge. La limite $\\ell$ vérifie $\\ell = \\frac{1}{2}\\ell + @k$.",
+          "points": 1,
+          "question": "Quelle est la limite de la suite $(u_n)$ ?",
+          "explanation": "La suite converge vers $\\ell$ qui vérifie $\\ell = \\frac{\\ell}{2} + @k$, soit $\\frac{\\ell}{2} = @k$, donc $\\ell = 2 \\times @k = @L$.",
+          "answerFormat": "number",
+          "correctAnswer": "2*@k"
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "legacy": {
+      "adapterVersion": "legacy-to-canonical-v1",
+      "sourceFormat": "database-row-v1",
+      "original": {
+        "id": 96,
+        "created_at": "2026-04-29 14:11:13.660632+00",
+        "title": "Raisonnement par récurrence suite",
+        "chapter": "Suites numériques",
+        "difficulty": "Difficile",
+        "competences": "[\"Démontrer une propriété par récurrence\",\"Manipuler les inégalités sur les suites\"]",
+        "content": "{\"elements\": [{\"id\": 1780003000001, \"type\": \"text\", \"content\": {\"text\": \"Soit la suite $(u_n)$ définie par $u_0 = @u0$ et $\\\\forall n \\\\in \\\\mathbb{N}$, $u_{n+1} = \\\\frac{1}{2} u_n + @k$.\\n\\nOn admet que la suite est croissante et majorée par $@L$.\"}}, {\"id\": 1780003000002, \"type\": \"question\", \"content\": {\"hint\": \"Si $(u_n)$ est croissante et majorée, elle converge. La limite $\\\\ell$ vérifie $\\\\ell = \\\\frac{1}{2}\\\\ell + @k$.\", \"points\": 1, \"question\": \"Quelle est la limite de la suite $(u_n)$ ?\", \"explanation\": \"La suite converge vers $\\\\ell$ qui vérifie $\\\\ell = \\\\frac{\\\\ell}{2} + @k$, soit $\\\\frac{\\\\ell}{2} = @k$, donc $\\\\ell = 2 \\\\times @k = @L$.\", \"answerFormat\": \"number\", \"correctAnswer\": \"2*@k\"}}], \"variables\": [{\"id\": 1780003000010, \"max\": 8, \"min\": 1, \"name\": \"k\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}, {\"id\": 1780003000011, \"max\": 16, \"min\": 2, \"name\": \"L\", \"type\": \"computed\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"2*@k\"}, {\"id\": 1780003000012, \"max\": 3, \"min\": 0, \"name\": \"u0\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}]}",
+        "app_title": "Limite par récurrence",
+        "Is_Flash": false,
+        "Need_Calculator": false
+      },
+      "decodedContent": {
+        "elements": [
+          {
+            "id": 1780003000001,
+            "type": "text",
+            "content": {
+              "text": "Soit la suite $(u_n)$ définie par $u_0 = @u0$ et $\\forall n \\in \\mathbb{N}$, $u_{n+1} = \\frac{1}{2} u_n + @k$.\n\nOn admet que la suite est croissante et majorée par $@L$."
+            }
+          },
+          {
+            "id": 1780003000002,
+            "type": "question",
+            "content": {
+              "hint": "Si $(u_n)$ est croissante et majorée, elle converge. La limite $\\ell$ vérifie $\\ell = \\frac{1}{2}\\ell + @k$.",
+              "points": 1,
+              "question": "Quelle est la limite de la suite $(u_n)$ ?",
+              "explanation": "La suite converge vers $\\ell$ qui vérifie $\\ell = \\frac{\\ell}{2} + @k$, soit $\\frac{\\ell}{2} = @k$, donc $\\ell = 2 \\times @k = @L$.",
+              "answerFormat": "number",
+              "correctAnswer": "2*@k"
+            }
+          }
+        ],
+        "variables": [
+          {
+            "id": 1780003000010,
+            "max": 8,
+            "min": 1,
+            "name": "k",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": ""
+          },
+          {
+            "id": 1780003000011,
+            "max": 16,
+            "min": 2,
+            "name": "L",
+            "type": "computed",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": "2*@k"
+          },
+          {
+            "id": 1780003000012,
+            "max": 3,
+            "min": 0,
+            "name": "u0",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": ""
+          }
+        ]
+      },
+      "decodedCompetences": [
+        "Démontrer une propriété par récurrence",
+        "Manipuler les inégalités sur les suites"
+      ],
+      "recipe": {
+        "revision": "legacy-reviewed-v1:0f4d1173",
+        "defaults": "observed-creator-v1",
+        "variables": [],
+        "aliases": {
+          "L": "limitValue"
+        },
+        "questions": {
+          "1780003000002": {
+            "response": {
+              "format": "latex",
+              "kind": "rational"
+            },
+            "policy": {
+              "domain": "rational",
+              "form": "value-only"
+            }
+          }
+        },
+        "constraints": [
+          {
+            "kind": "comparison",
+            "left": {
+              "variable": "u0"
+            },
+            "operator": "<=",
+            "right": {
+              "variable": "limitValue"
+            }
+          }
+        ],
+        "decisions": [
+          "User approved u0 <= 2k to retain growth/boundedness statement; sampled domain reduced.",
+          "Mechanical canonical parameter alias L -> limitValue; original spelling preserved."
+        ]
+      }
+    }
+  }
+}

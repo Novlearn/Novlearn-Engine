@@ -1,0 +1,466 @@
+{
+  "adapterVersion": "legacy-to-canonical-v1",
+  "sourceFormat": "database-row-v1",
+  "classification": "adaptable",
+  "original": {
+    "id": 64,
+    "created_at": "2026-03-18 15:21:01.665616+00",
+    "title": "signe dérivée 3",
+    "chapter": "Dérivation et Fonctions",
+    "difficulty": "Moyen",
+    "competences": "[\"Tirer des informations du graphe d'une fonction ou de ses dérivées\"]",
+    "content": "{\"apptitle\": \"\", \"elements\": [{\"id\": 1772030408260, \"type\": \"text\", \"content\": {\"text\": \"On considère le graphe d'une fonction $f$ quelconque que l'on admet dérivable :\"}}, {\"id\": 1772030005401, \"type\": \"graph\", \"content\": {\"xMax\": 2, \"xMin\": -2, \"yMax\": 2, \"yMin\": -2, \"showGrid\": true, \"functions\": [{\"color\": \"#6805e1\", \"expression\": \"\\\\sin(2.5 *x^2)\"}]}}, {\"id\": 1772030559994, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Combien de fois la dérivée de $f$ s'annule-t-elle sur $[-2,2]$?\", \"explanation\": \"Les racines de la dérivée correspondent aux extremums locaux. Ici, on en compte 7, ils correspondent au changement de monotonie de la fonction\", \"answerFormat\": \"number\", \"correctAnswer\": \"7\"}}, {\"id\": 1773846039909, \"type\": \"mcq\", \"content\": {\"options\": [{\"id\": 1, \"text\": \"$f'$ n'est pas de signe constant sur $[0,1]$\", \"correct\": true}, {\"id\": 2, \"text\": \"$f'( 0 ) = 0$\", \"correct\": true}, {\"text\": \"$f$ est une fonction impaire\", \"correct\": false}, {\"text\": \"$f$ est une fonction paire\", \"correct\": true}, {\"text\": \"$f$ est $1$-périodique\", \"correct\": false}, {\"text\": \"$f'$ est négative sur $[- \\\\frac{1}{2} , 0]$\", \"correct\": true}], \"question\": \"Quelle(s) affirmation(s) est(sont) vraie(s) ?\", \"multipleChoice\": true}}], \"variables\": []}",
+    "app_title": "Graphique d'une fonction",
+    "Is_Flash": false,
+    "Need_Calculator": false
+  },
+  "mappings": [
+    {
+      "scope": "row",
+      "path": "",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/id",
+      "disposition": "mapped",
+      "target": "/id"
+    },
+    {
+      "scope": "row",
+      "path": "/created_at",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/title",
+      "disposition": "mapped",
+      "target": "/title"
+    },
+    {
+      "scope": "row",
+      "path": "/chapter",
+      "disposition": "mapped",
+      "target": "/catalogue/chapter"
+    },
+    {
+      "scope": "row",
+      "path": "/difficulty",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/competences",
+      "disposition": "mapped",
+      "target": "/catalogue/skills"
+    },
+    {
+      "scope": "row",
+      "path": "/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/app_title",
+      "disposition": "mapped",
+      "target": "/catalogue/appTitle"
+    },
+    {
+      "scope": "row",
+      "path": "/Is_Flash",
+      "disposition": "mapped",
+      "target": "/catalogue/exerciseType"
+    },
+    {
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "disposition": "mapped",
+      "target": "/catalogue/needsCalculator"
+    },
+    {
+      "scope": "content",
+      "path": "",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/apptitle",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/id",
+      "disposition": "mapped",
+      "target": "/elements/0/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/type",
+      "disposition": "mapped",
+      "target": "/elements/0/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "disposition": "mapped",
+      "target": "/elements/0/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/id",
+      "disposition": "mapped",
+      "target": "/elements/1/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/type",
+      "disposition": "mapped",
+      "target": "/elements/1/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/xMax",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/xMin",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/yMax",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/yMin",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/showGrid",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/functions",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/functions/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/functions/0/color",
+      "disposition": "mapped",
+      "target": "/elements/1/functions/0"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/functions/0/expression",
+      "disposition": "mapped",
+      "target": "/elements/1/functions/0"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/id",
+      "disposition": "mapped",
+      "target": "/elements/2/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/type",
+      "disposition": "mapped",
+      "target": "/elements/2/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/hint",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/points",
+      "disposition": "mapped",
+      "target": "/elements/2"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/question",
+      "disposition": "mapped",
+      "target": "/elements/2"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/explanation",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/answerFormat",
+      "disposition": "mapped",
+      "target": "/elements/2"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/correctAnswer",
+      "disposition": "mapped",
+      "target": "/elements/2"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/id",
+      "disposition": "mapped",
+      "target": "/elements/3/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/type",
+      "disposition": "mapped",
+      "target": "/elements/3/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/0/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/0/text",
+      "disposition": "mapped",
+      "target": "/elements/3/options/0/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/0/correct",
+      "disposition": "mapped",
+      "target": "/elements/3/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/1",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/1/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/1/text",
+      "disposition": "mapped",
+      "target": "/elements/3/options/1/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/1/correct",
+      "disposition": "mapped",
+      "target": "/elements/3/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/2",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/2/text",
+      "disposition": "mapped",
+      "target": "/elements/3/options/2/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/2/correct",
+      "disposition": "mapped",
+      "target": "/elements/3/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/3",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/3/text",
+      "disposition": "mapped",
+      "target": "/elements/3/options/3/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/3/correct",
+      "disposition": "mapped",
+      "target": "/elements/3/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/4",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/4/text",
+      "disposition": "mapped",
+      "target": "/elements/3/options/4/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/4/correct",
+      "disposition": "mapped",
+      "target": "/elements/3/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/5",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/5/text",
+      "disposition": "mapped",
+      "target": "/elements/3/options/5/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/5/correct",
+      "disposition": "mapped",
+      "target": "/elements/3/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/question",
+      "disposition": "mapped",
+      "target": "/elements/3/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/multipleChoice",
+      "disposition": "mapped",
+      "target": "/elements/3/mode"
+    },
+    {
+      "scope": "content",
+      "path": "/variables",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "competences",
+      "path": "",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "competences",
+      "path": "/0",
+      "disposition": "preserved-private"
+    }
+  ],
+  "decisions": [
+    "Known seven derivative zeros in [-2,2], not derivative solving.",
+    "Negative derivative on [-1/2,0] interpreted as nonpositive, includes zero at endpoint.",
+    "Outer app_title retained; empty content.apptitle remains private.",
+    "/elements/1/content/functions/0/id: synthetic path ID legacy-function-1-0",
+    "/elements/1/content/functions/0/showExpression: observed renderer default true",
+    "/elements/3/content/options/2/id: synthetic path ID legacy-option-3-2",
+    "/elements/3/content/options/3/id: synthetic path ID legacy-option-3-3",
+    "/elements/3/content/options/4/id: synthetic path ID legacy-option-3-4",
+    "/elements/3/content/options/5/id: synthetic path ID legacy-option-3-5",
+    "/elements/3/content/points: observed Creator MCQ default 1"
+  ],
+  "diagnostics": [],
+  "productionMigration": false,
+  "sourceHash": "0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae",
+  "verification": {
+    "status": "passed",
+    "seed": 42,
+    "instanceId": "legacy-64-proof",
+    "corrections": [
+      {
+        "schemaVersion": 5,
+        "instanceId": "legacy-64-proof",
+        "questionId": "1772030559994",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "exact",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "exact-number",
+        "code": "numeric-equal"
+      },
+      {
+        "schemaVersion": 5,
+        "instanceId": "legacy-64-proof",
+        "questionId": "1773846039909",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "discrete",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "selection",
+        "code": "selection-equal"
+      }
+    ]
+  }
+}

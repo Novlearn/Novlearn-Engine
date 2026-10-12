@@ -453,6 +453,18 @@ export function prepareNumeric(
           );
       }
       if (head === 'Power' || head === 'Square') {
+        const base = ce.box(args[0]!, { form: 'raw' }).canonical;
+        const rationalExponent =
+          head === 'Power' && base.json === 'ExponentialE'
+            ? ce.box(args[1]!).evaluate()
+            : undefined;
+        const rationalValue = rationalExponent?.toRational()
+          ? exactNumber(rationalExponent, true)
+          : undefined;
+        const exponentialPower =
+          rationalValue !== undefined &&
+          [0, 1].includes(exactOrder(rationalValue, -16) ?? -2) &&
+          [-1, 0].includes(exactOrder(rationalValue, 16) ?? 2);
         const e =
           head === 'Square'
             ? 2
@@ -460,16 +472,21 @@ export function prepareNumeric(
         const exponent =
           typeof e === 'number' ? e : e === undefined ? undefined : e.toJSON();
         if (
-          typeof exponent !== 'number' ||
-          !Number.isInteger(exponent) ||
-          Math.abs(exponent) > 16
+          !exponentialPower &&
+          (typeof exponent !== 'number' ||
+            !Number.isInteger(exponent) ||
+            Math.abs(exponent) > 16)
         )
           fail(
             'unsupported',
             p,
             'An integer power from -16 to 16 is required.',
           );
-        if (exponent <= 0) {
+        if (
+          !exponentialPower &&
+          typeof exponent === 'number' &&
+          exponent <= 0
+        ) {
           const sign = signOf(args[0]!);
           if (sign === 0)
             fail(
@@ -553,7 +570,38 @@ export interface NumericVerdict {
     | 'closed-identity'
     | 'certified-bounds'
     | 'explicit-infinity'
+    | 'exponential-injectivity'
+    | 'positive-exponential'
     | 'none';
+}
+/** Only admitted closed exponentials with exact rational exponents; exp is injective on R. */
+function rationalExponentialExponent(
+  prepared: PreparedNumeric,
+): Exact | undefined {
+  const expression = prepared.expression;
+  if (isSymbol(expression) && expression.symbol === 'ExponentialE') return 1;
+  const numeric = exactNumber(expression);
+  if (numeric !== undefined && exactOrder(numeric, 1) === 0) return 0;
+  let raw = prepared.math.substituted;
+  while (Array.isArray(raw) && raw[0] === 'Delimiter' && raw.length === 2)
+    raw = raw[1]!;
+  if (!Array.isArray(raw)) return undefined;
+  const ce = new ComputeEngine();
+  ce.iterationLimit = 1024;
+  ce.recursionLimit = 64;
+  // Raw admission has passed. Evaluation can turn e^-1 into 1/e and e^(1/2)
+  // into sqrt(e), so retain the admitted original power for this witness.
+  const exponent =
+    raw[0] === 'Exp' && raw.length === 2
+      ? ce.box(raw[1]!, { form: 'raw' })
+      : raw[0] === 'Power' &&
+          raw.length === 3 &&
+          ce.box(raw[1]!, { form: 'raw' }).canonical.json === 'ExponentialE'
+        ? ce.box(raw[2]!, { form: 'raw' })
+        : undefined;
+  if (!exponent) return undefined;
+  const value = exponent.evaluate();
+  return value.toRational() ? exactNumber(value, true) : undefined;
 }
 export function numericOrder(
   a: PreparedNumeric,
@@ -597,6 +645,22 @@ export function compareNumeric(
       student.expression.isSame(expected.expression)
     )
       return { equal: true, proof: 'closed-identity' };
+    const studentExponent = rationalExponentialExponent(student);
+    const expectedExponent = rationalExponentialExponent(expected);
+    const nonpositive = (value: Exact | undefined): boolean =>
+      value !== undefined && [-1, 0].includes(exactOrder(value, 0) ?? 1);
+    if (
+      (studentExponent !== undefined && nonpositive(expected.exact)) ||
+      (expectedExponent !== undefined && nonpositive(student.exact))
+    )
+      return { equal: false, proof: 'positive-exponential' };
+    if (studentExponent !== undefined && expectedExponent !== undefined) {
+      const order = exactOrder(studentExponent, expectedExponent);
+      return {
+        equal: order === undefined ? undefined : order === 0,
+        proof: order === undefined ? 'none' : 'exponential-injectivity',
+      };
+    }
     const quadraticOrder = expressionOrder(
       student.expression,
       expected.expression,

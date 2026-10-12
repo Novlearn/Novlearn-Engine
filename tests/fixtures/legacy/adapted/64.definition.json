@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 5,
+  "kind": "composed",
+  "id": "64",
+  "revision": "legacy-reviewed-v1:0f4d1173",
+  "title": "signe dérivée 3",
+  "catalogue": {
+    "chapter": "Dérivation et Fonctions",
+    "skills": [
+      "Tirer des informations du graphe d'une fonction ou de ses dérivées"
+    ],
+    "exerciseType": "classic",
+    "needsCalculator": false,
+    "appTitle": "Graphique d'une fonction"
+  },
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [],
+    "constraints": [],
+    "maxAttempts": 128,
+    "maxDraws": 10000
+  },
+  "variables": [
+    {
+      "name": "x",
+      "domain": "real"
+    }
+  ],
+  "elements": [
+    {
+      "id": "1772030408260",
+      "type": "text",
+      "text": "On considère le graphe d'une fonction $f$ quelconque que l'on admet dérivable :",
+      "extensions": {
+        "legacyPath": "/elements/0",
+        "legacy": {
+          "text": "On considère le graphe d'une fonction $f$ quelconque que l'on admet dérivable :"
+        }
+      }
+    },
+    {
+      "id": "1772030005401",
+      "type": "function-graph",
+      "variable": "x",
+      "window": {
+        "xMin": {
+          "latex": "-2"
+        },
+        "xMax": {
+          "latex": "2"
+        },
+        "yMin": {
+          "latex": "-2"
+        },
+        "yMax": {
+          "latex": "2"
+        }
+      },
+      "showGrid": true,
+      "functions": [
+        {
+          "id": "legacy-function-1-0",
+          "latex": "\\sin(2{,}5x^2)",
+          "color": "#6805e1",
+          "showExpression": true
+        }
+      ],
+      "extensions": {
+        "legacyPath": "/elements/1",
+        "legacy": {
+          "xMax": 2,
+          "xMin": -2,
+          "yMax": 2,
+          "yMin": -2,
+          "showGrid": true,
+          "functions": [
+            {
+              "color": "#6805e1",
+              "expression": "\\sin(2.5 *x^2)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "1772030559994",
+      "type": "question",
+      "text": "Combien de fois la dérivée de $f$ s'annule-t-elle sur $[-2,2]$?",
+      "points": 1,
+      "response": {
+        "format": "latex",
+        "kind": "rational"
+      },
+      "policy": {
+        "domain": "rational",
+        "form": "value-only"
+      },
+      "expectedLatex": "7",
+      "extensions": {
+        "legacyPath": "/elements/2",
+        "legacy": {
+          "hint": "",
+          "points": 1,
+          "question": "Combien de fois la dérivée de $f$ s'annule-t-elle sur $[-2,2]$?",
+          "explanation": "Les racines de la dérivée correspondent aux extremums locaux. Ici, on en compte 7, ils correspondent au changement de monotonie de la fonction",
+          "answerFormat": "number",
+          "correctAnswer": "7"
+        }
+      }
+    },
+    {
+      "id": "1773846039909",
+      "type": "mcq",
+      "text": "Quelle(s) affirmation(s) est(sont) vraie(s) ?",
+      "points": 1,
+      "mode": "multiple",
+      "options": [
+        {
+          "id": "1",
+          "content": {
+            "format": "text",
+            "text": "$f'$ n'est pas de signe constant sur $[0,1]$"
+          }
+        },
+        {
+          "id": "2",
+          "content": {
+            "format": "text",
+            "text": "$f'( 0 ) = 0$"
+          }
+        },
+        {
+          "id": "legacy-option-3-2",
+          "content": {
+            "format": "text",
+            "text": "$f$ est une fonction impaire"
+          }
+        },
+        {
+          "id": "legacy-option-3-3",
+          "content": {
+            "format": "text",
+            "text": "$f$ est une fonction paire"
+          }
+        },
+        {
+          "id": "legacy-option-3-4",
+          "content": {
+            "format": "text",
+            "text": "$f$ est $1$-périodique"
+          }
+        },
+        {
+          "id": "legacy-option-3-5",
+          "content": {
+            "format": "text",
+            "text": "$f'$ est négative sur $[- \\frac{1}{2} , 0]$"
+          }
+        }
+      ],
+      "expectedOptionIds": ["1", "2", "legacy-option-3-3", "legacy-option-3-5"],
+      "extensions": {
+        "legacyPath": "/elements/3",
+        "legacy": {
+          "options": [
+            {
+              "id": 1,
+              "text": "$f'$ n'est pas de signe constant sur $[0,1]$",
+              "correct": true
+            },
+            {
+              "id": 2,
+              "text": "$f'( 0 ) = 0$",
+              "correct": true
+            },
+            {
+              "text": "$f$ est une fonction impaire",
+              "correct": false
+            },
+            {
+              "text": "$f$ est une fonction paire",
+              "correct": true
+            },
+            {
+              "text": "$f$ est $1$-périodique",
+              "correct": false
+            },
+            {
+              "text": "$f'$ est négative sur $[- \\frac{1}{2} , 0]$",
+              "correct": true
+            }
+          ],
+          "question": "Quelle(s) affirmation(s) est(sont) vraie(s) ?",
+          "multipleChoice": true
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "legacy": {
+      "adapterVersion": "legacy-to-canonical-v1",
+      "sourceFormat": "database-row-v1",
+      "original": {
+        "id": 64,
+        "created_at": "2026-03-18 15:21:01.665616+00",
+        "title": "signe dérivée 3",
+        "chapter": "Dérivation et Fonctions",
+        "difficulty": "Moyen",
+        "competences": "[\"Tirer des informations du graphe d'une fonction ou de ses dérivées\"]",
+        "content": "{\"apptitle\": \"\", \"elements\": [{\"id\": 1772030408260, \"type\": \"text\", \"content\": {\"text\": \"On considère le graphe d'une fonction $f$ quelconque que l'on admet dérivable :\"}}, {\"id\": 1772030005401, \"type\": \"graph\", \"content\": {\"xMax\": 2, \"xMin\": -2, \"yMax\": 2, \"yMin\": -2, \"showGrid\": true, \"functions\": [{\"color\": \"#6805e1\", \"expression\": \"\\\\sin(2.5 *x^2)\"}]}}, {\"id\": 1772030559994, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Combien de fois la dérivée de $f$ s'annule-t-elle sur $[-2,2]$?\", \"explanation\": \"Les racines de la dérivée correspondent aux extremums locaux. Ici, on en compte 7, ils correspondent au changement de monotonie de la fonction\", \"answerFormat\": \"number\", \"correctAnswer\": \"7\"}}, {\"id\": 1773846039909, \"type\": \"mcq\", \"content\": {\"options\": [{\"id\": 1, \"text\": \"$f'$ n'est pas de signe constant sur $[0,1]$\", \"correct\": true}, {\"id\": 2, \"text\": \"$f'( 0 ) = 0$\", \"correct\": true}, {\"text\": \"$f$ est une fonction impaire\", \"correct\": false}, {\"text\": \"$f$ est une fonction paire\", \"correct\": true}, {\"text\": \"$f$ est $1$-périodique\", \"correct\": false}, {\"text\": \"$f'$ est négative sur $[- \\\\frac{1}{2} , 0]$\", \"correct\": true}], \"question\": \"Quelle(s) affirmation(s) est(sont) vraie(s) ?\", \"multipleChoice\": true}}], \"variables\": []}",
+        "app_title": "Graphique d'une fonction",
+        "Is_Flash": false,
+        "Need_Calculator": false
+      },
+      "decodedContent": {
+        "apptitle": "",
+        "elements": [
+          {
+            "id": 1772030408260,
+            "type": "text",
+            "content": {
+              "text": "On considère le graphe d'une fonction $f$ quelconque que l'on admet dérivable :"
+            }
+          },
+          {
+            "id": 1772030005401,
+            "type": "graph",
+            "content": {
+              "xMax": 2,
+              "xMin": -2,
+              "yMax": 2,
+              "yMin": -2,
+              "showGrid": true,
+              "functions": [
+                {
+                  "color": "#6805e1",
+                  "expression": "\\sin(2.5 *x^2)"
+                }
+              ]
+            }
+          },
+          {
+            "id": 1772030559994,
+            "type": "question",
+            "content": {
+              "hint": "",
+              "points": 1,
+              "question": "Combien de fois la dérivée de $f$ s'annule-t-elle sur $[-2,2]$?",
+              "explanation": "Les racines de la dérivée correspondent aux extremums locaux. Ici, on en compte 7, ils correspondent au changement de monotonie de la fonction",
+              "answerFormat": "number",
+              "correctAnswer": "7"
+            }
+          },
+          {
+            "id": 1773846039909,
+            "type": "mcq",
+            "content": {
+              "options": [
+                {
+                  "id": 1,
+                  "text": "$f'$ n'est pas de signe constant sur $[0,1]$",
+                  "correct": true
+                },
+                {
+                  "id": 2,
+                  "text": "$f'( 0 ) = 0$",
+                  "correct": true
+                },
+                {
+                  "text": "$f$ est une fonction impaire",
+                  "correct": false
+                },
+                {
+                  "text": "$f$ est une fonction paire",
+                  "correct": true
+                },
+                {
+                  "text": "$f$ est $1$-périodique",
+                  "correct": false
+                },
+                {
+                  "text": "$f'$ est négative sur $[- \\frac{1}{2} , 0]$",
+                  "correct": true
+                }
+              ],
+              "question": "Quelle(s) affirmation(s) est(sont) vraie(s) ?",
+              "multipleChoice": true
+            }
+          }
+        ],
+        "variables": []
+      },
+      "decodedCompetences": [
+        "Tirer des informations du graphe d'une fonction ou de ses dérivées"
+      ],
+      "recipe": {
+        "revision": "legacy-reviewed-v1:0f4d1173",
+        "defaults": "observed-creator-v1",
+        "variables": [
+          {
+            "name": "x",
+            "domain": "real"
+          }
+        ],
+        "questions": {
+          "1772030559994": {
+            "response": {
+              "format": "latex",
+              "kind": "rational"
+            },
+            "policy": {
+              "domain": "rational",
+              "form": "value-only"
+            }
+          }
+        },
+        "decisions": [
+          "Known seven derivative zeros in [-2,2], not derivative solving.",
+          "Negative derivative on [-1/2,0] interpreted as nonpositive, includes zero at endpoint.",
+          "Outer app_title retained; empty content.apptitle remains private."
+        ]
+      }
+    }
+  }
+}

@@ -18,6 +18,7 @@ import { instantiateMath } from './math/substitution.js';
 import type { InstantiationMathDiagnostic } from './math/substitution.js';
 import { MathFailure } from './math/substitution.js';
 import { prepareNumeric } from './math/numeric.js';
+import { prepareLogAffine } from './math/log-affine.js';
 import { prepareFormReferences } from './math/form-references.js';
 import {
   algebraKind,
@@ -442,6 +443,31 @@ function instantiateElements(
           response: { format: 'latex', kind: element.response.kind },
           policy: element.policy,
           expected: { kind: 'collection', math: collection.value.math },
+        });
+        continue;
+      }
+      if (element.response.kind === 'log-affine-positive') {
+        const variable =
+          element.response.variable ?? context.variables[0] ?? 'z';
+        const prepared = prepareLogAffine(
+          element.expectedLatex,
+          { parameters: context.parameters, variables: [variable] },
+          generated.values,
+          `${path}/expectedLatex`,
+          variable,
+        );
+        if (!prepared.ok)
+          return failElement(
+            prepared.diagnostics.map((d) => ({ ...d, stage: 'expected' })),
+          );
+        elements.push({
+          ...identity,
+          type: 'question',
+          text: text.value,
+          points: element.points,
+          response: { format: 'latex', kind: 'log-affine-positive', variable },
+          policy: element.policy,
+          expected: { kind: 'log-affine-positive', math: prepared.value.math },
         });
         continue;
       }

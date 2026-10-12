@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 5,
+  "kind": "composed",
+  "id": "6",
+  "revision": "legacy-reviewed-v1:0f4d1173",
+  "title": "Equation 2",
+  "catalogue": {
+    "chapter": "Logarithme néperien",
+    "skills": ["Utiliser le logarithme pour résoudre une équation/inéquation"],
+    "exerciseType": "flash",
+    "needsCalculator": false,
+    "appTitle": "Equation"
+  },
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [
+      {
+        "name": "k",
+        "kind": "integer",
+        "min": 1,
+        "max": 1000,
+        "exclusions": []
+      }
+    ],
+    "constraints": [],
+    "maxAttempts": 128,
+    "maxDraws": 10000
+  },
+  "variables": [],
+  "elements": [
+    {
+      "id": "1768401681114",
+      "type": "text",
+      "text": "Soit la fonction $f$ définie sur $\\mathbb{R}$ par : $\\forall$ $x$ $\\in$ $\\mathbb{R}$, $f(x) = e^{x}$",
+      "extensions": {
+        "legacyPath": "/elements/0",
+        "legacy": {
+          "text": "Soit la fonction $f$ définie sur $\\mathbb{R}$ par : $\\forall$ $x$ $\\in$ $\\mathbb{R}$, $f(x) = e^{x}$"
+        }
+      }
+    },
+    {
+      "id": "1768402172314",
+      "type": "question",
+      "text": "Résoudre l'équation $f(x)= @k$ d'inconnue $x \\in \\mathbb{R}$",
+      "points": 1,
+      "response": {
+        "format": "latex",
+        "kind": "real"
+      },
+      "policy": {
+        "domain": "real",
+        "form": "value-only"
+      },
+      "expectedLatex": "\\ln(\\mathrm{k})",
+      "extensions": {
+        "legacyPath": "/elements/1",
+        "legacy": {
+          "hint": "",
+          "points": 1,
+          "question": "Résoudre l'équation $f(x)= @k$ d'inconnue $x \\in \\mathbb{R}$",
+          "explanation": "",
+          "answerFormat": "number",
+          "correctAnswer": "\\ln(@k)"
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "legacy": {
+      "adapterVersion": "legacy-to-canonical-v1",
+      "sourceFormat": "database-row-v1",
+      "original": {
+        "id": 6,
+        "created_at": "2026-01-14 15:21:23.933018+00",
+        "title": "Equation 2",
+        "chapter": "Logarithme néperien",
+        "difficulty": "Facile",
+        "competences": "[\"Utiliser le logarithme pour résoudre une équation/inéquation\"]",
+        "content": "{\"elements\": [{\"id\": 1768401681114, \"type\": \"text\", \"content\": {\"text\": \"Soit la fonction $f$ définie sur $\\\\mathbb{R}$ par : $\\\\forall$ $x$ $\\\\in$ $\\\\mathbb{R}$, $f(x) = e^{x}$\"}}, {\"id\": 1768402172314, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Résoudre l'équation $f(x)= @k$ d'inconnue $x \\\\in \\\\mathbb{R}$\", \"explanation\": \"\", \"answerFormat\": \"number\", \"correctAnswer\": \"\\\\ln(@k)\"}}], \"variables\": [{\"id\": 1768401694635, \"max\": 1000, \"min\": 1, \"name\": \"k\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}]}",
+        "app_title": "Equation",
+        "Is_Flash": true,
+        "Need_Calculator": false
+      },
+      "decodedContent": {
+        "elements": [
+          {
+            "id": 1768401681114,
+            "type": "text",
+            "content": {
+              "text": "Soit la fonction $f$ définie sur $\\mathbb{R}$ par : $\\forall$ $x$ $\\in$ $\\mathbb{R}$, $f(x) = e^{x}$"
+            }
+          },
+          {
+            "id": 1768402172314,
+            "type": "question",
+            "content": {
+              "hint": "",
+              "points": 1,
+              "question": "Résoudre l'équation $f(x)= @k$ d'inconnue $x \\in \\mathbb{R}$",
+              "explanation": "",
+              "answerFormat": "number",
+              "correctAnswer": "\\ln(@k)"
+            }
+          }
+        ],
+        "variables": [
+          {
+            "id": 1768401694635,
+            "max": 1000,
+            "min": 1,
+            "name": "k",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": ""
+          }
+        ]
+      },
+      "decodedCompetences": [
+        "Utiliser le logarithme pour résoudre une équation/inéquation"
+      ],
+      "recipe": {
+        "revision": "legacy-reviewed-v1:0f4d1173",
+        "defaults": "observed-creator-v1",
+        "variables": [],
+        "questions": {
+          "1768402172314": {
+            "response": {
+              "format": "latex",
+              "kind": "real"
+            },
+            "policy": {
+              "domain": "real",
+              "form": "value-only"
+            }
+          }
+        },
+        "decisions": [
+          "Known solution ln(k), k positive; finite exact real response."
+        ]
+      }
+    }
+  }
+}

@@ -119,6 +119,7 @@ export interface QuestionResponse {
     | 'real'
     | 'extended-real'
     | 'expression'
+    | 'log-affine-positive'
     | 'text'
     | 'rational-expression'
     | 'equation'
@@ -140,7 +141,7 @@ export interface TextNormalization {
 }
 /** Structural families checked on the original syntax, within a bounded profile. */
 export type AtomicForm =
-  'irreducible-fraction' | 'expanded' | 'reduced' | 'factorized';
+  'irreducible-fraction' | 'expanded' | 'reduced' | 'factorized' | 'power-of-e';
 export type FormPolicy =
   | 'value-only'
   | AtomicForm
@@ -152,6 +153,7 @@ export interface GradingPolicy {
     | 'real'
     | 'extended-real'
     | 'polynomial'
+    | 'log-affine-positive'
     | 'text'
     | 'rational-function'
     | 'equation'
@@ -277,6 +279,7 @@ export type PublicElement =
 export type ExpectedAnswer =
   | { kind: 'rational'; math: InstantiatedMath; value: RationalValue }
   | { kind: 'expression'; math: InstantiatedMath }
+  | { kind: 'log-affine-positive'; math: InstantiatedMath }
   | { kind: 'real'; math: InstantiatedMath }
   | { kind: 'algebra'; math: InstantiatedMath }
   | { kind: 'collection'; math: InstantiatedMath }

@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 5,
+  "kind": "composed",
+  "id": "103",
+  "revision": "legacy-reviewed-v1:0f4d1173",
+  "title": "Extremum d'un trinôme avec graphe",
+  "catalogue": {
+    "chapter": "Dérivation et Fonctions",
+    "skills": [
+      "Déterminer les extremums d'une fonction par le calcul",
+      "Tirer des informations du graphe d'une fonction ou de ses dérivées",
+      "Calculer une dérivée"
+    ],
+    "exerciseType": "flash",
+    "needsCalculator": false,
+    "appTitle": "Extremum d'un trinôme"
+  },
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [
+      {
+        "name": "a",
+        "kind": "integer",
+        "min": 1,
+        "max": 3,
+        "exclusions": []
+      },
+      {
+        "name": "b",
+        "kind": "integer",
+        "min": -6,
+        "max": 6,
+        "exclusions": [0]
+      },
+      {
+        "name": "c",
+        "kind": "integer",
+        "min": -5,
+        "max": 5,
+        "exclusions": []
+      }
+    ],
+    "constraints": [],
+    "maxAttempts": 128,
+    "maxDraws": 10000
+  },
+  "variables": [
+    {
+      "name": "x",
+      "domain": "real"
+    }
+  ],
+  "elements": [
+    {
+      "id": "1780008000001",
+      "type": "text",
+      "text": "Soit $f$ définie sur $\\mathbb{R}$ par $f(x) = @a x^2 + @b x + @c$.",
+      "extensions": {
+        "legacyPath": "/elements/0",
+        "legacy": {
+          "text": "Soit $f$ définie sur $\\mathbb{R}$ par $f(x) = @a x^2 + @b x + @c$."
+        }
+      }
+    },
+    {
+      "id": "1780008000002",
+      "type": "function-graph",
+      "variable": "x",
+      "window": {
+        "xMin": {
+          "latex": "-6"
+        },
+        "xMax": {
+          "latex": "6"
+        },
+        "yMin": {
+          "latex": "-10"
+        },
+        "yMax": {
+          "latex": "15"
+        }
+      },
+      "showGrid": true,
+      "functions": [
+        {
+          "id": "legacy-function-1-0",
+          "latex": "\\mathrm{a}x^2+\\mathrm{b}x+\\mathrm{c}",
+          "color": "#2563eb",
+          "showExpression": true
+        }
+      ],
+      "extensions": {
+        "legacyPath": "/elements/1",
+        "legacy": {
+          "xMax": 6,
+          "xMin": -6,
+          "yMax": 15,
+          "yMin": -10,
+          "showGrid": true,
+          "functions": [
+            {
+              "color": "#2563eb",
+              "expression": "@a*x^2 + @b*x + @c"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "1780008000003",
+      "type": "question",
+      "text": "En quel point $x_0$ la fonction $f$ admet-elle un minimum ? (donner la valeur de $x_0$)",
+      "points": 1,
+      "response": {
+        "format": "latex",
+        "kind": "rational"
+      },
+      "policy": {
+        "domain": "rational",
+        "form": "value-only"
+      },
+      "expectedLatex": "\\frac{-\\mathrm{b}}{2\\mathrm{a}}",
+      "extensions": {
+        "legacyPath": "/elements/2",
+        "legacy": {
+          "hint": "Résoudre $f'(x) = 0$. On a $f'(x) = 2 \\times @a \\times x + @b$.",
+          "points": 1,
+          "question": "En quel point $x_0$ la fonction $f$ admet-elle un minimum ? (donner la valeur de $x_0$)",
+          "explanation": "$f'(x) = 2@a x + @b = 0 \\Leftrightarrow x = \\frac{-@b}{2 \\times @a}$. Comme $@a > 0$, c'est bien un minimum.",
+          "answerFormat": "number",
+          "correctAnswer": "\\frac{-@b}{2*@a}"
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "legacy": {
+      "adapterVersion": "legacy-to-canonical-v1",
+      "sourceFormat": "database-row-v1",
+      "original": {
+        "id": 103,
+        "created_at": "2026-05-06 12:44:02.271796+00",
+        "title": "Extremum d'un trinôme avec graphe",
+        "chapter": "Dérivation et Fonctions",
+        "difficulty": "Moyen",
+        "competences": "[\"Déterminer les extremums d'une fonction par le calcul\",\"Tirer des informations du graphe d'une fonction ou de ses dérivées\",\"Calculer une dérivée\"]",
+        "content": "{\"isFlash\": false, \"elements\": [{\"id\": 1780008000001, \"type\": \"text\", \"content\": {\"text\": \"Soit $f$ définie sur $\\\\mathbb{R}$ par $f(x) = @a x^2 + @b x + @c$.\"}}, {\"id\": 1780008000002, \"type\": \"graph\", \"content\": {\"xMax\": 6, \"xMin\": -6, \"yMax\": 15, \"yMin\": -10, \"showGrid\": true, \"functions\": [{\"color\": \"#2563eb\", \"expression\": \"@a*x^2 + @b*x + @c\"}]}}, {\"id\": 1780008000003, \"type\": \"question\", \"content\": {\"hint\": \"Résoudre $f'(x) = 0$. On a $f'(x) = 2 \\\\times @a \\\\times x + @b$.\", \"points\": 1, \"question\": \"En quel point $x_0$ la fonction $f$ admet-elle un minimum ? (donner la valeur de $x_0$)\", \"explanation\": \"$f'(x) = 2@a x + @b = 0 \\\\Leftrightarrow x = \\\\frac{-@b}{2 \\\\times @a}$. Comme $@a > 0$, c'est bien un minimum.\", \"answerFormat\": \"number\", \"correctAnswer\": \"\\\\frac{-@b}{2*@a}\"}}], \"variables\": [{\"id\": 1780008000010, \"max\": 3, \"min\": 1, \"name\": \"a\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}, {\"id\": 1780008000011, \"max\": 6, \"min\": -6, \"name\": \"b\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"0\", \"expression\": \"\"}, {\"id\": 1780008000012, \"max\": 5, \"min\": -5, \"name\": \"c\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}], \"needCalculator\": false}",
+        "app_title": "Extremum d'un trinôme",
+        "Is_Flash": true,
+        "Need_Calculator": false
+      },
+      "decodedContent": {
+        "isFlash": false,
+        "elements": [
+          {
+            "id": 1780008000001,
+            "type": "text",
+            "content": {
+              "text": "Soit $f$ définie sur $\\mathbb{R}$ par $f(x) = @a x^2 + @b x + @c$."
+            }
+          },
+          {
+            "id": 1780008000002,
+            "type": "graph",
+            "content": {
+              "xMax": 6,
+              "xMin": -6,
+              "yMax": 15,
+              "yMin": -10,
+              "showGrid": true,
+              "functions": [
+                {
+                  "color": "#2563eb",
+                  "expression": "@a*x^2 + @b*x + @c"
+                }
+              ]
+            }
+          },
+          {
+            "id": 1780008000003,
+            "type": "question",
+            "content": {
+              "hint": "Résoudre $f'(x) = 0$. On a $f'(x) = 2 \\times @a \\times x + @b$.",
+              "points": 1,
+              "question": "En quel point $x_0$ la fonction $f$ admet-elle un minimum ? (donner la valeur de $x_0$)",
+              "explanation": "$f'(x) = 2@a x + @b = 0 \\Leftrightarrow x = \\frac{-@b}{2 \\times @a}$. Comme $@a > 0$, c'est bien un minimum.",
+              "answerFormat": "number",
+              "correctAnswer": "\\frac{-@b}{2*@a}"
+            }
+          }
+        ],
+        "variables": [
+          {
+            "id": 1780008000010,
+            "max": 3,
+            "min": 1,
+            "name": "a",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": ""
+          },
+          {
+            "id": 1780008000011,
+            "max": 6,
+            "min": -6,
+            "name": "b",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "0",
+            "expression": ""
+          },
+          {
+            "id": 1780008000012,
+            "max": 5,
+            "min": -5,
+            "name": "c",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": ""
+          }
+        ],
+        "needCalculator": false
+      },
+      "decodedCompetences": [
+        "Déterminer les extremums d'une fonction par le calcul",
+        "Tirer des informations du graphe d'une fonction ou de ses dérivées",
+        "Calculer une dérivée"
+      ],
+      "recipe": {
+        "revision": "legacy-reviewed-v1:0f4d1173",
+        "defaults": "observed-creator-v1",
+        "variables": [
+          {
+            "name": "x",
+            "domain": "real"
+          }
+        ],
+        "flags": {
+          "flash": "row"
+        },
+        "questions": {
+          "1780008000003": {
+            "response": {
+              "format": "latex",
+              "kind": "rational"
+            },
+            "policy": {
+              "domain": "rational",
+              "form": "value-only"
+            }
+          }
+        },
+        "decisions": [
+          "User approved outer Is_Flash=true; inner isFlash=false remains private.",
+          "Known minimum abscissa -b/(2a), a positive; value-only exact rational response."
+        ]
+      }
+    }
+  }
+}

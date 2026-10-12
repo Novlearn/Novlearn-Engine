@@ -1,6 +1,26 @@
 # Corpus historique et compatibilité
 
-état actuel : aucun adaptateur ni migration exécuté. Schéma canonique 5 seul
+## Adaptation M10 — validée localement
+
+Un adaptateur explicite séparé `./legacy` convertit désormais les huit lignes reçues.
+Les [huit rapports et définitions](../tests/fixtures/legacy/adapted) proviennent d'une
+conversion exécutée, avec instanciation/correction officielle seed42 PASS. Les
+originaux et558 chemins restent conservés ; aucune migration de production.
+Tests32 tirages/oracles et refus de sources/recettes ; check complet Linux
+1482PASS/32WindowsSKIP,26 fichiers/27,465,43s. Deux passages du parcours isolé8
+exercices PASS et7régressions Python/FastAPI PASS. Aucun test Windows natif actuel
+ou CI distante annoncé ; limites OS/quotas et profils documentés.
+[ADR016](adr/016-reviewed-legacy-adaptation.md), [coexistence et rollback](migration-guide.md).
+
+36 : a≠0 ;78 : u0≠1 et k≠2u0² ;96 : u0≤2k ;103 : flag flash de ligne true,
+arbitrages utilisateur explicites. Computed min/max inactifs conservés privés ; QCM
+points1 et graph showExpression=true par défaut observé. 106 : preuve log-affine-positive
+sur x>0 et forme power-of-e ; pas de solveur universel. Les documents Creator testés sont
+reconstruits d'après les sources, distincts des huit vraies lignes DB reçues.
+
+## Audit initial conservé — avant M10
+
+État de cet audit initial : aucun adaptateur ni migration exécuté. Schéma canonique 5 seul
 accepté par le nouveau moteur ; contrats expérimentaux non conservés. Les rapports
 ci-dessous décrivent les huit sources observées et leurs besoins de conversion,
 pas les capacités natives d'un ancien format toujours accepté.

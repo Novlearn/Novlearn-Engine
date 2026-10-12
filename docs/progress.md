@@ -1,5 +1,67 @@
 # État et transmission
 
+## M10 validé — adaptations historiques explicites
+
+M9 commité **00e9a1a** ; arbre propre hors CDC avant M10. README, décisions,
+compatibilité, ADR004, CDC9/11 et roadmap9 relus. Root seul auteur ; analyses
+indépendantes en lecture seule. Aucun original ni dépôt voisin modifié.
+
+Arbitrages utilisateur reçus : 36 impose a≠0 ; 78 impose u0≠1 et k≠2u0² ;
+96 impose u0≤2k ; 103 retient Is_Flash=true de la ligne. Sources et valeurs
+contradictoires restent privées et conservées, réduction des tirages explicitée.
+Les bornes computed sont inactives dans les deux générateurs historiques observés,
+donc conservées sans les importer comme contraintes. Points QCM absents : défaut
+historique 1 ; graph.showExpression absent : défaut historique true.
+
+Critères : adaptateur séparé et borné vers schéma5, original complet/provenance et
+mapping par chemins ; huit rapports ; aucune exécution JS ni réécriture algébrique
+regex ; génération/correction officielles et erreurs testées ; coexistence/rollback.
+Implémentation : ./legacy, une fonction adaptLegacyExercise, trois enveloppes
+DB/Creator distinguées, recettes inertes strictes et provenance privée complète.
+Huit définitions et rapports exécutés dans tests/fixtures/legacy/adapted ; source
+SHA256 inchangé. Inventaire558 chemins couvert, statut adaptable et vérification
+officielle seed42 PASS pour les huit. Ce sont des conversions complètes locales,
+distinctes des anciennes transcriptions64/103, sans migration de production.
+106 possède log-affine-positive exact surx>0 et forme power-of-e ; ln(k) de6 déjà
+supporté réutilisé. Hôte privé reçoit la huitième opération adaptLegacyExercise,
+payload source/sourceFormat/recipe, même worker neuf et quotas, sans route HTTP.
+
+Revues readonly : sourceguard réutilisé avant sérialisation (virgule, scripts,
+décimaux/commentaires), noms digits exemptés, sources attendues originales relues,
+undefined de comparaison conservé, variablepositive explicite, recettes/types
+stricts et mappings selon champ réellement retenu. Ces corrections ont leurs tests.
+Premier check Linux arrêté au format, second au type du test NumericValue corrigé
+avec isNumber ; aucune réussite annoncée pour ces passages. `npm ci --offline`
+Linux132packages PASS34s. Check avant derniers guards1472PASS/32SKIP477,80s ;
+check aprèsguards/mappings **1474PASS/32WindowsSKIP**,26 fichiers/27,467,75s.
+Conditions Windows préexistantes ; AppControl toujours refusant le lanceur, sans
+contournement ni qualification Windows annoncée. Ciblés93/3PASS32,58s avantmapping.
+Deux passages check-legacy-host Linux384MiB/pids64/networknone/nonroot/readonly
+PASS : huit adaptations→instances→projections→corrections et recette invalide.
+7Python/FastAPI Linux PASS20,822s après whitelist8. Root build/types/lint PASS ;
+exports7 cœur/1legacy/1host, déclarations publiques sans boxed/builtinNode.
+Pack avant dernier complémentmath :153 fichiers158473/747655octets,
+SHA1 3a907c808a1166c7aab574f44090b12ca97184bb ; à refaire aprèsfixfinal.
+
+Dernier manque vérifié : e^q et e^p rationnels différents restaient indéterminés.
+Compléments d'injectivité et positivité exponentielles implémentés ; le témoin
+relit math.substituted raw, car Cortex transforme e^-1 en1/e et e^(1/2) en√e.
+Comparaison exacte et signe prouvé seulement ; undefined jamais faux. Tests4
+exposants différents,3 nombresnonpositifs et injectiond'ordreinconnu ajoutés.
+Ciblés327/5PASS78,73s puis51/1PASS10,37s ; revue readonly favorable. Première
+implémentation sur expression canonique perdait e^-1/e^1/2 : deux tests échouaient,
+corrigés par témoin raw ; ces passages ne sont pas annoncés comme réussite.
+Code final build/types/lint PASS. Check complet final dans la copie Linux
+**1482PASS/32WindowsSKIP**,26 fichiers/27,465,43s, npmExit0 ; log
+.cache/m10-check-exponential-final.log. Aucun code modifié pendant ; dernières
+modifications suivantes concernent uniquement docs/coverage/bilan et format.
+Pack final après compléments153 fichiers159263/752095octets,
+SHA1 abf2d71fcddf9bd89fa732ad24fe2937bbf7609d. Aucun fichier horsREADME/package/dist,
+aucun exemple, fixture ou corpus publié. **M10 validé, commit local restant**.
+99 nouveaux tests au total ;51log/47legacy/1frontièrepackage. Revue du diff,
+exports et empreintes PASS ; readonly favorable, tous les manques démontrés corrigés.
+Prochaines actions : format final/diff/commit M10, puis M11–M12 selon mission autorisée.
+
 ## M9 vérifié — transport privé Python/FastAPI et profil Linux
 
 M8 commité **6f62be7**, 22 fichiers, check1405/24 et pack128 PASS ; arbre propre

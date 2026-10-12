@@ -142,7 +142,13 @@ Schéma 5 : structure/policies ; révision : identité pédagogique immuable ; m
 0.1.0 : artefact avec CortexJS épinglé ; mulberry32-rejection-v1 : flux/rangs/ordre/
 rejet avec [vecteurs](../tests/fixtures/canonical/reference-vectors.json). Aucun
 instantiationVersion redondant. Pas de rejeu promis entre artefacts non identifiés.
-Adaptateurs historiques futurs explicites hors fonctions principales, Lot 9.
+Adaptateurs historiques explicites sous-chemin `./legacy`, une fonction séparée
+adaptLegacyExercise. Formats DB encodé/Creator plat/publication distincts ; recette
+revue, originaux/mappings et arbitrages privés. [ADR016](adr/016-reviewed-legacy-adaptation.md).
+Le canal privé de l'hôte compte huit opérations : les sept du cœur et l'adaptation
+avec `{source,sourceFormat,recipe}`, pour borner aussi un parsing legacy non fiable.
+Le profil log-affine-positive prouve A·ln(x)+B sur x>0 ; power-of-e distingue
+valeur et forme du résultat connu de106. Aucun autre CAS ou boxed public ajouté.
 
 [Budgets/profils](functional-specification.md). Calculs synchrones/contextes isolés
 par appel ; deadline/quota OS/cleanup désormais qualifiés dans l'hôte optionnel M8.

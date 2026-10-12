@@ -1,0 +1,156 @@
+{
+  "1": {
+    "revision": "legacy-reviewed-v1:0f4d1173",
+    "defaults": "observed-creator-v1",
+    "variables": [],
+    "questions": {
+      "1768397937041": {
+        "response": { "format": "latex", "kind": "extended-real" },
+        "policy": { "domain": "extended-real", "form": "value-only" }
+      }
+    },
+    "decisions": [
+      "Known right-hand limit; explicit negative infinity response, no limit solver."
+    ]
+  },
+  "6": {
+    "revision": "legacy-reviewed-v1:0f4d1173",
+    "defaults": "observed-creator-v1",
+    "variables": [],
+    "questions": {
+      "1768402172314": {
+        "response": { "format": "latex", "kind": "real" },
+        "policy": { "domain": "real", "form": "value-only" }
+      }
+    },
+    "decisions": [
+      "Known solution ln(k), k positive; finite exact real response."
+    ]
+  },
+  "36": {
+    "revision": "legacy-reviewed-v1:0f4d1173",
+    "defaults": "observed-creator-v1",
+    "variables": [],
+    "questions": {},
+    "constraints": [
+      {
+        "kind": "comparison",
+        "left": { "variable": "a" },
+        "operator": "!=",
+        "right": { "constant": 0 }
+      }
+    ],
+    "decisions": [
+      "User approved a != 0 to retain original MCQ options without collisions; sampled domain reduced."
+    ]
+  },
+  "64": {
+    "revision": "legacy-reviewed-v1:0f4d1173",
+    "defaults": "observed-creator-v1",
+    "variables": [{ "name": "x", "domain": "real" }],
+    "questions": {
+      "1772030559994": {
+        "response": { "format": "latex", "kind": "rational" },
+        "policy": { "domain": "rational", "form": "value-only" }
+      }
+    },
+    "decisions": [
+      "Known seven derivative zeros in [-2,2], not derivative solving.",
+      "Negative derivative on [-1/2,0] interpreted as nonpositive, includes zero at endpoint.",
+      "Outer app_title retained; empty content.apptitle remains private."
+    ]
+  },
+  "78": {
+    "revision": "legacy-reviewed-v1:0f4d1173",
+    "defaults": "observed-creator-v1",
+    "variables": [],
+    "questions": {
+      "1781009000002": {
+        "response": { "format": "latex", "kind": "real" },
+        "policy": { "domain": "real", "form": "value-only" }
+      }
+    },
+    "constraints": [
+      {
+        "kind": "comparison",
+        "left": { "variable": "u0" },
+        "operator": "!=",
+        "right": { "constant": 1 }
+      },
+      {
+        "kind": "comparison",
+        "left": { "variable": "k" },
+        "operator": "!=",
+        "right": { "latex": "2\\cdot\\mathrm{u0}^2" }
+      }
+    ],
+    "decisions": [
+      "User approved u0 != 1 and k != 2u0^2 to retain distractors; sampled domain reduced.",
+      "Convergence limit is conditional; nonsquare k and integer u0 give a nonconstant two-cycle."
+    ]
+  },
+  "96": {
+    "revision": "legacy-reviewed-v1:0f4d1173",
+    "defaults": "observed-creator-v1",
+    "variables": [],
+    "aliases": { "L": "limitValue" },
+    "questions": {
+      "1780003000002": {
+        "response": { "format": "latex", "kind": "rational" },
+        "policy": { "domain": "rational", "form": "value-only" }
+      }
+    },
+    "constraints": [
+      {
+        "kind": "comparison",
+        "left": { "variable": "u0" },
+        "operator": "<=",
+        "right": { "variable": "limitValue" }
+      }
+    ],
+    "decisions": [
+      "User approved u0 <= 2k to retain growth/boundedness statement; sampled domain reduced.",
+      "Mechanical canonical parameter alias L -> limitValue; original spelling preserved."
+    ]
+  },
+  "103": {
+    "revision": "legacy-reviewed-v1:0f4d1173",
+    "defaults": "observed-creator-v1",
+    "variables": [{ "name": "x", "domain": "real" }],
+    "flags": { "flash": "row" },
+    "questions": {
+      "1780008000003": {
+        "response": { "format": "latex", "kind": "rational" },
+        "policy": { "domain": "rational", "form": "value-only" }
+      }
+    },
+    "decisions": [
+      "User approved outer Is_Flash=true; inner isFlash=false remains private.",
+      "Known minimum abscissa -b/(2a), a positive; value-only exact rational response."
+    ]
+  },
+  "106": {
+    "revision": "legacy-reviewed-v1:0f4d1173",
+    "defaults": "observed-creator-v1",
+    "variables": [{ "name": "x", "domain": "real" }],
+    "questions": {
+      "1780010000002": {
+        "response": {
+          "format": "latex",
+          "kind": "log-affine-positive",
+          "variable": "x"
+        },
+        "policy": { "domain": "log-affine-positive", "form": "value-only" }
+      },
+      "1780010000003": {
+        "response": { "format": "latex", "kind": "real" },
+        "policy": { "domain": "real", "form": "power-of-e" }
+      }
+    },
+    "decisions": [
+      "Known derivative a ln(x)+a+b, intrinsic comparison domain x>0; bounded affine logarithmic proof only.",
+      "Known solution e^(-(a+b)/a), power-of-e form required by original question.",
+      "Dependent exclusion b != a retained as canonical constraint."
+    ]
+  }
+}

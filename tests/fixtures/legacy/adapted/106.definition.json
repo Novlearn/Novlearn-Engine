@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 5,
+  "kind": "composed",
+  "id": "106",
+  "revision": "legacy-reviewed-v1:0f4d1173",
+  "title": "Dérivée fonction avec logarithme",
+  "catalogue": {
+    "chapter": "Logarithme néperien",
+    "skills": [
+      "Dériver la fonction logarithme",
+      "Utiliser le logarithme pour résoudre une équation/inéquation",
+      "Calculer une dérivée"
+    ],
+    "exerciseType": "classic",
+    "needsCalculator": false,
+    "appTitle": "Dérivée fonction logarithmique"
+  },
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [
+      {
+        "name": "a",
+        "kind": "integer",
+        "min": 1,
+        "max": 4,
+        "exclusions": []
+      },
+      {
+        "name": "b",
+        "kind": "integer",
+        "min": 1,
+        "max": 6,
+        "exclusions": []
+      },
+      {
+        "name": "c",
+        "kind": "computed",
+        "latex": "-\\mathrm{a}-\\mathrm{b}"
+      }
+    ],
+    "constraints": [
+      {
+        "kind": "comparison",
+        "left": {
+          "variable": "b"
+        },
+        "operator": "!=",
+        "right": {
+          "variable": "a"
+        }
+      }
+    ],
+    "maxAttempts": 128,
+    "maxDraws": 10000
+  },
+  "variables": [
+    {
+      "name": "x",
+      "domain": "real"
+    }
+  ],
+  "elements": [
+    {
+      "id": "1780010000001",
+      "type": "text",
+      "text": "Soit $f$ définie sur $]0 ; +\\infty[$ par $f(x) = @a x \\ln(x) + @b x$.",
+      "extensions": {
+        "legacyPath": "/elements/0",
+        "legacy": {
+          "text": "Soit $f$ définie sur $]0 ; +\\infty[$ par $f(x) = @a x \\ln(x) + @b x$."
+        }
+      }
+    },
+    {
+      "id": "1780010000002",
+      "type": "question",
+      "text": "Calculer $f'(x)$ pour $x > 0$.",
+      "points": 1,
+      "response": {
+        "format": "latex",
+        "kind": "log-affine-positive",
+        "variable": "x"
+      },
+      "policy": {
+        "domain": "log-affine-positive",
+        "form": "value-only"
+      },
+      "expectedLatex": "\\mathrm{a}\\ln(x)+\\mathrm{a}+\\mathrm{b}",
+      "extensions": {
+        "legacyPath": "/elements/1",
+        "legacy": {
+          "hint": "",
+          "points": 1,
+          "question": "Calculer $f'(x)$ pour $x > 0$.",
+          "explanation": "$f'(x) = @a (\\ln x + 1) + @b = @a \\ln(x) + @a + @b$.",
+          "answerFormat": "expression",
+          "correctAnswer": "@a * \\ln(x) + @a + @b"
+        }
+      }
+    },
+    {
+      "id": "1780010000003",
+      "type": "question",
+      "text": "Pour quelle valeur de $x$ a-t-on $f'(x) = 0$ ? (Donner le résultat exact sous la forme $e^k$)",
+      "points": 1,
+      "response": {
+        "format": "latex",
+        "kind": "real"
+      },
+      "policy": {
+        "domain": "real",
+        "form": "power-of-e"
+      },
+      "expectedLatex": "\\exponentialE^{\\frac{\\mathrm{c}}{\\mathrm{a}}}",
+      "extensions": {
+        "legacyPath": "/elements/2",
+        "legacy": {
+          "hint": "",
+          "points": 1,
+          "question": "Pour quelle valeur de $x$ a-t-on $f'(x) = 0$ ? (Donner le résultat exact sous la forme $e^k$)",
+          "explanation": "$@a \\ln(x) + @a + @b = 0$ $\\Leftrightarrow \\ln(x) = \\frac{-@a-@b}{@a} \\Leftrightarrow x = e^{\\frac{@c}{@a}}$.",
+          "answerFormat": "number",
+          "correctAnswer": "e^{\\frac{@c}{@a}}"
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "legacy": {
+      "adapterVersion": "legacy-to-canonical-v1",
+      "sourceFormat": "database-row-v1",
+      "original": {
+        "id": 106,
+        "created_at": "2026-05-06 13:47:36.956737+00",
+        "title": "Dérivée fonction avec logarithme",
+        "chapter": "Logarithme néperien",
+        "difficulty": "Moyen",
+        "competences": "[\"Dériver la fonction logarithme\",\"Utiliser le logarithme pour résoudre une équation/inéquation\",\"Calculer une dérivée\"]",
+        "content": "{\"isFlash\": false, \"elements\": [{\"id\": 1780010000001, \"type\": \"text\", \"content\": {\"text\": \"Soit $f$ définie sur $]0 ; +\\\\infty[$ par $f(x) = @a x \\\\ln(x) + @b x$.\"}}, {\"id\": 1780010000002, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Calculer $f'(x)$ pour $x > 0$.\", \"explanation\": \"$f'(x) = @a (\\\\ln x + 1) + @b = @a \\\\ln(x) + @a + @b$.\", \"answerFormat\": \"expression\", \"correctAnswer\": \"@a * \\\\ln(x) + @a + @b\"}}, {\"id\": 1780010000003, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Pour quelle valeur de $x$ a-t-on $f'(x) = 0$ ? (Donner le résultat exact sous la forme $e^k$)\", \"explanation\": \"$@a \\\\ln(x) + @a + @b = 0$ $\\\\Leftrightarrow \\\\ln(x) = \\\\frac{-@a-@b}{@a} \\\\Leftrightarrow x = e^{\\\\frac{@c}{@a}}$.\", \"answerFormat\": \"number\", \"correctAnswer\": \"e^{\\\\frac{@c}{@a}}\"}}], \"variables\": [{\"id\": 1780010000010, \"max\": 4, \"min\": 1, \"name\": \"a\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}, {\"id\": 1780010000011, \"max\": 6, \"min\": 1, \"name\": \"b\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"@a\", \"expression\": \"\"}, {\"id\": 1778075375953, \"max\": 10, \"min\": 1, \"name\": \"c\", \"type\": \"computed\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"-@a-@b\"}], \"needCalculator\": false}",
+        "app_title": "Dérivée fonction logarithmique",
+        "Is_Flash": false,
+        "Need_Calculator": false
+      },
+      "decodedContent": {
+        "isFlash": false,
+        "elements": [
+          {
+            "id": 1780010000001,
+            "type": "text",
+            "content": {
+              "text": "Soit $f$ définie sur $]0 ; +\\infty[$ par $f(x) = @a x \\ln(x) + @b x$."
+            }
+          },
+          {
+            "id": 1780010000002,
+            "type": "question",
+            "content": {
+              "hint": "",
+              "points": 1,
+              "question": "Calculer $f'(x)$ pour $x > 0$.",
+              "explanation": "$f'(x) = @a (\\ln x + 1) + @b = @a \\ln(x) + @a + @b$.",
+              "answerFormat": "expression",
+              "correctAnswer": "@a * \\ln(x) + @a + @b"
+            }
+          },
+          {
+            "id": 1780010000003,
+            "type": "question",
+            "content": {
+              "hint": "",
+              "points": 1,
+              "question": "Pour quelle valeur de $x$ a-t-on $f'(x) = 0$ ? (Donner le résultat exact sous la forme $e^k$)",
+              "explanation": "$@a \\ln(x) + @a + @b = 0$ $\\Leftrightarrow \\ln(x) = \\frac{-@a-@b}{@a} \\Leftrightarrow x = e^{\\frac{@c}{@a}}$.",
+              "answerFormat": "number",
+              "correctAnswer": "e^{\\frac{@c}{@a}}"
+            }
+          }
+        ],
+        "variables": [
+          {
+            "id": 1780010000010,
+            "max": 4,
+            "min": 1,
+            "name": "a",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": ""
+          },
+          {
+            "id": 1780010000011,
+            "max": 6,
+            "min": 1,
+            "name": "b",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "@a",
+            "expression": ""
+          },
+          {
+            "id": 1778075375953,
+            "max": 10,
+            "min": 1,
+            "name": "c",
+            "type": "computed",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": "-@a-@b"
+          }
+        ],
+        "needCalculator": false
+      },
+      "decodedCompetences": [
+        "Dériver la fonction logarithme",
+        "Utiliser le logarithme pour résoudre une équation/inéquation",
+        "Calculer une dérivée"
+      ],
+      "recipe": {
+        "revision": "legacy-reviewed-v1:0f4d1173",
+        "defaults": "observed-creator-v1",
+        "variables": [
+          {
+            "name": "x",
+            "domain": "real"
+          }
+        ],
+        "questions": {
+          "1780010000002": {
+            "response": {
+              "format": "latex",
+              "kind": "log-affine-positive",
+              "variable": "x"
+            },
+            "policy": {
+              "domain": "log-affine-positive",
+              "form": "value-only"
+            }
+          },
+          "1780010000003": {
+            "response": {
+              "format": "latex",
+              "kind": "real"
+            },
+            "policy": {
+              "domain": "real",
+              "form": "power-of-e"
+            }
+          }
+        },
+        "decisions": [
+          "Known derivative a ln(x)+a+b, intrinsic comparison domain x>0; bounded affine logarithmic proof only.",
+          "Known solution e^(-(a+b)/a), power-of-e form required by original question.",
+          "Dependent exclusion b != a retained as canonical constraint."
+        ]
+      }
+    }
+  }
+}

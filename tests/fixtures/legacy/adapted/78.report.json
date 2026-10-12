@@ -1,0 +1,615 @@
+{
+  "adapterVersion": "legacy-to-canonical-v1",
+  "sourceFormat": "database-row-v1",
+  "classification": "adaptable",
+  "original": {
+    "id": 78,
+    "created_at": "2026-04-29 13:32:37.083753+00",
+    "title": "Suite récurrente point fixe 1",
+    "chapter": "Suites numériques",
+    "difficulty": "Moyen",
+    "competences": "[\"Utiliser les théorèmes du cours\",\"Etablir la convergence ou divergence d'une suite\"]",
+    "content": "{\"isFlash\": false, \"elements\": [{\"id\": 1781009000001, \"type\": \"text\", \"content\": {\"text\": \"Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\\\frac{@k}{u_n}$ pour tout $n \\\\in \\\\mathbb{N}$ (avec $u_n > 0$).\"}}, {\"id\": 1781009000002, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Si la suite converge vers un réel $\\\\ell > 0$, quelle est la valeur de $\\\\ell$ ?\", \"explanation\": \"On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\\\frac{@k}{x} . \\\\newline$\\nComme $\\\\ell > 0$, $f$ est continue en $\\\\ell$ et par passage à la lmite quand $n \\\\to +\\\\infty$ :\\n$\\\\newline \\\\ell = f( \\\\ell ) \\\\Leftrightarrow \\\\ell = \\\\frac{@k}{\\\\ell} \\\\Leftrightarrow \\\\ell^2 = @k\\\\Leftrightarrow \\\\ell = \\\\sqrt{@k}$ (car $\\\\ell > 0$).\", \"answerFormat\": \"number\", \"correctAnswer\": \"\\\\sqrt{@k}\"}}, {\"id\": 1781009000003, \"type\": \"mcq\", \"content\": {\"hint\": \"$u_1 = \\\\frac{@k}{u_0}$, puis $u_2 = \\\\frac{@k}{u_1}$.\", \"options\": [{\"id\": 1, \"text\": \"$u_0$\", \"correct\": true}, {\"id\": 2, \"text\": \"$\\\\frac{@k}{u_0}$\", \"correct\": false}, {\"id\": 3, \"text\": \"$\\\\frac{1}{u_0}$\", \"correct\": false}, {\"id\": 4, \"text\": \"$2 u_0$\", \"correct\": false}], \"question\": \"Que vaut $u_2$ en fonction de $u_0$ ?\", \"explanation\": \"$u_2 = \\\\frac{@k}{u_1} = \\\\frac{@k}{\\\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !\", \"multipleChoice\": false, \"multipleAnswers\": false}}, {\"id\": 1777470911608, \"type\": \"mcq\", \"content\": {\"options\": [{\"id\": 1, \"text\": \"La suite $(u_n)$ converge\", \"correct\": false}, {\"id\": 2, \"text\": \"La suite $(u_n)$ diverge\", \"correct\": true}, {\"text\": \"On ne peut encore rien conclure\", \"correct\": false}], \"question\": \"Que conclure sur la convergence de $(u_n)$ ?\", \"explanation\": \"La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\\n$\\\\newline$ Ainsi comme $u_0 \\\\ne u_1$, la suite $(u_n)$ diverge.\", \"multipleChoice\": false}}], \"variables\": [{\"id\": 1781009000010, \"max\": 15, \"min\": 2, \"name\": \"k\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"4;9\", \"expression\": \"\"}, {\"id\": 1781009000011, \"max\": 5, \"min\": 1, \"name\": \"u0\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}], \"needCalculator\": false}",
+    "app_title": "Point fixe d'une suite récurrente",
+    "Is_Flash": false,
+    "Need_Calculator": false
+  },
+  "mappings": [
+    {
+      "scope": "row",
+      "path": "",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/id",
+      "disposition": "mapped",
+      "target": "/id"
+    },
+    {
+      "scope": "row",
+      "path": "/created_at",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/title",
+      "disposition": "mapped",
+      "target": "/title"
+    },
+    {
+      "scope": "row",
+      "path": "/chapter",
+      "disposition": "mapped",
+      "target": "/catalogue/chapter"
+    },
+    {
+      "scope": "row",
+      "path": "/difficulty",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/competences",
+      "disposition": "mapped",
+      "target": "/catalogue/skills"
+    },
+    {
+      "scope": "row",
+      "path": "/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "row",
+      "path": "/app_title",
+      "disposition": "mapped",
+      "target": "/catalogue/appTitle"
+    },
+    {
+      "scope": "row",
+      "path": "/Is_Flash",
+      "disposition": "mapped",
+      "target": "/catalogue/exerciseType"
+    },
+    {
+      "scope": "row",
+      "path": "/Need_Calculator",
+      "disposition": "mapped",
+      "target": "/catalogue/needsCalculator"
+    },
+    {
+      "scope": "content",
+      "path": "",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/isFlash",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/id",
+      "disposition": "mapped",
+      "target": "/elements/0/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/type",
+      "disposition": "mapped",
+      "target": "/elements/0/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/0/content/text",
+      "disposition": "mapped",
+      "target": "/elements/0/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/id",
+      "disposition": "mapped",
+      "target": "/elements/1/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/type",
+      "disposition": "mapped",
+      "target": "/elements/1/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/hint",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/points",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/question",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/explanation",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/answerFormat",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/1/content/correctAnswer",
+      "disposition": "mapped",
+      "target": "/elements/1"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/id",
+      "disposition": "mapped",
+      "target": "/elements/2/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/type",
+      "disposition": "mapped",
+      "target": "/elements/2/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/hint",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/0/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/0/text",
+      "disposition": "mapped",
+      "target": "/elements/2/options/0/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/0/correct",
+      "disposition": "mapped",
+      "target": "/elements/2/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/1",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/1/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/1/text",
+      "disposition": "mapped",
+      "target": "/elements/2/options/1/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/1/correct",
+      "disposition": "mapped",
+      "target": "/elements/2/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/2",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/2/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/2/text",
+      "disposition": "mapped",
+      "target": "/elements/2/options/2/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/2/correct",
+      "disposition": "mapped",
+      "target": "/elements/2/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/3",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/3/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/3/text",
+      "disposition": "mapped",
+      "target": "/elements/2/options/3/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/options/3/correct",
+      "disposition": "mapped",
+      "target": "/elements/2/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/question",
+      "disposition": "mapped",
+      "target": "/elements/2/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/explanation",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/multipleChoice",
+      "disposition": "mapped",
+      "target": "/elements/2/mode"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/2/content/multipleAnswers",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/id",
+      "disposition": "mapped",
+      "target": "/elements/3/id"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/type",
+      "disposition": "mapped",
+      "target": "/elements/3/type"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/0/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/0/text",
+      "disposition": "mapped",
+      "target": "/elements/3/options/0/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/0/correct",
+      "disposition": "mapped",
+      "target": "/elements/3/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/1",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/1/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/1/text",
+      "disposition": "mapped",
+      "target": "/elements/3/options/1/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/1/correct",
+      "disposition": "mapped",
+      "target": "/elements/3/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/2",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/2/text",
+      "disposition": "mapped",
+      "target": "/elements/3/options/2/content/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/options/2/correct",
+      "disposition": "mapped",
+      "target": "/elements/3/expectedOptionIds"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/question",
+      "disposition": "mapped",
+      "target": "/elements/3/text"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/explanation",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/elements/3/content/multipleChoice",
+      "disposition": "mapped",
+      "target": "/elements/3/mode"
+    },
+    {
+      "scope": "content",
+      "path": "/variables",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/max",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/min",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/name",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0/name"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/type",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0/kind"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/choices",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/decimals",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/exclusions",
+      "disposition": "mapped",
+      "target": "/generation/definitions/0"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/0/expression",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/id",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/max",
+      "disposition": "mapped",
+      "target": "/generation/definitions/1"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/min",
+      "disposition": "mapped",
+      "target": "/generation/definitions/1"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/name",
+      "disposition": "mapped",
+      "target": "/generation/definitions/1/name"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/type",
+      "disposition": "mapped",
+      "target": "/generation/definitions/1/kind"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/choices",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/decimals",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/exclusions",
+      "disposition": "mapped",
+      "target": "/generation/definitions/1"
+    },
+    {
+      "scope": "content",
+      "path": "/variables/1/expression",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "content",
+      "path": "/needCalculator",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "competences",
+      "path": "",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "competences",
+      "path": "/0",
+      "disposition": "preserved-private"
+    },
+    {
+      "scope": "competences",
+      "path": "/1",
+      "disposition": "preserved-private"
+    }
+  ],
+  "decisions": [
+    "User approved u0 != 1 and k != 2u0^2 to retain distractors; sampled domain reduced.",
+    "Convergence limit is conditional; nonsquare k and integer u0 give a nonconstant two-cycle.",
+    "/elements/2/content/points: observed Creator MCQ default 1",
+    "/elements/3/content/options/2/id: synthetic path ID legacy-option-3-2",
+    "/elements/3/content/points: observed Creator MCQ default 1"
+  ],
+  "diagnostics": [],
+  "productionMigration": false,
+  "sourceHash": "0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae",
+  "verification": {
+    "status": "passed",
+    "seed": 42,
+    "instanceId": "legacy-78-proof",
+    "corrections": [
+      {
+        "schemaVersion": 5,
+        "instanceId": "legacy-78-proof",
+        "questionId": "1781009000002",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "exact",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "exact-number",
+        "code": "numeric-equal"
+      },
+      {
+        "schemaVersion": 5,
+        "instanceId": "legacy-78-proof",
+        "questionId": "1781009000003",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "discrete",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "selection",
+        "code": "selection-equal"
+      },
+      {
+        "schemaVersion": 5,
+        "instanceId": "legacy-78-proof",
+        "questionId": "1777470911608",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "discrete",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "selection",
+        "code": "selection-equal"
+      }
+    ]
+  }
+}

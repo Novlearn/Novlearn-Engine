@@ -25,6 +25,7 @@ export function inspectQuestionAnswer(
   const kind = response.kind;
   const algebra = [
     'expression',
+    'log-affine-positive',
     'rational-expression',
     'equation',
     'inequality',
@@ -61,6 +62,7 @@ export function inspectQuestionAnswer(
       'real',
       'extended-real',
       'expression',
+      'log-affine-positive',
       'text',
       'rational-expression',
       'equation',
@@ -107,11 +109,29 @@ export function inspectQuestionAnswer(
     'comparisonDomain',
   ]);
   v.literal(p.domain, `${path}/policy/domain`, String(domain));
+  if (kind === 'log-affine-positive') {
+    if (p.form !== 'value-only')
+      v.issue(
+        `${path}/policy/form`,
+        'value',
+        'Log-affine-positive accepts value-only forms.',
+      );
+    if (
+      typeof response.variable !== 'string' ||
+      variables.get(response.variable) !== 'real'
+    )
+      v.issue(
+        `${path}/response/variable`,
+        'value',
+        'Log-affine-positive requires an explicit declared real variable.',
+      );
+  }
   const families = [
     'irreducible-fraction',
     'expanded',
     'reduced',
     'factorized',
+    'power-of-e',
   ];
   const inspectForm = (form: unknown, formPath: string): void => {
     if (!families.some((f) => f === form)) {
@@ -123,9 +143,11 @@ export function inspectQuestionAnswer(
       return;
     }
     if (
-      form === 'irreducible-fraction'
-        ? !['rational', 'real'].some((k) => k === kind)
-        : kind !== 'expression'
+      form === 'power-of-e'
+        ? kind !== 'real'
+        : form === 'irreducible-fraction'
+          ? !['rational', 'real'].some((k) => k === kind)
+          : kind !== 'expression'
     )
       v.issue(
         formPath,
@@ -219,6 +241,12 @@ export function inspectQuestionAnswer(
       );
   }
   if (p.comparisonDomain !== undefined) {
+    if (kind === 'log-affine-positive')
+      v.issue(
+        `${path}/policy/comparisonDomain`,
+        'value',
+        'The log-affine-positive profile has the intrinsic comparison domain x>0.',
+      );
     const d = v.object(p.comparisonDomain, `${path}/policy/comparisonDomain`, [
       'variable',
       'excludedLatex',

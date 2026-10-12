@@ -17,6 +17,10 @@
     "./node-host": {
       "types": "./dist/node-host/index.d.ts",
       "import": "./dist/node-host/index.js"
+    },
+    "./legacy": {
+      "types": "./dist/adapters/legacy/index.d.ts",
+      "import": "./dist/adapters/legacy/index.js"
     }
   },
   "files": [

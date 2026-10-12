@@ -1,5 +1,19 @@
 # Stratégie de vérification
 
+M10 : legacy-adapter.test.ts et log-affine.test.ts, conversion des huit vrais
+documents reçus avec originaux/mappings558 chemins, quatre seeds par ligne et
+oracles indépendants de génération/attendus. Creator plat/publication : tests
+synthétiques fondés sur sources, aucune capture runtime revendiquée. Refus de JS,
+getters, placeholders inconnus complets, décimaux/scripts incomplets, commentaires,
+conflits, types inconnus et recettes mal formées. Domaine avant réduction et
+comparaison indéterminée injectée/restaurée ; grands rationnels et attendu brut
+recontrôlés. Forme e^k distincte de exp(q) de même valeur.
+tools/check-legacy-host.mjs : huit parcours réels de conversion/instanciation/
+projection/correction sous worker neuf et quota Linux, plus recette invalide.
+Sept régressions Python/FastAPI après whitelist de l'adaptation, sans HTTP d'import.
+Les inventaires/transcriptions manuelles antérieurs restent distincts de cette
+conversion complète. Qualification et commandes exactes dans progress.md.
+
 M9 : 10 tests CLI Vitest, 7 tests Python/FastAPI autonomes, tools/check-linux.mjs
 avec 12 contrôles sous scope cgroupv2 borné. Quotas absents/swap autorisé refusés
 avant PID worker ; Linux sans privilèges, réseau coupé, mounts readonly et cache

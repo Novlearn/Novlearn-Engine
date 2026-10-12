@@ -191,6 +191,20 @@ function atomic(
   ce: ComputeEngine,
 ): boolean | undefined {
   if (form === 'irreducible-fraction') return fraction(syntax, ce);
+  if (form === 'power-of-e') {
+    const node = unwrap(syntax);
+    if (
+      !Array.isArray(node) ||
+      node[0] !== 'Power' ||
+      node.length !== 3 ||
+      unwrap(node[1]!) !== 'ExponentialE'
+    )
+      return false;
+    const exponent = ce.box(encode(node[2]!, '/form/exponent')).evaluate();
+    return (
+      exponent.toRational() !== null && exponent.toRational() !== undefined
+    );
+  }
   if (form === 'factorized') return factorized(syntax, variable, ce);
   const items = terms(syntax);
   const expanded = items.map((n) => monomial(n, variable));

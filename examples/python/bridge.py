@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 import uuid
 
-OPERATIONS = frozenset({"validateDefinition", "validateSubmission", "parseMathInput", "generateVariables", "instantiateExercise", "projectPublicInstance", "gradeAnswer"})
+OPERATIONS = frozenset({"validateDefinition", "validateSubmission", "parseMathInput", "generateVariables", "instantiateExercise", "projectPublicInstance", "gradeAnswer", "adaptLegacyExercise"})
 ERRORS = frozenset({"invalid-request", "input-limit", "output-limit", "stderr-limit", "busy", "timeout", "aborted", "closed", "unavailable", "crash", "protocol-error", "worker-error"})
 
 

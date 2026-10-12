@@ -3,6 +3,8 @@ import process from 'node:process';
 import { TextDecoder } from 'node:util';
 import * as engine from '../index.js';
 import type { ExerciseInstance } from '../contracts/types.js';
+import { adaptLegacyExercise } from '../adapters/legacy/index.js';
+import type { LegacyRecipe } from '../adapters/legacy/index.js';
 import { boundedJson, object, request } from './protocol.js';
 
 // One request, one process, one fresh mathematical context per engine call.
@@ -30,6 +32,23 @@ try {
     if (keys !== expected) throw new Error('invalid-request');
   };
   switch (input.operation) {
+    case 'adaptLegacyExercise':
+      need('recipe,source,sourceFormat');
+      if (
+        !object(p.recipe) ||
+        (p.sourceFormat !== 'database-row-v1' &&
+          p.sourceFormat !== 'creator-publication-v1' &&
+          p.sourceFormat !== 'creator-document-v1')
+      )
+        throw new Error('invalid-request');
+      // Parsed bounded JSON, on the private backend channel. The adapter checks inert
+      // recipe data and the resulting canonical contract; pedagogical authority is server-side.
+      value = adaptLegacyExercise(
+        p.source,
+        p.sourceFormat,
+        p.recipe as unknown as LegacyRecipe,
+      );
+      break;
     case 'validateDefinition':
       need('definition');
       value = engine.validateDefinition(p.definition);

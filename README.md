@@ -168,8 +168,12 @@ Pas de champ d'instanciation redondant.
 
 Anciens contrats, tableaux de paramètres et options expérimentales refusés ; aucun
 adaptateur implicite ou rejeu des anciens snapshots. Huit sources originales et
-copie inchangées en octets. Question 103 transcrite manuellement au canonique,
-aucun exercice historique complet migré. Adaptateurs futurs au Lot 9, hors cœur.
+copie inchangées en octets. Sous-chemin explicite `./legacy` : adaptLegacyExercise
+avec format et recette serveur revue, original/mappings privés, huit conversions
+complètes locales. [Rapports et profils](docs/compatibility.md), [guide](docs/migration-guide.md).
+Les fixtures64/103 antérieures restent des transcriptions manuelles distinctes.
+M10 ajoute le profil exact `log-affine-positive` sur x>0 et la forme `power-of-e`
+pour106 ; aucun solveur général. Aucune migration de base/production exécutée.
 
 ## Développement et documentation
 

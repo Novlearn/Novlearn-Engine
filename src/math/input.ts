@@ -169,6 +169,14 @@ export function parseNumericInput(source: string, context: MathInputContext) {
 export function parseAlgebraInput(source: string, context: MathInputContext) {
   return parseInput(source, context, 'algebra-latex-v1');
 }
+/** Internal legacy admission reuses every source guard; only placeholder dictionary differs. */
+export function parseLegacyInput(
+  source: string,
+  context: MathInputContext,
+  aliases: ReadonlyMap<string, string>,
+) {
+  return parseInput(source, context, 'school-latex-v1', aliases);
+}
 export function parseCollectionInput(
   source: string,
   context: MathInputContext,
@@ -184,7 +192,12 @@ function parseInput<
     | 'numeric-latex-v1'
     | 'algebra-latex-v1'
     | 'collection-latex-v1',
->(source: string, context: MathInputContext, profile: P): ParsedMathInput<P> {
+>(
+  source: string,
+  context: MathInputContext,
+  profile: P,
+  legacyAliases?: ReadonlyMap<string, string>,
+): ParsedMathInput<P> {
   const display = profile === 'display-latex-v1';
   const school = profile === 'school-latex-v1';
   const presentation = display || school;
@@ -364,6 +377,14 @@ function parseInput<
         parse: name,
       })),
     );
+    if (legacyAliases)
+      ce.latexSyntax?.addEntries?.(
+        [...legacyAliases].map(([old, name]) => ({
+          kind: 'expression' as const,
+          latexTrigger: `@${old}`,
+          parse: name,
+        })),
+      );
     ce.latexOptions.decimalSeparator = '{,}';
     const expression = ce.parse(source, { form: 'raw' });
     const syntax = expression.json;

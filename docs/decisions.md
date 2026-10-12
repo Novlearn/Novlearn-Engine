@@ -1,5 +1,18 @@
 # Décisions
 
+## D45 — M10 : import explicite et arbitrages historiques confirmés
+
+[ADR016](adr/016-reviewed-legacy-adaptation.md). Adaptateur sous-chemin ./legacy,
+recettes privées versionnées, originale complète et mappings558 chemins. Formats
+DB encodé /publication Creator /document plat distincts ; tests Creator reconstruits.
+Computed min/max conservés inactifs selon sources observées, aucun JS exécuté.
+Utilisateur autorise contraintes36 a≠0,78 u0≠1 et k≠2u0²,96 u0≤2k et priorité
+Is_Flash de ligne true pour103. Tirages réduits explicitement, original intact.
+106 requiert log-affine-positive exact surx>0 et forme power-of-e, sans solveur
+général. Sept exports du cœur conservés, une fonction d'adaptation séparée.
+Qualification M10 : check1482PASS/32WindowsSKIP et pack153 ; conversion locale ≠
+migration de production. Linux borné validé, AppControl Windows toujours unavailable.
+
 **Priorité actuelle : D35, cahier des charges V1 et D34/ADR 008.** Les décisions de conservation des APIs expérimentales ci-dessous sont remplacées ; leurs profils mathématiques restent documentés historiquement.
 
 ## D35 — Mission autonome V1 et référence officielle (11 octobre 2026)

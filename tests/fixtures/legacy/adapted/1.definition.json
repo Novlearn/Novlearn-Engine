@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 5,
+  "kind": "composed",
+  "id": "1",
+  "revision": "legacy-reviewed-v1:0f4d1173",
+  "title": "Limite usuelle logarithme 1",
+  "catalogue": {
+    "chapter": "Logarithme néperien",
+    "skills": ["Utiliser les limites usuelles du logarithme"],
+    "exerciseType": "flash",
+    "needsCalculator": false,
+    "appTitle": "Limite usuelle"
+  },
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [
+      {
+        "name": "a",
+        "kind": "integer",
+        "min": 0,
+        "max": 10,
+        "exclusions": []
+      }
+    ],
+    "constraints": [],
+    "maxAttempts": 128,
+    "maxDraws": 10000
+  },
+  "variables": [],
+  "elements": [
+    {
+      "id": "1768397463645",
+      "type": "text",
+      "text": "Soit la fonction $f$ définie sur $]@a, +\\infty[ $ par : \n$\\forall$ $x$ $\\in$ $]@a, +\\infty[$, $f(x)$ = $\\frac{ln(x-@a)}{x-@a}$.\n",
+      "extensions": {
+        "legacyPath": "/elements/0",
+        "legacy": {
+          "text": "Soit la fonction $f$ définie sur $]@a, +\\infty[ $ par : \n$\\forall$ $x$ $\\in$ $]@a, +\\infty[$, $f(x)$ = $\\frac{ln(x-@a)}{x-@a}$.\n"
+        }
+      }
+    },
+    {
+      "id": "1768397937041",
+      "type": "question",
+      "text": "Calculer $\\lim_{x \\to @a  _+}$ $f(x)$",
+      "points": 1,
+      "response": {
+        "format": "latex",
+        "kind": "extended-real"
+      },
+      "policy": {
+        "domain": "extended-real",
+        "form": "value-only"
+      },
+      "expectedLatex": "-\\infty",
+      "extensions": {
+        "legacyPath": "/elements/1",
+        "legacy": {
+          "hint": "",
+          "points": 1,
+          "question": "Calculer $\\lim_{x \\to @a  _+}$ $f(x)$",
+          "explanation": "",
+          "answerFormat": "number",
+          "correctAnswer": "-\\infty"
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "legacy": {
+      "adapterVersion": "legacy-to-canonical-v1",
+      "sourceFormat": "database-row-v1",
+      "original": {
+        "id": 1,
+        "created_at": "2026-01-14 14:22:46.597276+00",
+        "title": "Limite usuelle logarithme 1",
+        "chapter": "Logarithme néperien",
+        "difficulty": "Facile",
+        "competences": "[\"Utiliser les limites usuelles du logarithme\"]",
+        "content": "{\"elements\": [{\"id\": 1768397463645, \"type\": \"text\", \"content\": {\"text\": \"Soit la fonction $f$ définie sur $]@a, +\\\\infty[ $ par : \\n$\\\\forall$ $x$ $\\\\in$ $]@a, +\\\\infty[$, $f(x)$ = $\\\\frac{ln(x-@a)}{x-@a}$.\\n\"}}, {\"id\": 1768397937041, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Calculer $\\\\lim_{x \\\\to @a  _+}$ $f(x)$\", \"explanation\": \"\", \"answerFormat\": \"number\", \"correctAnswer\": \"-\\\\infty\"}}], \"variables\": [{\"id\": 1768397412689, \"max\": 10, \"min\": 0, \"name\": \"a\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}]}",
+        "app_title": "Limite usuelle",
+        "Is_Flash": true,
+        "Need_Calculator": false
+      },
+      "decodedContent": {
+        "elements": [
+          {
+            "id": 1768397463645,
+            "type": "text",
+            "content": {
+              "text": "Soit la fonction $f$ définie sur $]@a, +\\infty[ $ par : \n$\\forall$ $x$ $\\in$ $]@a, +\\infty[$, $f(x)$ = $\\frac{ln(x-@a)}{x-@a}$.\n"
+            }
+          },
+          {
+            "id": 1768397937041,
+            "type": "question",
+            "content": {
+              "hint": "",
+              "points": 1,
+              "question": "Calculer $\\lim_{x \\to @a  _+}$ $f(x)$",
+              "explanation": "",
+              "answerFormat": "number",
+              "correctAnswer": "-\\infty"
+            }
+          }
+        ],
+        "variables": [
+          {
+            "id": 1768397412689,
+            "max": 10,
+            "min": 0,
+            "name": "a",
+            "type": "integer",
+            "choices": [],
+            "decimals": 2,
+            "exclusions": "",
+            "expression": ""
+          }
+        ]
+      },
+      "decodedCompetences": ["Utiliser les limites usuelles du logarithme"],
+      "recipe": {
+        "revision": "legacy-reviewed-v1:0f4d1173",
+        "defaults": "observed-creator-v1",
+        "variables": [],
+        "questions": {
+          "1768397937041": {
+            "response": {
+              "format": "latex",
+              "kind": "extended-real"
+            },
+            "policy": {
+              "domain": "extended-real",
+              "form": "value-only"
+            }
+          }
+        },
+        "decisions": [
+          "Known right-hand limit; explicit negative infinity response, no limit solver."
+        ]
+      }
+    }
+  }
+}

@@ -9,6 +9,7 @@ export const operations = [
   'instantiateExercise',
   'projectPublicInstance',
   'gradeAnswer',
+  'adaptLegacyExercise',
 ] as const;
 export type EngineOperation = (typeof operations)[number];
 /** Private backend channel only. An official instance is never supplied by a browser. */

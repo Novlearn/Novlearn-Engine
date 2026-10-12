@@ -87,14 +87,21 @@ export function encode(
 }
 
 /** Shared lexical numeric admission. Guards do not transform mathematical source. */
-export function admitSource(source: string, path: string): void {
+export function admitSource(
+  source: string,
+  path: string,
+  additionalReferences: readonly (readonly [number, number])[] = [],
+): void {
   // Digits inside explicit identifier spellings are not numeric literals.
   // This is a lexical admission guard only: source is never rewritten.
   const references = [
-    ...source.matchAll(
-      /\\mathrm\s*\{(?:\s|\\ )*[a-z](?:[A-Za-z0-9\s]|\\ )*\}/g,
-    ),
-  ].map((match) => [match.index, match.index + match[0].length] as const);
+    ...additionalReferences,
+    ...[
+      ...source.matchAll(
+        /\\mathrm\s*\{(?:\s|\\ )*[a-z](?:[A-Za-z0-9\s]|\\ )*\}/g,
+      ),
+    ].map((match) => [match.index, match.index + match[0].length] as const),
+  ];
   const insideReference = (offset: number): boolean =>
     references.some(([start, end]) => offset >= start && offset < end);
   for (const match of source.matchAll(
