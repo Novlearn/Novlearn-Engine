@@ -9,8 +9,15 @@ validé. M9 : [ADR015](adr/015-private-python-transport.md), CLI/bridge privé P
 et exemple FastAPI avec provenance/TTL ; scope cgroupv2 Linux existant borné,
 quota partagé et peakCgroupBytes distinct du commit Windows. Contrôle OS Windows
 du poste refuse actuellement le lanceur reconstruit ; aucun contournement.
-M9 vérifié sous ce profil Linux ; scénarios M11 et adoption applicative restent
-nécessaires. Le résultat et le slot attendent cleanup, sans SLO strict de fermeture.
+M9 vérifié sous ce profil Linux ; [M11](demo.md) démontre le parcours réel,
+la reprise et les manches périmées. L'adoption de production reste applicative.
+Le résultat et le slot attendent cleanup, sans SLO strict de fermeture.
+
+M12 : garde partagé des versions de snapshot avant correction/projection,
+contrat applicatif de persistance et registre d'artefacts immuables dans
+[release](release.md). Types/imports/bundle du vrai tarball vérifiés ; sept
+exports du cœur conservés. Le garde de versions ne remplace pas la confiance
+serveur ou la sélection d'artefact avant rejeu.
 
 Extension M6 : [ADR 013](adr/013-school-known-answers.md). Profil public de lecture
 school-latex-v1, limites avec binding Cortex et mode display explicite des

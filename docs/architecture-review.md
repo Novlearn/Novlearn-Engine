@@ -1,5 +1,45 @@
 # Audit de cohérence de l'architecture
 
+## Revue finale M12 — cohérente sur les profils V1 documentés
+
+Le CDC officiel confirmé, la mission et les48 lignes de
+[couverture](feature-coverage.md) ont été confrontés aux contrats, code et tests
+actuels par root et deux revues indépendantes en lecture seule. Les conclusions
+historiques suivantes ne décrivent pas l'état courant M0–M12.
+
+Architecture unique schéma5, sept exports portables, une instanciation/correction
+et adaptateur legacy séparé confirmés. Source/domaine/forme précèdent la réduction
+dans substitution/numeric/algebra/log-affine ; l'affichage annonce les domaines
+non vérifiés. Les oracles BigInt, formes, domaines/contre-exemples et états
+indéterminés disposent de tests. Aucun second CAS, parseur LaTeX, eval/newFunction,
+RNG global ou preuve par égalité heuristique trouvé dans les chemins audités.
+
+Les revues finales ont trouvé puis fait corriger deux défauts : progression
+concurrente écrasée par une réponse ancienne M11, et snapshots de versions
+inconnues corrigés/projetés implicitement M12. Leurs régressions passent.
+L'infini à question unique demandé par la mission a été ajouté au parcours HTTP
+historique1 : adaptation privée, sortieMathLive réelle archivée, signes/1/0.
+Les passages documentaires pré-M8/10/11 obsolètes ont été explicitement archivés
+ou actualisés. Aucun autre faux verdict ou défaut critique démontré par les revues.
+
+Consommation réelle Node/TS/bundle vérifiée sous Windows et Linux, navigateur
+Chromium réel, archives/locks distincts et enveloppe privée versionnée avec
+rejeu/upgrade/rollback exécutés. Linux OS384MiB/swap0/pids64 :12 contrôles M12
+PASS, Buffer externe atteint402653184octets, OOM/crash puis reprise saine.
+La preuve n'est pas une qualification de production ni de Windows AppControl.
+
+Gates finales : check1501PASS/32WindowsSKIP,13PythonPASS,12LinuxOSPASS,
+consommateurs Windows/Linux/types/bundle et replay/rollback PASS ; originaux et
+golden canoniques inchangés. Les46 exigences P0/P1 de la matrice sont validées
+sur leurs profils, sans réserve critique démontrée. Commit local à enregistrer.
+Verdict : V1 locale prête pour intégration contrôlée ; aucune production ou CI
+distante exécutée.
+Les limites légitimes du CDC15 sont conservées : pas de solveur général,
+multivarié/complexes libres, renderer/Admin ou progression/points dans le cœur.
+[Profils et adoption](release.md), [preuve navigateur](demo.md).
+
+## Archive de l'audit initial
+
 **Audit historique du 10 octobre et actualisation 4 bis.** Les descriptions de versions ci-dessous décrivent ces étapes. [Audit de consolidation actuel](consolidation.md) et [architecture canonique](architecture.md) font référence pour le package 0.1.0.
 
 Date : 10 octobre 2026. Verdict : **cohérente avec réserves**. Les frontières et le premier sous-ensemble livré correspondent à la cible ; les contrats et parcours étendus, le correcteur et l'isolation n'ont pas encore les preuves nécessaires à une adoption officielle. Cette conclusion ne valide ni un correcteur universel ni une intégration de production.

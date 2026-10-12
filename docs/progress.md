@@ -1,5 +1,81 @@
 # État et transmission
 
+## M12 validé — commit final à créer
+
+Check complet Linux **1501PASS/32WindowsSKIP**,28fichiersPASS/1SKIP(29),
+**478,61s**, exit0. Build/types/lint/format inclus ; root types/lint/diff PASS.
+13Python/FastAPI PASS84,110s ;12contrôles natifs Linux M12 PASS sous384MiB/swap0/
+pids64, Bufferpeak402653184/crash1317ms/recovery. Consommateurs Windows/Linux,
+TypeScriptstrict types[]+contratpersistant et bundlebrowser PASS ; Linuxsansréseau.
+ArchiveWindowsexécutée 9f29aeb6…1753a/157fichiers, Linux79a2e6…a5afd/156.
+Packdryrun157fichiers/160115octets/754689décompressés/SHA1
+f6021bc11d29d8d6825f1222e003bd288580d2fc. Rapports fixtures/release séparés des
+archives et tentatives privées en.cache. Aucun serveur/validation encore actif.
+
+Audit final :48lignes, **46exigencesP0/P1 validées**, deuxexclusions explicites.
+Deuxrevues readonly favorables après correctifs. Enveloppe persistante relie
+id/révision/définition/official/soumission/correction ; régénération complète JSON
+avec ancien/nouvelartefact, regrade/projection/rollback PASS, **11corruptionsrefusées**.
+Premier testregen échouait sur prototypes null vsObject du JSON, corrigé en
+comparant le format JSON contractuel, sans retirer de champ ou preuve.
+La revue finale a corrigé la construction des trois corruptions engine/seed/title :
+elles utilisent désormais le JSON persisté et les onze rejets vérifient chacun
+le contrôle attendu. Rejeu, upgrade et rollback réexécutés : PASS.
+L'hôte de l'archive Linux installée a également exécuté un vrai parseMathInput
+sous 384 MiB/pids64 : 1744,509 ms, pic cgroup partagé 191963136 octets, PASS.
+CDC SHAFFB97D…59AE et deuxoriginaux SHA0F4D…C3AE inchangés ; golden canonical
+`git diff e072a57 HEAD` vide. Pas de CI distante, publication, déploiement ou SQL.
+Reste uniquement revue du diff/stage explicite/commit local et enregistrement du
+hash final. Verdict prêt : V1locale sur les profils documentés, limites dansrelease.
+
+### Travail M12 et preuves de préparation conservés
+
+M11 commité **41a8ef230b5241be797fd159eb0ffac700c7e5e9** :21fichiers,
+4367insertions/19suppressions. Arbre propre hors CDC officiel avant M12.
+README/progress/decisions/roadmap11 et CDCdistribution/critèresfin relus ;
+audits indépendants readonly math/sécurité et contrats/interop lancés, root seul
+auteur. Aucun processus de validation ou serveur de banc encore vivant.
+Objectifs : vrai tarball installé en consommateur externe local Node/TypeScript,
+bundle navigateur sans builtinNode, versions/artefacts/rejeu/rollback documentés,
+CI actions figées vérifiées, audit pointparpoint P0/P1 avec preuves effectives.
+Rolldown disponible via Vitest/Vite existants, aucune nouvelle dépendance moteur.
+Pas de publication/push/PR/déploiement, production voisine reste lecture seule.
+MatriceCDC14/15/41/45/47/48 encore à auditer/qualifier, V1 non déclarée terminée.
+Prochaines actions : scripts consommation et preuvesartefacts, auditCDC complet,
+correctifs si défaut démontré, check/pack/docs/revue/commit M12.
+
+M12 réalisé à ce stade : garde runtime schema/engine/generator ajouté à grade
+(error official-version) et projection (throw unsupported-snapshot-version),
+sept testsversions +E2E/canonical **32PASS/3fichiers8,78s**. Manque de scénario
+M11 unique/infini repéré par audit final et complété enM12 : historique1 réellement
+adapté parhost, HTTPFastAPI avec sortieMathLiveM7 -infty, +infty incorrect,
+1/0invalid ; **13Python PASS84,110s** aprèsgardeversion. Aucun nouveau fauxverdict
+trouvé par les deux audits readonly ; contradictionsdocs finales identifiées.
+
+Consommation `npm.cmd run smoke:package` PASS Node24.19.0, vraiarchive installée
+dans.cache/package-smoke-1791809312180/consumer ; typesstricts sansambienttypes,
+septexports+deuxsouschemins, génération/correction78 ; Rolldown1.2.13 browser,
+31modules/5471974octets sansbuiltin/externalNode. Archive157fichiersSHA256
+9bc4999589377c05338c4e48d53749b48260d7df774530095131586e4cc01d2e.
+Premier essai --offline ENOTCACHED(metadataCortex), passé avec --prefer-offline
+registreofficiel, aucunedepsmoteur ajoutée. Bundle réellement exécuté Brave155
+via serveur **statique seulement** loopback4319, sourcefr1{,}25 conservée,
+capture+JSON tests/fixtures/release ; ongletfermé, serveur79340 terminéCtrlC.
+
+AncienartefactM11 extrait `git archive 41a8ef2`, compilé depuis.cache/m11-source
+contre dépendancesmathinchangées. Premier pack --prefix ciblait le dépôtcourant
+(157fichiers), corrigé avec cwdexact ; vraiM11 **153fichiers**, SHA256
+974e54fa4114d2c427c5022a6f1980ae956ba390953f16f06b5c9eb96cb9989a.
+tools/release-replay.mjs : lesdeuxvraisartefacts installés, enveloppe privéeversion1
+avec définition/official/submission/correction etshaarchive+lock ; JSON/rejeu,
+upgrade de cescas etrollback **PASS**, quatrecorruptionsrefusées. Contratapplicatif
+examples/persistence/attempt.ts, aucunexportcoreajouté. CI actionsv4SHAofficiels
+vérifiés git ls-remote, smoke ajouté, aucuneCIdistante exécutée. Types/lint/diffPASS.
+
+Documentationrelease/adoption/audit etmatrice pointparpoint achevées ;
+consommateurLinux/checkcomplet/pack/revues terminés comme indiqué ci-dessus.
+Commit final encore à créer. Aucunprocessuscommandesactif actuellement.
+
 ## M11 validé — commit à créer
 
 Vérification complète Linux `npm run check` **1494PASS/32WindowsSKIP**,

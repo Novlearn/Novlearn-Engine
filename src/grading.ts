@@ -1,5 +1,6 @@
 import type { ExerciseInstance, TextNormalization } from './contracts/types.js';
 import { validateSubmission } from './contracts/validation.js';
+import { supportedSnapshotVersion } from './contracts/snapshot-version.js';
 import { compareNumeric, prepareNumeric } from './math/numeric.js';
 import { prepareLogAffine, compareLogAffine } from './math/log-affine.js';
 import { toleranceSyntax } from './contracts/answer-validation.js';
@@ -138,6 +139,8 @@ export function gradeAnswer(
     if (!checked.ok) return result('invalid', 'submission-contract');
     const s = checked.value;
     questionId = s.questionId;
+    if (!supportedSnapshotVersion(instance))
+      return result('error', 'official-version');
     if (s.instanceId !== instance.instanceId)
       return result('invalid', 'instance-mismatch');
     const matches = instance.elements.filter((e) => e.id === s.questionId);

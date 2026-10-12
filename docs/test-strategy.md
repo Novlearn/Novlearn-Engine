@@ -1,5 +1,21 @@
 # Stratégie de vérification
 
+M12 : snapshot-version.test.ts refuse schema/engine/generator inconnus avant
+correction/projection ; versions supportées rejouées en JSON. Vrai tarball
+installé en consommateurs Node/TypeScript stricts sans types ambiants hérités,
+deux sous-chemins, bundle Rolldown browser sans builtin/externalNode et exécution
+réelle Chromium ; contrat persistant privé versionné et deux archives réellement
+installées pour rejeu/upgrade/rollback. CI configurée avec SHA actions vérifiés,
+sans CI distante annoncée. Contrats, empreintes et limites dans release.md.
+
+M11 :17 observations réelles MathLive/FastAPI archivées,12 rejouées par Vitest,
+trois questions/QCM par IDs, partiel/reload, falsification et pannes distinctes.
+Les13 tests Python finaux incluent ordre concurrent, TTL/round après vrai grade,
+progression séparée par élève et parcours historique1 à question unique/infini
+ajouté lors de l'audit M12. L'ancien bilan M2 « aucune migration complète »
+ci-dessous décrit cette étape seulement : M10 a exécuté les huit conversions
+locales complètes, distinctes de la production.
+
 M10 : legacy-adapter.test.ts et log-affine.test.ts, conversion des huit vrais
 documents reçus avec originaux/mappings558 chemins, quatre seeds par ligne et
 oracles indépendants de génération/attendus. Creator plat/publication : tests

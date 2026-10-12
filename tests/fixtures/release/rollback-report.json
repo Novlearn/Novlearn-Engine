@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "previous": {
+    "schemaVersion": 1,
+    "packageVersion": "0.1.0",
+    "tarballSha256": "974e54fa4114d2c427c5022a6f1980ae956ba390953f16f06b5c9eb96cb9989a",
+    "dependencyLockSha256": "6f6a2fb4e0bb3d1e53d8805e3d7297451a920a9830d54374db8d4cef2fcc8591"
+  },
+  "current": {
+    "schemaVersion": 1,
+    "packageVersion": "0.1.0",
+    "tarballSha256": "9f29aeb6a3a60b775cc2f94dbb19f3ad0f2b27e867d0578f5507886db3f1753a",
+    "dependencyLockSha256": "26867ead96ce8a2dcfc026147806f7df48675686aaaff8a488700fa2fd4fcfbc"
+  },
+  "replay": "passed",
+  "qualifiedUpgrade": "passed",
+  "rollback": "passed",
+  "rejectedCorruptions": 11
+}

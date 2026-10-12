@@ -194,6 +194,11 @@ rechargement, falsification refusée et erreurs/timeout distincts. Les tentative
 et la fixture de duel restent applicatives ; aucun renderer définitif ou stockage
 de production livré. Captures publiques et snapshots de test privés séparés.
 
+[Distribution et adoption](docs/release.md) : consommation du vrai tarball en
+Node/TypeScript/bundle navigateur, persistance versionnée et rejeu/rollback par
+archive+lock immuables. Versions de snapshot inconnues refusées avant correction
+ou projection. `npm.cmd run smoke:package` reproduit la preuve de distribution.
+
 - [Vision](docs/exercise-engine-vision.md), [spécification](docs/functional-specification.md)
 - [Audit initial](docs/consolidation.md), [ADR 008](docs/adr/008-canonical-consolidation.md), [décisions](docs/decisions.md)
 - [Roadmap](docs/roadmap.md), [tests](docs/test-strategy.md), [corpus](docs/compatibility.md)

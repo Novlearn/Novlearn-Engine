@@ -59,7 +59,14 @@ flowchart TD
 6. Construire et vérifier l'instance complète : définition/révision, versions, valeurs typées, sources nécessaires, affichage et attendus. Aucun échec ne renvoie une instance partiellement valide.
 7. Le backend conserve l'état officiel. `projectPublicInstance` sélectionne des champs affichables et détachés ; aucun spread de définition, `correct`, solution, seed, extensions, politique privée ou trace de génération. Un calcul élève possible à partir de l'énoncé ne constitue pas une fuite de champ privé.
 
-État réel : un seul pipeline sous schemaVersion 5, package privé 0.1.0. Scalaires integer/decimal/choice, tuples, computed et contraintes exactes bornées alimentent la liste texte/section/expression/question/QCM. Attendus par ID, projection et rejeu sont testés. Figures avancées, correction et intégrations applicatives restent différées. La projection accepte un snapshot **officiel de confiance**, sans authentifier des objets privés fournis par le client. Voir [architecture canonique](architecture.md) et [limites](feature-coverage.md).
+État réel : un seul pipeline sous schemaVersion5/package privé0.1.0. Les quatre
+mécanismes alimentent tous les éléments canoniques, y compris les données avancées
+M2. Correction commune et formes M3–M6/M10, projection/rejeu et intégration locale
+M11 sont testés. L'adoption dans les applications de production reste distincte.
+La projection accepte un snapshot **officiel de confiance** avec version admise,
+sans authentifier des objets privés fournis par le client. Voir
+[architecture](architecture.md), [profils](feature-coverage.md) et
+[persistance/adoption](release.md).
 
 ## Parcours élève et tentatives
 

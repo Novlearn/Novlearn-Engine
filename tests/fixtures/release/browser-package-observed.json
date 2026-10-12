@@ -1,0 +1,13 @@
+{
+  "exports": [
+    "generateVariables",
+    "gradeAnswer",
+    "instantiateExercise",
+    "parseMathInput",
+    "projectPublicInstance",
+    "validateDefinition",
+    "validateSubmission"
+  ],
+  "source": "1{,}25",
+  "ok": true
+}

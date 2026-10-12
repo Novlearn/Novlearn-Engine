@@ -203,7 +203,9 @@ AnswerSubmission transporte LaTeX/texte brut ou sélection d'IDs sous schéma 5,
 source même incomplète. Aucun seed/policy/verdict client. gradeAnswer associe les
 IDs à l'instance officielle et rend CorrectionResult, sans authentifier sa provenance.
 Validation structurelle ≠ parsing/domaine/preuve ; previews multi-seeds ne prouvent
-pas toutes les générations. Corps synchrone, aucun timeout préemptif démontré.
+pas toutes les générations. Le corps portable est synchrone ; M8/M9 démontrent
+l'interruption OS dans l'hôte optionnel, avec les limites documentées de quota
+partagé et de nettoyage. M11 exerce le transport FastAPI et MathLive réels.
 
 Correction cible : soumission structurée → association officielle → parsing → admissibilité et domaine → preuve de valeur → politique de réponse/forme → résultat. Recueillir les témoins de forme sur source/raw **avant réduction** ; statuer séparément sur la forme après preuve de valeur. Le serveur fournit format, attendu, tolérance et politique.
 

@@ -145,6 +145,29 @@ class VerticalTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result.status_code, 410)
         self.assertEqual(len(self.app.state.instances[instance]["attempts"]), 1)
 
+    async def test_historical_single_question_infinity_through_http(self):
+        rows = json.loads((ROOT / "tests/fixtures/legacy/exercises_rows.original.json").read_text(encoding="utf-8"))
+        recipes = json.loads((ROOT / "tests/fixtures/legacy/recipes.json").read_text(encoding="utf-8"))
+        adapted = await self.bridge.run("adaptLegacyExercise", {"source": next(row for row in rows if row["id"] == 1), "sourceFormat": "database-row-v1", "recipe": recipes["1"]})
+        self.assertTrue(adapted["ok"], adapted)
+        self.assertTrue(adapted["value"]["ok"])
+        application = create_app(self.bridge, {"1": adapted["value"]["definition"]})
+        async with AsyncClient(transport=ASGITransport(app=application), base_url="http://example.test", headers={"Authorization": "Bearer demo-alice"}) as client:
+            created = await client.post("/instances", json={"exerciseId": "1"})
+            self.assertEqual(created.status_code, 200, created.text)
+            public = created.json()
+            questions = [e for e in public["elements"] if e["type"] == "question"]
+            self.assertEqual(len(questions), 1)
+            observed = json.loads((ROOT / "tests/fixtures/mathlive/observed-0.111.1.json").read_text(encoding="utf-8"))
+            # Real archived MathLive serialization, not a regenerated fake capture.
+            negative = next(record["expandedLatex"] for record in observed["records"] if record["expandedLatex"] == r"-\infty")
+            for source, state in ((negative, "correct"), (r"+\infty", "incorrect"), (r"\frac{1}{0}", "invalid")):
+                graded = await client.post(f'/instances/{public["instanceId"]}/answers', json={"questionId": questions[0]["id"], "answer": {"format": "latex", "source": source}})
+                self.assertEqual(graded.status_code, 200, graded.text)
+                self.assertEqual(graded.json()["state"], state)
+            self.assertNotIn('"expected"', created.text)
+            self.assertNotIn('"seed"', created.text)
+
 
 if __name__ == "__main__":
     unittest.main()

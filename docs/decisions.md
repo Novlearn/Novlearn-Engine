@@ -1,5 +1,19 @@
 # Décisions
 
+## D47 — M12 : artefact immuable et qualification de versions
+
+[Distribution/adoption](release.md). Garde schema5/engine0.1.0/generator admis
+avant correction/projection, sans nouveau validateur général de snapshots ni
+export du cœur. Une archive0.1.0 ne suffit pas à identifier un build : tarball
+SHA256+lock du consommateur figés et registre serveur choisi avant rejeu.
+Enveloppe applicative PersistedAttempt version1 conserve définition, snapshot,
+soumission, résultat et artefact ; aucun schémaSQL ou historique réécrit.
+Deux archives réellement installées, ancien M11/current M12, prouvent les cas
+de rejeu et rollback qualifiés ; aucune compatibilité universelle d'upgrade.
+Consommateurs Windows/Linux et bundle navigateur réel, CI SHA officiels vérifiés.
+Les skips Windows et anciennes preuves JobObject ne qualifient pas le lanceur
+actuel refusé par AppControl. Aucun push/publication/adoption de production.
+
 ## D46 — M11 : preuve verticale et état applicatif minimal
 
 [Banc local](demo.md) : FastAPI sert MathLive local et reçoit uniquement les

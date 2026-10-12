@@ -38,6 +38,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "smoke:package": "node tools/package-smoke.mjs",
     "check": "npm run build && npm run typecheck && npm run lint && npm run format:check && vitest run",
     "prepack": "npm run build"
   },

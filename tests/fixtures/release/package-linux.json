@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "node": "v24.19.0",
+  "packageVersion": "0.1.0",
+  "sha256": "79a2e6f61291033a27ec202a08cb63066e2a455a4e088df7ed11f3c9957a5afd",
+  "integrity": "sha512-B5/m1AIEk0JiTkwbtkr1waQ99RVsuK3KgmOKb5Q2Dxvh6NxFEDtV/0gpwTXQX/LwtgDYqUsAlwg+dKhA5DA2KQ==",
+  "files": 156,
+  "nodeEvidence": {
+    "keys": [
+      "generateVariables",
+      "gradeAnswer",
+      "instantiateExercise",
+      "parseMathInput",
+      "projectPublicInstance",
+      "validateDefinition",
+      "validateSubmission"
+    ],
+    "state": "correct",
+    "questions": 3
+  },
+  "browserEvidence": {
+    "exports": [
+      "generateVariables",
+      "gradeAnswer",
+      "instantiateExercise",
+      "parseMathInput",
+      "projectPublicInstance",
+      "validateDefinition",
+      "validateSubmission"
+    ],
+    "source": "1{,}25",
+    "ok": true
+  },
+  "browserModules": 31,
+  "browserBytes": 5471974,
+  "platform": "linux-x64"
+}

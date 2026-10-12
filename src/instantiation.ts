@@ -8,6 +8,7 @@ import type {
   GeneratedValue,
 } from './contracts/types.js';
 import { validate, validateDefinition } from './contracts/validation.js';
+import { supportedSnapshotVersion } from './contracts/snapshot-version.js';
 import { generateVariables } from './generation/variables.js';
 import type {
   GenerateVariablesOptions,
@@ -181,6 +182,8 @@ export function instantiateExercise(
 export function projectPublicInstance(
   instance: ExerciseInstance,
 ): PublicInstance {
+  if (!supportedSnapshotVersion(instance))
+    throw new Error('unsupported-snapshot-version');
   return {
     schemaVersion: 5,
     instanceId: instance.instanceId,

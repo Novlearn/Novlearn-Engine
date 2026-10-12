@@ -1,0 +1,213 @@
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises';
+import { builtinModules } from 'node:module';
+import { dirname, resolve, join } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { rolldown } from 'rolldown';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const workspace = join(root, '.cache', `package-smoke-${Date.now()}`);
+const archive = join(workspace, 'archive');
+const consumer = join(workspace, 'consumer');
+const npmCli =
+  process.env.npm_execpath ??
+  join(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js');
+await mkdir(archive, { recursive: true });
+await mkdir(consumer);
+function run(args, cwd = root) {
+  const result = spawnSync(process.execPath, args, {
+    cwd,
+    encoding: 'utf8',
+    timeout: 120000,
+    maxBuffer: 8 * 1024 * 1024,
+  });
+  assert.equal(
+    result.status,
+    0,
+    result.stderr || result.error?.message || result.stdout,
+  );
+  return result.stdout;
+}
+const packed = JSON.parse(
+  run([npmCli, 'pack', '--json', '--pack-destination', archive]),
+)[0];
+assert(
+  packed.files.every(
+    (file) =>
+      ['package.json', 'README.md'].includes(file.path) ||
+      file.path.startsWith('dist/'),
+  ),
+);
+const tarball = join(archive, packed.filename);
+const sha256 = createHash('sha256')
+  .update(await readFile(tarball))
+  .digest('hex');
+await writeFile(
+  join(consumer, 'package.json'),
+  JSON.stringify({
+    name: 'isolated-package-consumer',
+    private: true,
+    type: 'module',
+  }),
+);
+run(
+  [
+    npmCli,
+    'install',
+    '--prefer-offline',
+    '--ignore-scripts',
+    '--no-audit',
+    '--no-fund',
+    '--cache',
+    join(root, '.cache/m9-linux-validation/.npm-cache'),
+    tarball,
+  ],
+  consumer,
+);
+await copyFile(
+  join(root, 'tests/fixtures/legacy/adapted/78.definition.json'),
+  join(consumer, 'definition.json'),
+);
+await copyFile(
+  join(root, 'examples/persistence/attempt.ts'),
+  join(consumer, 'attempt.ts'),
+);
+const smoke = `import * as engine from 'novlearn-exercise-engine';
+import { adaptLegacyExercise } from 'novlearn-exercise-engine/legacy';
+import { createNodeHost } from 'novlearn-exercise-engine/node-host';
+const keys=Object.keys(engine).sort();
+const wanted=['generateVariables','gradeAnswer','instantiateExercise','parseMathInput','projectPublicInstance','validateDefinition','validateSubmission'].sort();
+if(JSON.stringify(keys)!==JSON.stringify(wanted))throw Error('exports');
+if(typeof adaptLegacyExercise!=='function'||typeof createNodeHost!=='function')throw Error('subpaths');
+const definition=JSON.parse(await (await import('node:fs/promises')).readFile(new URL('./definition.json',import.meta.url),'utf8'));
+const generated=engine.instantiateExercise(definition,{seed:42,instanceId:'external-consumer'});
+if(!generated.ok)throw Error('instantiate');
+const official=JSON.parse(JSON.stringify(generated.value));
+const result=engine.gradeAnswer(official,{schemaVersion:5,instanceId:official.instanceId,questionId:'1781009000002',answer:{format:'latex',source:'\\\\sqrt{10}'}});
+if(result.state!=='correct')throw Error('grade');
+const publicInstance=engine.projectPublicInstance(official);
+console.log(JSON.stringify({keys,state:result.state,questions:publicInstance.elements.filter(e=>e.type==='question'||e.type==='mcq').length}));
+`;
+await writeFile(join(consumer, 'smoke.mjs'), smoke);
+const nodeEvidence = JSON.parse(run([join(consumer, 'smoke.mjs')], consumer));
+await writeFile(
+  join(consumer, 'types.ts'),
+  `import type { ExerciseDefinition, ExerciseInstance, AnswerSubmission, CorrectionResult, PublicInstance } from 'novlearn-exercise-engine';
+import { instantiateExercise, projectPublicInstance, gradeAnswer } from 'novlearn-exercise-engine';
+import type { LegacyRecipe } from 'novlearn-exercise-engine/legacy';
+import { createNodeHost } from 'novlearn-exercise-engine/node-host';
+export function consume(definition:ExerciseDefinition, submission:AnswerSubmission, recipe:LegacyRecipe):PublicInstance|CorrectionResult|undefined {
+ const result=instantiateExercise(definition,{seed:42,instanceId:'types'});
+ if(!result.ok)return undefined;
+ const official:ExerciseInstance=result.value;
+ void recipe; void createNodeHost;
+ return submission.questionId ? gradeAnswer(official,submission) : projectPublicInstance(official);
+}
+`,
+);
+await writeFile(
+  join(consumer, 'tsconfig.json'),
+  JSON.stringify({
+    compilerOptions: {
+      noEmit: true,
+      strict: true,
+      target: 'ES2022',
+      module: 'NodeNext',
+      moduleResolution: 'NodeNext',
+      types: [],
+    },
+    files: ['types.ts', 'attempt.ts'],
+  }),
+);
+run(
+  [
+    join(root, 'node_modules/typescript/bin/tsc'),
+    '--project',
+    join(consumer, 'tsconfig.json'),
+  ],
+  consumer,
+);
+await writeFile(
+  join(consumer, 'browser.mjs'),
+  `import * as engine from 'novlearn-exercise-engine';
+const source=engine.parseMathInput('1{,}25',{},'school-latex-v1');
+if(!source.ok)throw Error('browser-parse');
+export const result={exports:Object.keys(engine).sort(),source:source.source,ok:source.ok};
+`,
+);
+const seen = new Set();
+const bundle = await rolldown({
+  input: join(consumer, 'browser.mjs'),
+  platform: 'browser',
+  plugins: [
+    {
+      name: 'deny-node-builtins',
+      resolveId(source) {
+        assert(
+          !source.startsWith('node:') && !builtinModules.includes(source),
+          `Node builtin in browser: ${source}`,
+        );
+      },
+      moduleParsed(info) {
+        seen.add(info.id);
+      },
+    },
+  ],
+  onLog(level, log) {
+    if (level === 'warn' || level === 'error') throw new Error(log.message);
+  },
+});
+let output;
+try {
+  output = await bundle.write({
+    file: join(consumer, 'browser-bundle.mjs'),
+    format: 'esm',
+  });
+} finally {
+  await bundle.close();
+}
+assert(
+  output.output.every(
+    (item) =>
+      item.type !== 'chunk' ||
+      (!item.imports.length && !item.dynamicImports.length),
+  ),
+);
+assert(
+  [...seen].every((id) => !id.includes('/node-host/') && !id.includes('node:')),
+);
+const browserEvidence = await import(
+  pathToFileURL(join(consumer, 'browser-bundle.mjs'))
+);
+assert.equal(browserEvidence.result.ok, true);
+await writeFile(
+  join(workspace, 'report.json'),
+  JSON.stringify(
+    {
+      schemaVersion: 1,
+      node: process.version,
+      packageVersion: packed.version,
+      sha256,
+      integrity: packed.integrity,
+      files: packed.entryCount,
+      nodeEvidence,
+      browserEvidence: browserEvidence.result,
+      browserModules: seen.size,
+      browserBytes: (await readFile(join(consumer, 'browser-bundle.mjs')))
+        .byteLength,
+      consumer,
+    },
+    null,
+    2,
+  ),
+);
+console.log(
+  JSON.stringify({
+    workspace,
+    sha256,
+    node: nodeEvidence,
+    browser: browserEvidence.result,
+  }),
+);
