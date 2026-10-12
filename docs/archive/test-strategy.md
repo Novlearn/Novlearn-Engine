@@ -1,3 +1,5 @@
+> Archive historique, arrêtée avant la réorganisation documentaire du 12 octobre 2026. Les états et les exemples ci-dessous décrivent leurs étapes respectives. Pour l’état actuel, consulter [l’index](../README.md), [les capacités](../features.md) et [la progression](../progress.md). Les contenus historiques sont conservés ; seuls ce repère et les chemins des liens ont été ajoutés ou ajustés.
+
 # Stratégie de vérification
 
 M12 : snapshot-version.test.ts refuse schema/engine/generator inconnus avant
@@ -39,7 +41,7 @@ Les tests propres à Windows sont distincts ; politique OS du poste refuse
 actuellement les binaires reconstruits. Aucun skip ajouté pour masquer ce refus.
 Suite package Linux et checks Windows disponibles rapportés séparément.
 
-M7 : [banc MathLive réel](mathlive-compatibility.md), 45 observations archivées,
+M7 : [banc MathLive réel](../mathlive-compatibility.md), 45 observations archivées,
 90 corrections depuis deux formats et 35 tests de provenance/régression. Clavier,
 collage et clavier virtuel effectivement utilisés, séparés des insertions API.
 Rejeu Vitest distinct de la séance navigateur ; aucune CI navigateur exécutée.
@@ -49,7 +51,7 @@ BigInt d'expansion et signes/membership, coefficients mutés, solutions prescrit
 trous raw/imposés, radicaux quadratiques, unions/contacts/fermetures. Indétermination,
 échecs atomiques, projection sous canaris, JSON/paramètres/variables et récupération
 de panne. Juxtaposition mixte refusée même avec variable ; exposants multidigits
-testés avec accolades LaTeX. [Profil et budgets](adr/011-algebra-collections.md).
+testés avec accolades LaTeX. [Profil et budgets](../adr/011-algebra-collections.md).
 
 M3 : grading.test.ts teste correction officielle par IDs, nombres exacts, racines,
 constantes, tolérances inclusives, infinis, QCM et texte ; cinq états et récupération
@@ -103,14 +105,14 @@ régressions signe de soustraction/doubles signes dans quotients/coefficients,
 unités/zéro/décimaux, alternatives officielles certifiées et projection.
 Oracles PGCD entier et discriminant quadratique indépendants ; inconnus propagés.
 Les huit cas de l'oracle quadratique sont individualisés pour respecter le timeout
-Vitest sans prétendre interrompre Cortex. [Règles](adr/012-pedagogical-forms.md).
+Vitest sans prétendre interrompre Cortex. [Règles](../adr/012-pedagogical-forms.md).
 
 M6 : school-math.test.ts, fixture native synthétique sans migration historique.
 Identités usuelles contre oracles scolaires indépendants, domaines log/tangente
 avant réduction, inconnus, parsing explicite, substitutions négatives/décimales,
 relecture des cibles dirigées, attendu −∞, dérivée polynomiale connue et projection.
 
-M8 : [hôte Windows à quota OS](adr/014-isolated-node-host.md), tests de blocage
+M8 : [hôte Windows à quota OS](../adr/014-isolated-node-host.md), tests de blocage
 synchrone réel/PID disparu, boucle parent bloquée, mort du parent, Buffer external
 hors heap, crash/OOM et requête suivante saine ; protocoles corrompus, quotas,
 file, annulation, close, environnement, spawn synchrone et opérations publiques.

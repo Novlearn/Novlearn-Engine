@@ -1,5 +1,7 @@
 # ADR 015 — Transport privé Python et profils hôte
 
+> Statut documentaire : **Active** (revue du 12 octobre 2026). La décision reste applicable avec les extensions ultérieures. Les mentions de lots futurs, de nombres d’exports et de validation décrivent la date de chaque section ; [l’architecture](../architecture.md) et [les capacités](../features.md) décrivent l’état actuel.
+
 Statut : M9 vérifié sur profil Linux borné, 12 octobre 2026. Aucun branchement applicatif ou
 déploiement. M8 livré au commit 6f62be7 ; Linux étend ce lot parce que les sources
 du backend cible le demandent. Cette ADR ne certifie pas le serveur déployé.

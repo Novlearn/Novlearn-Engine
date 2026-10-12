@@ -1,178 +1,64 @@
-# Roadmap exécutable
+# Roadmap et critères de passage
 
-## Mission V1 autorisée — ordre actuel et critères de passage
+Le [CDC officiel](CDC_référence.md), notamment son chapitre 13, fixe objectifs et
+priorités P0/P1/P2. Les numéros **M0–M12** désignent les lots de la mission de
+finalisation ; les numéros **1–11, 5C, 6A, 6B** désignent ceux du CDC.
+Ils ne constituent pas deux roadmaps concurrentes.
 
-Référence officielle : `../CDC_référence.md`, confirmée par l'utilisateur.
-La mission autonome remplace les anciennes restrictions d'enchaînement ci-dessous
-(D35). Les numéros M0–M12 désignent les lots du texte de mission ; les numéros
-5C/6A/6B/7–11 désignent ceux du chapitre 13 du CDC. Chaque lot se termine par
-tests appropriés, check complet, pack, revue du diff et commit local. Aucun push.
+M0–M12 sont livrés localement sur les profils de [features](features.md).
+La [matrice CDC](feature-coverage.md) conserve les exigences et preuves ;
+[progress](progress.md) distingue validations historiques et contrôles actuels.
+L’[ancienne roadmap](archive/roadmap.md) reste une trace, sans consignes actives.
+Les lots pré-consolidation 1–5/4 bis/5 bis ne sont pas à reconstruire.
 
-| Lot mission / CDC    | Travail nécessaire et critère d'acceptation                                                                                                                                                           |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| M0 / fondations      | Vérifier la consolidation existante, état Git, six exports, tests ; matrice exhaustive P0/P1, documents alignés. Ne pas recréer V1–V4.                                                                |
-| M1 / compléments 1–5 | Noms descriptifs et références explicites CortexJS sans modifier la multiplication implicite ; recettes composées obligatoires, contraintes/dépendances/exactitude/rejeu/projection testés.           |
-| M2 / 5C              | Contrats, validation, références, substitution, données et tests des éléments prioritaires et avancés ; aucune interface React, aucun calcul analytique de graphe artificiel.                         |
-| M3 / 6A              | Correction par question numérique/discrète : rationnels, racines/constantes sous preuve, approximation explicite, infinis, QCM, texte et soumission sûre ; cinq états distincts.                      |
-| M4 / 6B              | Polynômes rationnels univariés, fractions rationnelles avec domaines, équations/solutions, ensembles/intervalles/unions sous profils exacts ; contre-exemples obligatoires.                           |
-| M5 / 7               | Politiques de forme indépendantes de la valeur : irréductible, développée/réduite/factorisée sous profils, formes acceptées, exact/approché et tolérances.                                            |
-| M6 / 6B              | Cas du lycée avec réponses connues ; log/exp/trig en parsing/substitution ; limite ln(x−a)/(x−a) à droite → −∞ et dérivées admises, sans solveur général.                                             |
-| M7 / 10 partiel      | Vraies sorties MathLive : clavier, collage, français, placeholders/incomplet, ensembles/intervalles ; banc isolé indépendant du cœur.                                                                 |
-| M8–M9 / 8            | Hôte Node terminable : quotas durée/mémoire/entrée/sortie/concurrence, crash/récupération, protocole JSON et exemple Python/FastAPI ; mesures p50/p95/mémoire/débit. Pas de service HTTP automatique. |
-| M10 / 9              | Adaptateurs explicites des huit lignes, provenance/brut/aliases/propriétés conservés, rapports/tests individuels ; incohérences bloquées explicitement, pas de JS historique exécuté.                 |
-| M11 / 10             | Scénarios complets isolés : historique → adaptation → génération → projection → saisie → correction officielle ; partiel/rejeu/falsification/erreur/timeout/confidentialité.                          |
-| M12 / 11             | Tarball installé et consommé en Node/TypeScript et bundler cible, contrats/exports/snapshots, audit sécurité/math/architecture et chaque exigence CDC. V1 seulement si toutes P0/P1 validées.         |
+## Lots achevés
 
-M0 validé au commit `e072a57`, M1 au commit `8ef7de5` (592 tests).
-M2 données d'éléments validé (666 tests). M3 correction numérique/discrète validé
-(817 tests et pack). M4 algèbre/ensembles/domaines vérifié : 1031 tests/20 fichiers,
-pack102 fichiers et revue favorable. M5 formes pédagogiques validé : 1169 tests/
-21 fichiers et pack110 ; factorisation complète sur ℚ confirmée par l'utilisateur.
-M6 cas du lycée validé : 1250 tests/22 fichiers et pack110 ; 81 nouveaux tests,
-profils et limites dans ADR013. M7 validé : banc réel MathLive 0.111.1,
-45 observations et 125 nouveaux tests ; check1375/23 et pack110 PASS.
-M7 commité 2c970d0. M8 validé : hôte Windows OS borné, processus mono-requête,
-30 tests ciblés ; check1405/24 et pack128 PASS, ADR014, commit6f62be7.
-M9 vérifié sous profil Linux : CLI privée, bridge Python/FastAPI, benchmarks réels,
-12 contrôles Linux, 7 tests Python et check1383PASS/32WindowsSKIP ; ADR015.
-Contrôle OS Windows actuel refusant le lanceur, ancien benchmark explicitement
-historique. Aucun serveur HTTP Node imposé ; M9 commité00e9a1a, pack133 PASS.
-M10 validé : huit adaptations exécutées, original/mappings558,
-arbitrages utilisateur et profil106 borné ; ADR016. Hôte privé permet également
-la conversion dans un worker neuf, aucun import HTTP ou migration de production.
-Check1482PASS/32WindowsSKIP,26 fichiers/27,465,43s et pack153 ; revues indépendantes
-favorables, preuves injectivité/positivité exponentielles et indétermination incluses.
-M11 validé : vrai78 adapté/FastAPI/MathLive et17observations navigateur,
-reprise/QCM/duel/falsification/pannes,12rejeux Vitest et12testsPythonPASS.
-Revues indépendantes favorables aprèscorrectifs de concurrence ;
-checkglobal1494PASS/32WindowsSKIP505,23s et pack153 ; commit41a8ef2.
-M12 validé : consommateurstarballs Windows/Linux/TS/bundle/navigateur réels,
-enveloppepersistante etdeuxarchives pourrejeu/rollback avec11corruptionsrefusées.
-Check1501PASS/32WindowsSKIP478,61s,13Python et12contrôlesOSLinux PASS, pack157.
-Audit48lignes/46P0P1 validées, profils/limites/adoption explicites ; commit008d0ce.
-Aucun lot futur requis pour la V1 locale, P2 et production séparés.
-Les exigences
-de correction, données d'éléments et transport restent obligatoires malgré les
-profils bornés des lots anciens. Les décisions de licence/registre/adoption en
-production ne bloquent pas la livraison locale d'un package privé consommable.
-La matrice CDC et progress.md fournissent l'état réel et la procédure de reprise.
+Pour chaque ligne, le statut signifie « livré et testé dans le profil indiqué ».
+Les limites de famille et travaux applicatifs restent explicites, sans modifier
+les objectifs du CDC.
 
-## Référence historique des lots précédents
+| Mission / CDC    | Objectif et livré                                                          | Dépendances                  | Critère de validation / preuve                                                                                           | Statut et reste                                                           |
+| ---------------- | -------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| M0 / fondations  | Audit du socle, modèle canonique et matrice P0/P1                          | Consolidation `6c7a9d1`      | Contrats/exports/goldens, [archive](archive/progress.md#mission-autonome-v1--m0-audit-11-octobre-2026), `e072a57`        | Terminé ; aucune refonte répétée                                          |
+| M1 / 1–5         | Noms descriptifs, génération composée, dépendances/contraintes et recettes | M0                           | Oracles BigInt/rejeu/cycles/contraintes, [tests](../tests/named-parameters.test.ts), `8ef7de5`                           | Terminé ; scopes locaux P2                                                |
+| M2 / 5C          | Contrats/données d’éléments prioritaires et avancés                        | M1                           | Validation/substitution/références/projection de chaque type, [ADR 009](adr/009-display-elements.md), `d8a39a2`          | Terminé sur données prescrites ; rendu applicatif                         |
+| M3 / 6A          | Correction numérique/discrète, infinis, texte/QCM, cinq états              | M1/M2                        | Exactitude/tolérances/erreurs/indétermination, [ADR 010](adr/010-numeric-grading.md), `5d45d77`                          | Terminé ; familles hors preuve restent inconnues                          |
+| M4 / 6B          | Algèbre univariée, domaines, relations degré 0–2 et collections            | M3                           | Contre-exemples de domaines/oracles/solutions/fermetures, [ADR 011](adr/011-algebra-collections.md), `1836dbb`           | Terminé sur profils ; aucun solveur général                               |
+| M5 / 7           | Formes originales, factorisation complète sur ℚ bornée et alternatives     | M3/M4                        | Valeur/forme séparées et inconnus conservés, [ADR 012](adr/012-pedagogical-forms.md), `b64ae3d`                          | Terminé ; facteurs degré ≥3 inconnus                                      |
+| M6 / 6B          | Fonctions usuelles, limites/dérivées à attendus connus                     | M3–M5                        | Domaine avant réduction, exemple obligatoire −∞ et dérivée connue, [ADR 013](adr/013-school-known-answers.md), `066bca8` | Terminé ; aucun calcul général de limite/dérivée                          |
+| M7 / 10 partiel  | Saisie MathLive réelle                                                     | M3–M6                        | 45 observations clavier/collage/API/virtuel et rejeu, [rapport](mathlive-compatibility.md), `2c970d0`                    | Terminé pour 0.111.1/profils ; autres cibles à qualifier                  |
+| M8 / 8 isolation | Processus neuf, watchdog, quotas OS Windows et protocole                   | Cœur et M3                   | Terminaison réelle/PID/Buffer/crash/récupération, [ADR 014](adr/014-isolated-node-host.md), `6f62be7`                    | Terminé ; tests natifs Windows de cet audit PASS, refus M9/M12 historique |
+| M9 / 8 transport | CLI/bridge Python/FastAPI, Linux cgroup borné, mesures                     | M8                           | 12 contrôles OS, tests Python et benchmarks, [ADR 015](adr/015-private-python-transport.md), `00e9a1a`                   | Terminé sur Linux admissible ; SLO/provisioning de production à qualifier |
+| M10 / 9          | Huit adaptations complètes, rapports/provenance et profil 106              | M1–M6/M9, recettes arbitrées | Huit parcours, 558 mappings, seeds/oracles/refus, [ADR 016](adr/016-reviewed-legacy-adaptation.md), `63e43f7`            | Terminé localement ; catalogue inconnu et DB non migrés                   |
+| M11 / 10         | Parcours historique/FastAPI/MathLive, reprise, duel et falsification       | M7/M9/M10                    | 17 observations, tests HTTP/concurrence/TTL/manche, [demo](demo.md), `41a8ef2`                                           | Terminé en banc ; auth/store/rendu de production externes                 |
+| M12 / 11         | Distribution, versions/persistance/rejeu/rollback et audit CDC             | M11                          | Tarballs Node/TS/browser, 11 corruptions, 46 P0/P1 qualifiées, [release](release.md), `008d0ce`                          | Terminé localement ; publication/adoption non exécutées                   |
 
-état au 11 octobre 2026 après consolidation : package privé 0.1.0, schéma unique 5.
-Un contrat, un chemin de génération et d'instanciation, aucune API expérimentale
-maintenue. [D34](decisions.md#d34--consolidation-canonique-retenue-11-octobre-2026),
-[ADR 008](adr/008-canonical-consolidation.md), [preuves](progress.md).
+Les critères de passage ont été consignés dans les bilans de lots. Une nouvelle
+régression démontrée peut justifier une correction ciblée, sans rouvrir tous les
+lots achevés. Une preuve OS Windows ancienne et des skips Linux ne qualifient pas
+la politique Windows actuelle. Aucun « refus hors profil » ne remplace une
+exigence obligatoire non réalisée.
 
-## Lots livrés et consolidation
+## Travaux restants — non engagés
 
-| Lot                     | état réel / profil                                                                                                          |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| 0                       | POC externe observé, aucune certification par ses suites non réexécutées                                                    |
-| 1                       | Socle TypeScript/ESM/package/tests/CI configurée                                                                            |
-| 2                       | Corpus reçu/inventorié, transcription manuelle de question 103, contrats                                                    |
-| 3                       | Parsing scalaire raw/source/symboles, sans calcul/preuve de domaine                                                         |
-| 4                       | Integer/decimal/choice, PRNG déterministe et domaines/exclusions                                                            |
-| 4 bis                   | Tuples 2–8, comparaisons exactes structurées, candidats atomiques/budgets                                                   |
-| 5 et compléments livrés | Substitution/snapshot/projection, liste/sections/multiquestions/QCM, computed rationnels/dépendances/contraintes fermées    |
-| Consolidation actuelle  | Capacités réunies sous schemaVersion 5, anciennes implémentations supprimées, vecteurs canoniques et documentation actuelle |
+Les chantiers suivants nécessitent une instruction distincte. Ils ne changent
+ni les priorités du CDC ni le verdict de V1 locale, et aucun n’est commencé ici.
 
-Les bilans des étapes précédentes sont historiques dans progress/ADR. Aucun lot
-livré recommencé, aucun enchaînement automatique. éléments avancés du Lot 5
-restent à qualifier par contrats/validation/substitution/données/tests ; aucun
-renderer React. Noms longs/scopes locaux/familles numériques/symboliques étendues
-demandent une instruction distincte et un profil motivé.
+| Chantier                          | Objectif / tâches                                                                                                                                                   | Dépendances                                                             | Critères de validation                                                                                                                             |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Adoption serveur applicative      | Mettre à niveau le runtime ciblé, provisionner les quotas, registre officiel, identité/droits/store/tentatives ; intégrer la projection/correction pratique et duel | Artefact M12, environnement réel et autorisation sur dépôts applicatifs | Tests falsification/propriété/TTL/manche, interruption/récupération sous charge réelle, anciennes tentatives/rejeu/rollback ; aucun verdict client |
+| Distribution et publication       | Décider licence/registre/consommateurs ; release immuable et activation par définition                                                                              | Choix produit et contrats consommateurs                                 | Tarball exact installé, CI réellement exécutée, compatibilité et rollback qualifiés ; publication uniquement autorisée explicitement               |
+| Catalogue au-delà des huit lignes | Collecter des sources autorisées, inventorier/enregistrer provenance, adapter individuellement les cas admis                                                        | Exports réels et arbitrages pédagogiques                                | Originaux préservés, rapports sans pertes silencieuses, profils/tests par exercice ; blocages explicites, aucune exécution JS                      |
+| UI élève et Admin                 | Renderer partagé, édition, saisie et accessibilité ; afficher seulement les capacités admises                                                                       | Applications et données M2, workflows de publication définis            | Rendu/interaction réels par type, conservation IDs, champs privés absents, validation serveur commune ; MathLive sans autorité                     |
+| P2 du CDC                         | Scopes locaux, parties imbriquées, génération conditionnelle / réponses précédentes                                                                                 | Besoin produit documenté, contrat et politiques approuvés               | Modèle/version/provenance/rejeu et tests de chemins conditionnels ; aucune dépendance pédagogique implicite                                        |
+| Extensions mathématiques motivées | Profils additionnels précis, sans CAS universel                                                                                                                     | Cas utilisateur/catalogue démontré, méthode de preuve CortexJS          | Domaines avant réduction, vrais positifs/négatifs, contre-exemples et états inconnus ; limites publiées et mise à jour CDC                         |
 
-## Lot 6 — Correction exacte bornée
+Le périmètre exclu au chapitre 15 du CDC n’est pas transformé en backlog
+obligatoire. La phase suivante reste un choix explicite, **un seul lot à la fois**.
 
-- Objectif : gradeAnswer pour rationnels et polynômes univariés rationnels bornés.
-- Fichiers : src/grading, src/math/comparison, tests/grading, docs/support-matrix.md.
-- Dépendances : Lots 2, 3, 5 pour la famille concernée ; politique de mêmes domaines par défaut et domaine imposé explicite confirmée, méthodes/bornes de preuve à fixer. Le contrat canonique et les instances multiquestions/QCM sont disponibles ; le correcteur et le transport des sélections restent à construire. Isolation du Lot 8 nécessaire avant adoption officielle, pas avant conception pure du correcteur.
-- Tâches : admissibilité raw, bornes coefficient/degré, API polynomialCoefficients, preuves exactes, états distincts ; méthodes non prouvées hors parcours officiel.
-- Tests obligatoires : vrais positifs/négatifs, fractions, coefficient muté, grands nombres hors borne, variable au dénominateur, sin, x/x et domaines inconnus → indeterminate ; oracle indépendant.
-- Acceptation : aucune heuristique/undefined convertie en faute ; correction prétendue exacte uniquement dans familles documentées.
-- Risques : canonicalisation masque domaine, coefficient numérique approximé, oracle circulaire.
-- Livrables : premier correcteur exact et tableau de garanties.
-- Passage : revue mathématique de familles/bornes et contre-exemples ; pas d'élargissement automatique aux fonctions partielles.
+## Règles pour une prochaine mission
 
-Complément discret ciblé après instance QCM : comparaison exacte de l'ensemble d'IDs sélectionnés, cardinal/mode, options inconnues/doublons, permutations d'ordre affiché et correspondance instance/question ; aucun score partiel implicite. Réutiliser le résultat par question et ses états sans moteur mathématique QCM séparé. Formats intervalle/ensemble/texte/complexe et tolérances nécessitent des compléments motivés, leurs contrats/profils/exemples et tests, pas un élargissement implicite du Lot 6.
-
-## Lot 7 — Formes pédagogiques minimales
-
-- Objectif : distinguer valeur correcte et forme demandée sur les familles nécessaires.
-- Fichiers livrés M5 : src/math/forms.ts, form-references.ts, tests/forms.test.ts,
-  contrats/grading/instantiation et ADR 012 ; 138 nouveaux tests et validation PASS.
-- Dépendances : Lots 3, 6 ; règles de forme approuvées.
-- Tâches : une politique à la fois, fraction irréductible puis développée/réduite si corpus requis ; définir factorisation triviale et ambiguïtés avant extension.
-- Tests obligatoires : 2/4 vs 1/2, 2(x+1), x+x+2, parenthèses/unité/signe, forme non reconnue → indeterminate.
-- Acceptation : valeur et forme indépendantes, raw utilisé, aucune prétention de reconnaissance générale.
-- Risques : attentes pédagogiques divergentes et témoins perdus.
-- Livrables : politiques versionnées et verdict forme.
-- Passage : exemples acceptés/refusés validés pédagogiquement.
-
-M5 : factorisation complète sur ℚ confirmée utilisateur, unités/linéaires/zéro
-et degré ≥3 inconnus documentés dans D40/ADR 012. Alternatives de familles et
-références officielles certifiées en valeur/domaine. Aucun nouveau CAS/parseur.
-
-## Lot 8 — Isolation et interface FastAPI
-
-- Objectif : établir une voie serveur avec garanties de ressources vérifiées et transport mesuré.
-- Fichiers : adapters/node ou package subpath dédié, tests/integration/python, scripts/bench, ADR transport.
-- Dépendances : Lot 3 pour expérience de charge ; Lot 6 pour intégration du correcteur. Peut commencer avant Lot 7.
-- Tâches : CLI stdin/stdout versionné, processus terminable, quotas entrée/sortie/concurrence/mémoire OS ; benchmark cold/warm ; prototype pool ; comparer service selon contraintes réelles.
-- Tests obligatoires : calcul lent réellement tué, deadline, crash et travail suivant sain, scopes séparés, saturation/file bornée, protocole corrompu, aucune injection shell.
-- Acceptation : nettoyage et récupération prouvés ; mesures p50/p95/mémoire/débit ; ADR justifie transport/SLO. Prototype Python dans ce dépôt seulement.
-- Risques : OOM global, zombies, annulation incomplète, contraintes deployment inconnues.
-- Livrables : transport retenu ou recommandation mesurée, preuves isolation et exemple FastAPI autonome.
-- Passage : aucune correction officielle connectée avant garanties d'isolation et provenance serveur.
-
-## Lot 9 — Adaptateurs et migration des huit documents
-
-- Objectif : importer progressivement les vrais historiques sans pertes silencieuses.
-- Fichiers : src/adapters/legacy, tests/fixtures/legacy, docs/compatibility.md et migration-guide.md.
-- Dépendances : Lot 2, contrat de composition/IDs et Lots 5–7 pour comportements effectivement couverts, dont compléments d'éléments s'ils sont nécessaires au document choisi. Tests d'enveloppe peuvent être préparés plus tôt. La migration complète des huit lignes reste un objectif du Lot 9 avec rapports et blocages explicites ; le pilote peut sélectionner des exercices admis sans annoncer les huit migrés.
-- Tâches : decode explicite Creator/DB/élève, aliases avec provenance, conserver extensions/brut ; convertir computed autorisés ; revue manuelle JS ; identifier tableaux/figures non convertibles ; version et rollback par définition.
-- Tests obligatoires : chaque JSON, conservation champs, collisions, variations/signes divergents, computed malveillant non exécuté, différences intentionnelles contre legacy.
-- Acceptation : huit rapports individuels, couverture et pertes explicites, aucun remplacement aveugle camelCase/snake_case.
-- Risques : ancien moteur contient bugs ; ne pas en faire oracle ; historiques sans seed non rejouables.
-- Livrables : adaptateurs bornés et plan de coexistence/rollback.
-- Passage : revue humaine des incompatibilités et sauvegarde des versions originales.
-
-## Lot 10 — Démonstration bout en bout
-
-- Objectif : preuve verticale d'un vrai exercice, en environnement isolé.
-- Fichiers : examples/e2e, tests/e2e, docs/demo.md ; aucun autre dépôt modifié dans cette mission.
-- Dépendances : Lots 5, 6, 8, 9 ; Lot 7 si forme exigée.
-- Tâches : JSON historique autorisé → adaptation → génération → projection → champ MathLive réel → soumission FastAPI → correction officielle et rejeu.
-- Tests obligatoires : clavier/collage fr, placeholder, soumission HTTP falsifiée, policy/seed/verdict client ignorés, secrets absents, timeout visible, réponses correctes/fausses/indéterminées. Selon profil : plusieurs questions, tentative partielle/reprise, non répondu distinct d'incorrect, QCM par IDs et instance de duel périmée ; projection et correction serveur communes. Au moins un vrai exercice autorisé entièrement couvert, sans annoncer sa migration par un affichage natif manuel.
-- Acceptation : parcours complet reproductible et résultats distincts ; aucune confiance accordée au navigateur.
-- Risques : interopérabilité réelle et version MathLive, rendu non sécurisé côté app.
-- Livrables : démonstration, captures/logs sans secrets et guide d'intégration.
-- Passage : revue complète avant branchement d'une application de production.
-
-## Lot 11 — Release pilote et adoption progressive
-
-- Objectif : artefact consommable et activation contrôlée.
-- Fichiers : scripts/package-smoke, CI release explicite, changelog, docs/release.md.
-- Dépendances : Lot 10, choix licence/registre/consommateurs.
-- Tâches : archive installée dans consommateur TypeScript et bundler navigateur, SHA actions vérifiés, compatibilité de versions, activation par définition, rollback et télémétrie indétermination sans réponse sensible.
-- Tests obligatoires : tarball/types/import Node, bundle sans builtin Node, matrice runtime, rejeu version précédente et rollback.
-- Acceptation : capacités/support publiés, aucune publication automatique sans instruction dédiée ; pilote accepté.
-- Risques : divergence clients/serveur, dépendance interne révélée, dérive math après upgrade.
-- Livrables : version pilote et guide upgrade.
-- Passage : mesurer pilote puis proposer séparément extensions (fonctions partielles, figures, multivarié), sans promesse anticipée.
-
-## Dépendances et passage
-
-Consolidation → tranche suivante explicitement demandée : complément d'élément
-ou correction bornée du Lot 6, puis politiques du 7 ; isolation/transport 8 avant
-correction serveur officielle ; adaptation 9, démonstration 10, pilote 11.
-La compatibilité JSON historique est hors du chemin canonique. Chaque exercice
-converti exige capacités admises et rapport propre, aucune suppression de bloc.
-
-Une seule tranche développée et validée à la fois, puis enchaînement autorisé par
-D35. Domaines/source avant réduction, preuve
-exacte avant verdict, définition/instance officielles avant correction, tests
-de terminaison avant adoption, intégration avant production. Travail UI/Admin
-séparé ; ni migration de production, service injustifié, Supabase ou publication.
-Les adaptations locales et commits de lots validés sont autorisés par la mission.
+Lire les consignes et l’état actuel, délimiter objectif/autorisation, réaliser
+contrats/code/tests du lot, exécuter check/pack et contrôles spécifiques, revoir
+le diff, actualiser progression/décisions/couverture. Commit seulement si autorisé
+dans cette mission. Aucun push, SQL, publication ou déploiement implicite.

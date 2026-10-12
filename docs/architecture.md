@@ -1,164 +1,175 @@
-# Architecture et contrats canoniques
+# Architecture
 
-Extension M8 : [ADR014](adr/014-isolated-node-host.md), sous-chemin Node optionnel
-distinct du cœur. Processus neuf et quota OS Windows10+/x64, deadline externe et
-watchdog natif, cleanup avant slot libéré. Protocole backend privé avec métriques,
-sans autorité navigateur. Types Node dev seulement ; aucun import Node dans la
-racine portable, sept exports runtime inchangés. Autres hôtes refusés sans quota OS
-validé. M9 : [ADR015](adr/015-private-python-transport.md), CLI/bridge privé Python
-et exemple FastAPI avec provenance/TTL ; scope cgroupv2 Linux existant borné,
-quota partagé et peakCgroupBytes distinct du commit Windows. Contrôle OS Windows
-du poste refuse actuellement le lanceur reconstruit ; aucun contournement.
-M9 vérifié sous ce profil Linux ; [M11](demo.md) démontre le parcours réel,
-la reprise et les manches périmées. L'adoption de production reste applicative.
-Le résultat et le slot attendent cleanup, sans SLO strict de fermeture.
+## Périmètre et responsabilités
 
-M12 : garde partagé des versions de snapshot avant correction/projection,
-contrat applicatif de persistance et registre d'artefacts immuables dans
-[release](release.md). Types/imports/bundle du vrai tarball vérifiés ; sept
-exports du cœur conservés. Le garde de versions ne remplace pas la confiance
-serveur ou la sélection d'artefact avant rejeu.
+Le moteur est une bibliothèque de fonctions synchrones et de contrats JSON.
+Il valide des définitions, résout leurs paramètres, prépare les éléments et les
+attendus, projette une vue publique et corrige une réponse par question. Toutes
+les applications visées partagent ces mêmes règles.
 
-Extension M6 : [ADR 013](adr/013-school-known-answers.md). Profil public de lecture
-school-latex-v1, limites avec binding Cortex et mode display explicite des
-expressions d'énoncé. Fonctions numériques fermées sous contrôle de domaine avant
-réduction ; le correcteur et les sept exports runtime restent communs.
+CortexJS 0.151.0 assure le parsing LaTeX, la substitution, les calculs et les
+opérations symboliques utilisées dans les profils admis. Ses objets boxed restent
+internes. Les résultats publics sont des données détachées, avec source et
+MathJSON quand le contrat le prévoit. Aucun CAS parallèle ni deuxième parseur LaTeX.
 
-Extension M4 : [ADR 011](adr/011-algebra-collections.md), math/algebra et
-math/collections sous le correcteur commun. Polynômes/fractions univariés,
-relations degré 0–2, ensembles/intervalles, restrictions raw et domaine imposé.
-CorrectionResult.domain séparé, equal-on-common-domain distingue domaine et
-valeur. ExpectedAnswer algebra/collection porte uniquement une trace JSON.
+| Frontière                        | Responsabilité                                                                             |
+| -------------------------------- | ------------------------------------------------------------------------------------------ |
+| Cœur portable, entrée du package | Définition, génération, instanciation, projection et correction                            |
+| Sous-chemin `node-host` et CLI   | Processus neuf, protocole privé, file, quotas et interruption OS                           |
+| Sous-chemin `legacy`             | Conversion explicite de sources historiques avec recette revue et rapport                  |
+| Backend applicatif               | Droits, définition publiée, seed/ID officiels, stockage, tentatives, points et progression |
+| Interface élève/Admin/duels      | Édition, rendu, MathLive, interactions et feedback autorisé                                |
 
-Extension M3 : [ADR 010](adr/010-numeric-grading.md), grading et math/numeric.
-Soumission latex/text/selection ; gradeAnswer officiel par IDs, cinq états et
-valeur/comparaison/forme/proof distincts. NumericComparison exacte ou tolérance
-officielle inclusive ; QuestionResponse et expectedLatex/expectedTexts validés
-ensemble. Réels fermés, infinis typés et correction discrète documentés par profil.
+FastAPI et MathLive sont utilisés dans les exemples locaux. Aucun service de
+production NovLearn, Admin ou Colyseus n’est livré ici.
 
-Extension M2 : [ADR 009](adr/009-display-elements.md), contracts/elements,
-inspection spécialisée, mapper de champs partagé et contrôles exacts des données
-prescrites. Présentation raw Cortex séparée de l'admission exacte, domaine non
-vérifié explicite. Catalogue/aides/traces privés, clavier UI non autoritaire.
+## Contrats et identités
 
-Référence au 11 octobre 2026 : package privé 0.1.0, schemaVersion 5,
-[ADR 008](adr/008-canonical-consolidation.md). Les enveloppes expérimentales ne sont
-plus implémentées. [Inventaire initial](consolidation.md).
+Les [types principaux](../src/contracts/types.ts) et les
+[éléments de présentation](../src/contracts/elements.ts) font référence.
+La validation runtime refuse les champs inconnus, versions non admises et données
+non inertes : getters, classes, cycles, non-finis, tableaux creux et clés dangereuses.
+`extensions` conserve du JSON privé non interprété.
 
-## Contrats publics
+| Contrat                                   | Contenu et rôle                                                                                                                          |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `ExerciseDefinition`                      | `schemaVersion:5`, `kind:'composed'`, `id/revision/title`, catalogue privé facultatif, génération, inconnues libres et éléments ordonnés |
+| `GenerationDefinition`                    | Même contrat autonome et imbriqué : déclarations, contraintes et budgets obligatoires                                                    |
+| `VariableDefinition`                      | Scalaire entier/décimal/choix, tuple ou formule `computed`                                                                               |
+| `FreeVariableDefinition`                  | Inconnue déclarée `real` ou `integer`, qui reste symbolique                                                                              |
+| `ExerciseElement`                         | Union discriminée de contenus et questions ; `id` stable et `sectionId` facultatif                                                       |
+| `QuestionDefinition` / `AnswerDefinition` | Branches `question` et `mcq` ; attendu et politique privés attachés à l’ID de question                                                   |
+| `GeneratedValue`                          | Entier/choix avec `value`, décimal avec coefficient/précision, calculé avec numérateur/dénominateur exacts                               |
+| `ExerciseInstance`                        | Snapshot privé : définition détachée, version moteur, génération, titre et éléments instanciés                                           |
+| `ExpectedAnswer`                          | Valeur/trace mathématique, expression préparée, variantes textuelles ou sélection d’IDs                                                  |
+| `PublicInstance`                          | Schéma, ID opaque, titre et éléments affichables sélectionnés ; aucun attendu ni seed                                                    |
+| `AnswerSubmission`                        | Schéma, `instanceId/questionId`, source LaTeX/texte brute ou IDs QCM                                                                     |
+| `CorrectionResult`                        | État, valeur, comparaison, forme, domaine, preuve et code par question, sans données privées                                             |
 
-Les [types](../src/contracts/types.ts) sont la référence TypeScript. Les frontières
-copient le JSON inerte sans getters, cycles, classes, non-finis, symboles, tableaux
-creux ou clés dangereuses. Champs inconnus refusés ; extensions privées conservées.
+`generation.definitions` contient les paramètres à résoudre ; `variables`
+contient les inconnues mathématiques. Leurs noms sont disjoints. Une composante
+de tuple est adressée par son nom plat ; le tuple n’est pas un vecteur.
+`generation.values` est l’unique table de valeurs. `groups` relie les composantes
+ordonnées à leur groupe ; `computed` relie les calculs à leurs dépendances.
 
-| Contrat                | Responsabilité                                                                                                            |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| ExerciseDefinition     | schemaVersion:5, kind:composed, id/revision/title, generation, variables libres, elements ordonnés, extensions privées    |
-| GenerationDefinition   | schemaVersion:5, definitions/constraints/maxAttempts/maxDraws ; même contrat autonome et imbriqué                         |
-| VariableDefinition     | ScalarVariableDefinition (integer/decimal/choice), TupleVariableDefinition, ComputedVariableDefinition                    |
-| FreeVariableDefinition | Nom et domaine real/integer ; reste symbolique, aucune valeur tirée                                                       |
-| ExerciseElement        | text, section, expression, question, mcq ; ID stable, sectionId et extensions facultatifs                                 |
-| QuestionDefinition     | Branches question/mcq ; ID d'élément = ID de question                                                                     |
-| AnswerDefinition       | Champs privés d'attendu/format/politique ou IDs attendus QCM                                                              |
-| GeneratedValue         | Integer:value, decimal:coefficient/precision, choice:value, RationalValue:numerator/denominator                           |
-| ExpectedAnswer         | Rationnel exact/trace, réel fermé/trace, expression préparée/trace, variantes texte, sélection d'IDs                      |
-| ExerciseInstance       | Définition détachée, engineVersion, generation(version/seed/draws/attempts/values/groups/computed), title/elements privés |
-| PublicInstance         | schemaVersion/instanceId/title/elements sélectionnés et détachés                                                          |
-| AnswerSubmission       | schemaVersion:5, instanceId/questionId, latex/text/source ou selection/optionIds, même vide/incomplète                    |
-| CorrectionResult       | schemaVersion:5, IDs, state/value/comparison/form/domain/proof/code ; aucune trace/attendu privé                          |
+Un exercice à une question utilise le même modèle qu’un problème long. La liste
+reste plate. Les sections sont des éléments explicites, référencés par ID,
+indépendamment de leur position. Chaque soumission est corrigée séparément ;
+l’application conserve les questions non répondues et les tentatives partielles.
+Les points descriptifs d’une question ne calculent aucun score applicatif.
 
-Question : text/points, response, expectedLatex ou expectedTexts et GradingPolicy,
-cohérence format/kind/domaine contrôlée runtime ; FormPolicy M5 sur syntaxe
-originale, familles ou références explicites privées, selon [ADR 012](adr/012-pedagogical-forms.md).
-QCM : mode single/multiple, options avec IDs et contenu texte/LaTeX rationnel fermé,
-expectedOptionIds privés. Collisions exactes de valeurs/affichages refusées.
-Sections plates référencées par ID, indépendamment de leur position.
+## Pipeline complet
 
-Les valeurs résident une fois dans generation.values. groups lie IDs et noms
-ordonnés de composantes ; computed lie noms et dépendances dans l'ordre calculé.
-Attendus dans chaque question identifiée, aucun tableau parallèle concurrent.
+```mermaid
+flowchart TD
+  D[Définition privée] --> V[Validation structurelle]
+  V --> R[Préparation des références et dépendances]
+  R --> G[Tirage du candidat complet]
+  G --> C[Résolution des calculs et contraintes]
+  C -->|candidat rejeté| G
+  C --> I[Instanciation de tous les éléments et attendus]
+  I --> O[Snapshot officiel privé conservé par le serveur]
+  O --> P[Projection publique]
+  P --> U[Affichage et saisie dans l'application]
+  U --> S[Soumission brute par IDs]
+  O --> K[Correction depuis le snapshot officiel]
+  S --> K
+  K --> F[Résultat par question]
+```
 
-Noms : grammaire bornée partagée dans contracts/names.ts, 1–32 lettres/chiffres
-avec minuscule initiale, noms réservés exclus. Références mathématiques explicites
-`\mathrm{delta}`/`\mathrm{r1}`/`\mathrm{xSommet}` via dictionnaire CortexJS local ;
-lettres juxtaposées inchangées. Paramètres/inconnues distincts, substitutions sans
-prototype, composantes adressées par leurs noms plats (D36). Source/raw conservés.
+Les reprises de tirage sont limitées par les budgets. Un diagnostic terminal à
+n’importe quelle étape empêche le retour d’une instance partielle.
 
-## Structure réelle
+1. `validateDefinition` contrôle la structure et les références structurelles.
+   Cette validation seule ne prouve pas que toutes les formules sont calculables.
+2. `generateVariables` prépare les formules via CortexJS, détecte les références
+   inconnues et cycles, puis établit un tri topologique stable **avant le RNG**.
+3. La boucle tire les déclarations aléatoires dans leur ordre, résout chaque
+   `computed` une fois par candidat, puis vérifie restrictions et comparaisons.
+   Une condition fausse retire tout le candidat. Singularité, erreur ou preuve
+   inconnue terminent la génération, même après une condition déjà fausse.
+4. `instantiateExercise` appelle cette résolution une seule fois, puis traite
+   textes, formules, options et attendus de toutes les questions. Les textes
+   utilisent `@nom` et `@@` ; la substitution mathématique passe par CortexJS.
+5. L’instance finale conserve définition/source, syntaxe raw, substitution,
+   affichage dérivé et données privées, dans les limites du JSON agrégé.
+6. `projectPublicInstance` sélectionne les champs à chaque niveau imbriqué.
+   Les indications et explications privées sont retirées intégralement.
+7. `gradeAnswer` valide la soumission, associe ses IDs au snapshot officiel,
+   contrôle format/admissibilité/domaine et témoins de forme, puis compare avec
+   une méthode admise. Valeur et forme déterminent séparément le résultat.
 
-| Module                          | Travail                                                                                                |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| contracts/types.ts              | Un seul modèle, sans héritage de générations expérimentales                                            |
-| contracts/validation.ts         | Copie JSON bornée/primitives/frontières définition et soumission                                       |
-| contracts/composition.ts        | Document/éléments/IDs/sections/politiques, inspection de génération commune                            |
-| contracts/generation.ts         | Inspection scalaire/tuple/computed/contraintes, domaines/exclusions/grilles/noms                       |
-| generation/variables.ts         | Seule orchestration : options, validation, préparation CortexJS, dépendances/tri, calculs/restrictions |
-| generation/candidates.ts        | Une boucle atomique : plans, preuves simples d'impossibilité, tirages, calculs, comparaisons, budgets  |
-| generation/scalar.ts, random.ts | Rangs et PRNG locaux, sans état global/horloge                                                         |
-| contracts/decimal-grid.ts       | Encodage exact de grille, aucune algèbre                                                               |
-| math/input.ts                   | Parsing Cortex raw, dictionnaires locaux par profil ; aucune preuve de domaine                         |
-| math/substitution.ts            | Admission/domaine avant réduction, substitution CortexJS, rationnel exact/affichage polynomial bornés  |
-| math/comparison.ts              | Ordre exact de nombres fermés ; undefined reste indéterminé                                            |
-| instantiation.ts                | Validation, un appel generateVariables, parcours d'éléments, snapshot complet/projection               |
-| math/numeric.ts                 | Admission réelle fermée, témoins exacts Cortex, bornes constantes et tolérances inclusives             |
-| grading.ts                      | Correction par IDs officiels ; cinq états, numérique/discret/algèbre/collections sous preuve           |
-| math/algebra.ts                 | Coefficients/produits croisés Cortex exacts, domaines raw, solutions degré0–2                          |
-| math/collections.ts             | Ensembles et intervalles/unions normalisés par preuves exactes de bornes                               |
-| index.ts                        | Export racine portable : sept fonctions et types détachés                                              |
+L’application effectue le lookup officiel, les droits et les contrôles de
+manche/expiration avant et après un appel asynchrone à l’hôte. Le banc
+[M11](demo.md) illustre cette intégration ; elle n’est pas ajoutée au cœur.
 
-Aucune conversion vers un ancien schéma. Résolution obligatoire même sans computed,
-seule sa liste est vide. L'instanciation ne recalcule pas les dépendances par question.
+## Frontière mathématique
 
-1. Copier/valider structure/options, domaines locaux, noms, IDs/références/politiques.
-2. Préparer computed/opérandes LaTeX et tri topologique stable : inconnues, hors profil,
-   cycles avant RNG. Ordre déclaré départage les calculs prêts.
-3. Préparer tirages dans l'ordre des déclarations aléatoires/composantes. Prouver
-   seulement les impossibilités simples par bornes ou réflexivité.
-4. Tirer tout le contexte, calculer chaque computed une fois ; vérifier restrictions
-   et toutes les comparaisons même après faux.
-5. Faux → retirer le candidat complet sur le flux continu. Singularité/inconnu/erreur
-   → diagnostic terminal ; épuisement ≠ preuve d'impossibilité.
-6. Instancier tous les éléments/attendus ; erreur → aucune instance partielle.
-   Diagnostics stage/path et IDs de question/élément lorsque concernés.
-7. Contrôler/copier le snapshot JSON final, sélectionner chaque niveau public,
-   y compris response/options/contenus QCM.
+Le parsing public lit une syntaxe ; il ne démontre pas une valeur ou un domaine.
+La source originale reste indispensable, car même le raw CortexJS peut effacer
+certains témoins. Les gardes lexicales détectent notamment placeholders et
+scripts vides sans transformer l’algèbre.
 
-Sources/raw/substitution conservés, affichage dérivé. Aucun eval/new Function,
-transformation algébrique regex, second parseur, Math.random ou boxed public.
-Parsing, évaluation, comparaison numérique, correction et preuve universelle distincts.
+Les noms suivent `[a-z][A-Za-z0-9]{0,31}`, hors réservés. Dans une formule,
+`\mathrm{delta}` référence le nom déclaré, tandis que `ab` conserve le produit
+implicite. Les dictionnaires CortexJS sont locaux à chaque appel.
 
-## API et frontières applicatives
+Les opérations d’exécution inspectent descendants et restrictions avant
+réduction. Cela empêche d’admettre `0*(1/0)` comme zéro ou de perdre le trou de
+`x/x`. Les coefficients et produits croisés algébriques sont calculés par CortexJS.
+`isIdenticallyEqual()` seul et quelques évaluations numériques ne constituent
+pas une preuve universelle.
 
-| Fonction              | Entrée → sortie                                                                                                   |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| validateDefinition    | unknown → ValidationResult<ExerciseDefinition>                                                                    |
-| validateSubmission    | unknown → ValidationResult<AnswerSubmission>                                                                      |
-| parseMathInput        | Source/contexte → source/profile/syntax/symboles ou diagnostics                                                   |
-| generateVariables     | Contrat canonique depuis unknown + seed/version unique facultative → values/groups/computed/replay ou diagnostics |
-| instantiateExercise   | Définition depuis unknown + instanceId/seed/version de génération facultative → ExerciseInstance ou diagnostics   |
-| projectPublicInstance | ExerciseInstance officielle → PublicInstance                                                                      |
-| gradeAnswer           | ExerciseInstance officielle + soumission unknown → CorrectionResult par question                                  |
+La présentation `mode:'display'` substitue sans évaluation ni preuve de domaine ;
+le public porte `formulaDomain:'unverified'`. Les nombres de rendu utilisent
+le profil rationnel exact. Un graphe, tableau ou système présenté ne résout
+pas les mathématiques qu’il décrit. Les profils, bornes et contre-exemples sont
+centralisés dans [features](features.md) et détaillés dans les ADR.
 
-Pas de validateur public de snapshots arbitraires : projection ne prouve pas
-provenance. Serveur retrouve état officiel et refuse autorité client sur seed/
-politique/verdict. Accès, publication, persistance, points/progression et duels
-relèvent des applications. Formes M5 bornées, fonctions au M6 ; transport FastAPI/hôte
-terminable mesurés au Lot 8, sans service imposé. Rendu React/MathLive séparé.
+## Sécurité et isolation
 
-Schéma 5 : structure/policies ; révision : identité pédagogique immuable ; moteur
-0.1.0 : artefact avec CortexJS épinglé ; mulberry32-rejection-v1 : flux/rangs/ordre/
-rejet avec [vecteurs](../tests/fixtures/canonical/reference-vectors.json). Aucun
-instantiationVersion redondant. Pas de rejeu promis entre artefacts non identifiés.
-Adaptateurs historiques explicites sous-chemin `./legacy`, une fonction séparée
-adaptLegacyExercise. Formats DB encodé/Creator plat/publication distincts ; recette
-revue, originaux/mappings et arbitrages privés. [ADR016](adr/016-reviewed-legacy-adaptation.md).
-Le canal privé de l'hôte compte huit opérations : les sept du cœur et l'adaptation
-avec `{source,sourceFormat,recipe}`, pour borner aussi un parsing legacy non fiable.
-Le profil log-affine-positive prouve A·ln(x)+B sur x>0 ; power-of-e distingue
-valeur et forme du résultat connu de106. Aucun autre CAS ou boxed public ajouté.
+La projection et le correcteur attendent un snapshot **officiel de confiance**.
+Le garde `schemaVersion/engineVersion/generation.version` refuse les versions
+inconnues ; il n’authentifie pas le snapshot et ne valide pas intégralement un
+objet externe. Le navigateur ne choisit jamais attendu, politique, seed ou verdict.
 
-[Budgets/profils](functional-specification.md). Calculs synchrones/contextes isolés
-par appel ; deadline/quota OS/cleanup désormais qualifiés dans l'hôte optionnel M8.
-Timeout de promesse/Vitest seul ne coupe pas un calcul synchrone. Navigateur,
-CI distante et adoption demandent
-leurs preuves propres.
+Le cœur est synchrone. Les limites structurelles et contextes locaux ne suffisent
+pas à interrompre un calcul bloquant. L’hôte optionnel crée un processus neuf,
+contrôle file/entrée/sortie et dispose d’un watchdog externe. Linux exige un
+cgroup v2 déjà borné, sans swap, avec limite de processus ; son quota est partagé.
+Windows utilise un Job Object. Le lanceur était refusé dans le contexte M9/M12 ;
+les tests natifs Windows ont passé pendant cet audit documentaire, sans changement
+de politique OS par cette mission. Sans hôte admissible, le résultat est `unavailable`.
+[ADR 014](adr/014-isolated-node-host.md) et
+[ADR 015](adr/015-private-python-transport.md) distinguent les garanties observées
+et l’absence de SLO strict de nettoyage sous pression.
+
+Le canal privé expose les sept opérations du cœur et l’adaptation historique.
+Il ne doit pas être publié comme API navigateur. Authentification, stockage
+fiable, sandbox de déploiement et protection du rendu restent applicatifs.
+
+## Modules et versions
+
+| Modules réels                                            | Responsabilité                                                        |
+| -------------------------------------------------------- | --------------------------------------------------------------------- |
+| `src/contracts/`                                         | Types, noms, copie JSON, validation et garde de versions              |
+| `src/generation/variables.ts`                            | Options, préparation des formules, dépendances et résolution calculée |
+| `src/generation/candidates.ts`, `scalar.ts`, `random.ts` | Boucle atomique, domaines, budgets, tirages et PRNG local             |
+| `src/math/input.ts`, `substitution.ts`, `display.ts`     | Lecture raw, admission, substitution et présentation                  |
+| `src/math/numeric.ts`, `comparison.ts`                   | Preuves numériques exactes, encadrements et tolérances                |
+| `src/math/algebra.ts`, `collections.ts`, `log-affine.ts` | Profils univariés, domaines, solutions et collections                 |
+| `src/math/forms.ts`, `form-references.ts`                | Témoins de forme originaux et références officielles                  |
+| `src/display-elements.ts`, `math/display-data-checks.ts` | Sélection des champs et cohérence des données prescrites              |
+| `src/instantiation.ts`, `grading.ts`, `index.ts`         | Orchestration, projection, correction et exports portables            |
+| `src/node-host/`, `runtime/`                             | Hôte/CLI et lanceurs fixes OS séparés                                 |
+| `src/adapters/legacy/`                                   | Adaptation revue, conservation et rapport de provenance               |
+
+Le schéma 5 identifie la structure, la révision identifie la définition pédagogique,
+`mulberry32-rejection-v1` identifie le tirage, et l’artefact exact identifie le moteur
+avec CortexJS. La seed obligatoire est un uint32 ou sa chaîne décimale canonique.
+Il n’existe pas de champ `instantiationVersion` concurrent. Même définition,
+ordre, budgets, seed, ID et artefact donnent le même snapshot JSON.
+
+Les APIs expérimentales V1–V4 sont refusées. Pour un rejeu entre builds privés
+0.1.0, conserver archive et lock par empreinte, puis sélectionner l’artefact
+côté serveur. Voir [release](release.md), [usage](usage.md) et [ADR 008](adr/008-canonical-consolidation.md).

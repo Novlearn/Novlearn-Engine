@@ -1,3 +1,5 @@
+> Archive historique, arrêtée avant la réorganisation documentaire du 12 octobre 2026. Les états et les exemples ci-dessous décrivent leurs étapes respectives. Pour l’état actuel, consulter [l’index](../README.md), [les capacités](../features.md) et [la progression](../progress.md). Les contenus historiques sont conservés ; seuls ce repère et les chemins des liens ont été ajoutés ou ajustés.
+
 # Consolidation canonique — audit du 11 octobre 2026
 
 Audit effectué avant modification du moteur : AGENTS, README, vision, spécification,

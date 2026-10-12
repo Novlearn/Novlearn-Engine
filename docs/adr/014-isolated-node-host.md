@@ -1,5 +1,7 @@
 # ADR 014 — Hôte Node isolé M8
 
+> Statut documentaire : **Active** (revue du 12 octobre 2026). La décision reste applicable avec les extensions ultérieures. Les mentions de lots futurs, de nombres d’exports et de validation décrivent la date de chaque section ; [l’architecture](../architecture.md) et [les capacités](../features.md) décrivent l’état actuel.
+
 ## Décision et frontière
 
 CDC10.1/12.3 : sous-chemin optionnel `novlearn-exercise-engine/node-host`, séparé
@@ -126,6 +128,6 @@ Revue indépendante : course d'ordre started/réponse corrigée par suspension a
 Job atomique ; exception synchrone de spawn corrigée avec slot libéré et requête
 suivante saine ; options héritées du prototype refusées via Object.hasOwn.
 Ces fixtures ne sont jamais distribuées comme opérations publiques.
-Les résultats complets/commandes sont dans [progress](../progress.md).
+Les résultats complets/commandes sont dans [progress](../archive/progress.md).
 Les métriques initiales ne sont pas un benchmark p50/p95/débit ; M9 reste requis.
 Pas de CI distante, de runtime Linux ou de liaison production testés dans M8.

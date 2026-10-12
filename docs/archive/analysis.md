@@ -1,3 +1,5 @@
+> Archive historique, arrêtée avant la réorganisation documentaire du 12 octobre 2026. Les états et les exemples ci-dessous décrivent leurs étapes respectives. Pour l’état actuel, consulter [l’index](../README.md), [les capacités](../features.md) et [la progression](../progress.md). Les contenus historiques sont conservés ; seuls ce repère et les chemins des liens ont été ajoutés ou ajustés.
+
 # Analyse initiale : sources et confrontation
 
 Date : 10 octobre 2026. Trois sous-agents Codex natifs indépendants ont été exécutés en lecture seule. L'agent principal est le seul auteur du socle et des documents. Aucun autre dépôt modifié.
@@ -48,7 +50,7 @@ Convergence : séparation valeur/forme/domaine, seed privée quand sensible, auc
 
 ## Mise à jour après réception du corpus
 
-L'utilisateur a fourni `docs/exercises_rows.json` après l'analyse initiale : huit lignes de stockage, non huit fichiers indépendants. L'absence décrite ci-dessus est historique. Les trois agents natifs ont repris leurs analyses en lecture seule ; observations et arbitrages actuels dans [compatibility.md](compatibility.md), [ADR 004](adr/004-first-contract.md) et [progress.md](progress.md). Question 103 retenue pour le contrat natif rationnel v1, sans migration générale. Le principal reste seul auteur ; revue indépendante math/contrats/QA effectuée sur l'implémentation, deux défauts corrigés (accents, clés JSON non bornées). Aucune suite POC réexécutée et aucune conclusion de comparaison générale modifiée.
+L'utilisateur a fourni `docs/exercises_rows.json` après l'analyse initiale : huit lignes de stockage, non huit fichiers indépendants. L'absence décrite ci-dessus est historique. Les trois agents natifs ont repris leurs analyses en lecture seule ; observations et arbitrages actuels dans [compatibility.md](compatibility.md), [ADR 004](../adr/004-first-contract.md) et [progress.md](progress.md). Question 103 retenue pour le contrat natif rationnel v1, sans migration générale. Le principal reste seul auteur ; revue indépendante math/contrats/QA effectuée sur l'implémentation, deux défauts corrigés (accents, clés JSON non bornées). Aucune suite POC réexécutée et aucune conclusion de comparaison générale modifiée.
 
 ## Sources externes de référence
 

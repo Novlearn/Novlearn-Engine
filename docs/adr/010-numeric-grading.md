@@ -1,5 +1,7 @@
 # ADR 010 — Correction numérique et discrète, M3
 
+> Statut documentaire : **Active** (revue du 12 octobre 2026). La décision reste applicable avec les extensions ultérieures. Les mentions de lots futurs, de nombres d’exports et de validation décrivent la date de chaque section ; [l’architecture](../architecture.md) et [les capacités](../features.md) décrivent l’état actuel.
+
 Statut : retenue localement, schéma canonique 5, package privé 0.1.0. D38.
 Les exigences P0/P1 des lots M4–M12 restent obligatoires ; ce profil ne constitue
 pas la V1 complète ni une autorisation d'adoption sans isolation.

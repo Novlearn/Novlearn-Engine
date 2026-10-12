@@ -1,5 +1,7 @@
 # ADR 007 — Instanciation rationnelle native
 
+> Statut documentaire : **Superseded** (revue du 12 octobre 2026). Les enveloppes et API expérimentales ont été remplacées par [ADR 008](008-canonical-consolidation.md). Ce texte conserve les motifs, alternatives et preuves historiques ; ses exemples ne sont pas des API actuelles.
+
 **Archive de décisions expérimentales.** Depuis le 11 octobre 2026, les anciens contrats/options ne sont plus disponibles. [ADR 008](008-canonical-consolidation.md) les remplace ; profils mathématiques et preuves historiques conservés. [API actuelle](../architecture.md).
 
 ## Complément Lot 5 — instance v4

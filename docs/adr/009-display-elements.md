@@ -1,5 +1,7 @@
 # ADR 009 — Données d'éléments, M2
 
+> Statut documentaire : **Active** (revue du 12 octobre 2026). La décision reste applicable avec les extensions ultérieures. Les mentions de lots futurs, de nombres d’exports et de validation décrivent la date de chaque section ; [l’architecture](../architecture.md) et [les capacités](../features.md) décrivent l’état actuel.
+
 Retenue le 11 octobre 2026 ; CDC 2.1, 6.5, 8 et 9. Contrats, validation,
 substitution et projection appartiennent au moteur, dessin/édition aux apps.
 Schéma 5 étendu additivement, six exports runtime et anciens vecteurs conservés,

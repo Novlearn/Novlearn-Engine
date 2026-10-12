@@ -1,10 +1,12 @@
+> Archive historique, arrêtée avant la réorganisation documentaire du 12 octobre 2026. Les états et les exemples ci-dessous décrivent leurs étapes respectives. Pour l’état actuel, consulter [l’index](../README.md), [les capacités](../features.md) et [la progression](../progress.md). Les contenus historiques sont conservés ; seuls ce repère et les chemins des liens ont été ajoutés ou ajustés.
+
 # Parcours d'un exercice
 
-Référence actualisée après M11. Le [banc local](demo.md) exerce génération,
+Référence actualisée après M11. Le [banc local](../demo.md) exerce génération,
 projection, correction officielle, reprise et manche périmée avec FastAPI et
 MathLive réels. Les parcours de production ci-dessous restent applicatifs ;
 aucun service Admin, DB ou Colyseus n'est livré dans ce dépôt. Voir
-[spécification](functional-specification.md), [architecture](architecture.md)
+[spécification](functional-specification.md), [architecture](../architecture.md)
 et [preuves de couverture](feature-coverage.md).
 
 ## Création et publication dans Admin
@@ -65,8 +67,8 @@ M2. Correction commune et formes M3–M6/M10, projection/rejeu et intégration l
 M11 sont testés. L'adoption dans les applications de production reste distincte.
 La projection accepte un snapshot **officiel de confiance** avec version admise,
 sans authentifier des objets privés fournis par le client. Voir
-[architecture](architecture.md), [profils](feature-coverage.md) et
-[persistance/adoption](release.md).
+[architecture](../architecture.md), [profils](feature-coverage.md) et
+[persistance/adoption](../release.md).
 
 ## Parcours élève et tentatives
 

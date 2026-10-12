@@ -1,5 +1,7 @@
 # ADR 006 — Génération de paramètres v1
 
+> Statut documentaire : **Superseded** (revue du 12 octobre 2026). Les enveloppes et API expérimentales ont été remplacées par [ADR 008](008-canonical-consolidation.md). Ce texte conserve les motifs, alternatives et preuves historiques ; ses exemples ne sont pas des API actuelles.
+
 **Archive de décisions expérimentales.** Depuis le 11 octobre 2026, les anciens contrats/options ne sont plus disponibles. [ADR 008](008-canonical-consolidation.md) les remplace ; profils mathématiques et preuves historiques conservés. [API actuelle](../architecture.md).
 
 ## Complément Lot 5 — variables-v3 (11 octobre 2026)
@@ -30,7 +32,7 @@ Statut historique : retenu, 10 octobre 2026, Lot 4. Complément documentaire du 
 
 ## Périmètre et contrats
 
-Lecture historique : les paragraphes de livraison ci-dessous décrivent le Lot 4 et sa clarification préalable au Lot 5. État actuel : [ADR 007](007-native-instantiation.md) livre l'instance native entière, la substitution/attendu exact et la projection ; les DTO ne sont plus seulement préparatoires. Cet état historique du Lot 4 est complété par variables-v2 ci-dessus ; computed reste absent. La [référence globale](../functional-specification.md) et la [couverture](../feature-coverage.md) complètent ce document, sans changer parameters-v1.
+Lecture historique : les paragraphes de livraison ci-dessous décrivent le Lot 4 et sa clarification préalable au Lot 5. État actuel : [ADR 007](007-native-instantiation.md) livre l'instance native entière, la substitution/attendu exact et la projection ; les DTO ne sont plus seulement préparatoires. Cet état historique du Lot 4 est complété par variables-v2 ci-dessus ; computed reste absent. La [référence globale](../archive/functional-specification.md) et la [couverture](../archive/feature-coverage.md) complètent ce document, sans changer parameters-v1.
 
 Inspection préalable : le Lot 3 fournit `parseMathInput` et son profil scalaire raw, avec 99 tests existants passants avant l'ajout des tests de génération. Le Lot 2 définit uniquement `IntegerParameterV1` dans `ExerciseDefinitionV1`, sans expression calculée ni relation entre paramètres. La roadmap réserve explicitement computed et substitution au Lot 5. Il n'existe donc pas de blocage pour les tirages ; ajouter un graphe computed et un contrat de domaine maintenant déplacerait le périmètre du lot suivant.
 
@@ -76,7 +78,7 @@ Aucun énoncé, instance, projection publique, correction, score, service ou cat
 
 ## Modèle cible décidé — quatre mécanismes composables
 
-Cette section spécifie un objectif, sans élargir `parameters-v1`, les contrats TypeScript ou les validateurs actuels. La couverture réelle et les preuves sont dans la [matrice de génération](../compatibility.md#matrice-de-couverture-fonctionnelle--génération). Les statuts de roadmap distinguent le Lot 4 terminé de son complément proposé.
+Cette section spécifie un objectif, sans élargir `parameters-v1`, les contrats TypeScript ou les validateurs actuels. La couverture réelle et les preuves sont dans la [matrice de génération](../archive/compatibility.md#matrice-de-couverture-fonctionnelle--génération). Les statuts de roadmap distinguent le Lot 4 terminé de son complément proposé.
 
 1. **Aléatoire numérique** : un domaine entier ou décimal sur grille, bornes inclusives, signes et exclusions explicites. Réutiliser les tirages du Lot 4 ; ne pas ajouter un type par propriété mathématique.
 2. **Choix** : sélection dans une liste finie de valeurs admises. Aujourd'hui uniquement des nombres JS finis ; fractions ou autres valeurs mathématiques exigent d'abord un contrat sérialisable validé. Un choix ne prouve aucune propriété de ces valeurs. Pas de pondération implicite.
@@ -253,4 +255,4 @@ Même fonction publique generateVariables : tableau + version absente/parameters
 
 Exemples effectivement exécutés : tuple ordonné a,b entiers 1…10, a<b, seed 42 → (5,6), 2 tentatives/4 mots. Lignes pythagoriciennes (3,4,5)/(5,12,13)/(8,15,17), composants entiers 1…17 : seed 42 → (3,4,5), seed 0 → (8,15,17), un mot. Exclure 3 et 8 de a laisse (5,12,13), aucun mot (singleton). Les deux modes utilisent le même values plat + groups ; groupes sans values dupliqué. Définition/contraintes/budgets font partie du rejeu, jamais seed seule.
 
-Preuves : generation-v2 et generation-v2-limit, bilan dans [progress](../progress.md). Oracle pythagoricien indépendant sur 256 seeds ; six opérateurs sur 96 seeds chacun par arithmétique BigInt ; scalaires et groupes sur 128 seeds. Inconnue/exception et épuisement de rejet injectés ; limites JSON/candidats/mots, choix/exclusions, données hostiles et intégration v3 testés. Les formules générales, graphes, prédicats avancés et deadline ne sont pas supportés du fait de ces tests.
+Preuves : generation-v2 et generation-v2-limit, bilan dans [progress](../archive/progress.md). Oracle pythagoricien indépendant sur 256 seeds ; six opérateurs sur 96 seeds chacun par arithmétique BigInt ; scalaires et groupes sur 128 seeds. Inconnue/exception et épuisement de rejet injectés ; limites JSON/candidats/mots, choix/exclusions, données hostiles et intégration v3 testés. Les formules générales, graphes, prédicats avancés et deadline ne sont pas supportés du fait de ces tests.

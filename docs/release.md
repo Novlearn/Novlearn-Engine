@@ -1,5 +1,12 @@
 # Distribution pilote privée et adoption
 
+Actualisation documentaire du 12 octobre 2026 : la suite Windows de cet audit
+passe **1533 tests / 29 fichiers sans skip**, incluant l’hôte natif et la CLI.
+Le refus OS consigné en M9/M12 reste une observation historique ; aucune politique
+OS modifiée par cette mission, cause de l’évolution non établie. Les benchmarks,
+archives consommées et captures ci-dessous restent les preuves historiques M12,
+sans nouvelle exécution de ces bancs. Voir [contrôles actuels](progress.md#contrôles-de-la-réorganisation-documentaire).
+
 Le package ESM0.1.0 utilise le schéma5, CortexJS0.151.0 et le générateur
 mulberry32-rejection-v1. Sept fonctions sont exportées à la racine ;
 `./legacy` expose adaptLegacyExercise et `./node-host` createNodeHost.
@@ -34,14 +41,14 @@ Le bundle complet sans minification mesure environ5,47Mo ; il ne constitue pas
 un budget de livraison frontend recommandé. Les réponses officielles restent
 corrigées côté serveur, même si le cœur portable sert à une prévisualisation.
 
-| Cible        | Support vérifié et limite                                                                                                              |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Node         | 24.19.0/npm11.17.0, ESM et déclarations strictes ; Node20 du backend voisin doit être mis à niveau avant adoption                      |
-| Navigateur   | Bundle Rolldown1.2.13, lecture réelle Chromium155 ; hôte Node exclu du bundle                                                          |
-| MathLive     | 0.111.1, sorties réelles M7/M11 ; indépendant du moteur et pas distribué dans le package                                               |
-| Hôte Linux   | x86_64, Python3.11+, cgroupv2 déjà borné/swap0/pids bornés ; absence de quota refusée                                                  |
-| Hôte Windows | Preuve historique M8 JobObject ; politique actuelle du poste refuse le lanceur, résultat unavailable ; aucune protection OS contournée |
-| FastAPI      | Exemple privé Python, serveur détenteur des instances ; identité/DB/points restent applicatifs                                         |
+| Cible        | Support vérifié et limite                                                                                              |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Node         | 24.19.0/npm11.17.0, ESM et déclarations strictes ; Node20 du backend voisin doit être mis à niveau avant adoption      |
+| Navigateur   | Bundle Rolldown1.2.13, lecture réelle Chromium155 ; hôte Node exclu du bundle                                          |
+| MathLive     | 0.111.1, sorties réelles M7/M11 ; indépendant du moteur et pas distribué dans le package                               |
+| Hôte Linux   | x86_64, Python3.11+, cgroupv2 déjà borné/swap0/pids bornés ; absence de quota refusée                                  |
+| Hôte Windows | JobObject M8 ; refus du lanceur consigné en M9/M12 ; tests natifs de cet audit PASS, sans modification de politique OS |
+| FastAPI      | Exemple privé Python, serveur détenteur des instances ; identité/DB/points restent applicatifs                         |
 
 Le quota Linux est partagé avec le superviseur et Python. Les métriques cgroup
 ne sont pas le committed memory Windows. Le nettoyage sous pression a été mesuré

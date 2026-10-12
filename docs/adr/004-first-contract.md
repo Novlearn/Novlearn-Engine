@@ -1,5 +1,7 @@
 # ADR 004 — Premier contrat natif de valeur rationnelle
 
+> Statut documentaire : **Superseded** (revue du 12 octobre 2026). Les enveloppes et API expérimentales ont été remplacées par [ADR 008](008-canonical-consolidation.md). Ce texte conserve les motifs, alternatives et preuves historiques ; ses exemples ne sont pas des API actuelles.
+
 **Archive de décisions expérimentales.** Depuis le 11 octobre 2026, les anciens contrats/options ne sont plus disponibles. [ADR 008](008-canonical-consolidation.md) les remplace ; profils mathématiques et preuves historiques conservés. [API actuelle](../architecture.md).
 
 Statut : retenu pour le premier lot, 10 octobre 2026. Le package reste privé et en version 0.0.0 ; schéma natif version 1, sans engagement de release pilote.

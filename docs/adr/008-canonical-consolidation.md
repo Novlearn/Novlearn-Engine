@@ -1,9 +1,11 @@
 # ADR 008 — Un contrat et un pipeline canoniques
 
+> Statut documentaire : **Active** (revue du 12 octobre 2026). La décision reste applicable avec les extensions ultérieures. Les mentions de lots futurs, de nombres d’exports et de validation décrivent la date de chaque section ; [l’architecture](../architecture.md) et [les capacités](../features.md) décrivent l’état actuel.
+
 Statut : retenu le 11 octobre 2026 sur demande explicite. Remplace les exigences
 de compatibilité interne des ADR 004/006/007 et D12/D16/D24/D30/D32/D33 ; leurs
 choix mathématiques et preuves historiques restent utiles. ADR 001/002/003/005
-applicables. [Audit avant suppression](../consolidation.md).
+applicables. [Audit avant suppression](../archive/consolidation.md).
 
 ## Décision
 
@@ -36,5 +38,5 @@ futures au Lot 9 hors chemin canonique ; aucun JS historique ou migration exécu
 
 Tests mathématiques/erreurs/inconnus portés au canonique ; anciennes attentes de
 compatibilité remplacées par refus explicite. Nouveaux vecteurs figés et oracles
-indépendants, projection/rejeu/JSON/immutabilité/inertie testés. [Preuves](../progress.md).
+indépendants, projection/rejeu/JSON/immutabilité/inertie testés. [Preuves](../archive/progress.md).
 Correcteur, éléments avancés, UI, isolation forte/adoption différés ; aucun commit.

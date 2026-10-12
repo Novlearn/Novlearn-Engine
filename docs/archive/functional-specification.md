@@ -1,9 +1,11 @@
+> Archive historique, arrêtée avant la réorganisation documentaire du 12 octobre 2026. Les états et les exemples ci-dessous décrivent leurs étapes respectives. Pour l’état actuel, consulter [l’index](../README.md), [les capacités](../features.md) et [la progression](../progress.md). Les contenus historiques sont conservés ; seuls ce repère et les chemins des liens ont été ajoutés ou ajustés.
+
 # Spécification fonctionnelle
 
 M0–M9 livrés : génération/éléments/correction bornées, formes, cas connus du lycée,
 MathLive et hôte isolé/transport privé. M10 validé : huit adaptations
 réelles, recettes/mappings privés et profil log-affine-positive sur x>0 pour106,
-avec forme power-of-e. [ADR016](adr/016-reviewed-legacy-adaptation.md).
+avec forme power-of-e. [ADR016](../adr/016-reviewed-legacy-adaptation.md).
 Le profil rationnel/polynomial de génération reste distinct. Démonstration
 intégrée M11 et consommation/audit final M12 demeurent obligatoires pour la V1.
 
@@ -12,7 +14,7 @@ Contrat canonique schemaVersion 5 ; package privé 0.1.0. Le cahier des charges
 CDC_référence.md reste une cible plus large, préservée en octets. Cette mission
 conserve les capacités livrées ; la mission V1 autorise la réalisation progressive
 des manques (D35). M1 étend les noms descriptifs (D36), sans nouveau moteur.
-[Contrats/APIs](architecture.md), [preuves et limites](feature-coverage.md).
+[Contrats/APIs](../architecture.md), [preuves et limites](feature-coverage.md).
 
 ## 1. Document et questions
 
@@ -50,7 +52,7 @@ d'options livré. La projection sélectionne chaque branche, mode/response/optio
 sans attendus/flags/politiques/traces/extensions/seed. Prose équivalente ou options
 symboliques non comparables ne sont pas réputées distinguées mathématiquement.
 
-Données natives M2 : [ADR 009](adr/009-display-elements.md) définit les contrats
+Données natives M2 : [ADR 009](../adr/009-display-elements.md) définit les contrats
 effectivement validés/instanciables, leurs profils et leur projection. Catalogue
 privé typé et keyboard facultatif disponibles. Les fiches ci-dessous conservent
 l'inventaire des besoins et observations avant M2 ; leurs mentions « absent natif »
@@ -193,7 +195,7 @@ spécialisée avant réduction, documentée dans ADR 010.
 
 Parsing scalar-latex-v1 reste plus large : sources préservées, racines et Pi/
 ExponentialE parsables mais aucune preuve d'évaluation/domaine. Point et {,} décimaux,
-virgule nue ambiguë refusée, placeholders détectés avant CortexJS. [ADR 005](adr/005-math-input.md).
+virgule nue ambiguë refusée, placeholders détectés avant CortexJS. [ADR 005](../adr/005-math-input.md).
 
 JSON : sources/textes ≤4096 unités UTF-16, IDs/révision/clés ≤128, profondeur ≤16,
 ≤10000 nœuds, collections ≤128. ≤128 éléments et ≤64 options/sélection QCM. Le
@@ -230,7 +232,7 @@ Une expression mathématiquement valable mais hors famille supportée n'est pas 
 
 ## 5. Évolutions et limites
 
-M6, [ADR 013](adr/013-school-known-answers.md) : profil public school-latex-v1
+M6, [ADR 013](../adr/013-school-known-answers.md) : profil public school-latex-v1
 pour lire fonctions usuelles et limites ; expression mode display substituée
 sans évaluation et avec domaine unverified. Réponses numériques fermées sous
 preuve exacte, domaines logarithmiques et pôles connus de tangente avant réduction.

@@ -1,133 +1,80 @@
-# Corpus historique et compatibilité
+# Compatibilité des exercices historiques
 
-## Adaptation M10 — validée localement
+## Trois étapes distinctes
 
-Un adaptateur explicite séparé `./legacy` convertit désormais les huit lignes reçues.
-Les [huit rapports et définitions](../tests/fixtures/legacy/adapted) proviennent d'une
-conversion exécutée, avec instanciation/correction officielle seed42 PASS. Les
-originaux et558 chemins restent conservés ; aucune migration de production.
-Tests32 tirages/oracles et refus de sources/recettes ; check complet Linux
-1482PASS/32WindowsSKIP,26 fichiers/27,465,43s. Deux passages du parcours isolé8
-exercices PASS et7régressions Python/FastAPI PASS. Aucun test Windows natif actuel
-ou CI distante annoncé ; limites OS/quotas et profils documentés.
-[ADR016](adr/016-reviewed-legacy-adaptation.md), [coexistence et rollback](migration-guide.md).
+1. **Inventaire** : huit lignes reçues et 558 chemins recensés, sans conversion.
+2. **Transcription native** : fixtures manuelles 103 (question de minimum) et 64
+   (graphe observé), sans migration de leur document complet à cette étape.
+3. **Adaptation M10** : huit conversions complètes réellement exécutées localement,
+   avec recettes revues, définitions, rapports et instanciation/correction seed 42.
+   Tests sur quatre seeds par ligne et parcours dans l’hôte Linux borné.
 
-36 : a≠0 ;78 : u0≠1 et k≠2u0² ;96 : u0≤2k ;103 : flag flash de ligne true,
-arbitrages utilisateur explicites. Computed min/max inactifs conservés privés ; QCM
-points1 et graph showExpression=true par défaut observé. 106 : preuve log-affine-positive
-sur x>0 et forme power-of-e ; pas de solveur universel. Les documents Creator testés sont
-reconstruits d'après les sources, distincts des huit vraies lignes DB reçues.
+La production et le catalogue complet n’ont pas été migrés. La source, version
+historique de générateur et seed des anciennes tentatives ne permettent pas
+d’inventer leur rejeu. [ADR 016](adr/016-reviewed-legacy-adaptation.md) détaille
+la méthode ; [migration-guide](migration-guide.md) décrit coexistence/rollback.
 
-## Audit initial conservé — avant M10
+## Source et conservation
 
-État de cet audit initial : aucun adaptateur ni migration exécuté. Schéma canonique 5 seul
-accepté par le nouveau moteur ; contrats expérimentaux non conservés. Les rapports
-ci-dessous décrivent les huit sources observées et leurs besoins de conversion,
-pas les capacités natives d'un ancien format toujours accepté.
+- [Corpus reçu](exercises_rows.json) : 14 583 octets, IDs 1, 6, 36, 64, 78, 96, 103, 106.
+- [Copie originale](../tests/fixtures/legacy/exercises_rows.original.json) identique
+  en octets ; SHA-256 commun
+  `0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae`.
+- [Inventaire](../tests/fixtures/legacy/inventory.json) : 558 entrées scope/chemin/type,
+  avec champs de ligne et JSON `content/competences` décodés explicitement.
+- Date/provenance d’export, catalogue complet et versions historiques non fournis.
+  `created_at` ne prouve ni une révision pédagogique ni la date d’export.
 
-## Provenance et conservation
+Les enveloppes DB encodée, publication Creator et document Creator plat sont
+des formats distincts. Les deux formes Creator sont reconstruites dans les tests
+depuis les sources observées ; elles ne sont pas de nouveaux exports runtime.
+`answerFormat:'number'` ne choisit pas une famille de correction : infini,
+logarithme, racine, rationnel et exponentielle requièrent des politiques explicites.
 
-Ce document conserve l'inventaire du corpus et la couverture détaillée de génération. La [matrice globale](feature-coverage.md) ajoute tous les éléments, correction et fonctions applicatives ; la [spécification](functional-specification.md) définit leurs besoins cibles. Les constats historiques ne sont ni une migration exécutée ni un inventaire du catalogue complet.
+## Les huit adaptations locales
 
-- Source reçue : `docs/exercises_rows.json`, 14 583 octets.
-- SHA-256 : `0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae`.
-- Copie byte-identique : `tests/fixtures/legacy/exercises_rows.original.json`.
-- Identifiants reçus : 1, 6, 36, 64, 78, 96, 103, 106.
-- Application/table distante, date d'export, révision historique et versions des générateurs : non fournies. `created_at` est une valeur du document, pas une preuve de révision ni date d'export.
+Tous les cas sont adaptables **sous les recettes revues** ; ce statut ne signifie
+pas que n’importe quel JSON ressemblant à ces documents est accepté.
 
-Les originaux sont exclus de Prettier. L'inventaire dérivé [inventory.json](../tests/fixtures/legacy/inventory.json) contient **558 entrées**, incluant conteneurs, champs de ligne et chemins du contenu/compétences décodés. Chaque entrée indique ligne, scope, JSON Pointer, type observé et statut `preserved-original`. Le scope `row` désigne le document reçu ; `content` et `competences` désignent les données issues d'un décodage JSON explicite. Aucune clé n'est renommée dans l'original. Les tests vérifient empreinte, couverture des chemins et aller-retour des données ; ils ne prouvent pas une migration de comportements.
+| Ligne                       | Profil et arbitrage                                                                                                             | Définition / rapport exécuté                                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| 1 — Limite logarithmique    | Expression présentée ; attendu connu −∞, sans preuve de limite calculée                                                         | [définition](../tests/fixtures/legacy/adapted/1.definition.json), [rapport](../tests/fixtures/legacy/adapted/1.report.json)     |
+| 6 — Équation exponentielle  | Attendu réel ln(k), k≥1 ; identité connue sous profil numérique                                                                 | [définition](../tests/fixtures/legacy/adapted/6.definition.json), [rapport](../tests/fixtures/legacy/adapted/6.report.json)     |
+| 36 — QCM asymptote          | Computed rationnels/QCM ; contrainte utilisateur a≠0 pour options distinctes                                                    | [définition](../tests/fixtures/legacy/adapted/36.definition.json), [rapport](../tests/fixtures/legacy/adapted/36.report.json)   |
+| 64 — Signe de dérivée       | Graphe et QCM, réponse connue ; « négative » interprétée nonpositive incluant f′(0)=0                                           | [définition](../tests/fixtures/legacy/adapted/64.definition.json), [rapport](../tests/fixtures/legacy/adapted/64.report.json)   |
+| 78 — Suite / point fixe     | Racine connue et deux QCM ; u0≠1 et k≠2u0² pour éviter collisions ; k exclut toujours 4/9                                       | [définition](../tests/fixtures/legacy/adapted/78.definition.json), [rapport](../tests/fixtures/legacy/adapted/78.report.json)   |
+| 96 — Récurrence             | u0≤2k pour rendre l’énoncé de croissance cohérent ; alias L→limitValue explicite                                                | [définition](../tests/fixtures/legacy/adapted/96.definition.json), [rapport](../tests/fixtures/legacy/adapted/96.report.json)   |
+| 103 — Minimum du trinôme    | Exercice complet avec graphe ; priorité Is_Flash=true de la ligne confirmée malgré content.isFlash=false                        | [définition](../tests/fixtures/legacy/adapted/103.definition.json), [rapport](../tests/fixtures/legacy/adapted/103.report.json) |
+| 106 — Dérivée logarithmique | Deux questions : A·ln(x)+B sur x>0 et forme e^q ; exclusion dépendante ; computed c négatif admis, bornes historiques inactives | [définition](../tests/fixtures/legacy/adapted/106.definition.json), [rapport](../tests/fixtures/legacy/adapted/106.report.json) |
 
-## Enveloppe et champs communs
+Les contraintes 36/78/96 réduisent volontairement les domaines historiques après
+arbitrage utilisateur. Les IDs d’options manquants reçoivent des IDs synthétiques
+stables par chemin, signalés dans les rapports. Champs inactifs, collisions de
+flags et données non transposées restent dans l’original/rapport privés.
+Les indications/explications historiques non converties ne sont pas annoncées
+comme éléments natifs actifs ; leur conservation privée est tracée.
 
-Chaque ligne possède exactement les dix champs suivants. Tous sont préservés dans l'original ; seuls les champs explicitement cités dans la transcription de 103 alimentent la fixture native.
+Computed min/max sont conservés sans devenir restrictions natives, conformément
+au comportement observé des anciens générateurs. Aucune expression JavaScript
+historique n’est exécutée. La conversion mathématique passe par CortexJS raw,
+avec références explicites et source préservée, sans remplacement algébrique regex.
 
-| Champ                         | Type observé                     | Traitement dans ce lot                                                  |
-| ----------------------------- | -------------------------------- | ----------------------------------------------------------------------- |
-| `id`                          | nombre entier                    | Identifie la ligne historique ; référence de provenance privée pour 103 |
-| `created_at`                  | chaîne                           | Conservé ; pas de révision immuable déduite                             |
-| `title`                       | chaîne                           | Titre natif de 103, identique à la source                               |
-| `chapter`, `difficulty`       | chaînes                          | Métadonnées conservées ; pas de taxonomie native supposée               |
-| `competences`                 | chaîne contenant un tableau JSON | Décodage documentaire et inventaire ; chaîne originale conservée        |
-| `content`                     | chaîne contenant un objet JSON   | Décodage documentaire et inventaire ; chaîne originale conservée        |
-| `app_title`                   | chaîne                           | Conservé ; ne pas confondre avec `apptitle`                             |
-| `Is_Flash`, `Need_Calculator` | booléens                         | Conservés ; collisions signalées, aucune priorité automatique           |
+## Entrée et preuves
 
-`content` contient `elements` et `variables`. Chaque élément a `id`, `type`, `content`. Seuls text, question, mcq et graph sont observés ici ; les familles supplémentaires présentes dans le code voisin ne font pas partie du corpus reçu.
+`adaptLegacyExercise` est exportée uniquement depuis
+`novlearn-exercise-engine/legacy`. Elle reçoit une source, un format explicite et
+une recette privée : id/révision, variables libres, politiques par question,
+aliases, contraintes et arbitrages. Le résultat distingue adapté et bloqué,
+avec rapport et original conservés. Pour une entrée non fiable, utiliser
+l’opération privée de l’hôte isolé, jamais une route d’import publique brute.
 
-| Structure décodée   | Champs observés                                                                                    | Traitement                                                                                                                                               |
-| ------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| text.content        | `text`                                                                                             | Source originale conservée ; texte de 103 reformulé explicitement pour la fixture native                                                                 |
-| question.content    | `hint`, `points`, `question`, `explanation`, `answerFormat`, `correctAnswer`                       | Tous conservés ; points/texte de question et ID de 103 repris, attendu transcrit séparément ; hint/explanation ne sont pas des champs publics implicites |
-| mcq.content         | `question`, `options`, `multipleChoice` ; `hint`, `explanation`, `multipleAnswers` selon l'élément | Conservé, hors contrat initial ; les flags ne sont pas fusionnés                                                                                         |
-| mcq.options[]       | `text`, `correct`, parfois `id`                                                                    | Conservé ; IDs manquants signalés ; aucun ID généré ni correction QCM promise                                                                            |
-| graph.content       | `xMax`, `xMin`, `yMax`, `yMin`, `showGrid`, `functions`                                            | Conservé, non pris en charge par le contrat initial                                                                                                      |
-| graph.functions[]   | `color`, `expression`                                                                              | Conservé ; aucun renderer ou interpréteur ajouté                                                                                                         |
-| variables[]         | `id`, `max`, `min`, `name`, `type`, `choices`, `decimals`, `exclusions`, `expression`              | Tous conservés ; seuls les trois paramètres entiers de 103 sont transcrits dans la fixture native                                                        |
-| content additionnel | `apptitle` (64), `isFlash` (78/103/106), `needCalculator` (78/103/106)                             | Conservé ; aliases éventuels et collision de 103 signalés                                                                                                |
+Preuves : [corpus](../tests/corpus.test.mjs),
+[adaptateur](../tests/legacy-adapter.test.ts), [profil 106](../tests/log-affine.test.ts),
+[recettes](../tests/fixtures/legacy/recipes.json),
+[parcours isolé](../tools/check-legacy-host.mjs). L’inventaire détaillé des champs,
+défauts observés et première transcription reste dans
+[l’archive de compatibilité](archive/compatibility.md).
 
-Tous les paramètres ont `choices: []` et `decimals: 2`, y compris les integer/computed : aucun champ inactif n'est supprimé. Les exclusions sont des chaînes, notamment `"4;9"`, `"0"`, `"@a"`. Elles ne constituent pas une même politique native. `answerFormat: "number"` couvre infini, logarithme, racine, rationnel et exponentielle ; il ne suffit pas à déterminer une stratégie de correction.
-
-## Huit rapports de compatibilité
-
-| Ligne                                   | Éléments ; paramètres                                                            | Lecture et statut                                                                                                                                                                                                                                                 |
-| --------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1 — Limite usuelle logarithme 1         | text/question ; a entier 0…10                                                    | Limite à droite de ln(t)/t : −∞. Infini et logarithme hors famille initiale ; `ln` dans le texte à qualifier au parsing futur                                                                                                                                     |
-| 6 — Equation 2                          | text/question ; k entier 1…1000                                                  | Solution ln(k), domaine réel cohérent k≥1. Logarithme hors correction rationnelle initiale                                                                                                                                                                        |
-| 36 — QCM asymptote à une fonction 2     | text/mcq ; a entier, b=a²+1, c=2a, d=−a computed                                 | Dénominateur (x+a)²+1 positif, f(x)~x ; absence d'asymptotes proposées cohérente. Computed/QCM différés ; quatre options sur six sans ID                                                                                                                          |
-| 64 — signe dérivée 3                    | text/graph/question/mcq ; aucun paramètre                                        | f=sin(2,5x²), sept zéros de dérivée sur [−2,2] : 0 et ±√(π/5), ±√(3π/5), ±√π. Graphe/QCM différés ; quatre options sur six sans ID ; `apptitle=""` différent de `app_title`                                                                                       |
-| 78 — Suite récurrente point fixe 1      | text/question/mcq/mcq ; k entier 2…15 excluant 4/9, u0 entier 1…5                | Racine et QCM différés. **Collision réelle pour u0=1** : options u0 (true) et 1/u0 (false) valent toutes deux 1. Dernier QCM : une option sans ID. `multipleAnswers=false` et `multipleChoice=false` présents au premier QCM ; doubles flags d'exercice cohérents |
-| 96 — Raisonnement par récurrence suite  | text/question ; k entier 1…8, L=2k computed, u0 entier 0…3                       | **Énoncé incohérent pour k=1,u0=3** : L=2, u0>L, u1=2,5<u0. La limite 2k reste vraie ; ne pas reprendre l'affirmation admise de croissance sans revoir les contraintes                                                                                            |
-| 103 — Extremum d'un trinôme avec graphe | text/graph/question ; a entier 1…3, b entier −6…6 excluant 0, c entier −5…5      | Première question native retenue. **Collision `Is_Flash=true` / `content.isFlash=false`**, sans priorité choisie. Graphe conservé et signalé hors contrat initial                                                                                                 |
-| 106 — Dérivée fonction avec logarithme  | text/question/question ; a entier 1…4, b entier 1…6 excluant @a, c=−a−b computed | Dérivée/racine exponentielle cohérentes sur x>0. **c toujours négatif malgré min=1/max=10** : rôle des bornes computed à clarifier. Exclusion dépendante, logarithme et forme e^k différés                                                                        |
-
-Pour 64, « dérivée négative sur [−1/2,0] » est cohérent au sens ≤0 : elle est strictement négative avant 0 et nulle en 0. Ce n'est pas déclaré comme erreur sans politique de signe strict. Pour 78, les exclusions de carrés empêchent le point fixe entier, mais ne résolvent pas la collision de distracteurs.
-
-La lecture mathématique ci-dessus est une analyse indépendante, pas un test du moteur. Les autres dépôts restent sources en lecture seule. Computed n'est jamais exécuté comme JavaScript. Les contraintes, formes et domaines non explicités restent ouverts pour ces familles.
-
-## Première question native : minimum du trinôme (103)
-
-La fixture [rational-minimum.definition.json](../tests/fixtures/contracts/rational-minimum.definition.json) est une **transcription manuelle revue**, pas le résultat d'un importeur automatique ni la migration de l'exercice complet.
-
-| Source de 103                                         | Transcription native et justification                                                                                                                                        |
-| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| title                                                 | Repris exactement                                                                                                                                                            |
-| id=103, elements[2].id=1780008000003                  | Identité native distincte, question identifiée par sa valeur historique et provenance en extension privée                                                                    |
-| created_at                                            | Pas de révision déduite : nouvelle révision native liée à l'empreinte du corpus et à la transcription v1                                                                     |
-| variables a/b/c                                       | `kind: integer`, bornes reprises ; exclusions `""` → [], `"0"` → [0] uniquement pour ce cas revu                                                                             |
-| elements[0].content.text                              | Reformulation en texte + source mathématique séparée `a x^2 + b x + c` ; variable contextuelle x réelle explicitement déclarée                                               |
-| elements[2].content.question/points                   | Repris exactement                                                                                                                                                            |
-| elements[2].content.correctAnswer                     | Source `\frac{-@b}{2*@a}` préservée ; transcription native `\frac{-b}{2a}` avec paramètres déclarés. Aucune transformation regex utilisée                                    |
-| answerFormat=number et consigne « valeur de x0 »      | Nouvelle politique native : valeur rationnelle exacte, forme libre (`value-only`), pas d'exigence de fraction irréductible. La consigne ne demande aucune forme particulière |
-| elements[1] graph ; hint/explanation ; metadata/flags | Conservés dans l'original, non convertis dans cette question minimale. Le graphe n'est pas requis pour le calcul analytique ; aucune migration intégrale annoncée            |
-
-Avec a>0, la fonction est totale sur ℝ et possède un minimum unique, atteint en −b/(2a)∈ℚ. b=0 reste exclu conformément à la source, même si la formule mathématique resterait définie. c participe à l'énoncé sans intervenir dans l'abscisse attendue. Paramètres a/b/c et variable x sont distincts ; la réponse attendue est scalaire, sans variable libre. La source est décodée par JSON.parse deux fois (ligne puis content) ; la commande frac comporte alors **un seul backslash**, sans passe supplémentaire d'unescape.
-
-## Contrat canonique et validation runtime
-
-La transcription native de question 103 est désormais une liste texte/expression/
-question sous schemaVersion 5, avec GenerationDefinition canonique. Sources brutes
-historiques, inventaire et provenance restent identiques. Aucun graphe ou exercice
-complet migré. [Contrats et APIs](architecture.md), [spécification](functional-specification.md).
-
-JSON inerte/détaché, champs inconnus refusés, extensions privées conservées sans
-interprétation. Soumission LaTeX brute sous schéma 5, sans autorité client.
-Les snapshots expérimentaux ne sont plus rejouables ; nouveaux vecteurs stables
-au sein de l'identité mulberry32-rejection-v1 et de l'artefact identifié.
-
-## Matrice de couverture fonctionnelle — génération
-
-La [matrice actuelle](feature-coverage.md) recense le profil canonique avec preuves
-et limites ; l'[audit initial](consolidation.md) relie chaque capacité historique à
-son équivalent. Il n'existe plus de profils de génération concurrents à comparer.
-
-Integer/grille/choice/tuple/computed, exclusions/comparaisons/restrictions, dépendances,
-rejeu et instances multiquestions/QCM sont conservés. Choix finis tirables hors
-encodage exact : diagnostic lors d'un usage mathématique non admis, jamais arrondi.
-
-Futur Lot 9 : adaptateurs explicites hors fonctions principales, provenance/brut
-conservés, références/aliases/conflits revus individuellement, pertes/blocages
-rapportés, aucune exécution de JS historique ou migration de production automatique.
-
-## Bilan historique de passage du Lot 2
-
-Les huit lignes sont classées et tous les chemins conservés/inventoriés ; collisions et limites sont explicites. Le contrat minimal natif et les deux validateurs sont testés sur la question choisie. ADR 004 consigne la décision. Aucune migration de comportement des huit exercices n'est validée ; elle relève du Lot 9. Prochain lot proposé : Lot 3 (frontière mathématique), sans lancement automatique.
+Les générations natives sont décrites dans [features](features.md), sans seconde
+matrice concurrente dans ce document. Une source inconnue, un conflit non arbitré,
+un format ou calcul hors profil donne un blocage explicite, sans suppression de bloc.

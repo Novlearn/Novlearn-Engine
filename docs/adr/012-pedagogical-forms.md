@@ -1,5 +1,7 @@
 # ADR 012 — Formes pédagogiques sur syntaxe originale
 
+> Statut documentaire : **Active** (revue du 12 octobre 2026). La décision reste applicable avec les extensions ultérieures. Les mentions de lots futurs, de nombres d’exports et de validation décrivent la date de chaque section ; [l’architecture](../architecture.md) et [les capacités](../features.md) décrivent l’état actuel.
+
 Décision M5 du 11 octobre 2026, CDC 7.6. L'utilisateur confirme une
 **factorisation complète sur ℚ, sous profil borné**. Les choix locaux ci-dessous
 sont explicites et réversibles ; aucun correcteur universel de formes n'est annoncé.

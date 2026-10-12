@@ -1,5 +1,7 @@
 # ADR 013 — Fonctions usuelles et réponses connues du lycée
 
+> Statut documentaire : **Active** (revue du 12 octobre 2026). La décision reste applicable avec les extensions ultérieures. Les mentions de lots futurs, de nombres d’exports et de validation décrivent la date de chaque section ; [l’architecture](../architecture.md) et [les capacités](../features.md) décrivent l’état actuel.
+
 Décision M6, CDC 4.2/4.3/7.3/7.5. CortexJS 0.151.0 reste l'unique bibliothèque
 mathématique. Aucun solveur de limite ou de dérivée n'est ajouté.
 
@@ -53,4 +55,4 @@ ne constitue ni adaptation ni migration d'une ligne historique.
 Les budgets M3 restent applicables (entrée, AST, littéraux, puissances,
 coefficients/radicaux). Les limites affichées conservent le budget display M2.
 L'interruption effective reste M8. Preuves locales et état de validation dans
-[progress](../progress.md), [tests](../../tests/school-math.test.ts).
+[progress](../archive/progress.md), [tests](../../tests/school-math.test.ts).

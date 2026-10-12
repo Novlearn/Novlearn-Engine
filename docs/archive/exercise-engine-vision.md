@@ -1,3 +1,5 @@
+> Archive historique, arrêtée avant la réorganisation documentaire du 12 octobre 2026. Les états et les exemples ci-dessous décrivent leurs étapes respectives. Pour l’état actuel, consulter [l’index](../README.md), [les capacités](../features.md) et [la progression](../progress.md). Les contenus historiques sont conservés ; seuls ce repère et les chemins des liens ont été ajoutés ou ajustés.
+
 # Vision et périmètre du moteur d'exercices
 
 Référence fonctionnelle actualisée le 11 octobre 2026 après consolidation du moteur sous schemaVersion 5, package privé 0.1.0. Aucune migration ni intégration applicative exécutée. « Cible » désigne un comportement à construire ; seules les preuves de la [couverture](feature-coverage.md) établissent une capacité disponible.
@@ -5,7 +7,7 @@ Référence fonctionnelle actualisée le 11 octobre 2026 après consolidation du
 ## Objectif
 
 Données M2 disponibles : éléments avancés et fragments riches, aides/corrections
-privées, catalogue typé et clavier indicatif. [Profils](adr/009-display-elements.md).
+privées, catalogue typé et clavier indicatif. [Profils](../adr/009-display-elements.md).
 Formules à domaine non vérifié, nombres de rendu rationnels exacts ; aucune UI,
 correction élève ou migration historique complète livrée par ce lot.
 
@@ -63,7 +65,7 @@ Aujourd'hui : contrat canonique, parsing scalaire avec références descriptives
 
 - [Spécification fonctionnelle et inventaire des éléments](functional-specification.md)
 - [Parcours Admin, élève, correction et duels](exercise-lifecycle.md)
-- [Architecture, contrats et intégrations](architecture.md)
+- [Architecture, contrats et intégrations](../architecture.md)
 - [Couverture exhaustive au regard des sources accessibles](feature-coverage.md)
 - [Audit critique et arbitrages restants](architecture-review.md)
 - [Roadmap et conditions de passage](roadmap.md)
