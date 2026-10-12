@@ -1,6 +1,11 @@
 # Parcours d'un exercice
 
-Référence actualisée le 11 octobre 2026 après consolidation canonique. Les étapes applicatives suivantes sont des exigences de parcours, pas des services existants dans ce dépôt. Voir [spécification](functional-specification.md), [architecture](architecture.md) et [preuves de couverture](feature-coverage.md).
+Référence actualisée après M11. Le [banc local](demo.md) exerce génération,
+projection, correction officielle, reprise et manche périmée avec FastAPI et
+MathLive réels. Les parcours de production ci-dessous restent applicatifs ;
+aucun service Admin, DB ou Colyseus n'est livré dans ce dépôt. Voir
+[spécification](functional-specification.md), [architecture](architecture.md)
+et [preuves de couverture](feature-coverage.md).
 
 ## Création et publication dans Admin
 
@@ -100,7 +105,13 @@ sequenceDiagram
 
 Ordre détaillé : validation structurelle de soumission ; association à l'instance officielle ; parsing sous profil officiel ; contrôle d'admissibilité/symboles ; domaine et témoins de forme avant réduction ; méthode exacte bornée de comparaison ; application de la politique de forme/tolérance ; résultat structuré. Une méthode insuffisante donne indéterminé. Différence exacte donne incorrect. Un attendu officiel invalide donne défaut d'exercice/erreur de correction, jamais faute élève. Timeout/crash donnent erreur technique.
 
-La saisie/politique ne doivent pas être reconstruites depuis l'affichage, ni validées par un booléen client. Une prévalidation navigateur peut améliorer l'UX, sans remplacer les contrôles serveur. La politique de mêmes domaines par défaut est celle confirmée dans la [spécification](functional-specification.md) ; ses méthodes devront être prouvées par famille. Ce parcours est absent aujourd'hui, prévu aux Lots 6/7/8 puis démonstration 10.
+La saisie/politique ne doivent pas être reconstruites depuis l'affichage, ni
+validées par un booléen client. Une prévalidation navigateur peut améliorer l'UX,
+sans remplacer les contrôles serveur. La politique de mêmes domaines par défaut
+et les méthodes prouvées par famille sont décrites dans la
+[spécification](functional-specification.md) et les ADR010–016. M11 démontre ce
+parcours sur un exercice historique adapté complet, sous quota Linux ; cela ne
+constitue pas une adoption dans les applications de production.
 
 ## Duels
 

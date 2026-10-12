@@ -1,5 +1,69 @@
 # État et transmission
 
+## M11 validé — commit à créer
+
+Vérification complète Linux `npm run check` **1494PASS/32WindowsSKIP**,
+27fichiersPASS/1SKIP(28), **505,23s**, exit0 ; build/types/lint/format inclus.
+12Python/FastAPI PASS74,357s et cinq scénarios aprèsUnicode PASS60,413s.
+Root typecheck/lint/format/diffcheck et pack153 PASS. Revues readonly favorables.
+M11 livré sur son profil local : aucune intégration de production/Colyseus,
+aucune suite navigateur distante, aucune nouvelle dépendance du cœur.
+Prochaine action : stage limité, Conventional Commit et hash ; ensuite M12.
+
+Le parcours réel a été exécuté : serveur FastAPI local Linux384MiB/pids64,
+MathLive0.111.1 Brave/Chromium155, historique78 adapté par worker privé, seed/ID
+serveur. 13observations puis4après reload/duel conservées dans tests/e2e ;
+clavier1{,}25 incorrect, placeholderAPI invalide, ln2API indéterminé, collage
+$$sqrt12$$ correct, trois questions/QCM IDs, partiel/reprise complète aprèsreload.
+504timeouttransportcold100ms,503crashfixture et appelsuivantcorrect ; spoof422,
+deuxmanches/ancienne410. Capture JPG et private-replay JSON séparés d'HTTP/package.
+Onglet de test et conteneur novlearn-m11-bench fermés après capture ; aucun
+service encore lancé. Uvicorn0.32.0/Click8.5.0 dans cacheLinux uniquement.
+
+12tests Vitest verticaux PASS2,79s. 10Python/FastAPI PASS61,237s avant les deux
+régressions finales. Première vérificationPython3 : fuite par recherche de chaîne
+legacy (ID public légitime) corrigée en inspection de clés ; deuxième : seedstring
+du snapshot refusée par transport strict, convertie uint32 explicite au rejeu.
+Revues readonly : dernier répondant selon ordre d'admission corrigé et testé,
+capture figée avantawait et optionOrder ajouté pour prochaines observations.
+TTL pendantgrade et progressionduel parélève ajoutés ; gardeUnicode complétée.
+Lanceur run.ps1 test **12Python PASS74,357s** ; après gardeUnicode, cinq
+scénarios verticaux **PASS60,413s**. Types/lint root PASS, diffcheck PASS.
+run.ps1 start/stop réellement exécutés avec image figée, page HTTP200+CSP et
+quatre chemins privés HTTP404. Aucun conteneur de banc encore lancé.
+`npm.cmd pack --dry-run --json` PASS153fichiers/159432octets compressés,
+752494décompressés/SHA1 2a5c009ca87a9e3c704c18081530207839a1670e.
+Rapport PowerShell UTF16 lu parConvertFromJson (NodeUTF8 échoue sur ce fichier,
+sans invalider le résultatnpm). CaptureJPG SHA256
+54D180C3A41196F47B7768C5433E6EA82922D7897D05FD3BAE167F72A3ECACDE.
+Checkglobal Linux terminé : log .cache/m11-check.log, handle exec92439 clos,
+1494PASS/32WindowsSKIP505,23s. Commit M11 encore requis.
+README/decisions/demo mis à jour. M12 non commencé. CDC/originaux inchangés.
+
+### Préparation M11 conservée
+
+M10 commité **63e43f7**,50 fichiers8025insertions/38suppressions ; arbre propre
+hors CDC. Check1482PASS/32WindowsSKIP, pack153 ; tous les arbitrages utilisateur
+appliqués, huit conversions locales complètes, aucun original ou autre dépôt écrit.
+README/progress/decisions/roadmap10 et CDC6/10/11/lot10 relus. Analyses initiales
+M11 readonly ; root seul auteur. Aucun travail M12 démarré.
+
+Cible : vrai78 adapté (trois questions dont deuxQCM), backend FastAPI registre et
+snapshot officiels, saisie MathLive0.111.1 réelle, soumission puis gradeAnswer dans
+workers neufs Linux à quota. Selon besoin106 complète le profil expression/forme.
+Réutiliser le pont et le banc, aucun framework/CAS dans le cœur ou dépôt voisin.
+Critères : clavier/collage français/placeholder, correct/faux/invalide/indéterminé,
+erreur technique/timeout visible ; partiel/reprise, IDsQCM, falsification refusée,
+ownership/TTL/duel périmé et snapshot/rejeu/audit sans fuite dans la projection.
+Les responsabilités applicatives du banc restent explicites, sans production.
+
+Points à résoudre : serveur HTTP Python pour navigateur réel (pas HTTPNode moteur),
+assets MathLive locaux et qualification sous Linux car AppControl Windows refuse
+le lanceur. app.py existant n'a ni lecture de reprise ni trace de tentative ;
+définir le strict nécessaire pour la démonstration sans construire une plateforme.
+Prochaines actions : plan/critères précis après analysesreadonly, banc/examples et
+tests verticaux, vraie capture navigateur, revue/check/pack/docs/commit M11.
+
 ## M10 validé — adaptations historiques explicites
 
 M9 commité **00e9a1a** ; arbre propre hors CDC avant M10. README, décisions,

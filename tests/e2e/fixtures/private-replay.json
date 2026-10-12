@@ -1,0 +1,2490 @@
+{
+  "definitions": {
+    "78": {
+      "schemaVersion": 5,
+      "kind": "composed",
+      "id": "78",
+      "revision": "legacy-reviewed-v1:0f4d1173",
+      "title": "Suite récurrente point fixe 1",
+      "catalogue": {
+        "chapter": "Suites numériques",
+        "skills": [
+          "Utiliser les théorèmes du cours",
+          "Etablir la convergence ou divergence d'une suite"
+        ],
+        "exerciseType": "classic",
+        "needsCalculator": false,
+        "appTitle": "Point fixe d'une suite récurrente"
+      },
+      "generation": {
+        "schemaVersion": 5,
+        "definitions": [
+          {
+            "name": "k",
+            "kind": "integer",
+            "min": 2,
+            "max": 15,
+            "exclusions": [4, 9]
+          },
+          {
+            "name": "u0",
+            "kind": "integer",
+            "min": 1,
+            "max": 5,
+            "exclusions": []
+          }
+        ],
+        "constraints": [
+          {
+            "kind": "comparison",
+            "left": {
+              "variable": "u0"
+            },
+            "operator": "!=",
+            "right": {
+              "constant": 1
+            }
+          },
+          {
+            "kind": "comparison",
+            "left": {
+              "variable": "k"
+            },
+            "operator": "!=",
+            "right": {
+              "latex": "2\\cdot\\mathrm{u0}^2"
+            }
+          }
+        ],
+        "maxAttempts": 128,
+        "maxDraws": 10000
+      },
+      "variables": [],
+      "elements": [
+        {
+          "id": "1781009000001",
+          "type": "text",
+          "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$).",
+          "extensions": {
+            "legacyPath": "/elements/0",
+            "legacy": {
+              "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+            }
+          }
+        },
+        {
+          "id": "1781009000002",
+          "type": "question",
+          "text": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+          "points": 1,
+          "response": {
+            "format": "latex",
+            "kind": "real"
+          },
+          "policy": {
+            "domain": "real",
+            "form": "value-only"
+          },
+          "expectedLatex": "\\sqrt{\\mathrm{k}}",
+          "extensions": {
+            "legacyPath": "/elements/1",
+            "legacy": {
+              "hint": "",
+              "points": 1,
+              "question": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+              "explanation": "On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\frac{@k}{x} . \\newline$\nComme $\\ell > 0$, $f$ est continue en $\\ell$ et par passage à la lmite quand $n \\to +\\infty$ :\n$\\newline \\ell = f( \\ell ) \\Leftrightarrow \\ell = \\frac{@k}{\\ell} \\Leftrightarrow \\ell^2 = @k\\Leftrightarrow \\ell = \\sqrt{@k}$ (car $\\ell > 0$).",
+              "answerFormat": "number",
+              "correctAnswer": "\\sqrt{@k}"
+            }
+          }
+        },
+        {
+          "id": "1781009000003",
+          "type": "mcq",
+          "text": "Que vaut $u_2$ en fonction de $u_0$ ?",
+          "points": 1,
+          "mode": "single",
+          "options": [
+            {
+              "id": "1",
+              "content": {
+                "format": "text",
+                "text": "$u_0$"
+              }
+            },
+            {
+              "id": "2",
+              "content": {
+                "format": "text",
+                "text": "$\\frac{@k}{u_0}$"
+              }
+            },
+            {
+              "id": "3",
+              "content": {
+                "format": "text",
+                "text": "$\\frac{1}{u_0}$"
+              }
+            },
+            {
+              "id": "4",
+              "content": {
+                "format": "text",
+                "text": "$2 u_0$"
+              }
+            }
+          ],
+          "expectedOptionIds": ["1"],
+          "extensions": {
+            "legacyPath": "/elements/2",
+            "legacy": {
+              "hint": "$u_1 = \\frac{@k}{u_0}$, puis $u_2 = \\frac{@k}{u_1}$.",
+              "options": [
+                {
+                  "id": 1,
+                  "text": "$u_0$",
+                  "correct": true
+                },
+                {
+                  "id": 2,
+                  "text": "$\\frac{@k}{u_0}$",
+                  "correct": false
+                },
+                {
+                  "id": 3,
+                  "text": "$\\frac{1}{u_0}$",
+                  "correct": false
+                },
+                {
+                  "id": 4,
+                  "text": "$2 u_0$",
+                  "correct": false
+                }
+              ],
+              "question": "Que vaut $u_2$ en fonction de $u_0$ ?",
+              "explanation": "$u_2 = \\frac{@k}{u_1} = \\frac{@k}{\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !",
+              "multipleChoice": false,
+              "multipleAnswers": false
+            }
+          }
+        },
+        {
+          "id": "1777470911608",
+          "type": "mcq",
+          "text": "Que conclure sur la convergence de $(u_n)$ ?",
+          "points": 1,
+          "mode": "single",
+          "options": [
+            {
+              "id": "1",
+              "content": {
+                "format": "text",
+                "text": "La suite $(u_n)$ converge"
+              }
+            },
+            {
+              "id": "2",
+              "content": {
+                "format": "text",
+                "text": "La suite $(u_n)$ diverge"
+              }
+            },
+            {
+              "id": "legacy-option-3-2",
+              "content": {
+                "format": "text",
+                "text": "On ne peut encore rien conclure"
+              }
+            }
+          ],
+          "expectedOptionIds": ["2"],
+          "extensions": {
+            "legacyPath": "/elements/3",
+            "legacy": {
+              "options": [
+                {
+                  "id": 1,
+                  "text": "La suite $(u_n)$ converge",
+                  "correct": false
+                },
+                {
+                  "id": 2,
+                  "text": "La suite $(u_n)$ diverge",
+                  "correct": true
+                },
+                {
+                  "text": "On ne peut encore rien conclure",
+                  "correct": false
+                }
+              ],
+              "question": "Que conclure sur la convergence de $(u_n)$ ?",
+              "explanation": "La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\n$\\newline$ Ainsi comme $u_0 \\ne u_1$, la suite $(u_n)$ diverge.",
+              "multipleChoice": false
+            }
+          }
+        }
+      ],
+      "extensions": {
+        "legacy": {
+          "adapterVersion": "legacy-to-canonical-v1",
+          "sourceFormat": "database-row-v1",
+          "original": {
+            "id": 78,
+            "created_at": "2026-04-29 13:32:37.083753+00",
+            "title": "Suite récurrente point fixe 1",
+            "chapter": "Suites numériques",
+            "difficulty": "Moyen",
+            "competences": "[\"Utiliser les théorèmes du cours\",\"Etablir la convergence ou divergence d'une suite\"]",
+            "content": "{\"isFlash\": false, \"elements\": [{\"id\": 1781009000001, \"type\": \"text\", \"content\": {\"text\": \"Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\\\frac{@k}{u_n}$ pour tout $n \\\\in \\\\mathbb{N}$ (avec $u_n > 0$).\"}}, {\"id\": 1781009000002, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Si la suite converge vers un réel $\\\\ell > 0$, quelle est la valeur de $\\\\ell$ ?\", \"explanation\": \"On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\\\frac{@k}{x} . \\\\newline$\\nComme $\\\\ell > 0$, $f$ est continue en $\\\\ell$ et par passage à la lmite quand $n \\\\to +\\\\infty$ :\\n$\\\\newline \\\\ell = f( \\\\ell ) \\\\Leftrightarrow \\\\ell = \\\\frac{@k}{\\\\ell} \\\\Leftrightarrow \\\\ell^2 = @k\\\\Leftrightarrow \\\\ell = \\\\sqrt{@k}$ (car $\\\\ell > 0$).\", \"answerFormat\": \"number\", \"correctAnswer\": \"\\\\sqrt{@k}\"}}, {\"id\": 1781009000003, \"type\": \"mcq\", \"content\": {\"hint\": \"$u_1 = \\\\frac{@k}{u_0}$, puis $u_2 = \\\\frac{@k}{u_1}$.\", \"options\": [{\"id\": 1, \"text\": \"$u_0$\", \"correct\": true}, {\"id\": 2, \"text\": \"$\\\\frac{@k}{u_0}$\", \"correct\": false}, {\"id\": 3, \"text\": \"$\\\\frac{1}{u_0}$\", \"correct\": false}, {\"id\": 4, \"text\": \"$2 u_0$\", \"correct\": false}], \"question\": \"Que vaut $u_2$ en fonction de $u_0$ ?\", \"explanation\": \"$u_2 = \\\\frac{@k}{u_1} = \\\\frac{@k}{\\\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !\", \"multipleChoice\": false, \"multipleAnswers\": false}}, {\"id\": 1777470911608, \"type\": \"mcq\", \"content\": {\"options\": [{\"id\": 1, \"text\": \"La suite $(u_n)$ converge\", \"correct\": false}, {\"id\": 2, \"text\": \"La suite $(u_n)$ diverge\", \"correct\": true}, {\"text\": \"On ne peut encore rien conclure\", \"correct\": false}], \"question\": \"Que conclure sur la convergence de $(u_n)$ ?\", \"explanation\": \"La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\\n$\\\\newline$ Ainsi comme $u_0 \\\\ne u_1$, la suite $(u_n)$ diverge.\", \"multipleChoice\": false}}], \"variables\": [{\"id\": 1781009000010, \"max\": 15, \"min\": 2, \"name\": \"k\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"4;9\", \"expression\": \"\"}, {\"id\": 1781009000011, \"max\": 5, \"min\": 1, \"name\": \"u0\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}], \"needCalculator\": false}",
+            "app_title": "Point fixe d'une suite récurrente",
+            "Is_Flash": false,
+            "Need_Calculator": false
+          },
+          "decodedContent": {
+            "isFlash": false,
+            "elements": [
+              {
+                "id": 1781009000001,
+                "type": "text",
+                "content": {
+                  "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+                }
+              },
+              {
+                "id": 1781009000002,
+                "type": "question",
+                "content": {
+                  "hint": "",
+                  "points": 1,
+                  "question": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+                  "explanation": "On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\frac{@k}{x} . \\newline$\nComme $\\ell > 0$, $f$ est continue en $\\ell$ et par passage à la lmite quand $n \\to +\\infty$ :\n$\\newline \\ell = f( \\ell ) \\Leftrightarrow \\ell = \\frac{@k}{\\ell} \\Leftrightarrow \\ell^2 = @k\\Leftrightarrow \\ell = \\sqrt{@k}$ (car $\\ell > 0$).",
+                  "answerFormat": "number",
+                  "correctAnswer": "\\sqrt{@k}"
+                }
+              },
+              {
+                "id": 1781009000003,
+                "type": "mcq",
+                "content": {
+                  "hint": "$u_1 = \\frac{@k}{u_0}$, puis $u_2 = \\frac{@k}{u_1}$.",
+                  "options": [
+                    {
+                      "id": 1,
+                      "text": "$u_0$",
+                      "correct": true
+                    },
+                    {
+                      "id": 2,
+                      "text": "$\\frac{@k}{u_0}$",
+                      "correct": false
+                    },
+                    {
+                      "id": 3,
+                      "text": "$\\frac{1}{u_0}$",
+                      "correct": false
+                    },
+                    {
+                      "id": 4,
+                      "text": "$2 u_0$",
+                      "correct": false
+                    }
+                  ],
+                  "question": "Que vaut $u_2$ en fonction de $u_0$ ?",
+                  "explanation": "$u_2 = \\frac{@k}{u_1} = \\frac{@k}{\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !",
+                  "multipleChoice": false,
+                  "multipleAnswers": false
+                }
+              },
+              {
+                "id": 1777470911608,
+                "type": "mcq",
+                "content": {
+                  "options": [
+                    {
+                      "id": 1,
+                      "text": "La suite $(u_n)$ converge",
+                      "correct": false
+                    },
+                    {
+                      "id": 2,
+                      "text": "La suite $(u_n)$ diverge",
+                      "correct": true
+                    },
+                    {
+                      "text": "On ne peut encore rien conclure",
+                      "correct": false
+                    }
+                  ],
+                  "question": "Que conclure sur la convergence de $(u_n)$ ?",
+                  "explanation": "La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\n$\\newline$ Ainsi comme $u_0 \\ne u_1$, la suite $(u_n)$ diverge.",
+                  "multipleChoice": false
+                }
+              }
+            ],
+            "variables": [
+              {
+                "id": 1781009000010,
+                "max": 15,
+                "min": 2,
+                "name": "k",
+                "type": "integer",
+                "choices": [],
+                "decimals": 2,
+                "exclusions": "4;9",
+                "expression": ""
+              },
+              {
+                "id": 1781009000011,
+                "max": 5,
+                "min": 1,
+                "name": "u0",
+                "type": "integer",
+                "choices": [],
+                "decimals": 2,
+                "exclusions": "",
+                "expression": ""
+              }
+            ],
+            "needCalculator": false
+          },
+          "decodedCompetences": [
+            "Utiliser les théorèmes du cours",
+            "Etablir la convergence ou divergence d'une suite"
+          ],
+          "recipe": {
+            "revision": "legacy-reviewed-v1:0f4d1173",
+            "defaults": "observed-creator-v1",
+            "variables": [],
+            "questions": {
+              "1781009000002": {
+                "response": {
+                  "format": "latex",
+                  "kind": "real"
+                },
+                "policy": {
+                  "domain": "real",
+                  "form": "value-only"
+                }
+              }
+            },
+            "constraints": [
+              {
+                "kind": "comparison",
+                "left": {
+                  "variable": "u0"
+                },
+                "operator": "!=",
+                "right": {
+                  "constant": 1
+                }
+              },
+              {
+                "kind": "comparison",
+                "left": {
+                  "variable": "k"
+                },
+                "operator": "!=",
+                "right": {
+                  "latex": "2\\cdot\\mathrm{u0}^2"
+                }
+              }
+            ],
+            "decisions": [
+              "User approved u0 != 1 and k != 2u0^2 to retain distractors; sampled domain reduced.",
+              "Convergence limit is conditional; nonsquare k and integer u0 give a nonconstant two-cycle."
+            ]
+          }
+        }
+      }
+    },
+    "106": {
+      "schemaVersion": 5,
+      "kind": "composed",
+      "id": "106",
+      "revision": "legacy-reviewed-v1:0f4d1173",
+      "title": "Dérivée fonction avec logarithme",
+      "catalogue": {
+        "chapter": "Logarithme néperien",
+        "skills": [
+          "Dériver la fonction logarithme",
+          "Utiliser le logarithme pour résoudre une équation/inéquation",
+          "Calculer une dérivée"
+        ],
+        "exerciseType": "classic",
+        "needsCalculator": false,
+        "appTitle": "Dérivée fonction logarithmique"
+      },
+      "generation": {
+        "schemaVersion": 5,
+        "definitions": [
+          {
+            "name": "a",
+            "kind": "integer",
+            "min": 1,
+            "max": 4,
+            "exclusions": []
+          },
+          {
+            "name": "b",
+            "kind": "integer",
+            "min": 1,
+            "max": 6,
+            "exclusions": []
+          },
+          {
+            "name": "c",
+            "kind": "computed",
+            "latex": "-\\mathrm{a}-\\mathrm{b}"
+          }
+        ],
+        "constraints": [
+          {
+            "kind": "comparison",
+            "left": {
+              "variable": "b"
+            },
+            "operator": "!=",
+            "right": {
+              "variable": "a"
+            }
+          }
+        ],
+        "maxAttempts": 128,
+        "maxDraws": 10000
+      },
+      "variables": [
+        {
+          "name": "x",
+          "domain": "real"
+        }
+      ],
+      "elements": [
+        {
+          "id": "1780010000001",
+          "type": "text",
+          "text": "Soit $f$ définie sur $]0 ; +\\infty[$ par $f(x) = @a x \\ln(x) + @b x$.",
+          "extensions": {
+            "legacyPath": "/elements/0",
+            "legacy": {
+              "text": "Soit $f$ définie sur $]0 ; +\\infty[$ par $f(x) = @a x \\ln(x) + @b x$."
+            }
+          }
+        },
+        {
+          "id": "1780010000002",
+          "type": "question",
+          "text": "Calculer $f'(x)$ pour $x > 0$.",
+          "points": 1,
+          "response": {
+            "format": "latex",
+            "kind": "log-affine-positive",
+            "variable": "x"
+          },
+          "policy": {
+            "domain": "log-affine-positive",
+            "form": "value-only"
+          },
+          "expectedLatex": "\\mathrm{a}\\ln(x)+\\mathrm{a}+\\mathrm{b}",
+          "extensions": {
+            "legacyPath": "/elements/1",
+            "legacy": {
+              "hint": "",
+              "points": 1,
+              "question": "Calculer $f'(x)$ pour $x > 0$.",
+              "explanation": "$f'(x) = @a (\\ln x + 1) + @b = @a \\ln(x) + @a + @b$.",
+              "answerFormat": "expression",
+              "correctAnswer": "@a * \\ln(x) + @a + @b"
+            }
+          }
+        },
+        {
+          "id": "1780010000003",
+          "type": "question",
+          "text": "Pour quelle valeur de $x$ a-t-on $f'(x) = 0$ ? (Donner le résultat exact sous la forme $e^k$)",
+          "points": 1,
+          "response": {
+            "format": "latex",
+            "kind": "real"
+          },
+          "policy": {
+            "domain": "real",
+            "form": "power-of-e"
+          },
+          "expectedLatex": "\\exponentialE^{\\frac{\\mathrm{c}}{\\mathrm{a}}}",
+          "extensions": {
+            "legacyPath": "/elements/2",
+            "legacy": {
+              "hint": "",
+              "points": 1,
+              "question": "Pour quelle valeur de $x$ a-t-on $f'(x) = 0$ ? (Donner le résultat exact sous la forme $e^k$)",
+              "explanation": "$@a \\ln(x) + @a + @b = 0$ $\\Leftrightarrow \\ln(x) = \\frac{-@a-@b}{@a} \\Leftrightarrow x = e^{\\frac{@c}{@a}}$.",
+              "answerFormat": "number",
+              "correctAnswer": "e^{\\frac{@c}{@a}}"
+            }
+          }
+        }
+      ],
+      "extensions": {
+        "legacy": {
+          "adapterVersion": "legacy-to-canonical-v1",
+          "sourceFormat": "database-row-v1",
+          "original": {
+            "id": 106,
+            "created_at": "2026-05-06 13:47:36.956737+00",
+            "title": "Dérivée fonction avec logarithme",
+            "chapter": "Logarithme néperien",
+            "difficulty": "Moyen",
+            "competences": "[\"Dériver la fonction logarithme\",\"Utiliser le logarithme pour résoudre une équation/inéquation\",\"Calculer une dérivée\"]",
+            "content": "{\"isFlash\": false, \"elements\": [{\"id\": 1780010000001, \"type\": \"text\", \"content\": {\"text\": \"Soit $f$ définie sur $]0 ; +\\\\infty[$ par $f(x) = @a x \\\\ln(x) + @b x$.\"}}, {\"id\": 1780010000002, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Calculer $f'(x)$ pour $x > 0$.\", \"explanation\": \"$f'(x) = @a (\\\\ln x + 1) + @b = @a \\\\ln(x) + @a + @b$.\", \"answerFormat\": \"expression\", \"correctAnswer\": \"@a * \\\\ln(x) + @a + @b\"}}, {\"id\": 1780010000003, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Pour quelle valeur de $x$ a-t-on $f'(x) = 0$ ? (Donner le résultat exact sous la forme $e^k$)\", \"explanation\": \"$@a \\\\ln(x) + @a + @b = 0$ $\\\\Leftrightarrow \\\\ln(x) = \\\\frac{-@a-@b}{@a} \\\\Leftrightarrow x = e^{\\\\frac{@c}{@a}}$.\", \"answerFormat\": \"number\", \"correctAnswer\": \"e^{\\\\frac{@c}{@a}}\"}}], \"variables\": [{\"id\": 1780010000010, \"max\": 4, \"min\": 1, \"name\": \"a\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}, {\"id\": 1780010000011, \"max\": 6, \"min\": 1, \"name\": \"b\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"@a\", \"expression\": \"\"}, {\"id\": 1778075375953, \"max\": 10, \"min\": 1, \"name\": \"c\", \"type\": \"computed\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"-@a-@b\"}], \"needCalculator\": false}",
+            "app_title": "Dérivée fonction logarithmique",
+            "Is_Flash": false,
+            "Need_Calculator": false
+          },
+          "decodedContent": {
+            "isFlash": false,
+            "elements": [
+              {
+                "id": 1780010000001,
+                "type": "text",
+                "content": {
+                  "text": "Soit $f$ définie sur $]0 ; +\\infty[$ par $f(x) = @a x \\ln(x) + @b x$."
+                }
+              },
+              {
+                "id": 1780010000002,
+                "type": "question",
+                "content": {
+                  "hint": "",
+                  "points": 1,
+                  "question": "Calculer $f'(x)$ pour $x > 0$.",
+                  "explanation": "$f'(x) = @a (\\ln x + 1) + @b = @a \\ln(x) + @a + @b$.",
+                  "answerFormat": "expression",
+                  "correctAnswer": "@a * \\ln(x) + @a + @b"
+                }
+              },
+              {
+                "id": 1780010000003,
+                "type": "question",
+                "content": {
+                  "hint": "",
+                  "points": 1,
+                  "question": "Pour quelle valeur de $x$ a-t-on $f'(x) = 0$ ? (Donner le résultat exact sous la forme $e^k$)",
+                  "explanation": "$@a \\ln(x) + @a + @b = 0$ $\\Leftrightarrow \\ln(x) = \\frac{-@a-@b}{@a} \\Leftrightarrow x = e^{\\frac{@c}{@a}}$.",
+                  "answerFormat": "number",
+                  "correctAnswer": "e^{\\frac{@c}{@a}}"
+                }
+              }
+            ],
+            "variables": [
+              {
+                "id": 1780010000010,
+                "max": 4,
+                "min": 1,
+                "name": "a",
+                "type": "integer",
+                "choices": [],
+                "decimals": 2,
+                "exclusions": "",
+                "expression": ""
+              },
+              {
+                "id": 1780010000011,
+                "max": 6,
+                "min": 1,
+                "name": "b",
+                "type": "integer",
+                "choices": [],
+                "decimals": 2,
+                "exclusions": "@a",
+                "expression": ""
+              },
+              {
+                "id": 1778075375953,
+                "max": 10,
+                "min": 1,
+                "name": "c",
+                "type": "computed",
+                "choices": [],
+                "decimals": 2,
+                "exclusions": "",
+                "expression": "-@a-@b"
+              }
+            ],
+            "needCalculator": false
+          },
+          "decodedCompetences": [
+            "Dériver la fonction logarithme",
+            "Utiliser le logarithme pour résoudre une équation/inéquation",
+            "Calculer une dérivée"
+          ],
+          "recipe": {
+            "revision": "legacy-reviewed-v1:0f4d1173",
+            "defaults": "observed-creator-v1",
+            "variables": [
+              {
+                "name": "x",
+                "domain": "real"
+              }
+            ],
+            "questions": {
+              "1780010000002": {
+                "response": {
+                  "format": "latex",
+                  "kind": "log-affine-positive",
+                  "variable": "x"
+                },
+                "policy": {
+                  "domain": "log-affine-positive",
+                  "form": "value-only"
+                }
+              },
+              "1780010000003": {
+                "response": {
+                  "format": "latex",
+                  "kind": "real"
+                },
+                "policy": {
+                  "domain": "real",
+                  "form": "power-of-e"
+                }
+              }
+            },
+            "decisions": [
+              "Known derivative a ln(x)+a+b, intrinsic comparison domain x>0; bounded affine logarithmic proof only.",
+              "Known solution e^(-(a+b)/a), power-of-e form required by original question.",
+              "Dependent exclusion b != a retained as canonical constraint."
+            ]
+          }
+        }
+      }
+    }
+  },
+  "instances": {
+    "1123833480af41d696ec8b31f209950e": {
+      "owner": "Bearer demo-alice",
+      "official": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "definition": {
+          "schemaVersion": 5,
+          "kind": "composed",
+          "id": "78",
+          "revision": "legacy-reviewed-v1:0f4d1173",
+          "title": "Suite récurrente point fixe 1",
+          "catalogue": {
+            "chapter": "Suites numériques",
+            "skills": [
+              "Utiliser les théorèmes du cours",
+              "Etablir la convergence ou divergence d'une suite"
+            ],
+            "exerciseType": "classic",
+            "needsCalculator": false,
+            "appTitle": "Point fixe d'une suite récurrente"
+          },
+          "generation": {
+            "schemaVersion": 5,
+            "definitions": [
+              {
+                "name": "k",
+                "kind": "integer",
+                "min": 2,
+                "max": 15,
+                "exclusions": [4, 9]
+              },
+              {
+                "name": "u0",
+                "kind": "integer",
+                "min": 1,
+                "max": 5,
+                "exclusions": []
+              }
+            ],
+            "constraints": [
+              {
+                "kind": "comparison",
+                "left": {
+                  "variable": "u0"
+                },
+                "operator": "!=",
+                "right": {
+                  "constant": 1
+                }
+              },
+              {
+                "kind": "comparison",
+                "left": {
+                  "variable": "k"
+                },
+                "operator": "!=",
+                "right": {
+                  "latex": "2\\cdot\\mathrm{u0}^2"
+                }
+              }
+            ],
+            "maxAttempts": 128,
+            "maxDraws": 10000
+          },
+          "variables": [],
+          "elements": [
+            {
+              "id": "1781009000001",
+              "type": "text",
+              "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$).",
+              "extensions": {
+                "legacyPath": "/elements/0",
+                "legacy": {
+                  "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+                }
+              }
+            },
+            {
+              "id": "1781009000002",
+              "type": "question",
+              "text": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+              "points": 1,
+              "response": {
+                "format": "latex",
+                "kind": "real"
+              },
+              "policy": {
+                "domain": "real",
+                "form": "value-only"
+              },
+              "expectedLatex": "\\sqrt{\\mathrm{k}}",
+              "extensions": {
+                "legacyPath": "/elements/1",
+                "legacy": {
+                  "hint": "",
+                  "points": 1,
+                  "question": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+                  "explanation": "On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\frac{@k}{x} . \\newline$\nComme $\\ell > 0$, $f$ est continue en $\\ell$ et par passage à la lmite quand $n \\to +\\infty$ :\n$\\newline \\ell = f( \\ell ) \\Leftrightarrow \\ell = \\frac{@k}{\\ell} \\Leftrightarrow \\ell^2 = @k\\Leftrightarrow \\ell = \\sqrt{@k}$ (car $\\ell > 0$).",
+                  "answerFormat": "number",
+                  "correctAnswer": "\\sqrt{@k}"
+                }
+              }
+            },
+            {
+              "id": "1781009000003",
+              "type": "mcq",
+              "text": "Que vaut $u_2$ en fonction de $u_0$ ?",
+              "points": 1,
+              "mode": "single",
+              "options": [
+                {
+                  "id": "1",
+                  "content": {
+                    "format": "text",
+                    "text": "$u_0$"
+                  }
+                },
+                {
+                  "id": "2",
+                  "content": {
+                    "format": "text",
+                    "text": "$\\frac{@k}{u_0}$"
+                  }
+                },
+                {
+                  "id": "3",
+                  "content": {
+                    "format": "text",
+                    "text": "$\\frac{1}{u_0}$"
+                  }
+                },
+                {
+                  "id": "4",
+                  "content": {
+                    "format": "text",
+                    "text": "$2 u_0$"
+                  }
+                }
+              ],
+              "expectedOptionIds": ["1"],
+              "extensions": {
+                "legacyPath": "/elements/2",
+                "legacy": {
+                  "hint": "$u_1 = \\frac{@k}{u_0}$, puis $u_2 = \\frac{@k}{u_1}$.",
+                  "options": [
+                    {
+                      "id": 1,
+                      "text": "$u_0$",
+                      "correct": true
+                    },
+                    {
+                      "id": 2,
+                      "text": "$\\frac{@k}{u_0}$",
+                      "correct": false
+                    },
+                    {
+                      "id": 3,
+                      "text": "$\\frac{1}{u_0}$",
+                      "correct": false
+                    },
+                    {
+                      "id": 4,
+                      "text": "$2 u_0$",
+                      "correct": false
+                    }
+                  ],
+                  "question": "Que vaut $u_2$ en fonction de $u_0$ ?",
+                  "explanation": "$u_2 = \\frac{@k}{u_1} = \\frac{@k}{\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !",
+                  "multipleChoice": false,
+                  "multipleAnswers": false
+                }
+              }
+            },
+            {
+              "id": "1777470911608",
+              "type": "mcq",
+              "text": "Que conclure sur la convergence de $(u_n)$ ?",
+              "points": 1,
+              "mode": "single",
+              "options": [
+                {
+                  "id": "1",
+                  "content": {
+                    "format": "text",
+                    "text": "La suite $(u_n)$ converge"
+                  }
+                },
+                {
+                  "id": "2",
+                  "content": {
+                    "format": "text",
+                    "text": "La suite $(u_n)$ diverge"
+                  }
+                },
+                {
+                  "id": "legacy-option-3-2",
+                  "content": {
+                    "format": "text",
+                    "text": "On ne peut encore rien conclure"
+                  }
+                }
+              ],
+              "expectedOptionIds": ["2"],
+              "extensions": {
+                "legacyPath": "/elements/3",
+                "legacy": {
+                  "options": [
+                    {
+                      "id": 1,
+                      "text": "La suite $(u_n)$ converge",
+                      "correct": false
+                    },
+                    {
+                      "id": 2,
+                      "text": "La suite $(u_n)$ diverge",
+                      "correct": true
+                    },
+                    {
+                      "text": "On ne peut encore rien conclure",
+                      "correct": false
+                    }
+                  ],
+                  "question": "Que conclure sur la convergence de $(u_n)$ ?",
+                  "explanation": "La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\n$\\newline$ Ainsi comme $u_0 \\ne u_1$, la suite $(u_n)$ diverge.",
+                  "multipleChoice": false
+                }
+              }
+            }
+          ],
+          "extensions": {
+            "legacy": {
+              "adapterVersion": "legacy-to-canonical-v1",
+              "sourceFormat": "database-row-v1",
+              "original": {
+                "id": 78,
+                "created_at": "2026-04-29 13:32:37.083753+00",
+                "title": "Suite récurrente point fixe 1",
+                "chapter": "Suites numériques",
+                "difficulty": "Moyen",
+                "competences": "[\"Utiliser les théorèmes du cours\",\"Etablir la convergence ou divergence d'une suite\"]",
+                "content": "{\"isFlash\": false, \"elements\": [{\"id\": 1781009000001, \"type\": \"text\", \"content\": {\"text\": \"Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\\\frac{@k}{u_n}$ pour tout $n \\\\in \\\\mathbb{N}$ (avec $u_n > 0$).\"}}, {\"id\": 1781009000002, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Si la suite converge vers un réel $\\\\ell > 0$, quelle est la valeur de $\\\\ell$ ?\", \"explanation\": \"On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\\\frac{@k}{x} . \\\\newline$\\nComme $\\\\ell > 0$, $f$ est continue en $\\\\ell$ et par passage à la lmite quand $n \\\\to +\\\\infty$ :\\n$\\\\newline \\\\ell = f( \\\\ell ) \\\\Leftrightarrow \\\\ell = \\\\frac{@k}{\\\\ell} \\\\Leftrightarrow \\\\ell^2 = @k\\\\Leftrightarrow \\\\ell = \\\\sqrt{@k}$ (car $\\\\ell > 0$).\", \"answerFormat\": \"number\", \"correctAnswer\": \"\\\\sqrt{@k}\"}}, {\"id\": 1781009000003, \"type\": \"mcq\", \"content\": {\"hint\": \"$u_1 = \\\\frac{@k}{u_0}$, puis $u_2 = \\\\frac{@k}{u_1}$.\", \"options\": [{\"id\": 1, \"text\": \"$u_0$\", \"correct\": true}, {\"id\": 2, \"text\": \"$\\\\frac{@k}{u_0}$\", \"correct\": false}, {\"id\": 3, \"text\": \"$\\\\frac{1}{u_0}$\", \"correct\": false}, {\"id\": 4, \"text\": \"$2 u_0$\", \"correct\": false}], \"question\": \"Que vaut $u_2$ en fonction de $u_0$ ?\", \"explanation\": \"$u_2 = \\\\frac{@k}{u_1} = \\\\frac{@k}{\\\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !\", \"multipleChoice\": false, \"multipleAnswers\": false}}, {\"id\": 1777470911608, \"type\": \"mcq\", \"content\": {\"options\": [{\"id\": 1, \"text\": \"La suite $(u_n)$ converge\", \"correct\": false}, {\"id\": 2, \"text\": \"La suite $(u_n)$ diverge\", \"correct\": true}, {\"text\": \"On ne peut encore rien conclure\", \"correct\": false}], \"question\": \"Que conclure sur la convergence de $(u_n)$ ?\", \"explanation\": \"La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\\n$\\\\newline$ Ainsi comme $u_0 \\\\ne u_1$, la suite $(u_n)$ diverge.\", \"multipleChoice\": false}}], \"variables\": [{\"id\": 1781009000010, \"max\": 15, \"min\": 2, \"name\": \"k\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"4;9\", \"expression\": \"\"}, {\"id\": 1781009000011, \"max\": 5, \"min\": 1, \"name\": \"u0\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}], \"needCalculator\": false}",
+                "app_title": "Point fixe d'une suite récurrente",
+                "Is_Flash": false,
+                "Need_Calculator": false
+              },
+              "decodedContent": {
+                "isFlash": false,
+                "elements": [
+                  {
+                    "id": 1781009000001,
+                    "type": "text",
+                    "content": {
+                      "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+                    }
+                  },
+                  {
+                    "id": 1781009000002,
+                    "type": "question",
+                    "content": {
+                      "hint": "",
+                      "points": 1,
+                      "question": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+                      "explanation": "On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\frac{@k}{x} . \\newline$\nComme $\\ell > 0$, $f$ est continue en $\\ell$ et par passage à la lmite quand $n \\to +\\infty$ :\n$\\newline \\ell = f( \\ell ) \\Leftrightarrow \\ell = \\frac{@k}{\\ell} \\Leftrightarrow \\ell^2 = @k\\Leftrightarrow \\ell = \\sqrt{@k}$ (car $\\ell > 0$).",
+                      "answerFormat": "number",
+                      "correctAnswer": "\\sqrt{@k}"
+                    }
+                  },
+                  {
+                    "id": 1781009000003,
+                    "type": "mcq",
+                    "content": {
+                      "hint": "$u_1 = \\frac{@k}{u_0}$, puis $u_2 = \\frac{@k}{u_1}$.",
+                      "options": [
+                        {
+                          "id": 1,
+                          "text": "$u_0$",
+                          "correct": true
+                        },
+                        {
+                          "id": 2,
+                          "text": "$\\frac{@k}{u_0}$",
+                          "correct": false
+                        },
+                        {
+                          "id": 3,
+                          "text": "$\\frac{1}{u_0}$",
+                          "correct": false
+                        },
+                        {
+                          "id": 4,
+                          "text": "$2 u_0$",
+                          "correct": false
+                        }
+                      ],
+                      "question": "Que vaut $u_2$ en fonction de $u_0$ ?",
+                      "explanation": "$u_2 = \\frac{@k}{u_1} = \\frac{@k}{\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !",
+                      "multipleChoice": false,
+                      "multipleAnswers": false
+                    }
+                  },
+                  {
+                    "id": 1777470911608,
+                    "type": "mcq",
+                    "content": {
+                      "options": [
+                        {
+                          "id": 1,
+                          "text": "La suite $(u_n)$ converge",
+                          "correct": false
+                        },
+                        {
+                          "id": 2,
+                          "text": "La suite $(u_n)$ diverge",
+                          "correct": true
+                        },
+                        {
+                          "text": "On ne peut encore rien conclure",
+                          "correct": false
+                        }
+                      ],
+                      "question": "Que conclure sur la convergence de $(u_n)$ ?",
+                      "explanation": "La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\n$\\newline$ Ainsi comme $u_0 \\ne u_1$, la suite $(u_n)$ diverge.",
+                      "multipleChoice": false
+                    }
+                  }
+                ],
+                "variables": [
+                  {
+                    "id": 1781009000010,
+                    "max": 15,
+                    "min": 2,
+                    "name": "k",
+                    "type": "integer",
+                    "choices": [],
+                    "decimals": 2,
+                    "exclusions": "4;9",
+                    "expression": ""
+                  },
+                  {
+                    "id": 1781009000011,
+                    "max": 5,
+                    "min": 1,
+                    "name": "u0",
+                    "type": "integer",
+                    "choices": [],
+                    "decimals": 2,
+                    "exclusions": "",
+                    "expression": ""
+                  }
+                ],
+                "needCalculator": false
+              },
+              "decodedCompetences": [
+                "Utiliser les théorèmes du cours",
+                "Etablir la convergence ou divergence d'une suite"
+              ],
+              "recipe": {
+                "revision": "legacy-reviewed-v1:0f4d1173",
+                "defaults": "observed-creator-v1",
+                "variables": [],
+                "questions": {
+                  "1781009000002": {
+                    "response": {
+                      "format": "latex",
+                      "kind": "real"
+                    },
+                    "policy": {
+                      "domain": "real",
+                      "form": "value-only"
+                    }
+                  }
+                },
+                "constraints": [
+                  {
+                    "kind": "comparison",
+                    "left": {
+                      "variable": "u0"
+                    },
+                    "operator": "!=",
+                    "right": {
+                      "constant": 1
+                    }
+                  },
+                  {
+                    "kind": "comparison",
+                    "left": {
+                      "variable": "k"
+                    },
+                    "operator": "!=",
+                    "right": {
+                      "latex": "2\\cdot\\mathrm{u0}^2"
+                    }
+                  }
+                ],
+                "decisions": [
+                  "User approved u0 != 1 and k != 2u0^2 to retain distractors; sampled domain reduced.",
+                  "Convergence limit is conditional; nonsquare k and integer u0 give a nonconstant two-cycle."
+                ]
+              }
+            }
+          }
+        },
+        "engineVersion": "0.1.0",
+        "generation": {
+          "version": "mulberry32-rejection-v1",
+          "seed": "1327572682",
+          "draws": 2,
+          "attempts": 1,
+          "values": {
+            "k": {
+              "kind": "integer",
+              "value": 12
+            },
+            "u0": {
+              "kind": "integer",
+              "value": 5
+            }
+          },
+          "groups": [],
+          "computed": []
+        },
+        "title": "Suite récurrente point fixe 1",
+        "elements": [
+          {
+            "id": "1781009000001",
+            "type": "text",
+            "text": "Soit la suite définie par $u_0 = 5$ et $u_{n+1} = \\frac{12}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+          },
+          {
+            "id": "1781009000002",
+            "type": "question",
+            "text": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+            "points": 1,
+            "response": {
+              "format": "latex",
+              "kind": "real"
+            },
+            "policy": {
+              "domain": "real",
+              "form": "value-only"
+            },
+            "expected": {
+              "kind": "real",
+              "math": {
+                "source": "\\sqrt{\\mathrm{k}}",
+                "syntax": ["Sqrt", "k"],
+                "substituted": ["Sqrt", 12],
+                "displayLatex": "2\\sqrt{3}"
+              }
+            }
+          },
+          {
+            "id": "1781009000003",
+            "type": "mcq",
+            "text": "Que vaut $u_2$ en fonction de $u_0$ ?",
+            "points": 1,
+            "mode": "single",
+            "options": [
+              {
+                "id": "1",
+                "content": {
+                  "format": "text",
+                  "text": "$u_0$"
+                }
+              },
+              {
+                "id": "2",
+                "content": {
+                  "format": "text",
+                  "text": "$\\frac{12}{u_0}$"
+                }
+              },
+              {
+                "id": "3",
+                "content": {
+                  "format": "text",
+                  "text": "$\\frac{1}{u_0}$"
+                }
+              },
+              {
+                "id": "4",
+                "content": {
+                  "format": "text",
+                  "text": "$2 u_0$"
+                }
+              }
+            ],
+            "expected": {
+              "kind": "selection",
+              "optionIds": ["1"]
+            },
+            "optionMath": []
+          },
+          {
+            "id": "1777470911608",
+            "type": "mcq",
+            "text": "Que conclure sur la convergence de $(u_n)$ ?",
+            "points": 1,
+            "mode": "single",
+            "options": [
+              {
+                "id": "1",
+                "content": {
+                  "format": "text",
+                  "text": "La suite $(u_n)$ converge"
+                }
+              },
+              {
+                "id": "2",
+                "content": {
+                  "format": "text",
+                  "text": "La suite $(u_n)$ diverge"
+                }
+              },
+              {
+                "id": "legacy-option-3-2",
+                "content": {
+                  "format": "text",
+                  "text": "On ne peut encore rien conclure"
+                }
+              }
+            ],
+            "expected": {
+              "kind": "selection",
+              "optionIds": ["2"]
+            },
+            "optionMath": []
+          }
+        ]
+      },
+      "expires": 774.557221382,
+      "duel": false,
+      "attempts": [
+        {
+          "owner": "Bearer demo-alice",
+          "questionId": "1781009000002",
+          "answer": {
+            "format": "latex",
+            "source": "1{,}25"
+          },
+          "correction": {
+            "schemaVersion": 5,
+            "instanceId": "1123833480af41d696ec8b31f209950e",
+            "questionId": "1781009000002",
+            "state": "incorrect",
+            "value": "different",
+            "comparison": "exact",
+            "domain": "not-applicable",
+            "form": "not-required",
+            "proof": "exact-number",
+            "code": "numeric-different"
+          }
+        },
+        {
+          "owner": "Bearer demo-alice",
+          "questionId": "1781009000002",
+          "answer": {
+            "format": "latex",
+            "source": "\\frac{\\placeholder{}}{2}"
+          },
+          "correction": {
+            "schemaVersion": 5,
+            "instanceId": "1123833480af41d696ec8b31f209950e",
+            "questionId": "1781009000002",
+            "state": "invalid",
+            "value": "unknown",
+            "comparison": "none",
+            "domain": "not-applicable",
+            "form": "unknown",
+            "proof": "none",
+            "code": "incomplete"
+          }
+        },
+        {
+          "owner": "Bearer demo-alice",
+          "questionId": "1781009000002",
+          "answer": {
+            "format": "latex",
+            "source": "\\ln(2)"
+          },
+          "correction": {
+            "schemaVersion": 5,
+            "instanceId": "1123833480af41d696ec8b31f209950e",
+            "questionId": "1781009000002",
+            "state": "indeterminate",
+            "value": "unknown",
+            "comparison": "exact",
+            "domain": "not-applicable",
+            "form": "unknown",
+            "proof": "none",
+            "code": "numeric-proof"
+          }
+        },
+        {
+          "owner": "Bearer demo-alice",
+          "questionId": "1781009000002",
+          "answer": {
+            "format": "latex",
+            "source": "\\sqrt{12}"
+          },
+          "correction": {
+            "schemaVersion": 5,
+            "instanceId": "1123833480af41d696ec8b31f209950e",
+            "questionId": "1781009000002",
+            "state": "correct",
+            "value": "equal",
+            "comparison": "exact",
+            "domain": "not-applicable",
+            "form": "not-required",
+            "proof": "exact-number",
+            "code": "numeric-equal"
+          }
+        },
+        {
+          "owner": "Bearer demo-alice",
+          "questionId": "1781009000003",
+          "answer": {
+            "format": "selection",
+            "optionIds": ["1"]
+          },
+          "correction": {
+            "schemaVersion": 5,
+            "instanceId": "1123833480af41d696ec8b31f209950e",
+            "questionId": "1781009000003",
+            "state": "correct",
+            "value": "equal",
+            "comparison": "discrete",
+            "domain": "not-applicable",
+            "form": "not-required",
+            "proof": "selection",
+            "code": "selection-equal"
+          }
+        },
+        {
+          "owner": "Bearer demo-alice",
+          "questionId": "1777470911608",
+          "answer": {
+            "format": "selection",
+            "optionIds": ["1"]
+          },
+          "correction": {
+            "schemaVersion": 5,
+            "instanceId": "1123833480af41d696ec8b31f209950e",
+            "questionId": "1777470911608",
+            "state": "incorrect",
+            "value": "different",
+            "comparison": "discrete",
+            "domain": "not-applicable",
+            "form": "not-required",
+            "proof": "selection",
+            "code": "selection-different"
+          }
+        },
+        {
+          "owner": "Bearer demo-alice",
+          "questionId": "1777470911608",
+          "answer": {
+            "format": "selection",
+            "optionIds": ["2"]
+          },
+          "correction": {
+            "schemaVersion": 5,
+            "instanceId": "1123833480af41d696ec8b31f209950e",
+            "questionId": "1777470911608",
+            "state": "correct",
+            "value": "equal",
+            "comparison": "discrete",
+            "domain": "not-applicable",
+            "form": "not-required",
+            "proof": "selection",
+            "code": "selection-equal"
+          }
+        },
+        {
+          "owner": "Bearer demo-alice",
+          "questionId": "1781009000002",
+          "answer": {
+            "format": "latex",
+            "source": "\\sqrt{12}"
+          },
+          "correction": {
+            "schemaVersion": 5,
+            "instanceId": "1123833480af41d696ec8b31f209950e",
+            "questionId": "1781009000002",
+            "state": "correct",
+            "value": "equal",
+            "comparison": "exact",
+            "domain": "not-applicable",
+            "form": "not-required",
+            "proof": "exact-number",
+            "code": "numeric-equal"
+          }
+        }
+      ],
+      "latest": {
+        "Bearer demo-alice": {
+          "1781009000002": {
+            "questionId": "1781009000002",
+            "answer": {
+              "format": "latex",
+              "source": "\\sqrt{12}"
+            },
+            "correction": {
+              "schemaVersion": 5,
+              "instanceId": "1123833480af41d696ec8b31f209950e",
+              "questionId": "1781009000002",
+              "state": "correct",
+              "value": "equal",
+              "comparison": "exact",
+              "domain": "not-applicable",
+              "form": "not-required",
+              "proof": "exact-number",
+              "code": "numeric-equal"
+            }
+          },
+          "1781009000003": {
+            "questionId": "1781009000003",
+            "answer": {
+              "format": "selection",
+              "optionIds": ["1"]
+            },
+            "correction": {
+              "schemaVersion": 5,
+              "instanceId": "1123833480af41d696ec8b31f209950e",
+              "questionId": "1781009000003",
+              "state": "correct",
+              "value": "equal",
+              "comparison": "discrete",
+              "domain": "not-applicable",
+              "form": "not-required",
+              "proof": "selection",
+              "code": "selection-equal"
+            }
+          },
+          "1777470911608": {
+            "questionId": "1777470911608",
+            "answer": {
+              "format": "selection",
+              "optionIds": ["2"]
+            },
+            "correction": {
+              "schemaVersion": 5,
+              "instanceId": "1123833480af41d696ec8b31f209950e",
+              "questionId": "1777470911608",
+              "state": "correct",
+              "value": "equal",
+              "comparison": "discrete",
+              "domain": "not-applicable",
+              "form": "not-required",
+              "proof": "selection",
+              "code": "selection-equal"
+            }
+          }
+        }
+      }
+    },
+    "d4db4e9d1f564641964dab3826d36bc1": {
+      "owner": "Bearer demo-alice",
+      "official": {
+        "schemaVersion": 5,
+        "instanceId": "d4db4e9d1f564641964dab3826d36bc1",
+        "definition": {
+          "schemaVersion": 5,
+          "kind": "composed",
+          "id": "78",
+          "revision": "legacy-reviewed-v1:0f4d1173",
+          "title": "Suite récurrente point fixe 1",
+          "catalogue": {
+            "chapter": "Suites numériques",
+            "skills": [
+              "Utiliser les théorèmes du cours",
+              "Etablir la convergence ou divergence d'une suite"
+            ],
+            "exerciseType": "classic",
+            "needsCalculator": false,
+            "appTitle": "Point fixe d'une suite récurrente"
+          },
+          "generation": {
+            "schemaVersion": 5,
+            "definitions": [
+              {
+                "name": "k",
+                "kind": "integer",
+                "min": 2,
+                "max": 15,
+                "exclusions": [4, 9]
+              },
+              {
+                "name": "u0",
+                "kind": "integer",
+                "min": 1,
+                "max": 5,
+                "exclusions": []
+              }
+            ],
+            "constraints": [
+              {
+                "kind": "comparison",
+                "left": {
+                  "variable": "u0"
+                },
+                "operator": "!=",
+                "right": {
+                  "constant": 1
+                }
+              },
+              {
+                "kind": "comparison",
+                "left": {
+                  "variable": "k"
+                },
+                "operator": "!=",
+                "right": {
+                  "latex": "2\\cdot\\mathrm{u0}^2"
+                }
+              }
+            ],
+            "maxAttempts": 128,
+            "maxDraws": 10000
+          },
+          "variables": [],
+          "elements": [
+            {
+              "id": "1781009000001",
+              "type": "text",
+              "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$).",
+              "extensions": {
+                "legacyPath": "/elements/0",
+                "legacy": {
+                  "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+                }
+              }
+            },
+            {
+              "id": "1781009000002",
+              "type": "question",
+              "text": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+              "points": 1,
+              "response": {
+                "format": "latex",
+                "kind": "real"
+              },
+              "policy": {
+                "domain": "real",
+                "form": "value-only"
+              },
+              "expectedLatex": "\\sqrt{\\mathrm{k}}",
+              "extensions": {
+                "legacyPath": "/elements/1",
+                "legacy": {
+                  "hint": "",
+                  "points": 1,
+                  "question": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+                  "explanation": "On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\frac{@k}{x} . \\newline$\nComme $\\ell > 0$, $f$ est continue en $\\ell$ et par passage à la lmite quand $n \\to +\\infty$ :\n$\\newline \\ell = f( \\ell ) \\Leftrightarrow \\ell = \\frac{@k}{\\ell} \\Leftrightarrow \\ell^2 = @k\\Leftrightarrow \\ell = \\sqrt{@k}$ (car $\\ell > 0$).",
+                  "answerFormat": "number",
+                  "correctAnswer": "\\sqrt{@k}"
+                }
+              }
+            },
+            {
+              "id": "1781009000003",
+              "type": "mcq",
+              "text": "Que vaut $u_2$ en fonction de $u_0$ ?",
+              "points": 1,
+              "mode": "single",
+              "options": [
+                {
+                  "id": "1",
+                  "content": {
+                    "format": "text",
+                    "text": "$u_0$"
+                  }
+                },
+                {
+                  "id": "2",
+                  "content": {
+                    "format": "text",
+                    "text": "$\\frac{@k}{u_0}$"
+                  }
+                },
+                {
+                  "id": "3",
+                  "content": {
+                    "format": "text",
+                    "text": "$\\frac{1}{u_0}$"
+                  }
+                },
+                {
+                  "id": "4",
+                  "content": {
+                    "format": "text",
+                    "text": "$2 u_0$"
+                  }
+                }
+              ],
+              "expectedOptionIds": ["1"],
+              "extensions": {
+                "legacyPath": "/elements/2",
+                "legacy": {
+                  "hint": "$u_1 = \\frac{@k}{u_0}$, puis $u_2 = \\frac{@k}{u_1}$.",
+                  "options": [
+                    {
+                      "id": 1,
+                      "text": "$u_0$",
+                      "correct": true
+                    },
+                    {
+                      "id": 2,
+                      "text": "$\\frac{@k}{u_0}$",
+                      "correct": false
+                    },
+                    {
+                      "id": 3,
+                      "text": "$\\frac{1}{u_0}$",
+                      "correct": false
+                    },
+                    {
+                      "id": 4,
+                      "text": "$2 u_0$",
+                      "correct": false
+                    }
+                  ],
+                  "question": "Que vaut $u_2$ en fonction de $u_0$ ?",
+                  "explanation": "$u_2 = \\frac{@k}{u_1} = \\frac{@k}{\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !",
+                  "multipleChoice": false,
+                  "multipleAnswers": false
+                }
+              }
+            },
+            {
+              "id": "1777470911608",
+              "type": "mcq",
+              "text": "Que conclure sur la convergence de $(u_n)$ ?",
+              "points": 1,
+              "mode": "single",
+              "options": [
+                {
+                  "id": "1",
+                  "content": {
+                    "format": "text",
+                    "text": "La suite $(u_n)$ converge"
+                  }
+                },
+                {
+                  "id": "2",
+                  "content": {
+                    "format": "text",
+                    "text": "La suite $(u_n)$ diverge"
+                  }
+                },
+                {
+                  "id": "legacy-option-3-2",
+                  "content": {
+                    "format": "text",
+                    "text": "On ne peut encore rien conclure"
+                  }
+                }
+              ],
+              "expectedOptionIds": ["2"],
+              "extensions": {
+                "legacyPath": "/elements/3",
+                "legacy": {
+                  "options": [
+                    {
+                      "id": 1,
+                      "text": "La suite $(u_n)$ converge",
+                      "correct": false
+                    },
+                    {
+                      "id": 2,
+                      "text": "La suite $(u_n)$ diverge",
+                      "correct": true
+                    },
+                    {
+                      "text": "On ne peut encore rien conclure",
+                      "correct": false
+                    }
+                  ],
+                  "question": "Que conclure sur la convergence de $(u_n)$ ?",
+                  "explanation": "La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\n$\\newline$ Ainsi comme $u_0 \\ne u_1$, la suite $(u_n)$ diverge.",
+                  "multipleChoice": false
+                }
+              }
+            }
+          ],
+          "extensions": {
+            "legacy": {
+              "adapterVersion": "legacy-to-canonical-v1",
+              "sourceFormat": "database-row-v1",
+              "original": {
+                "id": 78,
+                "created_at": "2026-04-29 13:32:37.083753+00",
+                "title": "Suite récurrente point fixe 1",
+                "chapter": "Suites numériques",
+                "difficulty": "Moyen",
+                "competences": "[\"Utiliser les théorèmes du cours\",\"Etablir la convergence ou divergence d'une suite\"]",
+                "content": "{\"isFlash\": false, \"elements\": [{\"id\": 1781009000001, \"type\": \"text\", \"content\": {\"text\": \"Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\\\frac{@k}{u_n}$ pour tout $n \\\\in \\\\mathbb{N}$ (avec $u_n > 0$).\"}}, {\"id\": 1781009000002, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Si la suite converge vers un réel $\\\\ell > 0$, quelle est la valeur de $\\\\ell$ ?\", \"explanation\": \"On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\\\frac{@k}{x} . \\\\newline$\\nComme $\\\\ell > 0$, $f$ est continue en $\\\\ell$ et par passage à la lmite quand $n \\\\to +\\\\infty$ :\\n$\\\\newline \\\\ell = f( \\\\ell ) \\\\Leftrightarrow \\\\ell = \\\\frac{@k}{\\\\ell} \\\\Leftrightarrow \\\\ell^2 = @k\\\\Leftrightarrow \\\\ell = \\\\sqrt{@k}$ (car $\\\\ell > 0$).\", \"answerFormat\": \"number\", \"correctAnswer\": \"\\\\sqrt{@k}\"}}, {\"id\": 1781009000003, \"type\": \"mcq\", \"content\": {\"hint\": \"$u_1 = \\\\frac{@k}{u_0}$, puis $u_2 = \\\\frac{@k}{u_1}$.\", \"options\": [{\"id\": 1, \"text\": \"$u_0$\", \"correct\": true}, {\"id\": 2, \"text\": \"$\\\\frac{@k}{u_0}$\", \"correct\": false}, {\"id\": 3, \"text\": \"$\\\\frac{1}{u_0}$\", \"correct\": false}, {\"id\": 4, \"text\": \"$2 u_0$\", \"correct\": false}], \"question\": \"Que vaut $u_2$ en fonction de $u_0$ ?\", \"explanation\": \"$u_2 = \\\\frac{@k}{u_1} = \\\\frac{@k}{\\\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !\", \"multipleChoice\": false, \"multipleAnswers\": false}}, {\"id\": 1777470911608, \"type\": \"mcq\", \"content\": {\"options\": [{\"id\": 1, \"text\": \"La suite $(u_n)$ converge\", \"correct\": false}, {\"id\": 2, \"text\": \"La suite $(u_n)$ diverge\", \"correct\": true}, {\"text\": \"On ne peut encore rien conclure\", \"correct\": false}], \"question\": \"Que conclure sur la convergence de $(u_n)$ ?\", \"explanation\": \"La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\\n$\\\\newline$ Ainsi comme $u_0 \\\\ne u_1$, la suite $(u_n)$ diverge.\", \"multipleChoice\": false}}], \"variables\": [{\"id\": 1781009000010, \"max\": 15, \"min\": 2, \"name\": \"k\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"4;9\", \"expression\": \"\"}, {\"id\": 1781009000011, \"max\": 5, \"min\": 1, \"name\": \"u0\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}], \"needCalculator\": false}",
+                "app_title": "Point fixe d'une suite récurrente",
+                "Is_Flash": false,
+                "Need_Calculator": false
+              },
+              "decodedContent": {
+                "isFlash": false,
+                "elements": [
+                  {
+                    "id": 1781009000001,
+                    "type": "text",
+                    "content": {
+                      "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+                    }
+                  },
+                  {
+                    "id": 1781009000002,
+                    "type": "question",
+                    "content": {
+                      "hint": "",
+                      "points": 1,
+                      "question": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+                      "explanation": "On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\frac{@k}{x} . \\newline$\nComme $\\ell > 0$, $f$ est continue en $\\ell$ et par passage à la lmite quand $n \\to +\\infty$ :\n$\\newline \\ell = f( \\ell ) \\Leftrightarrow \\ell = \\frac{@k}{\\ell} \\Leftrightarrow \\ell^2 = @k\\Leftrightarrow \\ell = \\sqrt{@k}$ (car $\\ell > 0$).",
+                      "answerFormat": "number",
+                      "correctAnswer": "\\sqrt{@k}"
+                    }
+                  },
+                  {
+                    "id": 1781009000003,
+                    "type": "mcq",
+                    "content": {
+                      "hint": "$u_1 = \\frac{@k}{u_0}$, puis $u_2 = \\frac{@k}{u_1}$.",
+                      "options": [
+                        {
+                          "id": 1,
+                          "text": "$u_0$",
+                          "correct": true
+                        },
+                        {
+                          "id": 2,
+                          "text": "$\\frac{@k}{u_0}$",
+                          "correct": false
+                        },
+                        {
+                          "id": 3,
+                          "text": "$\\frac{1}{u_0}$",
+                          "correct": false
+                        },
+                        {
+                          "id": 4,
+                          "text": "$2 u_0$",
+                          "correct": false
+                        }
+                      ],
+                      "question": "Que vaut $u_2$ en fonction de $u_0$ ?",
+                      "explanation": "$u_2 = \\frac{@k}{u_1} = \\frac{@k}{\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !",
+                      "multipleChoice": false,
+                      "multipleAnswers": false
+                    }
+                  },
+                  {
+                    "id": 1777470911608,
+                    "type": "mcq",
+                    "content": {
+                      "options": [
+                        {
+                          "id": 1,
+                          "text": "La suite $(u_n)$ converge",
+                          "correct": false
+                        },
+                        {
+                          "id": 2,
+                          "text": "La suite $(u_n)$ diverge",
+                          "correct": true
+                        },
+                        {
+                          "text": "On ne peut encore rien conclure",
+                          "correct": false
+                        }
+                      ],
+                      "question": "Que conclure sur la convergence de $(u_n)$ ?",
+                      "explanation": "La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\n$\\newline$ Ainsi comme $u_0 \\ne u_1$, la suite $(u_n)$ diverge.",
+                      "multipleChoice": false
+                    }
+                  }
+                ],
+                "variables": [
+                  {
+                    "id": 1781009000010,
+                    "max": 15,
+                    "min": 2,
+                    "name": "k",
+                    "type": "integer",
+                    "choices": [],
+                    "decimals": 2,
+                    "exclusions": "4;9",
+                    "expression": ""
+                  },
+                  {
+                    "id": 1781009000011,
+                    "max": 5,
+                    "min": 1,
+                    "name": "u0",
+                    "type": "integer",
+                    "choices": [],
+                    "decimals": 2,
+                    "exclusions": "",
+                    "expression": ""
+                  }
+                ],
+                "needCalculator": false
+              },
+              "decodedCompetences": [
+                "Utiliser les théorèmes du cours",
+                "Etablir la convergence ou divergence d'une suite"
+              ],
+              "recipe": {
+                "revision": "legacy-reviewed-v1:0f4d1173",
+                "defaults": "observed-creator-v1",
+                "variables": [],
+                "questions": {
+                  "1781009000002": {
+                    "response": {
+                      "format": "latex",
+                      "kind": "real"
+                    },
+                    "policy": {
+                      "domain": "real",
+                      "form": "value-only"
+                    }
+                  }
+                },
+                "constraints": [
+                  {
+                    "kind": "comparison",
+                    "left": {
+                      "variable": "u0"
+                    },
+                    "operator": "!=",
+                    "right": {
+                      "constant": 1
+                    }
+                  },
+                  {
+                    "kind": "comparison",
+                    "left": {
+                      "variable": "k"
+                    },
+                    "operator": "!=",
+                    "right": {
+                      "latex": "2\\cdot\\mathrm{u0}^2"
+                    }
+                  }
+                ],
+                "decisions": [
+                  "User approved u0 != 1 and k != 2u0^2 to retain distractors; sampled domain reduced.",
+                  "Convergence limit is conditional; nonsquare k and integer u0 give a nonconstant two-cycle."
+                ]
+              }
+            }
+          }
+        },
+        "engineVersion": "0.1.0",
+        "generation": {
+          "version": "mulberry32-rejection-v1",
+          "seed": "4123066676",
+          "draws": 2,
+          "attempts": 1,
+          "values": {
+            "k": {
+              "kind": "integer",
+              "value": 2
+            },
+            "u0": {
+              "kind": "integer",
+              "value": 2
+            }
+          },
+          "groups": [],
+          "computed": []
+        },
+        "title": "Suite récurrente point fixe 1",
+        "elements": [
+          {
+            "id": "1781009000001",
+            "type": "text",
+            "text": "Soit la suite définie par $u_0 = 2$ et $u_{n+1} = \\frac{2}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+          },
+          {
+            "id": "1781009000002",
+            "type": "question",
+            "text": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+            "points": 1,
+            "response": {
+              "format": "latex",
+              "kind": "real"
+            },
+            "policy": {
+              "domain": "real",
+              "form": "value-only"
+            },
+            "expected": {
+              "kind": "real",
+              "math": {
+                "source": "\\sqrt{\\mathrm{k}}",
+                "syntax": ["Sqrt", "k"],
+                "substituted": ["Sqrt", 2],
+                "displayLatex": "\\sqrt{2}"
+              }
+            }
+          },
+          {
+            "id": "1781009000003",
+            "type": "mcq",
+            "text": "Que vaut $u_2$ en fonction de $u_0$ ?",
+            "points": 1,
+            "mode": "single",
+            "options": [
+              {
+                "id": "1",
+                "content": {
+                  "format": "text",
+                  "text": "$u_0$"
+                }
+              },
+              {
+                "id": "2",
+                "content": {
+                  "format": "text",
+                  "text": "$\\frac{2}{u_0}$"
+                }
+              },
+              {
+                "id": "3",
+                "content": {
+                  "format": "text",
+                  "text": "$\\frac{1}{u_0}$"
+                }
+              },
+              {
+                "id": "4",
+                "content": {
+                  "format": "text",
+                  "text": "$2 u_0$"
+                }
+              }
+            ],
+            "expected": {
+              "kind": "selection",
+              "optionIds": ["1"]
+            },
+            "optionMath": []
+          },
+          {
+            "id": "1777470911608",
+            "type": "mcq",
+            "text": "Que conclure sur la convergence de $(u_n)$ ?",
+            "points": 1,
+            "mode": "single",
+            "options": [
+              {
+                "id": "1",
+                "content": {
+                  "format": "text",
+                  "text": "La suite $(u_n)$ converge"
+                }
+              },
+              {
+                "id": "2",
+                "content": {
+                  "format": "text",
+                  "text": "La suite $(u_n)$ diverge"
+                }
+              },
+              {
+                "id": "legacy-option-3-2",
+                "content": {
+                  "format": "text",
+                  "text": "On ne peut encore rien conclure"
+                }
+              }
+            ],
+            "expected": {
+              "kind": "selection",
+              "optionIds": ["2"]
+            },
+            "optionMath": []
+          }
+        ]
+      },
+      "expires": 1051.117355438,
+      "duel": true,
+      "attempts": [],
+      "latest": {}
+    },
+    "8ac1fe0f42bc4019a37e52aecc60077d": {
+      "owner": "Bearer demo-alice",
+      "official": {
+        "schemaVersion": 5,
+        "instanceId": "8ac1fe0f42bc4019a37e52aecc60077d",
+        "definition": {
+          "schemaVersion": 5,
+          "kind": "composed",
+          "id": "78",
+          "revision": "legacy-reviewed-v1:0f4d1173",
+          "title": "Suite récurrente point fixe 1",
+          "catalogue": {
+            "chapter": "Suites numériques",
+            "skills": [
+              "Utiliser les théorèmes du cours",
+              "Etablir la convergence ou divergence d'une suite"
+            ],
+            "exerciseType": "classic",
+            "needsCalculator": false,
+            "appTitle": "Point fixe d'une suite récurrente"
+          },
+          "generation": {
+            "schemaVersion": 5,
+            "definitions": [
+              {
+                "name": "k",
+                "kind": "integer",
+                "min": 2,
+                "max": 15,
+                "exclusions": [4, 9]
+              },
+              {
+                "name": "u0",
+                "kind": "integer",
+                "min": 1,
+                "max": 5,
+                "exclusions": []
+              }
+            ],
+            "constraints": [
+              {
+                "kind": "comparison",
+                "left": {
+                  "variable": "u0"
+                },
+                "operator": "!=",
+                "right": {
+                  "constant": 1
+                }
+              },
+              {
+                "kind": "comparison",
+                "left": {
+                  "variable": "k"
+                },
+                "operator": "!=",
+                "right": {
+                  "latex": "2\\cdot\\mathrm{u0}^2"
+                }
+              }
+            ],
+            "maxAttempts": 128,
+            "maxDraws": 10000
+          },
+          "variables": [],
+          "elements": [
+            {
+              "id": "1781009000001",
+              "type": "text",
+              "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$).",
+              "extensions": {
+                "legacyPath": "/elements/0",
+                "legacy": {
+                  "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+                }
+              }
+            },
+            {
+              "id": "1781009000002",
+              "type": "question",
+              "text": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+              "points": 1,
+              "response": {
+                "format": "latex",
+                "kind": "real"
+              },
+              "policy": {
+                "domain": "real",
+                "form": "value-only"
+              },
+              "expectedLatex": "\\sqrt{\\mathrm{k}}",
+              "extensions": {
+                "legacyPath": "/elements/1",
+                "legacy": {
+                  "hint": "",
+                  "points": 1,
+                  "question": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+                  "explanation": "On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\frac{@k}{x} . \\newline$\nComme $\\ell > 0$, $f$ est continue en $\\ell$ et par passage à la lmite quand $n \\to +\\infty$ :\n$\\newline \\ell = f( \\ell ) \\Leftrightarrow \\ell = \\frac{@k}{\\ell} \\Leftrightarrow \\ell^2 = @k\\Leftrightarrow \\ell = \\sqrt{@k}$ (car $\\ell > 0$).",
+                  "answerFormat": "number",
+                  "correctAnswer": "\\sqrt{@k}"
+                }
+              }
+            },
+            {
+              "id": "1781009000003",
+              "type": "mcq",
+              "text": "Que vaut $u_2$ en fonction de $u_0$ ?",
+              "points": 1,
+              "mode": "single",
+              "options": [
+                {
+                  "id": "1",
+                  "content": {
+                    "format": "text",
+                    "text": "$u_0$"
+                  }
+                },
+                {
+                  "id": "2",
+                  "content": {
+                    "format": "text",
+                    "text": "$\\frac{@k}{u_0}$"
+                  }
+                },
+                {
+                  "id": "3",
+                  "content": {
+                    "format": "text",
+                    "text": "$\\frac{1}{u_0}$"
+                  }
+                },
+                {
+                  "id": "4",
+                  "content": {
+                    "format": "text",
+                    "text": "$2 u_0$"
+                  }
+                }
+              ],
+              "expectedOptionIds": ["1"],
+              "extensions": {
+                "legacyPath": "/elements/2",
+                "legacy": {
+                  "hint": "$u_1 = \\frac{@k}{u_0}$, puis $u_2 = \\frac{@k}{u_1}$.",
+                  "options": [
+                    {
+                      "id": 1,
+                      "text": "$u_0$",
+                      "correct": true
+                    },
+                    {
+                      "id": 2,
+                      "text": "$\\frac{@k}{u_0}$",
+                      "correct": false
+                    },
+                    {
+                      "id": 3,
+                      "text": "$\\frac{1}{u_0}$",
+                      "correct": false
+                    },
+                    {
+                      "id": 4,
+                      "text": "$2 u_0$",
+                      "correct": false
+                    }
+                  ],
+                  "question": "Que vaut $u_2$ en fonction de $u_0$ ?",
+                  "explanation": "$u_2 = \\frac{@k}{u_1} = \\frac{@k}{\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !",
+                  "multipleChoice": false,
+                  "multipleAnswers": false
+                }
+              }
+            },
+            {
+              "id": "1777470911608",
+              "type": "mcq",
+              "text": "Que conclure sur la convergence de $(u_n)$ ?",
+              "points": 1,
+              "mode": "single",
+              "options": [
+                {
+                  "id": "1",
+                  "content": {
+                    "format": "text",
+                    "text": "La suite $(u_n)$ converge"
+                  }
+                },
+                {
+                  "id": "2",
+                  "content": {
+                    "format": "text",
+                    "text": "La suite $(u_n)$ diverge"
+                  }
+                },
+                {
+                  "id": "legacy-option-3-2",
+                  "content": {
+                    "format": "text",
+                    "text": "On ne peut encore rien conclure"
+                  }
+                }
+              ],
+              "expectedOptionIds": ["2"],
+              "extensions": {
+                "legacyPath": "/elements/3",
+                "legacy": {
+                  "options": [
+                    {
+                      "id": 1,
+                      "text": "La suite $(u_n)$ converge",
+                      "correct": false
+                    },
+                    {
+                      "id": 2,
+                      "text": "La suite $(u_n)$ diverge",
+                      "correct": true
+                    },
+                    {
+                      "text": "On ne peut encore rien conclure",
+                      "correct": false
+                    }
+                  ],
+                  "question": "Que conclure sur la convergence de $(u_n)$ ?",
+                  "explanation": "La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\n$\\newline$ Ainsi comme $u_0 \\ne u_1$, la suite $(u_n)$ diverge.",
+                  "multipleChoice": false
+                }
+              }
+            }
+          ],
+          "extensions": {
+            "legacy": {
+              "adapterVersion": "legacy-to-canonical-v1",
+              "sourceFormat": "database-row-v1",
+              "original": {
+                "id": 78,
+                "created_at": "2026-04-29 13:32:37.083753+00",
+                "title": "Suite récurrente point fixe 1",
+                "chapter": "Suites numériques",
+                "difficulty": "Moyen",
+                "competences": "[\"Utiliser les théorèmes du cours\",\"Etablir la convergence ou divergence d'une suite\"]",
+                "content": "{\"isFlash\": false, \"elements\": [{\"id\": 1781009000001, \"type\": \"text\", \"content\": {\"text\": \"Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\\\frac{@k}{u_n}$ pour tout $n \\\\in \\\\mathbb{N}$ (avec $u_n > 0$).\"}}, {\"id\": 1781009000002, \"type\": \"question\", \"content\": {\"hint\": \"\", \"points\": 1, \"question\": \"Si la suite converge vers un réel $\\\\ell > 0$, quelle est la valeur de $\\\\ell$ ?\", \"explanation\": \"On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\\\frac{@k}{x} . \\\\newline$\\nComme $\\\\ell > 0$, $f$ est continue en $\\\\ell$ et par passage à la lmite quand $n \\\\to +\\\\infty$ :\\n$\\\\newline \\\\ell = f( \\\\ell ) \\\\Leftrightarrow \\\\ell = \\\\frac{@k}{\\\\ell} \\\\Leftrightarrow \\\\ell^2 = @k\\\\Leftrightarrow \\\\ell = \\\\sqrt{@k}$ (car $\\\\ell > 0$).\", \"answerFormat\": \"number\", \"correctAnswer\": \"\\\\sqrt{@k}\"}}, {\"id\": 1781009000003, \"type\": \"mcq\", \"content\": {\"hint\": \"$u_1 = \\\\frac{@k}{u_0}$, puis $u_2 = \\\\frac{@k}{u_1}$.\", \"options\": [{\"id\": 1, \"text\": \"$u_0$\", \"correct\": true}, {\"id\": 2, \"text\": \"$\\\\frac{@k}{u_0}$\", \"correct\": false}, {\"id\": 3, \"text\": \"$\\\\frac{1}{u_0}$\", \"correct\": false}, {\"id\": 4, \"text\": \"$2 u_0$\", \"correct\": false}], \"question\": \"Que vaut $u_2$ en fonction de $u_0$ ?\", \"explanation\": \"$u_2 = \\\\frac{@k}{u_1} = \\\\frac{@k}{\\\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !\", \"multipleChoice\": false, \"multipleAnswers\": false}}, {\"id\": 1777470911608, \"type\": \"mcq\", \"content\": {\"options\": [{\"id\": 1, \"text\": \"La suite $(u_n)$ converge\", \"correct\": false}, {\"id\": 2, \"text\": \"La suite $(u_n)$ diverge\", \"correct\": true}, {\"text\": \"On ne peut encore rien conclure\", \"correct\": false}], \"question\": \"Que conclure sur la convergence de $(u_n)$ ?\", \"explanation\": \"La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\\n$\\\\newline$ Ainsi comme $u_0 \\\\ne u_1$, la suite $(u_n)$ diverge.\", \"multipleChoice\": false}}], \"variables\": [{\"id\": 1781009000010, \"max\": 15, \"min\": 2, \"name\": \"k\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"4;9\", \"expression\": \"\"}, {\"id\": 1781009000011, \"max\": 5, \"min\": 1, \"name\": \"u0\", \"type\": \"integer\", \"choices\": [], \"decimals\": 2, \"exclusions\": \"\", \"expression\": \"\"}], \"needCalculator\": false}",
+                "app_title": "Point fixe d'une suite récurrente",
+                "Is_Flash": false,
+                "Need_Calculator": false
+              },
+              "decodedContent": {
+                "isFlash": false,
+                "elements": [
+                  {
+                    "id": 1781009000001,
+                    "type": "text",
+                    "content": {
+                      "text": "Soit la suite définie par $u_0 = @u0$ et $u_{n+1} = \\frac{@k}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+                    }
+                  },
+                  {
+                    "id": 1781009000002,
+                    "type": "question",
+                    "content": {
+                      "hint": "",
+                      "points": 1,
+                      "question": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+                      "explanation": "On peut écrire : $u_{n+1} = f( u_{n} )$, avec $ f ( x ) = \\frac{@k}{x} . \\newline$\nComme $\\ell > 0$, $f$ est continue en $\\ell$ et par passage à la lmite quand $n \\to +\\infty$ :\n$\\newline \\ell = f( \\ell ) \\Leftrightarrow \\ell = \\frac{@k}{\\ell} \\Leftrightarrow \\ell^2 = @k\\Leftrightarrow \\ell = \\sqrt{@k}$ (car $\\ell > 0$).",
+                      "answerFormat": "number",
+                      "correctAnswer": "\\sqrt{@k}"
+                    }
+                  },
+                  {
+                    "id": 1781009000003,
+                    "type": "mcq",
+                    "content": {
+                      "hint": "$u_1 = \\frac{@k}{u_0}$, puis $u_2 = \\frac{@k}{u_1}$.",
+                      "options": [
+                        {
+                          "id": 1,
+                          "text": "$u_0$",
+                          "correct": true
+                        },
+                        {
+                          "id": 2,
+                          "text": "$\\frac{@k}{u_0}$",
+                          "correct": false
+                        },
+                        {
+                          "id": 3,
+                          "text": "$\\frac{1}{u_0}$",
+                          "correct": false
+                        },
+                        {
+                          "id": 4,
+                          "text": "$2 u_0$",
+                          "correct": false
+                        }
+                      ],
+                      "question": "Que vaut $u_2$ en fonction de $u_0$ ?",
+                      "explanation": "$u_2 = \\frac{@k}{u_1} = \\frac{@k}{\\frac{@k}{u_0}} = u_0$. La suite est 2-périodique !",
+                      "multipleChoice": false,
+                      "multipleAnswers": false
+                    }
+                  },
+                  {
+                    "id": 1777470911608,
+                    "type": "mcq",
+                    "content": {
+                      "options": [
+                        {
+                          "id": 1,
+                          "text": "La suite $(u_n)$ converge",
+                          "correct": false
+                        },
+                        {
+                          "id": 2,
+                          "text": "La suite $(u_n)$ diverge",
+                          "correct": true
+                        },
+                        {
+                          "text": "On ne peut encore rien conclure",
+                          "correct": false
+                        }
+                      ],
+                      "question": "Que conclure sur la convergence de $(u_n)$ ?",
+                      "explanation": "La suite $(u_n)$ alterne entre les valeurs de $u_0$ et $u_1$, car $ u_0 = u_2 = u_4 ...$ et de même $u_1 = u_3 = u_5 = ...$.\n$\\newline$ Ainsi comme $u_0 \\ne u_1$, la suite $(u_n)$ diverge.",
+                      "multipleChoice": false
+                    }
+                  }
+                ],
+                "variables": [
+                  {
+                    "id": 1781009000010,
+                    "max": 15,
+                    "min": 2,
+                    "name": "k",
+                    "type": "integer",
+                    "choices": [],
+                    "decimals": 2,
+                    "exclusions": "4;9",
+                    "expression": ""
+                  },
+                  {
+                    "id": 1781009000011,
+                    "max": 5,
+                    "min": 1,
+                    "name": "u0",
+                    "type": "integer",
+                    "choices": [],
+                    "decimals": 2,
+                    "exclusions": "",
+                    "expression": ""
+                  }
+                ],
+                "needCalculator": false
+              },
+              "decodedCompetences": [
+                "Utiliser les théorèmes du cours",
+                "Etablir la convergence ou divergence d'une suite"
+              ],
+              "recipe": {
+                "revision": "legacy-reviewed-v1:0f4d1173",
+                "defaults": "observed-creator-v1",
+                "variables": [],
+                "questions": {
+                  "1781009000002": {
+                    "response": {
+                      "format": "latex",
+                      "kind": "real"
+                    },
+                    "policy": {
+                      "domain": "real",
+                      "form": "value-only"
+                    }
+                  }
+                },
+                "constraints": [
+                  {
+                    "kind": "comparison",
+                    "left": {
+                      "variable": "u0"
+                    },
+                    "operator": "!=",
+                    "right": {
+                      "constant": 1
+                    }
+                  },
+                  {
+                    "kind": "comparison",
+                    "left": {
+                      "variable": "k"
+                    },
+                    "operator": "!=",
+                    "right": {
+                      "latex": "2\\cdot\\mathrm{u0}^2"
+                    }
+                  }
+                ],
+                "decisions": [
+                  "User approved u0 != 1 and k != 2u0^2 to retain distractors; sampled domain reduced.",
+                  "Convergence limit is conditional; nonsquare k and integer u0 give a nonconstant two-cycle."
+                ]
+              }
+            }
+          }
+        },
+        "engineVersion": "0.1.0",
+        "generation": {
+          "version": "mulberry32-rejection-v1",
+          "seed": "1162442752",
+          "draws": 2,
+          "attempts": 1,
+          "values": {
+            "k": {
+              "kind": "integer",
+              "value": 7
+            },
+            "u0": {
+              "kind": "integer",
+              "value": 5
+            }
+          },
+          "groups": [],
+          "computed": []
+        },
+        "title": "Suite récurrente point fixe 1",
+        "elements": [
+          {
+            "id": "1781009000001",
+            "type": "text",
+            "text": "Soit la suite définie par $u_0 = 5$ et $u_{n+1} = \\frac{7}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+          },
+          {
+            "id": "1781009000002",
+            "type": "question",
+            "text": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+            "points": 1,
+            "response": {
+              "format": "latex",
+              "kind": "real"
+            },
+            "policy": {
+              "domain": "real",
+              "form": "value-only"
+            },
+            "expected": {
+              "kind": "real",
+              "math": {
+                "source": "\\sqrt{\\mathrm{k}}",
+                "syntax": ["Sqrt", "k"],
+                "substituted": ["Sqrt", 7],
+                "displayLatex": "\\sqrt{7}"
+              }
+            }
+          },
+          {
+            "id": "1781009000003",
+            "type": "mcq",
+            "text": "Que vaut $u_2$ en fonction de $u_0$ ?",
+            "points": 1,
+            "mode": "single",
+            "options": [
+              {
+                "id": "1",
+                "content": {
+                  "format": "text",
+                  "text": "$u_0$"
+                }
+              },
+              {
+                "id": "2",
+                "content": {
+                  "format": "text",
+                  "text": "$\\frac{7}{u_0}$"
+                }
+              },
+              {
+                "id": "3",
+                "content": {
+                  "format": "text",
+                  "text": "$\\frac{1}{u_0}$"
+                }
+              },
+              {
+                "id": "4",
+                "content": {
+                  "format": "text",
+                  "text": "$2 u_0$"
+                }
+              }
+            ],
+            "expected": {
+              "kind": "selection",
+              "optionIds": ["1"]
+            },
+            "optionMath": []
+          },
+          {
+            "id": "1777470911608",
+            "type": "mcq",
+            "text": "Que conclure sur la convergence de $(u_n)$ ?",
+            "points": 1,
+            "mode": "single",
+            "options": [
+              {
+                "id": "1",
+                "content": {
+                  "format": "text",
+                  "text": "La suite $(u_n)$ converge"
+                }
+              },
+              {
+                "id": "2",
+                "content": {
+                  "format": "text",
+                  "text": "La suite $(u_n)$ diverge"
+                }
+              },
+              {
+                "id": "legacy-option-3-2",
+                "content": {
+                  "format": "text",
+                  "text": "On ne peut encore rien conclure"
+                }
+              }
+            ],
+            "expected": {
+              "kind": "selection",
+              "optionIds": ["2"]
+            },
+            "optionMath": []
+          }
+        ]
+      },
+      "expires": 1073.309545323,
+      "duel": true,
+      "attempts": [],
+      "latest": {}
+    }
+  }
+}

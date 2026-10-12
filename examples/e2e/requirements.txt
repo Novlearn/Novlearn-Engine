@@ -1,0 +1,2 @@
+# Socket server only; the engine package has no Python/framework dependency.
+uvicorn==0.32.0

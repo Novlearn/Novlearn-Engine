@@ -1,5 +1,18 @@
 # Décisions
 
+## D46 — M11 : preuve verticale et état applicatif minimal
+
+[Banc local](demo.md) : FastAPI sert MathLive local et reçoit uniquement les
+réponses brutes/IDs. Le serveur adapte le corpus revu dans les workers, choisit
+seed/ID/snapshot et applique les mêmes projections/corrections pratique/duel.
+Reprise GET, tentatives bornées et séquence d'admission restent dans l'exemple
+applicatif ; aucun état de progression/points/auth ajouté au cœur. Propriété,
+TTL et manche revérifiés après await ; réponse ancienne ne remplace pas la plus
+récente soumise. Unicode/nonfinite/profondeur/corps bornés avant transport.
+17 observations navigateur réelles, snapshot/rejeu privé exclu d'HTTP/package.
+504 transport froid100ms et503 fixture crash distingués des preuves natives M8/M9.
+Uvicorn0.32.0/Click8.5.0 limités au banc. Aucun dépôt voisin/DB/production modifié.
+
 ## D45 — M10 : import explicite et arbitrages historiques confirmés
 
 [ADR016](adr/016-reviewed-legacy-adaptation.md). Adaptateur sous-chemin ./legacy,

@@ -1,0 +1,44 @@
+body {
+  font: 16px system-ui;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  max-width: 960px;
+  background: #f5f7fb;
+  color: #16233b;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+button {
+  cursor: pointer;
+  padding: 0.6rem;
+}
+section {
+  background: white;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #c6d2e3;
+  border-radius: 0.5rem;
+}
+math-field {
+  display: block;
+  min-height: 48px;
+  margin: 0.5rem 0;
+  font-size: 24px;
+}
+label {
+  display: block;
+  margin: 0.4rem 0;
+}
+output {
+  display: block;
+  white-space: pre-wrap;
+  margin: 0.6rem 0;
+  overflow-wrap: anywhere;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

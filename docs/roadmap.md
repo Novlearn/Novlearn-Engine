@@ -42,6 +42,10 @@ arbitrages utilisateur et profil106 borné ; ADR016. Hôte privé permet égalem
 la conversion dans un worker neuf, aucun import HTTP ou migration de production.
 Check1482PASS/32WindowsSKIP,26 fichiers/27,465,43s et pack153 ; revues indépendantes
 favorables, preuves injectivité/positivité exponentielles et indétermination incluses.
+M11 validé : vrai78 adapté/FastAPI/MathLive et17observations navigateur,
+reprise/QCM/duel/falsification/pannes,12rejeux Vitest et12testsPythonPASS.
+Revues indépendantes favorables aprèscorrectifs de concurrence ;
+checkglobal1494PASS/32WindowsSKIP505,23s et pack153 ; commit local à créer.
 Les exigences
 de correction, données d'éléments et transport restent obligatoires malgré les
 profils bornés des lots anciens. Les décisions de licence/registre/adoption en

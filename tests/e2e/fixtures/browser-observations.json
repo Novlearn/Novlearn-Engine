@@ -1,0 +1,516 @@
+{
+  "version": "0.111.1",
+  "locale": "fr",
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+  "records": [
+    {
+      "operation": "create",
+      "status": 200,
+      "data": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "title": "Suite récurrente point fixe 1",
+        "elements": [
+          {
+            "id": "1781009000001",
+            "type": "text",
+            "text": "Soit la suite définie par $u_0 = 5$ et $u_{n+1} = \\frac{12}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+          },
+          {
+            "id": "1781009000002",
+            "type": "question",
+            "text": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+            "points": 1,
+            "response": {
+              "format": "latex",
+              "kind": "real"
+            }
+          },
+          {
+            "id": "1781009000003",
+            "type": "mcq",
+            "text": "Que vaut $u_2$ en fonction de $u_0$ ?",
+            "points": 1,
+            "mode": "single",
+            "options": [
+              {
+                "id": "1",
+                "content": {
+                  "format": "text",
+                  "text": "$u_0$"
+                }
+              },
+              {
+                "id": "2",
+                "content": {
+                  "format": "text",
+                  "text": "$\\frac{12}{u_0}$"
+                }
+              },
+              {
+                "id": "3",
+                "content": {
+                  "format": "text",
+                  "text": "$\\frac{1}{u_0}$"
+                }
+              },
+              {
+                "id": "4",
+                "content": {
+                  "format": "text",
+                  "text": "$2 u_0$"
+                }
+              }
+            ]
+          },
+          {
+            "id": "1777470911608",
+            "type": "mcq",
+            "text": "Que conclure sur la convergence de $(u_n)$ ?",
+            "points": 1,
+            "mode": "single",
+            "options": [
+              {
+                "id": "1",
+                "content": {
+                  "format": "text",
+                  "text": "La suite $(u_n)$ converge"
+                }
+              },
+              {
+                "id": "2",
+                "content": {
+                  "format": "text",
+                  "text": "La suite $(u_n)$ diverge"
+                }
+              },
+              {
+                "id": "legacy-option-3-2",
+                "content": {
+                  "format": "text",
+                  "text": "On ne peut encore rien conclure"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1781009000002",
+      "answer": {
+        "format": "latex",
+        "source": "1{,}25"
+      },
+      "path": "keyboard",
+      "latex": "1{,}25",
+      "prompts": [],
+      "events": [
+        {
+          "type": "keydown",
+          "key": "1"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "keydown",
+          "key": ","
+        },
+        {
+          "type": "keydown",
+          "key": "2"
+        },
+        {
+          "type": "keydown",
+          "key": "5"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ],
+      "status": 200,
+      "data": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "questionId": "1781009000002",
+        "state": "incorrect",
+        "value": "different",
+        "comparison": "exact",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "exact-number",
+        "code": "numeric-different"
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1781009000002",
+      "answer": {
+        "format": "latex",
+        "source": "\\frac{\\placeholder{}}{2}"
+      },
+      "path": "mathlive-api",
+      "latex": "\\frac{\\placeholder{}}{2}",
+      "prompts": [],
+      "events": [],
+      "status": 200,
+      "data": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "questionId": "1781009000002",
+        "state": "invalid",
+        "value": "unknown",
+        "comparison": "none",
+        "domain": "not-applicable",
+        "form": "unknown",
+        "proof": "none",
+        "code": "incomplete"
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1781009000002",
+      "answer": {
+        "format": "latex",
+        "source": "\\ln(2)"
+      },
+      "path": "mathlive-api",
+      "latex": "\\ln(2)",
+      "prompts": [],
+      "events": [],
+      "status": 200,
+      "data": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "questionId": "1781009000002",
+        "state": "indeterminate",
+        "value": "unknown",
+        "comparison": "exact",
+        "domain": "not-applicable",
+        "form": "unknown",
+        "proof": "none",
+        "code": "numeric-proof"
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1781009000002",
+      "answer": {
+        "format": "latex",
+        "source": "\\sqrt{12}"
+      },
+      "path": "paste",
+      "latex": "\\sqrt{12}",
+      "prompts": [],
+      "events": [
+        {
+          "type": "paste",
+          "text": "$$\\sqrt{12}$$"
+        },
+        {
+          "type": "input",
+          "inputType": "insertText"
+        }
+      ],
+      "status": 200,
+      "data": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "questionId": "1781009000002",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "exact",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "exact-number",
+        "code": "numeric-equal"
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1781009000003",
+      "answer": {
+        "format": "selection",
+        "optionIds": ["1"]
+      },
+      "path": "selection-ids",
+      "latex": null,
+      "prompts": [],
+      "events": [],
+      "status": 200,
+      "data": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "questionId": "1781009000003",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "discrete",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "selection",
+        "code": "selection-equal"
+      }
+    },
+    {
+      "operation": "resume",
+      "status": 200,
+      "data": {
+        "instance": {
+          "schemaVersion": 5,
+          "instanceId": "1123833480af41d696ec8b31f209950e",
+          "title": "Suite récurrente point fixe 1",
+          "elements": [
+            {
+              "id": "1781009000001",
+              "type": "text",
+              "text": "Soit la suite définie par $u_0 = 5$ et $u_{n+1} = \\frac{12}{u_n}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$)."
+            },
+            {
+              "id": "1781009000002",
+              "type": "question",
+              "text": "Si la suite converge vers un réel $\\ell > 0$, quelle est la valeur de $\\ell$ ?",
+              "points": 1,
+              "response": {
+                "format": "latex",
+                "kind": "real"
+              }
+            },
+            {
+              "id": "1781009000003",
+              "type": "mcq",
+              "text": "Que vaut $u_2$ en fonction de $u_0$ ?",
+              "points": 1,
+              "mode": "single",
+              "options": [
+                {
+                  "id": "1",
+                  "content": {
+                    "format": "text",
+                    "text": "$u_0$"
+                  }
+                },
+                {
+                  "id": "2",
+                  "content": {
+                    "format": "text",
+                    "text": "$\\frac{12}{u_0}$"
+                  }
+                },
+                {
+                  "id": "3",
+                  "content": {
+                    "format": "text",
+                    "text": "$\\frac{1}{u_0}$"
+                  }
+                },
+                {
+                  "id": "4",
+                  "content": {
+                    "format": "text",
+                    "text": "$2 u_0$"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1777470911608",
+              "type": "mcq",
+              "text": "Que conclure sur la convergence de $(u_n)$ ?",
+              "points": 1,
+              "mode": "single",
+              "options": [
+                {
+                  "id": "1",
+                  "content": {
+                    "format": "text",
+                    "text": "La suite $(u_n)$ converge"
+                  }
+                },
+                {
+                  "id": "2",
+                  "content": {
+                    "format": "text",
+                    "text": "La suite $(u_n)$ diverge"
+                  }
+                },
+                {
+                  "id": "legacy-option-3-2",
+                  "content": {
+                    "format": "text",
+                    "text": "On ne peut encore rien conclure"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "progress": [
+          {
+            "questionId": "1781009000002",
+            "answer": {
+              "format": "latex",
+              "source": "\\sqrt{12}"
+            },
+            "correction": {
+              "schemaVersion": 5,
+              "instanceId": "1123833480af41d696ec8b31f209950e",
+              "questionId": "1781009000002",
+              "state": "correct",
+              "value": "equal",
+              "comparison": "exact",
+              "domain": "not-applicable",
+              "form": "not-required",
+              "proof": "exact-number",
+              "code": "numeric-equal"
+            }
+          },
+          {
+            "questionId": "1781009000003",
+            "answer": {
+              "format": "selection",
+              "optionIds": ["1"]
+            },
+            "correction": {
+              "schemaVersion": 5,
+              "instanceId": "1123833480af41d696ec8b31f209950e",
+              "questionId": "1781009000003",
+              "state": "correct",
+              "value": "equal",
+              "comparison": "discrete",
+              "domain": "not-applicable",
+              "form": "not-required",
+              "proof": "selection",
+              "code": "selection-equal"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1777470911608",
+      "answer": {
+        "format": "selection",
+        "optionIds": ["1"]
+      },
+      "path": "selection-ids",
+      "latex": null,
+      "prompts": [],
+      "events": [],
+      "status": 200,
+      "data": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "questionId": "1777470911608",
+        "state": "incorrect",
+        "value": "different",
+        "comparison": "discrete",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "selection",
+        "code": "selection-different"
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1777470911608",
+      "answer": {
+        "format": "selection",
+        "optionIds": ["2"]
+      },
+      "path": "selection-ids",
+      "latex": null,
+      "prompts": [],
+      "events": [],
+      "status": 200,
+      "data": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "questionId": "1777470911608",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "discrete",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "selection",
+        "code": "selection-equal"
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1781009000002",
+      "answer": {
+        "format": "latex",
+        "source": "\\sqrt{12}"
+      },
+      "path": "resume",
+      "latex": "\\sqrt{12}",
+      "prompts": [],
+      "events": [],
+      "status": 504,
+      "data": {
+        "detail": "timeout"
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1781009000002",
+      "answer": {
+        "format": "latex",
+        "source": "\\sqrt{12}"
+      },
+      "path": "resume",
+      "latex": "\\sqrt{12}",
+      "prompts": [],
+      "events": [],
+      "status": 503,
+      "data": {
+        "detail": "protocol-error"
+      }
+    },
+    {
+      "instanceId": "1123833480af41d696ec8b31f209950e",
+      "questionId": "1781009000002",
+      "answer": {
+        "format": "latex",
+        "source": "\\sqrt{12}"
+      },
+      "path": "resume",
+      "latex": "\\sqrt{12}",
+      "prompts": [],
+      "events": [],
+      "status": 200,
+      "data": {
+        "schemaVersion": 5,
+        "instanceId": "1123833480af41d696ec8b31f209950e",
+        "questionId": "1781009000002",
+        "state": "correct",
+        "value": "equal",
+        "comparison": "exact",
+        "domain": "not-applicable",
+        "form": "not-required",
+        "proof": "exact-number",
+        "code": "numeric-equal"
+      }
+    },
+    {
+      "operation": "spoof",
+      "status": 422,
+      "data": {
+        "detail": "invalid-submission"
+      }
+    }
+  ]
+}

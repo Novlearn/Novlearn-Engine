@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>NovLearn — preuve verticale locale</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+    <script type="module" src="/assets/bench.mjs"></script>
+  </head>
+  <body>
+    <h1>Preuve verticale locale</h1>
+    <p>MathLive → FastAPI → moteur isolé. Identité de démonstration : Alice.</p>
+    <nav>
+      <button id="practice">Nouvelle instance 78</button>
+      <button id="log">Nouvelle instance 106</button>
+      <button id="duel">Nouvelle manche 78</button>
+      <button id="resume">Reprendre</button>
+      <button id="old-round">Soumettre à la manche précédente</button>
+      <button id="spoof">Tester une politique falsifiée</button>
+      <button id="save">Enregistrer les observations</button>
+    </nav>
+    <p id="status" role="status">Aucune instance</p>
+    <main id="exercise"></main>
+    <details>
+      <summary>
+        Chargement par API MathLive pour les cas complémentaires
+      </summary>
+      <label>LaTeX brut <input id="source" /></label>
+      <button id="load">Charger dans le premier champ</button>
+      <button id="clear">Vider le premier champ</button>
+    </details>
+    <pre id="observations"></pre>
+  </body>
+</html>

@@ -188,6 +188,12 @@ Publication désactivée. La mission V1 autorise les lots successifs et leurs
 commits locaux validés ; aucun push, migration de production ou déploiement.
 [Preuves locales](docs/progress.md).
 
+[Démonstration verticale locale](docs/demo.md) : vrai exercice78 adapté,
+MathLive/FastAPI/CLI isolée, trois questions et QCM par IDs, reprise après
+rechargement, falsification refusée et erreurs/timeout distincts. Les tentatives
+et la fixture de duel restent applicatives ; aucun renderer définitif ou stockage
+de production livré. Captures publiques et snapshots de test privés séparés.
+
 - [Vision](docs/exercise-engine-vision.md), [spécification](docs/functional-specification.md)
 - [Audit initial](docs/consolidation.md), [ADR 008](docs/adr/008-canonical-consolidation.md), [décisions](docs/decisions.md)
 - [Roadmap](docs/roadmap.md), [tests](docs/test-strategy.md), [corpus](docs/compatibility.md)
