@@ -84,11 +84,14 @@ npm.cmd run check
 npm.cmd pack --dry-run
 ```
 
-`check` doit être vert pour une validation globale. Dans le contexte de l’audit,
-Prettier a rencontré `EPERM` en parcourant un cache Python : build/types/lint
-avaient passé, mais les tests n’étaient pas lancés. Le problème de parcours du
-cache reste à traiter dans une mission d’outillage, sans modifier les permissions
-ou déclarer le check réussi. Pour exécuter les tests indépendamment du format :
+`check` doit être vert pour une validation globale. L’audit documentaire avait
+rencontré `EPERM` lors du parcours d’un cache Python, avant les tests. Les scripts
+`format` et `format:check` excluent désormais `.cache/**` et `.npm-cache/**`
+**dès l’énumération**, avec des globs négatifs quotés. `.prettierignore` reste
+applicable aux fichiers protégés ; une règle ignore seule intervenait trop tard
+pour ce parcours de la CLI 3.9.10. Aucun droit ou fichier Python modifié.
+Voir [D49](decisions.md#d49--exclure-les-caches-dès-le-parcours-prettier-12-octobre-2026).
+Pour exécuter les tests indépendamment du format :
 
 ```powershell
 npm.cmd test

@@ -39,6 +39,16 @@ lots achevés. Une preuve OS Windows ancienne et des skips Linux ne qualifient p
 la politique Windows actuelle. Aucun « refus hors profil » ne remplace une
 exigence obligatoire non réalisée.
 
+## Complément d’outillage Prettier
+
+Complément d’outillage sélectionné le 12 octobre 2026 après le commit documentaire
+`19bf028` : exclure les caches dès le parcours des scripts Prettier, sans changer
+leurs droits ni réduire le contrôle des sources. Critères : format/check sans
+`EPERM`, défaut de format toujours détecté hors cache, références protégées
+inchangées et `npm.cmd run check` complet. **Terminé, bilan du 13 octobre :
+1533 tests / 29 fichiers PASS et pack PASS**. État et résultats dans progress ;
+[décision D49](decisions.md#d49--exclure-les-caches-dès-le-parcours-prettier-12-octobre-2026).
+
 ## Travaux restants — non engagés
 
 Les chantiers suivants nécessitent une instruction distincte. Ils ne changent

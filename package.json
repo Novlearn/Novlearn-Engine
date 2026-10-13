@@ -36,8 +36,8 @@
     "typecheck": "tsc --noEmit",
     "test": "npm run build && vitest run",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --write . \"!.cache/**\" \"!.npm-cache/**\"",
+    "format:check": "prettier --check . \"!.cache/**\" \"!.npm-cache/**\"",
     "smoke:package": "node tools/package-smoke.mjs",
     "check": "npm run build && npm run typecheck && npm run lint && npm run format:check && vitest run",
     "prepack": "npm run build"

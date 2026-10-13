@@ -1,6 +1,6 @@
 # État et reprise
 
-## État actuel — 12 octobre 2026
+## État actuel — 13 octobre 2026
 
 **Dernier lot fonctionnel terminé : M12**, commit
 `008d0ce78c93ae698f794180618d38402f87a216`. Le package privé 0.1.0, schéma 5,
@@ -8,8 +8,9 @@ est qualifié comme **V1 locale sur les profils documentés**. La
 [matrice CDC](feature-coverage.md) conserve 48 lignes : 46 exigences P0/P1
 qualifiées et deux exclusions explicites. Cela ne vaut pas adoption en production.
 
-**Lot de développement en cours : aucun.** La présente intervention est un audit
-et une réorganisation de documentation, sans modification du moteur. Aucun
+**Lot fonctionnel en cours : aucun.** Le complément d’outillage Prettier est
+terminé après l’audit documentaire au commit `19bf028` ; aucun comportement
+du moteur modifié. L’intervention initiale était un audit documentaire. Aucun
 Goal actif dans cette session à l’ouverture ; arbre Git initial propre au commit
 `0db2304`. L’audit a d’abord été livré sans commit. L’utilisateur demande ensuite
 explicitement son commit documentaire local et un guide des tests/restes à faire.
@@ -19,6 +20,39 @@ Les principaux livrables sont génération commune, données d’éléments,
 multiquestions/QCM, correction sous preuve, formes, hôte/transport privés,
 adaptations locales et preuves de distribution/rejeu. Les
 [capacités et limites](features.md) décrivent leur portée exacte.
+
+## Fiabilisation Prettier — complément d’outillage
+
+Les scripts npm `format` et `format:check` ajoutent les globs négatifs quotés
+`!.cache/**` et `!.npm-cache/**` pour exclure les caches dès leur énumération.
+`.prettierignore` les filtrait déjà, mais après le parcours de la CLI 3.9.10,
+trop tard pour éviter le `scandir` Python interdit. [D49](decisions.md#d49--exclure-les-caches-dès-le-parcours-prettier-12-octobre-2026).
+
+`npm.cmd ci --cache .npm-cache --no-audit --no-fund` PASS, 132 packages, lock inchangé.
+`npm.cmd run format:check` passe avec le cache Python toujours présent. Les sondes
+confirment qu’un JSON mal formaté dans le cache est ignoré, mais qu’un JSON mal
+formaté hors cache est signalé et retourne exit 1 ; sondes ensuite retirées.
+`format` et `format:check` partagent les mêmes exclusions. Références protégées
+inchangées, sans ajout de dépendance ou modification de droits/cache Python.
+
+**Complément terminé ; bilan finalisé le 13 octobre 2026.** Le contrôle complet
+de confirmation passe : build/types/lint/format puis **1533 tests / 29 fichiers
+PASS sans skip**, en **595,96 s**, avec le timeout Vitest habituel et sans filtre.
+Log : `.cache/prettier-fix-check-confirmation.log` (exécution du 12 octobre).
+
+Le premier passage avait franchi Prettier puis terminé avec 1531 tests PASS et
+deux timeouts à 5000 ms dans le groupe des infinis (570 s). Le rejeu ciblé des
+sept cas passe en 2,58 s ; les 142 autres cas du fichier étaient hors sélection.
+Le contrôle complet de confirmation ci-dessus passe ensuite sans cette sélection.
+Aucun test désactivé, timeout relevé ou comportement mathématique modifié ;
+la cause des fluctuations de durée reste à surveiller séparément.
+
+`npm.cmd pack --dry-run` du 13 octobre PASS (157 fichiers). Les références
+protégées et le lock restent inchangés. La correction concerne seulement les deux
+scripts et leur documentation ; l’utilisateur demande explicitement leur commit
+local le 13 octobre. Ce bilan accompagne le commit, sans push ni nouveau lot.
+Les résultats de l’audit
+documentaire ci-dessous restent historiques, notamment son échec de format.
 
 **Points d’attention pour l’adoption :** les tests natifs Windows passent dans
 cet audit, après un refus historique M9/M12 dont la cause d’évolution n’est pas
@@ -59,9 +93,10 @@ intermédiaires, arbitrages, mesures, chemins de cache et preuves de chaque lot.
 | `npm.cmd pack --dry-run`                             | PASS, 157 fichiers ; aucune publication                                                                                        |
 | Git / empreintes                                     | Diff documentaire uniquement, `git diff --check` PASS ; CDC et corpus inchangés                                                |
 
-Le contrôle ciblé du format contourne uniquement le parcours inaccessible du
-cache, sans modifier configuration ou permissions. Le `check` global reste
-**non passant** dans ce contexte ; il ne doit pas être présenté comme PASS.
+Au moment de la livraison documentaire, le contrôle ciblé du format contournait
+le parcours inaccessible du cache, sans modifier configuration ou permissions.
+Le `check` global était alors **non passant** ; ce résultat historique n’est pas
+présenté comme PASS. Le complément Prettier ci-dessus décrit le correctif ultérieur.
 Les tests Windows qualifient les scénarios exécutés aujourd’hui ; les benchmarks
 Python/Linux, captures navigateur et installations externes ne sont pas relancés.
 Les scripts de vérification ad hoc et logs sont dans `.cache/docs-audit` et
@@ -93,8 +128,8 @@ Le [rapport d’audit](audit.md) donne inventaire, corrections et périmètre du
 5. Cette réorganisation et ses contrôles sont terminés ; le commit documentaire
    demandé regroupe guides, archives, ADR et preuves locales. Pour développer
    ensuite, sélectionner un seul lot explicitement demandé.
-   Le `check` global nécessite un environnement où le cache est lisible,
-   ou un audit séparé de son parcours Prettier ; aucun code modifié ici pour cela.
+   Le complément Prettier exclut les caches dès leur parcours ; consulter ses
+   résultats ci-dessus pour le dernier contrôle global.
 6. Exécuter les commandes appropriées, rapporter environnement et résultats
    effectifs, puis mettre à jour décisions/progress/matrice. Respecter les règles
    de commit de la nouvelle mission ; aucune CI distante présumée.

@@ -89,3 +89,33 @@ les instructions pour tester et poursuivre le projet. Le commit regroupe uniquem
 les Markdown documentaires, avec revue du staging et contrôles de conservation.
 Le guide development précise les niveaux de test ; aucun nouveau lot, push ou
 déploiement n’est engagé.
+
+### D49 — Exclure les caches dès le parcours Prettier (12 octobre 2026)
+
+La demande suivante sélectionne la fiabilisation du contrôle global. Avec la CLI
+installée Prettier 3.9.10, `expandPatternsInternal` énumère les chemins avant que
+le filtre des fichiers ignore soit appliqué. `.cache/` est déjà ignoré, mais un
+`scandir` interdit peut donc faire échouer `prettier --check .` avant ce filtre.
+
+Décision : ajouter les globs négatifs quotés `!.cache/**` et `!.npm-cache/**`
+aux deux scripts npm `format` et `format:check`. Ils sont intégrés aux exclusions
+du parcours lui-même. Garder `.prettierignore` pour les éditeurs et les fichiers
+protégés (CDC, corpus, lock, artefacts). Pas de script intermédiaire, dépendance,
+changement de permissions ou suppression du cache. Les sources et documents
+restent dans le périmètre contrôlé, y compris leurs archives.
+
+Alternatives écartées : modifier les droits Python ou effacer le cache pour faire
+passer le contrôle ; un nouvel ajout `.cache/` à `.prettierignore`, déjà présent ;
+restreindre le contrôle à une liste fixe de fichiers qui oublierait des ajouts.
+La [CLI officielle](https://prettier.io/docs/cli#file-patterns) recommande de
+quoter les globs pour que leur expansion reste identique entre plateformes.
+Le comportement exact est vérifié dans la version locale et par exécution.
+
+Bilan finalisé le 13 octobre : format PASS, sonde hors cache refusée, contrôle
+complet de confirmation 1533 tests/29 fichiers PASS sans skip et pack157 PASS.
+Deux timeouts du premier passage et leur rejeu sont conservés dans progress ;
+aucun seuil de test modifié pour obtenir le résultat final.
+
+Le 13 octobre, l’utilisateur demande explicitement de commiter tous les changements
+de ce complément : package.json et les quatre documents de suivi/maintenance.
+Les caches et logs locaux restent hors Git ; aucun push ou lot suivant autorisé.
