@@ -25,11 +25,14 @@ appartiennent aux applications.
 - Huit adaptations historiques locales, banc MathLive/FastAPI et consommation
   réelle du package documentés. Aucune migration de production effectuée.
 
-La V1 locale a été qualifiée en M12. Elle ne fournit pas de CAS universel,
+La qualification historique V1 locale M12 est à relire avec le [dernier audit
+de certification](docs/certification/report.md) : la suite complète relancée
+le 13 octobre échoue sur le transport isolé Windows. Le cœur portable reste
+testable sur ses profils, mais le verdict courant est non prêt pour pilote.
+Le moteur ne fournit pas de CAS universel,
 solveur général de limites/dérivées, correction libre multivariée ou complexe,
 éditeur Admin ni interface de production. L’hôte Linux exige un cgroup v2 borné ;
-les tests natifs Windows passent dans cette mission, après un refus historique
-du lanceur documenté en M9/M12. Les
+le contrôle Windows du transport isolé échoue dans le dernier audit. Les
 [capacités et limites](docs/features.md) précisent ce qui est garanti et testé.
 
 ## Démarrer dans le dépôt

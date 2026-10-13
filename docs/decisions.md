@@ -119,3 +119,26 @@ aucun seuil de test modifié pour obtenir le résultat final.
 Le 13 octobre, l’utilisateur demande explicitement de commiter tous les changements
 de ce complément : package.json et les quatre documents de suivi/maintenance.
 Les caches et logs locaux restent hors Git ; aucun push ou lot suivant autorisé.
+
+### D50 — Résultats de certification V1 et statut d’isolation (13 octobre 2026)
+
+La demande de certification autorise l’audit, le banc local et ses rapports,
+sans changement du CDC, du corpus ou d’un dépôt applicatif. Ajouter un banc
+reproductible sur les huit fixtures adaptées, leurs éléments et questions, quatre
+seeds, correction, projection publique et rejeu JSON.
+
+La suite complète a été réellement relancée : build/typecheck/lint/format PASS,
+Vitest 1508 PASS / 25 FAIL. Les 23 tests Windows `node-host` et deux tests CLI
+retournent `unavailable`; le launcher ne fournit qu’un diagnostic système
+générique. Ne pas attribuer une cause qui n’est pas prouvée. Le smoke du tarball
+dans un consommateur séparé passe. Le rapport machine consigne les instances et
+réponses ; le rapport humain sépare ces observations des anciens benchmarks
+Linux/Python/navigateur, non relancés.
+
+Conséquence : CDC-42 à requalifier, CDC-46 non démontré dans cet environnement,
+CDC-47 et CDC-48 partiels. Le verdict de certification est « non prêt » pour
+pilote/adoption; le cœur portable reste prêt aux tests locaux sur profils exercés.
+Un cas faux candidat pour `ln(k)` demeure indéterminé, pas incorrect. La suite
+doit repasser dans un environnement où le launcher peut effectivement démarrer
+avant toute déclaration de qualification. Aucun commit automatique, CI distante,
+publication, production ou migration n’est inclus.

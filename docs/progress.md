@@ -2,6 +2,33 @@
 
 ## État actuel — 13 octobre 2026
 
+### Audit de certification fonctionnelle V1 — 13 octobre 2026
+
+Demande de certification exécutée dans le dépôt seulement. Rapport :
+[certification/report.md](certification/report.md), résultats complets :
+[corpus-report.json](certification/corpus-report.json). Le nouveau banc
+`tools/certify-corpus.mjs` vérifie les huit adaptations autorisées sur quatre
+seeds chacune : validation, éléments/questions, attendus, réponses simulées,
+projection, sérialisation et rejeu. Il relève zéro réponse correcte rejetée sur
+les cas certifiés ; les réponses invalides sont rejetées. Pour la ligne 6,
+répondre `0` à `ln(k)` donne `indeterminate` aux quatre seeds, ce qui préserve
+l’absence de preuve plutôt que d’affirmer `incorrect`.
+
+Vérifications réelles : build, typecheck, lint et format PASS ; smoke du vrai
+tarball dans un projet consommateur séparé PASS (Node/ESM/types/bundle browser).
+`npm.cmd run check` échoue avec **1508 PASS / 25 FAIL**, 29 fichiers, 359,49 s.
+Les 23 tests `node-host` et 2 tests CLI échouent avec `unavailable` au lancement
+du worker isolé Windows. Le rapport du launcher est générique ; cause système
+précise non établie. CDC-42 passe à « à requalifier », CDC-46 « non démontré ici »
+et CDC-47/48 « partiel » dans la matrice. **Verdict courant : non prêt pour pilote
+ni adoption**, malgré le cœur portable prêt à tester localement.
+
+`npm.cmd pack --dry-run` PASS (157 fichiers). Python/FastAPI, nouveau navigateur
+MathLive, cgroup Linux et CI distante non exécutés dans cette mission. CDC et trois copies
+historiques sont restés inchangés en octets. Détails et correctifs priorisés dans
+le rapport. Cette nouvelle preuve remplace les affirmations antérieures de
+passage Windows pour l’état courant, sans réécrire leur chronologie.
+
 **Dernier lot fonctionnel terminé : M12**, commit
 `008d0ce78c93ae698f794180618d38402f87a216`. Le package privé 0.1.0, schéma 5,
 est qualifié comme **V1 locale sur les profils documentés**. La
