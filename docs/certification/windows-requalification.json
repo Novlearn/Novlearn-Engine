@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-13T22:06:48.753Z",
+  "qualification": "blocked-installed-windows-launcher",
+  "sourceHashes": {
+    "runtime/windows/job.cs": "34be274f596390dd860f2f891e61b5985db66523e64933dbe732ec6213828c35",
+    "tests/node-host.test.mjs": "a4a0fca6d2797f9aac1d58f51053c05d02e55c57ae8c43af9d2f6de114e0db50",
+    "tools/package-smoke.mjs": "14d87b12be48caa5717815839592d770e31ab157e17f6d6f9489464a9e938499",
+    "vitest.config.ts": "1d2a4a5b0431f59f9fac05f69200de503dc3896d9c7633cb0bacfc73b74a96cf",
+    "package-lock.json": "0d33b7595305fe947bb84423e554bf1e5b4c10632364cfb8787dcf36397be2d3",
+    "docs/CDC_référence.md": "ffb97d8f1b3401e462da6411d4dde671a06d9522a6d745e28d06fb2f2e9459ae",
+    "docs/exercises_rows.json": "0f4d1173a78f9bd41e88678704c212c5147627e7e5a42ee28eb398f25f41c3ae"
+  },
+  "standardCheck": {
+    "command": "npm.cmd run check",
+    "testsPassed": 1534,
+    "testsFailed": 0,
+    "skipped": 0,
+    "filesPassed": 29,
+    "durationSeconds": 377.21,
+    "startedLocal": "2026-10-13 23:51:51 Europe/Paris",
+    "note": "Before the packaged native-host smoke was added; runtime and test sources unchanged since this execution."
+  },
+  "instrumentedCheck": {
+    "testsPassed": 1533,
+    "testsFailed": 0,
+    "filesPassed": 29,
+    "durationSeconds": 373.63,
+    "note": "Diagnostic execution; not substituted for the standard check."
+  },
+  "dryPack": {
+    "passed": true,
+    "files": 157
+  },
+  "installedPackage": {
+    "smokePassed": false,
+    "error": "unavailable",
+    "spawnError": "UNKNOWN",
+    "tarballSha256": "14fb7028875ebceae9ab1bcdfece97521b792f0fcbfea3e072207865fea3b762",
+    "sourceLauncherSha256": "76c85858b1d09686515ad805bfe7895721033858ba8f925deb75e247e52d1695",
+    "installedLauncherSha256": "76c85858b1d09686515ad805bfe7895721033858ba8f925deb75e247e52d1695",
+    "authenticodeStatus": "NotSigned",
+    "codeIntegrity": {
+      "eventId": 3077,
+      "localTime": "2026-10-14 00:00:24 Europe/Paris",
+      "policyName": "VerifiedAndReputableDesktop",
+      "status": "0xc0e90002",
+      "file": ".cache/package-smoke-1791928720244/consumer/node_modules/novlearn-exercise-engine/dist/node-host/windows/job.exe"
+    }
+  },
+  "pythonFastApi": {
+    "passed": true,
+    "tests": 13,
+    "durationSeconds": 65.06,
+    "network": "none",
+    "memoryMiB": 384,
+    "pids": 64
+  },
+  "linuxIsolation": {
+    "passed": true,
+    "checks": 12,
+    "memoryMax": 402653184,
+    "swapMax": 0,
+    "pidsMax": 64,
+    "network": "none"
+  },
+  "linuxHistoricalHost": {
+    "passed": true,
+    "exercises": 8,
+    "invalidRecipeRejected": true
+  },
+  "criteriaChanged": false,
+  "windowsPolicyChanged": false,
+  "remoteMutations": false
+}

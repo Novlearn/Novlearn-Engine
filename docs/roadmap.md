@@ -1,5 +1,12 @@
 # Roadmap et critères de passage
 
+## Requalification locale ciblée — 14 octobre 2026
+
+Le [profil Linux borné choisi](certification/linux-requalification.md) et
+l’archive installée sont qualifiés localement, avec critères inchangés.
+La reprise corrige les diagnostics et renforce les bancs, sans nouveau lot
+mathématique. Les refus Windows et les limites d’adoption restent documentés.
+
 Le [CDC officiel](CDC_référence.md), notamment son chapitre 13, fixe objectifs et
 priorités P0/P1/P2. Les numéros **M0–M12** désignent les lots de la mission de
 finalisation ; les numéros **1–11, 5C, 6A, 6B** désignent ceux du CDC.

@@ -1,5 +1,29 @@
 # État et reprise
 
+## Certification locale du profil Linux — 14 octobre 2026
+
+L’utilisateur choisit Linux sous cgroup v2 borné. La [certification locale](certification/linux-requalification.md)
+valide l’archive exacte 650128cd…9190290 : installation hors ligne, sept opérations
+publiques, rejeu privé, projection et arrêt des workers. Les preuves source
+Windows (1534 sans skip), Linux OS (12), historiques (8), Python/FastAPI (13) et
+ESM/types/bundle passent séparément. Aucune nouvelle CI distante ou session
+navigateur n’est annoncée. L’adoption applicative reste extérieure à ce bilan.
+
+Les observations suivantes, notamment les refus Windows, restent historiques.
+
+## Requalification locale — 13–14 octobre 2026
+
+La [reprise autorisée](certification/windows-requalification.md) valide la suite
+source standard : **1 534 PASS, 29 fichiers, aucun skip**, 377,21 s. Le smoke
+renforcé du tarball installé reste **FAIL** : Smart App Control bloque le
+launcher Windows non signé (Code Integrity 3077). La certification de l'artefact
+Windows n'est pas acquise. Linux : 12 contrôles OS, 8 parcours historiques et
+13 tests Python/FastAPI passent dans Docker local borné et sans réseau.
+
+Aucune limite ou protection Windows n'est modifiée ; aucun environnement
+distant ou CDC n'est touché. Le choix du runtime est demandé avant adoption.
+Les sections suivantes conservent les observations historiques du 13 octobre.
+
 ## État actuel — 13 octobre 2026
 
 ### Audit de certification fonctionnelle V1 — 13 octobre 2026

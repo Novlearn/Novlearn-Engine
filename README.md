@@ -25,14 +25,18 @@ appartiennent aux applications.
 - Huit adaptations historiques locales, banc MathLive/FastAPI et consommation
   réelle du package documentés. Aucune migration de production effectuée.
 
-La qualification historique V1 locale M12 est à relire avec le [dernier audit
-de certification](docs/certification/report.md) : la suite complète relancée
-le 13 octobre échoue sur le transport isolé Windows. Le cœur portable reste
-testable sur ses profils, mais le verdict courant est non prêt pour pilote.
+La [certification locale du 14 octobre](docs/certification/linux-requalification.md)
+valide le profil **Linux avec cgroup v2 borné** choisi par l’utilisateur et
+l’archive réellement installée. Suite source : **1534 tests**, sans skip ;
+12 contrôles OS Linux, huit parcours historiques, 13 tests Python/FastAPI,
+exports/types/bundle et sept opérations du tarball installé passent.
+Les [refus Windows antérieurs](docs/certification/windows-requalification.md)
+restent documentés ; aucun contrôle ni politique n’est assoupli. Cela ne vaut
+pas adoption applicative ou qualification d’un hébergement encore inconnu.
 Le moteur ne fournit pas de CAS universel,
 solveur général de limites/dérivées, correction libre multivariée ou complexe,
 éditeur Admin ni interface de production. L’hôte Linux exige un cgroup v2 borné ;
-le contrôle Windows du transport isolé échoue dans le dernier audit. Les
+chaque nouveau binaire Windows reste soumis à la politique du poste. Les
 [capacités et limites](docs/features.md) précisent ce qui est garanti et testé.
 
 ## Démarrer dans le dépôt

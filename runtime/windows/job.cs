@@ -165,8 +165,8 @@ public static class NovlearnJob {
       Frame("{\"runtime\":1,\"event\":\"finished\",\"pid\":" + process.Pid + ",\"exitCode\":" + exit +
         ",\"peakCommittedBytes\":" + observed.PeakProcessMemory.ToUInt64() + "}");
       return exit == 0 ? 0 : 73;
-    } catch (Exception) {
-      Console.Error.WriteLine("launcher-unavailable"); return 70;
+    } catch (Exception failure) {
+      Console.Error.WriteLine("launcher-unavailable:" + (failure is Win32Exception ? ((Win32Exception)failure).NativeErrorCode.ToString() : failure.GetType().Name)); return 70;
     } finally {
       if (job != IntPtr.Zero) { TerminateJobObject(job, 74); CloseHandle(job); }
       if (process.Thread != IntPtr.Zero) CloseHandle(process.Thread);

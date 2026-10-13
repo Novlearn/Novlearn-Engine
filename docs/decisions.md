@@ -142,3 +142,32 @@ Un cas faux candidat pour `ln(k)` demeure indéterminé, pas incorrect. La suite
 doit repasser dans un environnement où le launcher peut effectivement démarrer
 avant toute déclaration de qualification. Aucun commit automatique, CI distante,
 publication, production ou migration n’est inclus.
+
+### D51 — Requalification locale et smoke natif du package (13–14 octobre 2026)
+
+L'utilisateur autorise explicitement les corrections locales Engine et leur
+certification, sans assouplir les tests ni modifier d'environnement distant.
+Ajouter un diagnostic natif borné sans chemin/message privé et son test de
+refus. Renforcer le smoke avec une exécution isolée réelle depuis le tarball.
+Conserver l'échec sous Smart App Control comme une porte bloquante : le check
+source vert ne qualifie pas le launcher installé, pourtant identique en octets.
+
+Les preuves source, Linux et Python positives sont séparées du refus Windows.
+Ne pas désactiver ou contourner la politique, ni attribuer aux anciens timeouts
+une cause non établie. Choisir le runtime et requalifier l'artefact exact avant
+adoption ; [preuves et résultats](certification/windows-requalification.md).
+
+### D52 — Cible Linux bornée et archive installée (14 octobre 2026)
+
+L’utilisateur retient explicitement « Linux avec cgroup v2 borné, testé dans
+Docker local ». Qualifier l’archive exacte par installation npm hors ligne,
+sept opérations publiques, projection, rejeu et arrêt réel des workers sous
+384 MiB, swap 0 et 64 pids. Conserver les refus Windows antérieurs et le
+passage du dernier artefact comme des preuves distinctes, sans promettre
+l’acceptation des futurs binaires ni modifier Smart App Control.
+
+Le banc permanent tools/check-installed-package.ps1 épingle l’image locale,
+le daemon Docker Desktop local, les dépendances existantes et l’archive ;
+aucun réseau ou privilège supplémentaire. Les résultats sont dans la
+[certification Linux](certification/linux-requalification.md). Cette décision
+ne vaut pas adoption applicative, migration distante, publication ou déploiement.

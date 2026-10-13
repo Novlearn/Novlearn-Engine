@@ -92,6 +92,47 @@ describe.skipIf(process.platform !== 'win32' || process.arch !== 'x64')(
         await host.close();
       }
     }, 15000);
+    it('reports a native launch failure without paths or exception messages', async () => {
+      const missingNode = fileURLToPath(
+        new URL('./fixtures/runtime/missing-node.exe', import.meta.url),
+      );
+      const child = spawn(
+        fileURLToPath(
+          new URL('../dist/node-host/windows/job.exe', import.meta.url),
+        ),
+        [
+          missingNode,
+          fileURLToPath(chaos),
+          '402653184',
+          '128',
+          '1048576',
+          '5000',
+        ],
+        { windowsHide: true },
+      );
+      let stdout = '',
+        stderr = '';
+      child.stdout.on('data', (chunk) => {
+        stdout += chunk.toString('utf8');
+      });
+      child.stderr.on('data', (chunk) => {
+        stderr += chunk.toString('utf8');
+      });
+      child.stdin.on('error', () => {});
+      const timer = setTimeout(() => child.kill('SIGKILL'), 5000);
+      try {
+        const code = await new Promise((resolve, reject) => {
+          child.on('error', reject);
+          child.on('close', resolve);
+        });
+        expect(code).toBe(70);
+        expect(stdout).toBe('');
+        expect(stderr).toMatch(/^launcher-unavailable:2\r?\n$/);
+      } finally {
+        clearTimeout(timer);
+        child.kill('SIGKILL');
+      }
+    });
     it('uses the seven public operations with an official private snapshot and deterministic replay', async () => {
       const definition = {
         schemaVersion: 5,
