@@ -1,5 +1,22 @@
 # État et reprise
 
+## Régression de disponibilité des figures Admin — 17 octobre 2026
+
+La [correction ciblée](certification/numeric-render-cache.md), autorisée par
+l’accord humain D51 / Admin D05, réduit les recalculs numériques exacts identiques
+pendant une seule instanciation. Le profil Linux et son délai de cinq secondes
+restent inchangés. Ni formule, diagnostic d’erreur, génération suivante ni autre
+contexte n’utilisent ce cache. Le détachement final existant est conservé.
+
+**1 540 tests / 30 fichiers, zéro skip**, build/types/lint/format et smoke du
+tarball passent. Linux : six générations complètes en 2,41–2,64 s sous le délai
+natif inchangé de cinq secondes, projections identiques, dix comparaisons
+privées/diagnostiques exactes, sept opérations, 12 contrôles OS et huit parcours
+historiques passent. L’archive qualifiée commence par d4d3abc4 ; la preuve garde
+son SHA256 complet. L’Admin conserve son archive antérieure jusqu’à migration
+locale de son empreinte SQL et adoption coordonnée ; aucun reçu n’est réécrit.
+Aucune publication distante ni modification de protection Windows.
+
 ## Certification locale du profil Linux — 14 octobre 2026
 
 L’utilisateur choisit Linux sous cgroup v2 borné. La [certification locale](certification/linux-requalification.md)

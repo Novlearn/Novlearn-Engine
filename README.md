@@ -11,6 +11,12 @@ portable ne dépend d’aucun framework ni de MathLive. Un adaptateur Node optio
 isole les calculs côté serveur ; le rendu, les droits, le stockage et les points
 appartiennent aux applications.
 
+Le [correctif numérique du 17 octobre](docs/certification/numeric-render-cache.md)
+réutilise les succès exacts identiques au sein d’une seule instanciation. Les
+contrats, diagnostics et limites restent inchangés ; son état et ses preuves
+sont distincts de la certification historique ci-dessous. Aucun registre ni
+environnement distant n’est modifié.
+
 ## Disponible aujourd’hui
 
 - Génération reproductible d’entiers, décimaux exacts, choix, tuples et variables

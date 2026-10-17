@@ -228,6 +228,13 @@ function instantiateElements(
     variables: definition.variables.map((v) => v.name),
   };
   const elements: PrivateElement[] = [];
+  // One generated context per call. Only identical exact numeric sources may reuse
+  // a success; failures keep their current path and formulas keep their own scope.
+  // The existing final validate() detaches every occurrence in the returned snapshot.
+  const numericMath = new Map<
+    string,
+    Extract<ReturnType<typeof instantiateMath>, { ok: true }>
+  >();
   for (const [index, element] of definition.elements.entries()) {
     const path = `/elements/${index}`;
     const identity = {
@@ -275,13 +282,15 @@ function instantiateElements(
           element,
           {
             number(value, fieldPath) {
-              const result = instantiateMath(
-                value.latex,
-                context,
-                generated.values,
-                `${fieldPath}/latex`,
-                true,
-              );
+              const result =
+                numericMath.get(value.latex) ??
+                instantiateMath(
+                  value.latex,
+                  context,
+                  generated.values,
+                  `${fieldPath}/latex`,
+                  true,
+                );
               if (!result.ok)
                 throw new ElementFailure(
                   result.diagnostics.map((d) => ({ ...d, stage: 'statement' })),
@@ -292,6 +301,7 @@ function instantiateElements(
                   path: fieldPath,
                   message: 'Exact numeric render data required.',
                 });
+              numericMath.set(value.latex, result);
               mathFields.push({
                 path: `${fieldPath}/latex`,
                 math: result.value,

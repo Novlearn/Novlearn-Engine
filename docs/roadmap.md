@@ -1,5 +1,16 @@
 # Roadmap et critères de passage
 
+## Correction ciblée de disponibilité — 17 octobre 2026
+
+Une charge Admin combinant figures et vecteurs révèle un timeout natif
+intermittent à cinq secondes. Le [correctif et sa qualification](certification/numeric-render-cache.md)
+réduisent les évaluations numériques strictement identiques dans leur seul
+contexte d’instanciation. Aucun nouveau lot mathématique, contrat, délai ou
+critère de validation n’est ouvert ou assoupli. Le correctif et l’archive exacte sont qualifiés localement : 1 540 tests,
+contrôle complet, six générations avancées en moins de 2,64 s, comparaison
+exacte et contrôles Linux passent. L’adoption Admin attend encore la migration
+locale de l’empreinte SQL et le changement coordonné du package.
+
 ## Requalification locale ciblée — 14 octobre 2026
 
 Le [profil Linux borné choisi](certification/linux-requalification.md) et

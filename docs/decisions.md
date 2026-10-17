@@ -171,3 +171,23 @@ le daemon Docker Desktop local, les dépendances existantes et l’archive ;
 aucun réseau ou privilège supplémentaire. Les résultats sont dans la
 [certification Linux](certification/linux-requalification.md). Cette décision
 ne vaut pas adoption applicative, migration distante, publication ou déploiement.
+
+### D53 — Réutilisation locale des nombres de rendu exacts (17 octobre 2026)
+
+L’autorisation humaine D51 / Admin D05 couvre cette correction locale et sa
+certification. La charge avancée Admin a dépassé le délai natif de cinq secondes ;
+une reproduction inchangée réussit à 4 985 ms, sans marge suffisante pour qualifier
+sa disponibilité. Les familles isolées localisent le coût pendant l’instanciation.
+
+Décision : mémoriser uniquement les succès numériques exacts, par source brute
+identique, pendant l’unique passage d’une instanciation dont les paramètres et
+variables sont déjà résolus. Ne mémoriser ni échec ni formule à scope distinct.
+Le validate() final existant recopie chaque occurrence et préserve le détachement
+des AST. Ne pas réutiliser de contexte Cortex global, modifier une admission,
+augmenter les limites ou réessayer automatiquement pour masquer un refus.
+
+Six tests de sources, chemins, domaine, détachement et isolation complètent les
+tests existants. Qualification complète, comparaisons et package Linux borné
+requis avant adoption Admin. Le package reste privé ; aucun registre ou
+environnement distant n’est modifié. Les résultats sont consignés séparément
+dans [le relevé ciblé](certification/numeric-render-cache.md).
