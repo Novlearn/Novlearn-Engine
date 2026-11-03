@@ -269,3 +269,21 @@ Le [rapport d’audit](audit.md) donne inventaire, corrections et périmètre du
 
 Le détail des livraisons et critères figure dans la roadmap ; ce tableau sert
 uniquement à retrouver les états Git et les preuves de reprise.
+
+## Publication GitHub de la distribution 0.1.8 — 3 novembre 2026
+
+Publication explicitement demandée par l'utilisateur. Le snapshot source publié
+sur `release/0.1.8` conserve l'arbre local
+`b0019d5d4b0544764f4890cf787f4d6c9c5149a8` ; le tarball 0.1.8 existant est
+conservé octet pour octet avec manifeste et patch de provenance.
+
+Build, types, lint et format passent. Windows local : 1 589 tests passent sans
+skip. La CI source `41626455083` passe sous Linux et Windows, dont le contrôle
+complet et le smoke package. La vérification de distribution contrôle SHA-256,
+SHA-512 et chacun des 169 fichiers ; un tarball corrompu est refusé.
+
+Le workflow de publication vérifie les sources et la CI qualifiées avant de
+créer un brouillon, joindre les artefacts et publier une pré-release privée.
+Le résultat distant effectif doit être consulté dans GitHub Actions ; la
+publication n'active aucune application ni migration de production.
+Voir [la distribution](../releases/0.1.8/RELEASE.md).

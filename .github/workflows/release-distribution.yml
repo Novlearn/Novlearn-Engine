@@ -1,0 +1,55 @@
+name: Publish verified Engine distribution
+
+on:
+  push:
+    branches: ['release/0.1.8']
+    paths:
+      [
+        'releases/**',
+        'tools/verify-release-archive.py',
+        '.github/workflows/release-distribution.yml',
+      ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engine-distribution-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/release/0.1.8'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Identify the version and require its source CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version=$(python3 -c 'import json; print(json.load(open("package.json"))["version"])')
+          test "$GITHUB_REF_NAME" = "release/$version"
+          test "$version" = '0.1.8'
+          test "$(git rev-parse HEAD:src)" = '3c4de0f22963ef4a0f9ee3cdf620f8e9a27f1cde'
+          test "$(git rev-parse HEAD:runtime)" = '8774802eff76b89ed7abd1f4c67df49e35d1e3b4'
+          test "$(git rev-parse HEAD:package.json)" = '2edcfe733b975ca3c19a0b72e37768c8a3b17b61'
+          test "$(git rev-parse HEAD:package-lock.json)" = '53ae3ad43640f535b90a88b7205077c685f1098a8'
+          test "$(gh run view 41626455083 --repo "$GITHUB_REPOSITORY" --json conclusion --jq .conclusion)" = success
+          echo "ENGINE_VERSION=$version" >> "$GITHUB_ENV"
+      - name: Verify exact archive and every packaged file
+        run: python3 tools/verify-release-archive.py "releases/$ENGINE_VERSION"
+      - name: Publish attached artifacts from a draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="v$ENGINE_VERSION"
+          directory="releases/$ENGINE_VERSION"
+          gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft --prerelease --title "Engine $ENGINE_VERSION — archive de distribution" --notes-file "$directory/RELEASE.md"
+          gh release upload "$tag" --repo "$GITHUB_REPOSITORY" "$directory/novlearn-exercise-engine-$ENGINE_VERSION.tgz" "$directory/engine-release-$ENGINE_VERSION.json" "$directory/engine-source-$ENGINE_VERSION.patch" "$directory/SHA256SUMS"
+          gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false

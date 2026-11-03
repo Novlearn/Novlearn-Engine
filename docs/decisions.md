@@ -220,3 +220,15 @@ tests existants. Qualification complète, comparaisons et package Linux borné
 requis avant adoption Admin. Le package reste privé ; aucun registre ou
 environnement distant n’est modifié. Les résultats sont consignés séparément
 dans [le relevé ciblé](certification/numeric-render-cache.md).
+
+### D56 — Publication privée de l'archive 0.1.8 (3 novembre 2026)
+
+L'utilisateur demande explicitement de publier Engine sur GitHub. Distribuer
+l'archive exacte déjà utilisée par Novlearn et Admin dans une release du dépôt
+privé, avec manifeste, empreintes et patch de provenance. Conserver son nom npm,
+ses octets et ses identifiants de contrat ; exclure le travail 0.2.0 en cours.
+
+Engine ne possède ni base Supabase ni clé applicative. Les consommateurs
+choisissent leur environnement. Cette publication ne vaut ni migration ni
+activation de production. Les archives automatiques de sources GitHub ne sont
+pas le tarball npm à installer. Ne pas remplacer un artefact publié en place.
