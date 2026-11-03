@@ -8,4 +8,6 @@ dist/
 docs/exercises_rows.json
 tests/fixtures/legacy/exercises_rows.original.json
 # User-provided reference: preserve original bytes.
-CDC_référence.md
+CDC_r�f�rence.md
+# Published provenance manifest: preserve its original bytes and digest.
+releases/0.1.8/engine-release-0.1.8.json
