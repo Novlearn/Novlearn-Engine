@@ -1,0 +1,69 @@
+name: Qualify and publish Engine 0.2.0
+on:
+  push:
+    branches: [release/0.2.0]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: engine-release-0.2.0
+  cancel-in-progress: false
+jobs:
+  source:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.19.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm pack --dry-run
+  installed_linux_host:
+    needs: source
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.19.0'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: python3 tools/verify-release-archive.py releases/0.2.0
+      - run: node deploy/prepare-image.mjs
+      - run: docker build --network=none -t novlearn-engine:0.2.0 -f deploy/Dockerfile .
+      - name: Verify the exact installed archive through the bounded HTTP host
+        shell: bash
+        run: |
+          set -euo pipefail
+          ENGINE_TOKEN=$(node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))")
+          echo "::add-mask::$ENGINE_TOKEN"
+          export ENGINE_TOKEN
+          trap 'docker rm -f novlearn-engine-release-check >/dev/null 2>&1 || true' EXIT
+          docker run -d --name novlearn-engine-release-check --init --network none --memory 384m --memory-swap 384m --pids-limit 64 --read-only --tmpfs /tmp:rw,nosuid,nodev,noexec,size=32m --cap-drop ALL --security-opt no-new-privileges --env ENGINE_TOKEN novlearn-engine:0.2.0
+          for attempt in $(seq 1 20); do
+            if docker exec novlearn-engine-release-check node -e "fetch('http://127.0.0.1:3151/health',{headers:{authorization:'Bearer '+process.env.ENGINE_TOKEN}}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"; then break; fi
+            sleep 1
+          done
+          docker exec -i novlearn-engine-release-check node --input-type=module < deploy/smoke-host.mjs
+  publish:
+    needs: [source, installed_linux_host]
+    if: github.ref == 'refs/heads/release/0.2.0'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Publish verified distribution without replacing existing assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create v0.2.0 --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft --title "Engine 0.2.0" --notes-file releases/0.2.0/RELEASE.md
+          gh release upload v0.2.0 --repo "$GITHUB_REPOSITORY" releases/0.2.0/novlearn-exercise-engine-0.2.0.tgz releases/0.2.0/engine-release-0.2.0.json releases/0.2.0/SHA256SUMS releases/0.2.0/engine-source-0.2.0.bundle
+          gh release edit v0.2.0 --repo "$GITHUB_REPOSITORY" --draft=false

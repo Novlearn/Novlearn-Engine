@@ -5,7 +5,7 @@ instancie et corrige des exercices mathématiques. Elle fournit des règles comm
 à NovLearn élève, NovLearn Admin et aux duels pour éviter des calculs et des
 corrections divergents entre applications.
 
-Le package privé **0.1.8** est ESM, utilise le **schéma 5** et repose sur
+Le package privé **0.2.0** est ESM, utilise le **schéma 5** et repose sur
 **CortexJS 0.151.0**, son unique bibliothèque mathématique principale. Le cœur
 portable ne dépend d’aucun framework ni de MathLive. Un adaptateur Node optionnel
 isole les calculs côté serveur ; le rendu, les droits, le stockage et les points
@@ -102,3 +102,8 @@ Les [décisions](docs/decisions.md) et leurs ADR conservent les justifications.
 
 Le [cahier des charges officiel](docs/CDC_référence.md) décrit la cible validée.
 Les [archives](docs/archive/README.md) conservent les bilans historiques.
+
+## Livraison 0.2.0
+
+La [distribution et intégration](docs/release-0.2.0.md) décrit le package commun,
+le transport serveur authentifié et le host isolé sur le VPS existant.

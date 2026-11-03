@@ -221,14 +221,47 @@ requis avant adoption Admin. Le package reste privé ; aucun registre ou
 environnement distant n’est modifié. Les résultats sont consignés séparément
 dans [le relevé ciblé](certification/numeric-render-cache.md).
 
-### D56 — Publication privée de l'archive 0.1.8 (3 novembre 2026)
+### D54 — Sampling local officiel des courbes (21 octobre 2026)
 
-L'utilisateur demande explicitement de publier Engine sur GitHub. Distribuer
-l'archive exacte déjà utilisée par Novlearn et Admin dans une release du dépôt
-privé, avec manifeste, empreintes et patch de provenance. Conserver son nom npm,
-ses octets et ses identifiants de contrat ; exclure le travail 0.2.0 en cours.
+L’utilisateur répond explicitement « Oui, autoriser cette extension locale et sa
+certification » à la proposition Admin D10. Autoriser le calcul des fonctions et
+suites dans le moteur, sa certification puis l’intégration locale Admin ; garder
+quotas, délais et protections. Aucun changement de l’application élève NovLearn,
+base distante, publication réelle, push ou déploiement n’est inclus.
+Le profil et les limites sont décrits dans [le travail en cours](graph-sampling.md).
+Cette capacité s’ajoute au package 0.2.0 sans changer le pipeline des snapshots
+schéma 5 / engineVersion 0.1.0, ni réécrire les anciens artefacts.
 
-Engine ne possède ni base Supabase ni clé applicative. Les consommateurs
-choisissent leur environnement. Cette publication ne vaut ni migration ni
-activation de production. Les archives automatiques de sources GitHub ne sont
-pas le tarball npm à installer. Ne pas remplacer un artefact publié en place.
+### D55 — Sérialisation des attendus numériques Admin (30 octobre 2026)
+
+La mission Admin/Engine autorisée reproduit un attendu rendu par Cortex avec des
+séparateurs de groupes, puis refusé par le profil numérique inchangé. Les deux
+chemins numériques sérialisent désormais avec digitGroup: 0. Aucune admission,
+contrainte, forme, limite, source originale ou autorité mathématique n'est relâchée.
+Le test numeric-display-roundtrip couvre rationnels/réels, négatifs, grands nombres,
+rejeu et maintien du refus des entrées groupées hors profil.
+
+L'archive distribuée Admin 0.1.1 est construite depuis baa48c45 et ce correctif,
+sans les travaux 0.2.0 préexistants. SHA256 :
+c7116f9310da49478deb43ca64e04b974efd34765b45a22294c13b5235bdf927.
+Schéma 5 et pipeline 0.1.0 conservés ; les octets de présentation peuvent changer.
+Conserver l'archive exacte pour le rejeu et renouveler les reçus. Les sources de
+développement restent en 0.2.0 ; aucun tarball ancien n'est remplacé.
+
+Qualification candidate : build/types/lint ; 1542/1544 tests au premier passage,
+deux timeouts algébriques à 5 s pendant des builds concurrents ; relance complète
+du fichier algébrique 126/126 sans concurrence, même délai. Le contrôle composé
+s'arrête au format d'un ancien CDC de la copie de référence, conservé. Le banc
+officiel du package installé Linux passe sous 384 Mio / swap 0 / 64 pids et réseau
+coupé, avec arrêt des workers et rejeu. Cela ne qualifie pas Vercel ni NovLearn.
+Les manifests, patch exact de release et anciennes archives sont conservés dans
+Novlearn-admin/vendor ; aucune dépendance applicative au dossier voisin.
+
+### D57 — Release commune 0.2.0 et transport privé (3 novembre 2026)
+
+La demande utilisateur autorise la finalisation du moteur et son adoption dans
+les deux applications. Conserver tous les correctifs 0.1.8, ajouter le sampling
+0.2.0 et un adaptateur Node HTTP explicitement séparé. Le host officiel et ses
+quotas ne sont pas assouplis. Préparer son installation sur le VPS existant,
+les variables par environnement et les commits ; ne pas déduire une activation
+Production ni modifier les données historiques de la publication du package.

@@ -1,6 +1,7 @@
 name: CI
 on:
   push:
+    branches-ignore: [release/0.2.0]
   pull_request:
   workflow_dispatch:
 permissions:

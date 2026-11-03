@@ -1,5 +1,14 @@
 # Roadmap et critères de passage
 
+## Release commune 0.2.0 — 3 novembre 2026
+
+Autorisation utilisateur : finaliser 0.2.0, adapter Admin et Novlearn, préparer
+les commits et la configuration. Les correctifs du catalogue 0.1.8 sont fusionnés
+avec le sampling 0.2.0. Le cœur reste indépendant des bases.
+Le [guide de livraison](release-0.2.0.md) fixe le host Docker isolé sur le VPS
+existant et le transport privé. Les résultats exécutés sont consignés au rapport
+de vérification, sans déduire une qualification distante des tests locaux.
+
 ## Catalogue Staging — extension autorisée du 2 novembre 2026
 
 Qualifier les nouveaux profils sur les domaines et les cinq états de verdict,

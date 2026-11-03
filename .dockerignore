@@ -1,0 +1,11 @@
+**
+!deploy/
+!deploy/Dockerfile
+!deploy/server.mjs
+!deploy/verify-installed.mjs
+!deploy/vendor/
+!deploy/vendor/*.tgz
+!releases/
+!releases/0.2.0/
+!releases/0.2.0/engine-release-0.2.0.json
+!deploy/smoke-definition.json

@@ -1,15 +1,23 @@
 import { describe, expect, it } from 'vitest';
 import * as engine from 'novlearn-exercise-engine';
 import * as legacy from 'novlearn-exercise-engine/legacy';
+import packageJson from '../package.json' with { type: 'json' };
 
 describe('built package boundary', () => {
+  it('versions the new API package separately from unchanged replay snapshots', () => {
+    expect(packageJson.version).toBe('0.2.0');
+    expect(engine.GRAPH_PROFILE).toBe('display-graph-v1');
+    expect(typeof engine.sampleDisplayGraph).toBe('function');
+  });
   it('loads through the public ESM export without browser globals', () => {
     expect(Object.keys(engine).sort()).toEqual([
+      'GRAPH_PROFILE',
       'generateVariables',
       'gradeAnswer',
       'instantiateExercise',
       'parseMathInput',
       'projectPublicInstance',
+      'sampleDisplayGraph',
       'validateDefinition',
       'validateSubmission',
     ]);

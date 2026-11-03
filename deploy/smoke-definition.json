@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 5,
+  "kind": "composed",
+  "id": "release-smoke",
+  "revision": "1",
+  "title": "Release smoke",
+  "catalogue": {
+    "chapter": "Suites num\u00e9riques",
+    "skills": ["calculer_des_termes"],
+    "difficulty": 1,
+    "exerciseType": "classic",
+    "needsCalculator": false
+  },
+  "generation": {
+    "schemaVersion": 5,
+    "definitions": [],
+    "constraints": [],
+    "maxAttempts": 16,
+    "maxDraws": 64
+  },
+  "variables": [
+    {
+      "name": "x",
+      "domain": "real"
+    }
+  ],
+  "elements": [
+    {
+      "id": "q",
+      "type": "question",
+      "text": "Deux plus deux ?",
+      "points": 1,
+      "response": {
+        "format": "latex",
+        "kind": "rational"
+      },
+      "expectedLatex": "4",
+      "policy": {
+        "domain": "rational",
+        "form": "value-only"
+      }
+    },
+    {
+      "id": "g",
+      "type": "function-graph",
+      "variable": "x",
+      "showGrid": true,
+      "window": {
+        "xMin": {
+          "latex": "-2"
+        },
+        "xMax": {
+          "latex": "2"
+        },
+        "yMin": {
+          "latex": "-5"
+        },
+        "yMax": {
+          "latex": "5"
+        }
+      },
+      "functions": [
+        {
+          "id": "f",
+          "latex": "1/x",
+          "color": "#2563eb",
+          "showExpression": true
+        }
+      ]
+    }
+  ]
+}

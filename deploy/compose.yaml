@@ -1,0 +1,23 @@
+services:
+  engine:
+    image: novlearn-engine:0.2.0
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    init: true
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 384m
+    memswap_limit: 384m
+    pids_limit: 64
+    tmpfs: [/tmp:rw, nosuid, nodev, noexec, size=32m]
+    environment:
+      ENGINE_TOKEN: ${ENGINE_TOKEN:?Set a private 64-character hexadecimal token}
+    ports:
+      - 127.0.0.1:${ENGINE_BIND_PORT:-3151}:3151
+    networks: [engine]
+networks:
+  engine:
+    internal: true

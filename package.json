@@ -1,6 +1,6 @@
 {
   "name": "novlearn-exercise-engine",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "private": true,
   "description": "Independent NovLearn exercise engine foundations",
   "type": "module",
@@ -21,6 +21,10 @@
     "./legacy": {
       "types": "./dist/adapters/legacy/index.d.ts",
       "import": "./dist/adapters/legacy/index.js"
+    },
+    "./remote-host": {
+      "types": "./dist/remote-host/index.d.ts",
+      "import": "./dist/remote-host/index.js"
     }
   },
   "files": [
