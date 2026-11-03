@@ -23,6 +23,8 @@ assert.equal(
 );
 await copyFile(archive, join(vendor, 'engine.tgz'));
 const npm = join(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js');
+const executable = process.platform === 'win32' ? process.execPath : 'npm';
+const prefix = process.platform === 'win32' ? [npm] : [];
 for (const [name, target] of [
   ['@cortex-js/compute-engine', 'cortex.tgz'],
   ['@arnog/colors', 'colors.tgz'],
@@ -34,9 +36,9 @@ for (const [name, target] of [
   );
   assert.equal(pkg.version, manifest.dependencies[name]);
   const output = execFileSync(
-    process.execPath,
+    executable,
     [
-      npm,
+      ...prefix,
       'pack',
       '--offline',
       '--ignore-scripts',

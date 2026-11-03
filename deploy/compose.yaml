@@ -8,11 +8,11 @@ services:
     restart: unless-stopped
     read_only: true
     cap_drop: [ALL]
-    security_opt: [no-new-privileges:true]
+    security_opt: ['no-new-privileges:true']
     mem_limit: 384m
     memswap_limit: 384m
     pids_limit: 64
-    tmpfs: [/tmp:rw, nosuid, nodev, noexec, size=32m]
+    tmpfs: ['/tmp:rw,nosuid,nodev,noexec,size=32m']
     environment:
       ENGINE_TOKEN: ${ENGINE_TOKEN:?Set a private 64-character hexadecimal token}
     ports:
