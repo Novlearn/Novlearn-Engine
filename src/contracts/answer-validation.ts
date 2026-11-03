@@ -26,6 +26,8 @@ export function inspectQuestionAnswer(
   const algebra = [
     'expression',
     'log-affine-positive',
+    'geometric-expression',
+    'elementary-positive',
     'rational-expression',
     'equation',
     'inequality',
@@ -63,6 +65,8 @@ export function inspectQuestionAnswer(
       'extended-real',
       'expression',
       'log-affine-positive',
+      'geometric-expression',
+      'elementary-positive',
       'text',
       'rational-expression',
       'equation',
@@ -109,7 +113,13 @@ export function inspectQuestionAnswer(
     'comparisonDomain',
   ]);
   v.literal(p.domain, `${path}/policy/domain`, String(domain));
-  if (kind === 'log-affine-positive') {
+  if (
+    [
+      'log-affine-positive',
+      'geometric-expression',
+      'elementary-positive',
+    ].includes(String(kind))
+  ) {
     if (p.form !== 'value-only')
       v.issue(
         `${path}/policy/form`,

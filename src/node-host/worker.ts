@@ -111,12 +111,16 @@ try {
       break;
     }
     case 'projectPublicInstance':
-      need('official');
+      if (keys !== 'official' && keys !== 'official,sampleGraphs')
+        throw new Error('invalid-request');
+      if (p.sampleGraphs !== undefined && typeof p.sampleGraphs !== 'boolean')
+        throw new Error('invalid-request');
       // Shape is not provenance: this channel MUST be private backend input.
       if (!object(p.official) || p.official.schemaVersion !== 5)
         throw new Error('invalid-request');
       value = engine.projectPublicInstance(
         p.official as unknown as ExerciseInstance,
+        { sampleGraphs: p.sampleGraphs === true },
       );
       break;
     case 'gradeAnswer':

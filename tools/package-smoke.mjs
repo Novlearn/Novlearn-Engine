@@ -91,6 +91,24 @@ const publicInstance=engine.projectPublicInstance(official);
 console.log(JSON.stringify({keys,state:result.state,questions:publicInstance.elements.filter(e=>e.type==='question'||e.type==='mcq').length}));
 `;
 await writeFile(join(consumer, 'smoke.mjs'), smoke);
+const nativeSmoke = `import { createNodeHost } from 'novlearn-exercise-engine/node-host';
+let isolatedHost = {status:'not-executed',platform:process.platform};
+if(process.platform==='win32'&&process.arch==='x64') {
+ const host=createNodeHost();
+ try {
+  const isolated=await host.run(JSON.stringify({protocolVersion:1,requestId:'packaged-host',operation:'parseMathInput',payload:{source:' 1+2 ',context:{},profile:'scalar-latex-v1'}}));
+  if(!isolated.ok||!isolated.value.ok||isolated.value.source!==' 1+2 ')throw Error('packaged-host:'+JSON.stringify(isolated));
+  if(!(isolated.metrics.peakCommittedBytes>0&&isolated.metrics.peakCommittedBytes<=384*1048576))throw Error('packaged-host-memory');
+  let alive=false;
+  try {process.kill(isolated.metrics.workerPid,0);alive=true;} catch(error) {if(error.code!=='ESRCH')throw error;}
+  if(alive)throw Error('packaged-host-cleanup');
+  isolatedHost={status:'pass',platform:process.platform,elapsedMs:isolated.metrics.elapsedMs,peakCommittedBytes:isolated.metrics.peakCommittedBytes};
+ } finally {await host.close();}
+ if(JSON.stringify(host.stats())!==JSON.stringify({active:0,queued:0,queuedBytes:0,closed:true}))throw Error('packaged-host-stats');
+}
+console.log(JSON.stringify(isolatedHost));
+`;
+await writeFile(join(consumer, 'native.mjs'), nativeSmoke);
 const nodeEvidence = JSON.parse(run([join(consumer, 'smoke.mjs')], consumer));
 await writeFile(
   join(consumer, 'types.ts'),
@@ -182,6 +200,32 @@ const browserEvidence = await import(
   pathToFileURL(join(consumer, 'browser-bundle.mjs'))
 );
 assert.equal(browserEvidence.result.ok, true);
+let nativeHost;
+try {
+  nativeHost = JSON.parse(run([join(consumer, 'native.mjs')], consumer));
+} catch (error) {
+  await writeFile(
+    join(workspace, 'report.json'),
+    JSON.stringify(
+      {
+        schemaVersion: 1,
+        node: process.version,
+        packageVersion: packed.version,
+        sha256,
+        integrity: packed.integrity,
+        files: packed.entryCount,
+        nodeEvidence,
+        typesPassed: true,
+        browserEvidence: browserEvidence.result,
+        nativeHost: { status: 'fail', platform: process.platform },
+        consumer,
+      },
+      null,
+      2,
+    ),
+  );
+  throw error;
+}
 await writeFile(
   join(workspace, 'report.json'),
   JSON.stringify(
@@ -193,6 +237,7 @@ await writeFile(
       integrity: packed.integrity,
       files: packed.entryCount,
       nodeEvidence,
+      nativeHost,
       browserEvidence: browserEvidence.result,
       browserModules: seen.size,
       browserBytes: (await readFile(join(consumer, 'browser-bundle.mjs')))
@@ -208,6 +253,7 @@ console.log(
     workspace,
     sha256,
     node: nodeEvidence,
+    nativeHost,
     browser: browserEvidence.result,
   }),
 );

@@ -20,6 +20,7 @@ import type { InstantiationMathDiagnostic } from './math/substitution.js';
 import { MathFailure } from './math/substitution.js';
 import { prepareNumeric } from './math/numeric.js';
 import { prepareLogAffine } from './math/log-affine.js';
+import { prepareElementary } from './math/elementary.js';
 import { prepareFormReferences } from './math/form-references.js';
 import {
   algebraKind,
@@ -29,6 +30,8 @@ import {
 } from './math/algebra.js';
 import { prepareCollection } from './math/collections.js';
 import { instantiateDisplayMath } from './math/display.js';
+import { formatTextMath } from './math/text-display.js';
+import { sampleFunctionGraph } from './math/plot.js';
 import { checkDisplayData } from './math/display-data-checks.js';
 import { mapDisplayData } from './display-elements.js';
 import { displayFields } from './contracts/display-validation.js';
@@ -72,11 +75,12 @@ export type InstantiationDiagnostic = (
 export type InstantiateExerciseResult =
   | { ok: true; value: ExerciseInstance }
   | { ok: false; diagnostics: InstantiationDiagnostic[] };
-/** A bounded text template, never interpreted as algebra or inline LaTeX. */
+/** Bounded literal text; parameterized dollar-delimited maths get display-only serialization. */
 function textTemplate(
   source: string,
   parameters: Readonly<Record<string, number | string>>,
   path: string,
+  literalOnly = false,
 ):
   | { ok: true; value: string }
   | { ok: false; diagnostics: InstantiationDiagnostic[] } {
@@ -116,6 +120,30 @@ function textTemplate(
     value += String(parameters[name]);
     index = end;
   }
+  // Reject expansion before formatting individual fragments as well as after it.
+  if (value.length > 4096)
+    return {
+      ok: false,
+      diagnostics: [
+        {
+          stage: 'text',
+          code: 'limit',
+          path,
+          message: 'Instantiated text exceeds 4096 characters.',
+        },
+      ],
+    };
+  if (!literalOnly)
+    value = formatTextMath(source, parameters, (part) => {
+      const result = textTemplate(part, parameters, path, true);
+      if (!result.ok)
+        throw new MathFailure({
+          code: 'substitution-failed',
+          path,
+          message: 'Unable to interpolate display template.',
+        });
+      return result.value;
+    });
   if (value.length > 4096)
     return {
       ok: false,
@@ -181,6 +209,7 @@ export function instantiateExercise(
 /** Select fields explicitly from an official, trusted server snapshot. */
 export function projectPublicInstance(
   instance: ExerciseInstance,
+  options: { sampleGraphs?: boolean } = {},
 ): PublicInstance {
   if (!supportedSnapshotVersion(instance))
     throw new Error('unsupported-snapshot-version');
@@ -190,6 +219,11 @@ export function projectPublicInstance(
     title: instance.title,
     elements: instance.elements
       .map(projectElement)
+      .map((e) =>
+        e?.type === 'function-graph' && options.sampleGraphs
+          ? { ...e, plot: sampleFunctionGraph(e) }
+          : e,
+      )
       .filter((e): e is PublicElement => e !== undefined),
   };
 }
@@ -228,6 +262,13 @@ function instantiateElements(
     variables: definition.variables.map((v) => v.name),
   };
   const elements: PrivateElement[] = [];
+  // One generated context per call. Only identical exact numeric sources may reuse
+  // a success; failures keep their current path and formulas keep their own scope.
+  // The existing final validate() detaches every occurrence in the returned snapshot.
+  const numericMath = new Map<
+    string,
+    Extract<ReturnType<typeof instantiateMath>, { ok: true }>
+  >();
   for (const [index, element] of definition.elements.entries()) {
     const path = `/elements/${index}`;
     const identity = {
@@ -275,13 +316,15 @@ function instantiateElements(
           element,
           {
             number(value, fieldPath) {
-              const result = instantiateMath(
-                value.latex,
-                context,
-                generated.values,
-                `${fieldPath}/latex`,
-                true,
-              );
+              const result =
+                numericMath.get(value.latex) ??
+                instantiateMath(
+                  value.latex,
+                  context,
+                  generated.values,
+                  `${fieldPath}/latex`,
+                  true,
+                );
               if (!result.ok)
                 throw new ElementFailure(
                   result.diagnostics.map((d) => ({ ...d, stage: 'statement' })),
@@ -292,6 +335,7 @@ function instantiateElements(
                   path: fieldPath,
                   message: 'Exact numeric render data required.',
                 });
+              numericMath.set(value.latex, result);
               mathFields.push({
                 path: `${fieldPath}/latex`,
                 math: result.value,
@@ -408,6 +452,7 @@ function instantiateElements(
             source,
             parameters,
             `${path}/expectedTexts/${i}`,
+            true,
           );
           if (!value.ok) return failElement(value.diagnostics);
           variants.push(value.value);
@@ -446,6 +491,35 @@ function instantiateElements(
           response: { format: 'latex', kind: element.response.kind },
           policy: element.policy,
           expected: { kind: 'collection', math: collection.value.math },
+        });
+        continue;
+      }
+      if (
+        element.response.kind === 'geometric-expression' ||
+        element.response.kind === 'elementary-positive'
+      ) {
+        const variable =
+          element.response.variable ?? context.variables[0] ?? 'z';
+        const prepared = prepareElementary(
+          element.expectedLatex,
+          { parameters: context.parameters, variables: [variable] },
+          generated.values,
+          `${path}/expectedLatex`,
+          variable,
+          element.response.kind,
+        );
+        if (!prepared.ok)
+          return failElement(
+            prepared.diagnostics.map((d) => ({ ...d, stage: 'expected' })),
+          );
+        elements.push({
+          ...identity,
+          type: 'question',
+          text: text.value,
+          points: element.points,
+          response: { format: 'latex', kind: element.response.kind, variable },
+          policy: element.policy,
+          expected: { kind: 'elementary', math: prepared.value.math },
         });
         continue;
       }

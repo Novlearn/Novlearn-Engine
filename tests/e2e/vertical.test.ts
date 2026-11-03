@@ -87,7 +87,7 @@ describe('actual MathLive / FastAPI vertical observations', () => {
     });
   }
 
-  it('reproduces each private snapshot and its public HTTP projection', () => {
+  it('preserves historical snapshots and replays with the current text presentation', () => {
     for (const record of [...observed.records, ...resumed.records].filter(
       (r) => r.operation === 'create' || r.operation === 'create-round',
     )) {
@@ -99,7 +99,18 @@ describe('actual MathLive / FastAPI vertical observations', () => {
         instanceId: official.instanceId,
       });
       expect(result.ok).toBe(true);
-      if (result.ok) expect(result.value).toEqual(official);
+      if (result.ok) {
+        const expected = structuredClone(official);
+        const statement = expected.elements[0]!;
+        if (statement.type !== 'text')
+          throw new Error('Expected recorded statement');
+        // The captured bytes remain unchanged; only new instances use 0.1.5 typography.
+        const values = official.generation.values;
+        if (values.u0?.kind !== 'integer' || values.k?.kind !== 'integer')
+          throw new Error('Expected recorded integer parameters');
+        statement.text = `Soit la suite définie par $u_0=${values.u0!.value}$ et $u_{n+1}=\\frac{${values.k!.value}}{u_{n}}$ pour tout $n \\in \\mathbb{N}$ (avec $u_n > 0$).`;
+        expect(result.value).toEqual(expected);
+      }
       expect(projectPublicInstance(official)).toEqual(record.data);
     }
   });

@@ -1,5 +1,100 @@
 # État et reprise
 
+## Retrait du moteur historique Novlearn — 3 novembre 2026
+
+L'archive finale 0.1.8 ajoute la projection optionnelle des courbes par Cortex,
+avec 513 coordonnées approchées en précision machine par fonction. Le contexte
+est propre à cette projection ; les calculs exacts et verdicts restent séparés.
+La candidate 0.1.7 a rencontré des timeouts graphiques sous le délai inchangé de
+cinq secondes ; ses octets et constats sont conservés hors distribution reçue.
+Le nombre de points couvre le canvas actuel de 512 pixels sans ajouter de CAS
+au navigateur. Ni génération, instantané privé ni projection par défaut ne change.
+
+Novlearn reçoit les 111 exercices sous le host Linux borné : 131 générations et
+projections, dont cinq seeds pour chacun des cinq exercices graphiques et 12 825
+points réels. Les données de correction restent identiques à la référence 0.1.4.
+Le contrôle privé vérifie aussi 4/2 = 2, le refus de 3 et une saisie incomplète.
+Les 1 548 tests portables sont vérifiés sur la source 0.1.7, après reprise isolée
+du fichier computed (timeout sous charge) ; les trois tests du seul module de
+calcul modifié ensuite repassent sur la source finale 0.1.8. Build/types/lint/
+format passent. Les tests natifs Windows restent bloqués par la stratégie OS
+précédemment constatée ; aucune protection n'est contournée.
+
+Les mêmes octets 82e49972 sont installés dans Novlearn et Admin. Les preuves
+applicatives et la migration Staging d'empreinte restent dans Novlearn.
+
+## Présentation commune des textes — 3 novembre 2026
+
+Le correctif final 0.1.6 lie les paramètres mathématiques avant sérialisation Cortex,
+y compris les puissances négatives et les indices. Il préserve les sauts de
+ligne éditoriaux, les réponses textuelles littérales et les instantanés observés.
+Les limites de taille continuent à retourner un diagnostic structuré.
+Build, types, lint et format passent, ainsi que 100 tests ciblés. Novlearn a
+comparé 555 générations (111 exercices, cinq seeds) aux données de correction
+0.1.4 sans changement ; le tarball exact passe 127 générations et projections
+sous Linux borné sur les 111 exercices. Les mêmes octets sont installés dans
+Admin et Novlearn ; deux réponses sont validées dans l'écran élève existant.
+La suite complète n'est pas annoncée comme passée : elle a rencontré des
+timeouts algébriques sous charge et le blocage natif suivant. La stratégie de contrôle
+d'application Windows bloque le lanceur natif inchangé ; aucune protection
+n'est modifiée pour contourner ce blocage. Voir [le périmètre](text-display-0.1.5.md).
+
+## Extension du catalogue Staging — 2 novembre 2026
+
+L’extension finale 0.1.4 est décrite dans [le relevé dédié](catalogue-staging-0.1.2.md).
+Build, types, lint et format passent ; 1 575 tests / 32 fichiers passent avec
+deux workers. L'archive immuable 791c6472 est adoptée par Novlearn et Admin.
+Dans Novlearn, les 111 exercices historiques sont qualifiés sous Linux borné
+sur cinq seeds : 555 générations, 111 relectures déterministes, 770 réponses
+justes, 770 fausses et 770 vides. La conversion Staging est exécutée : 111 actifs,
+zéro ancien exercice disponible et zéro contenu privé dans les parents publics.
+Il s'agit d'un import technique conservant les originaux privés, sans fabriquer
+une approbation humaine ou un reçu Admin signé. Aucun déploiement Production.
+Le commit 65f6473 conserve les sources de l'archive avant le formatage suivant ;
+les archives antérieures restent immuables. Les preuves détaillées de l'import
+et de la réception entraînement/DS/duel restent dans Novlearn.
+
+## Régression de disponibilité des figures Admin — 17 octobre 2026
+
+La [correction ciblée](certification/numeric-render-cache.md), autorisée par
+l’accord humain D51 / Admin D05, réduit les recalculs numériques exacts identiques
+pendant une seule instanciation. Le profil Linux et son délai de cinq secondes
+restent inchangés. Ni formule, diagnostic d’erreur, génération suivante ni autre
+contexte n’utilisent ce cache. Le détachement final existant est conservé.
+
+**1 540 tests / 30 fichiers, zéro skip**, build/types/lint/format et smoke du
+tarball passent. Linux : six générations complètes en 2,41–2,64 s sous le délai
+natif inchangé de cinq secondes, projections identiques, dix comparaisons
+privées/diagnostiques exactes, sept opérations, 12 contrôles OS et huit parcours
+historiques passent. L’archive qualifiée commence par d4d3abc4 ; la preuve garde
+son SHA256 complet. L’Admin conserve son archive antérieure jusqu’à migration
+locale de son empreinte SQL et adoption coordonnée ; aucun reçu n’est réécrit.
+Aucune publication distante ni modification de protection Windows.
+
+## Certification locale du profil Linux — 14 octobre 2026
+
+L’utilisateur choisit Linux sous cgroup v2 borné. La [certification locale](certification/linux-requalification.md)
+valide l’archive exacte 650128cd…9190290 : installation hors ligne, sept opérations
+publiques, rejeu privé, projection et arrêt des workers. Les preuves source
+Windows (1534 sans skip), Linux OS (12), historiques (8), Python/FastAPI (13) et
+ESM/types/bundle passent séparément. Aucune nouvelle CI distante ou session
+navigateur n’est annoncée. L’adoption applicative reste extérieure à ce bilan.
+
+Les observations suivantes, notamment les refus Windows, restent historiques.
+
+## Requalification locale — 13–14 octobre 2026
+
+La [reprise autorisée](certification/windows-requalification.md) valide la suite
+source standard : **1 534 PASS, 29 fichiers, aucun skip**, 377,21 s. Le smoke
+renforcé du tarball installé reste **FAIL** : Smart App Control bloque le
+launcher Windows non signé (Code Integrity 3077). La certification de l'artefact
+Windows n'est pas acquise. Linux : 12 contrôles OS, 8 parcours historiques et
+13 tests Python/FastAPI passent dans Docker local borné et sans réseau.
+
+Aucune limite ou protection Windows n'est modifiée ; aucun environnement
+distant ou CDC n'est touché. Le choix du runtime est demandé avant adoption.
+Les sections suivantes conservent les observations historiques du 13 octobre.
+
 ## État actuel — 13 octobre 2026
 
 ### Audit de certification fonctionnelle V1 — 13 octobre 2026

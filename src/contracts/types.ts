@@ -120,6 +120,8 @@ export interface QuestionResponse {
     | 'extended-real'
     | 'expression'
     | 'log-affine-positive'
+    | 'geometric-expression'
+    | 'elementary-positive'
     | 'text'
     | 'rational-expression'
     | 'equation'
@@ -154,6 +156,8 @@ export interface GradingPolicy {
     | 'extended-real'
     | 'polynomial'
     | 'log-affine-positive'
+    | 'geometric-expression'
+    | 'elementary-positive'
     | 'text'
     | 'rational-function'
     | 'equation'
@@ -280,6 +284,7 @@ export type ExpectedAnswer =
   | { kind: 'rational'; math: InstantiatedMath; value: RationalValue }
   | { kind: 'expression'; math: InstantiatedMath }
   | { kind: 'log-affine-positive'; math: InstantiatedMath }
+  | { kind: 'elementary'; math: InstantiatedMath }
   | { kind: 'real'; math: InstantiatedMath }
   | { kind: 'algebra'; math: InstantiatedMath }
   | { kind: 'collection'; math: InstantiatedMath }

@@ -3,6 +3,7 @@ import { validateSubmission } from './contracts/validation.js';
 import { supportedSnapshotVersion } from './contracts/snapshot-version.js';
 import { compareNumeric, prepareNumeric } from './math/numeric.js';
 import { prepareLogAffine, compareLogAffine } from './math/log-affine.js';
+import { prepareElementary, compareElementary } from './math/elementary.js';
 import { toleranceSyntax } from './contracts/answer-validation.js';
 import { checkForm } from './math/forms.js';
 import { prepareFormReferences } from './math/form-references.js';
@@ -64,6 +65,8 @@ export interface CorrectionResult {
     | 'explicit-infinity'
     | 'exponential-injectivity'
     | 'positive-exponential'
+    | 'elementary-identity'
+    | 'exact-counterexample'
     | 'selection'
     | 'text'
     | 'exact-polynomial'
@@ -268,6 +271,63 @@ export function gradeAnswer(
         equal ? 'correct' : 'incorrect',
         equal ? 'text-equal' : 'text-different',
         'text',
+      );
+    }
+    if (
+      q.response.kind === 'geometric-expression' ||
+      q.response.kind === 'elementary-positive'
+    ) {
+      const variable = q.response.variable;
+      if (
+        !variable ||
+        q.expected.kind !== 'elementary' ||
+        q.policy.domain !== q.response.kind ||
+        q.policy.form !== 'value-only' ||
+        q.policy.comparison !== undefined ||
+        q.policy.comparisonDomain !== undefined ||
+        q.policy.normalization !== undefined ||
+        !instance.definition.variables.some(
+          (v) => v.name === variable && v.domain === 'real',
+        )
+      )
+        return result('error', 'official-elementary');
+      const context = {
+        parameters: Object.keys(instance.generation.values),
+        variables: [variable],
+      };
+      const expected = prepareElementary(
+        q.expected.math.source,
+        context,
+        instance.generation.values,
+        '/expected',
+        variable,
+        q.response.kind,
+      );
+      if (!expected.ok) return result('error', 'official-elementary');
+      const student = prepareElementary(
+        s.answer.source,
+        { variables: [variable] },
+        {},
+        '/answer',
+        variable,
+        q.response.kind,
+      );
+      if (!student.ok)
+        return result(
+          mathFailureState(student.diagnostics),
+          'elementary-admission',
+        );
+      domain = 'same';
+      comparison = 'exact';
+      const verdict = compareElementary(student.value, expected.value);
+      return result(
+        verdict.equal === true
+          ? 'correct'
+          : verdict.equal === false
+            ? 'incorrect'
+            : 'indeterminate',
+        'elementary-comparison',
+        verdict.proof,
       );
     }
     if (q.response.kind === 'log-affine-positive') {

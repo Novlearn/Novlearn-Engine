@@ -1,3 +1,7 @@
+> État courant : [certification locale Linux du 14 octobre](linux-requalification.md). Le présent rapport conserve l’audit initial et ses échecs.
+
+> Rapport initial conservé. État courant : [requalification du 13–14 octobre](windows-requalification.md), suite source verte mais tarball Windows bloqué par Smart App Control.
+
 # Certification fonctionnelle et audit d’utilisabilité V1
 
 **Exécution : 13 octobre 2026 — dépôt local, Windows x64, Node 24.19.0/npm 11.17.0**

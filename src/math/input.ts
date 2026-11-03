@@ -270,7 +270,10 @@ function parseInput<
     if (
       !commands.has(command) &&
       !(display && displayCommands.has(command)) &&
-      !((presentation || numeric) && functionCommands.has(command)) &&
+      !(
+        (presentation || numeric || collection) &&
+        functionCommands.has(command)
+      ) &&
       !(presentation && ['lim', 'to', 'rightarrow'].includes(command)) &&
       !(algebra && ['le', 'leq', 'ge', 'geq', 'ne', 'neq'].includes(command)) &&
       !(
@@ -282,6 +285,8 @@ function parseInput<
           'rbrace',
           'lbrack',
           'rbrack',
+          'lparen',
+          'rparen',
           'cup',
           'emptyset',
           'varnothing',
@@ -334,10 +339,15 @@ function parseInput<
         [']', '[', true, true],
       ] as const;
       for (const [open, close, leftOpen, rightOpen] of brackets)
-        for (const opening of [open, open === '[' ? '\\lbrack' : '\\rbrack'])
+        for (const opening of [
+          open,
+          open === '[' ? '\\lbrack' : '\\rbrack',
+          ...(leftOpen ? ['\\lparen'] : []),
+        ])
           for (const closing of [
             close,
             close === '[' ? '\\lbrack' : '\\rbrack',
+            ...(rightOpen ? ['\\rparen'] : []),
           ])
             ce.latexSyntax?.addEntries?.([
               {
@@ -519,7 +529,10 @@ function parseInput<
           typeof head !== 'string' ||
           (!operators.has(head) &&
             !(display && displayOperators.has(head)) &&
-            !((presentation || numeric) && functionOperators.has(head)) &&
+            !(
+              (presentation || numeric || collection) &&
+              functionOperators.has(head)
+            ) &&
             !(
               algebra &&
               [

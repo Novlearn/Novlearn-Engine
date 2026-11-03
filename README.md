@@ -5,13 +5,37 @@ instancie et corrige des exercices mathématiques. Elle fournit des règles comm
 à NovLearn élève, NovLearn Admin et aux duels pour éviter des calculs et des
 corrections divergents entre applications.
 
-Le package privé **0.1.0** est ESM, utilise le **schéma 5** et repose sur
+Le package privé **0.1.8** est ESM, utilise le **schéma 5** et repose sur
 **CortexJS 0.151.0**, son unique bibliothèque mathématique principale. Le cœur
 portable ne dépend d’aucun framework ni de MathLive. Un adaptateur Node optionnel
 isole les calculs côté serveur ; le rendu, les droits, le stockage et les points
 appartiennent aux applications.
 
+Le [correctif numérique du 17 octobre](docs/certification/numeric-render-cache.md)
+réutilise les succès exacts identiques au sein d’une seule instanciation. Les
+contrats, diagnostics et limites restent inchangés ; son état et ses preuves
+sont distincts de la certification historique ci-dessous. Aucun registre ni
+environnement distant n’est modifié.
+
 ## Disponible aujourd’hui
+
+La projection peut préparer les courbes avec `sampleGraphs: true` : 513
+coordonnées approchées par fonction, calculées par Cortex dans le host serveur.
+Les points hors du domaine réel ou non finis deviennent des trous. Ces données
+de dessin ne sont jamais une preuve ni un verdict. Le comportement historique
+sans cette option et les instantanés privés sont conservés.
+
+Les paramètres des segments mathématiques `$…$` et `$$…$$` dans les textes sont
+substitués comme AST CortexJS puis sérialisés sans évaluation. Les énoncés et
+explications partagent ainsi les signes et parenthèses corrects, notamment
+`u_n + @r` avec une raison négative. Les notations hors du profil d'affichage
+restent littérales ; les réponses textuelles exactes conservent leur substitution
+historique. Aucun composant de rendu ou de saisie n'est ajouté au cœur.
+
+L’[extension du catalogue Staging](docs/catalogue-staging-0.1.2.md) ajoute les
+expressions géométriques, les expressions élémentaires sur domaine positif et
+les bornes logarithmiques exactes. Le pipeline reste 0.1.0 ; les profils et
+l’empreinte exacte du package distinguent ses capacités et son rejeu.
 
 - Génération reproductible d’entiers, décimaux exacts, choix, tuples et variables
   calculées rationnelles, avec exclusions, dépendances et contraintes bornées.
@@ -25,14 +49,18 @@ appartiennent aux applications.
 - Huit adaptations historiques locales, banc MathLive/FastAPI et consommation
   réelle du package documentés. Aucune migration de production effectuée.
 
-La qualification historique V1 locale M12 est à relire avec le [dernier audit
-de certification](docs/certification/report.md) : la suite complète relancée
-le 13 octobre échoue sur le transport isolé Windows. Le cœur portable reste
-testable sur ses profils, mais le verdict courant est non prêt pour pilote.
+La [certification locale du 14 octobre](docs/certification/linux-requalification.md)
+valide le profil **Linux avec cgroup v2 borné** choisi par l’utilisateur et
+l’archive réellement installée. Suite source : **1534 tests**, sans skip ;
+12 contrôles OS Linux, huit parcours historiques, 13 tests Python/FastAPI,
+exports/types/bundle et sept opérations du tarball installé passent.
+Les [refus Windows antérieurs](docs/certification/windows-requalification.md)
+restent documentés ; aucun contrôle ni politique n’est assoupli. Cela ne vaut
+pas adoption applicative ou qualification d’un hébergement encore inconnu.
 Le moteur ne fournit pas de CAS universel,
 solveur général de limites/dérivées, correction libre multivariée ou complexe,
 éditeur Admin ni interface de production. L’hôte Linux exige un cgroup v2 borné ;
-le contrôle Windows du transport isolé échoue dans le dernier audit. Les
+chaque nouveau binaire Windows reste soumis à la politique du poste. Les
 [capacités et limites](docs/features.md) précisent ce qui est garanti et testé.
 
 ## Démarrer dans le dépôt

@@ -1,5 +1,31 @@
 # Roadmap et critères de passage
 
+## Catalogue Staging — extension autorisée du 2 novembre 2026
+
+Qualifier les nouveaux profils sur les domaines et les cinq états de verdict,
+exécuter les régressions, puis tester l’archive Linux exacte sur plusieurs tirages
+des 111 candidats. Adopter les mêmes octets dans les deux applications. Les
+brouillons, la publication éditoriale et la réception utilisateur restent des
+étapes distinctes ; les sources historiques ne sont jamais écrasées.
+
+## Correction ciblée de disponibilité — 17 octobre 2026
+
+Une charge Admin combinant figures et vecteurs révèle un timeout natif
+intermittent à cinq secondes. Le [correctif et sa qualification](certification/numeric-render-cache.md)
+réduisent les évaluations numériques strictement identiques dans leur seul
+contexte d’instanciation. Aucun nouveau lot mathématique, contrat, délai ou
+critère de validation n’est ouvert ou assoupli. Le correctif et l’archive exacte sont qualifiés localement : 1 540 tests,
+contrôle complet, six générations avancées en moins de 2,64 s, comparaison
+exacte et contrôles Linux passent. L’adoption Admin attend encore la migration
+locale de l’empreinte SQL et le changement coordonné du package.
+
+## Requalification locale ciblée — 14 octobre 2026
+
+Le [profil Linux borné choisi](certification/linux-requalification.md) et
+l’archive installée sont qualifiés localement, avec critères inchangés.
+La reprise corrige les diagnostics et renforce les bancs, sans nouveau lot
+mathématique. Les refus Windows et les limites d’adoption restent documentés.
+
 Le [CDC officiel](CDC_référence.md), notamment son chapitre 13, fixe objectifs et
 priorités P0/P1/P2. Les numéros **M0–M12** désignent les lots de la mission de
 finalisation ; les numéros **1–11, 5C, 6A, 6B** désignent ceux du CDC.

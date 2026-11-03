@@ -154,9 +154,17 @@ export function explicitProducts(
           'Cos',
           'Tan',
         ].includes(String(node[0])) ||
-          (node[0] === 'Delimiter' &&
-            node.length === 2 &&
-            namedFunctionFactor(node[1]!)));
+          ([
+            'Delimiter',
+            'Add',
+            'Subtract',
+            'Negate',
+            'Multiply',
+            'Divide',
+          ].includes(String(node[0])) &&
+            (node as readonly MathSyntax[])
+              .slice(1)
+              .some((child) => namedFunctionFactor(child))));
       // A trailing variable does not disambiguate a mixed number prefix such as 1\frac{1}{2}x.
       for (let i = 1; i < factors.length; i++) {
         const a = factors[i - 1]!,
@@ -482,7 +490,8 @@ export function instantiateMath(
     const display = substituted.canonical.evaluate();
     if (!display.isValid)
       fail('substitution-failed', path, 'Unable to produce a valid display.');
-    const displayLatex = display.latex;
+    // Generated answers must roundtrip through the unchanged numeric admission.
+    const displayLatex = display.toLatex({ digitGroup: 0 });
     if (!displayLatex || displayLatex.length > 4096)
       fail('limit', path, 'Display exceeds the text budget.');
     return {

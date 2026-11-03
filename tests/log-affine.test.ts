@@ -273,20 +273,22 @@ describe('power-of-e form preserves value and original presentation separately',
       form: 'nonconforming',
     });
   }, 20000);
-  for (const source of ['e^{17/2}', 'e^{-16}', 'e^{16}'])
-    it(
-      `admits bounded exponent ${source}`,
-      () => expect(numeric(source).ok).toBe(true),
-      20000,
-    );
   for (const source of [
+    'e^{17/2}',
+    'e^{-16}',
+    'e^{16}',
     'e^{17}',
     'e^{-17}',
     'e^{\\pi}',
     '2^{1/2}',
-    'e^{0/0}',
     'e^{\\sqrt{2}}',
   ])
+    it(
+      `admits an exact closed real exponent or square root ${source}`,
+      () => expect(numeric(source).ok).toBe(true),
+      20000,
+    );
+  for (const source of ['e^{0/0}', '2^{1/3}', '2^{17}', '(-2)^{1/2}'])
     it(
       `refuses unsupported expected exponent ${source}`,
       () => expect(numeric(source).ok).toBe(false),

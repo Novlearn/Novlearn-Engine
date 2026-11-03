@@ -242,7 +242,6 @@ describe('M3 domains and five result states', () => {
     'x',
     '\\sin(1)',
     '\\sqrt[3]{2}',
-    '2^{1/2}',
     '0.1234567',
     '1000000000+1',
     '2^17',

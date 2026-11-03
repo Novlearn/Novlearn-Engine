@@ -1,5 +1,34 @@
 # Décisions et ADR
 
+## D56 — Retrait du moteur mathématique historique de Novlearn (3 novembre 2026)
+
+L'utilisateur autorise le retrait de mathjs et des anciennes fonctions de calcul,
+en conservant rendu et saisie. La projection publique prépare, sur demande privée
+du serveur, les coordonnées approchées des graphes par Cortex. La sortie est
+bornée, les sources et domaines sont examinés avant évaluation numérique et les
+points non réels/non finis restent des trous. Aucun verdict n'utilise ces points.
+L'option est additive : ni instantané privé, génération, politique de correction
+ni projection sans option ne change. Aucun nouvel endpoint ou moteur concurrent.
+Le nouvel artefact doit être adopté à l'identique dans Novlearn et Admin.
+
+## D55 — Présentation commune des paramètres dans les textes (3 novembre 2026)
+
+L'utilisateur demande de corriger les signes dans Engine et de conserver les
+composants de rendu et de saisie. Les segments mathématiques paramétrés des textes
+sont liés et sérialisés par CortexJS sans évaluation ; les générations, politiques
+et réponses attendues restent distinctes. Voir [le périmètre 0.1.5](text-display-0.1.5.md).
+La même archive doit être adoptée par Admin et Novlearn. La suppression des
+anciens correcteurs et de mathjs n'appartient pas à ce correctif d'affichage.
+
+## D54 — Catalogue Staging dans le moteur commun (2 novembre 2026)
+
+L’autorisation explicite de l’utilisateur étend Engine pour Novlearn et Admin.
+Les besoins observés et les garanties sont consignés dans
+[le relevé 0.1.2](catalogue-staging-0.1.2.md). Les profils sont bornés, exacts
+et prudents : aucune réussite fondée seulement sur des valeurs échantillonnées.
+Les archives précédentes et les sources éditoriales sont conservées. L’adoption
+des deux applications exige la même archive qualifiée, sans déploiement Production.
+
 Les ADR décrivent les raisons et conséquences techniques. Les bilans ne sont
 pas des décisions actives supplémentaires. **Active** signifie toujours applicable
 avec ses extensions ; **Superseded** signifie remplacée ; **Historical** désigne
@@ -142,3 +171,52 @@ Un cas faux candidat pour `ln(k)` demeure indéterminé, pas incorrect. La suite
 doit repasser dans un environnement où le launcher peut effectivement démarrer
 avant toute déclaration de qualification. Aucun commit automatique, CI distante,
 publication, production ou migration n’est inclus.
+
+### D51 — Requalification locale et smoke natif du package (13–14 octobre 2026)
+
+L'utilisateur autorise explicitement les corrections locales Engine et leur
+certification, sans assouplir les tests ni modifier d'environnement distant.
+Ajouter un diagnostic natif borné sans chemin/message privé et son test de
+refus. Renforcer le smoke avec une exécution isolée réelle depuis le tarball.
+Conserver l'échec sous Smart App Control comme une porte bloquante : le check
+source vert ne qualifie pas le launcher installé, pourtant identique en octets.
+
+Les preuves source, Linux et Python positives sont séparées du refus Windows.
+Ne pas désactiver ou contourner la politique, ni attribuer aux anciens timeouts
+une cause non établie. Choisir le runtime et requalifier l'artefact exact avant
+adoption ; [preuves et résultats](certification/windows-requalification.md).
+
+### D52 — Cible Linux bornée et archive installée (14 octobre 2026)
+
+L’utilisateur retient explicitement « Linux avec cgroup v2 borné, testé dans
+Docker local ». Qualifier l’archive exacte par installation npm hors ligne,
+sept opérations publiques, projection, rejeu et arrêt réel des workers sous
+384 MiB, swap 0 et 64 pids. Conserver les refus Windows antérieurs et le
+passage du dernier artefact comme des preuves distinctes, sans promettre
+l’acceptation des futurs binaires ni modifier Smart App Control.
+
+Le banc permanent tools/check-installed-package.ps1 épingle l’image locale,
+le daemon Docker Desktop local, les dépendances existantes et l’archive ;
+aucun réseau ou privilège supplémentaire. Les résultats sont dans la
+[certification Linux](certification/linux-requalification.md). Cette décision
+ne vaut pas adoption applicative, migration distante, publication ou déploiement.
+
+### D53 — Réutilisation locale des nombres de rendu exacts (17 octobre 2026)
+
+L’autorisation humaine D51 / Admin D05 couvre cette correction locale et sa
+certification. La charge avancée Admin a dépassé le délai natif de cinq secondes ;
+une reproduction inchangée réussit à 4 985 ms, sans marge suffisante pour qualifier
+sa disponibilité. Les familles isolées localisent le coût pendant l’instanciation.
+
+Décision : mémoriser uniquement les succès numériques exacts, par source brute
+identique, pendant l’unique passage d’une instanciation dont les paramètres et
+variables sont déjà résolus. Ne mémoriser ni échec ni formule à scope distinct.
+Le validate() final existant recopie chaque occurrence et préserve le détachement
+des AST. Ne pas réutiliser de contexte Cortex global, modifier une admission,
+augmenter les limites ou réessayer automatiquement pour masquer un refus.
+
+Six tests de sources, chemins, domaine, détachement et isolation complètent les
+tests existants. Qualification complète, comparaisons et package Linux borné
+requis avant adoption Admin. Le package reste privé ; aucun registre ou
+environnement distant n’est modifié. Les résultats sont consignés séparément
+dans [le relevé ciblé](certification/numeric-render-cache.md).

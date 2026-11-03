@@ -156,8 +156,9 @@ Ces contrôles vérifient interruption réelle, mémoire, crash/récupération e
 adaptations dans des workers neufs. Ils ne se lancent pas dans PowerShell Windows
 ni sur un hôte Linux sans quotas. Les tests Python ne remplacent pas ces preuves OS.
 
-La suite Windows est qualifiée dans cet audit ; Linux/Python/navigateur/smoke
-restent ici des procédures de reproduction, sans nouvelle exécution revendiquée.
+La [dernière requalification](certification/windows-requalification.md) distingue
+suite source Windows verte, tarball Windows bloqué, et nouveaux contrôles
+Linux/Python positifs. Aucun nouveau navigateur ou hébergement applicatif qualifié.
 
 ## Étendre le moteur
 
@@ -224,3 +225,14 @@ les commandes, résultat et environnement dans [progress](progress.md).
 Un bug découvert pendant une mission documentaire est signalé, sans corriger le
 moteur hors périmètre. L’audit initial a été livré sans commit ; le commit local
 de documentation est ensuite explicitement demandé, sans push automatique.
+
+### Certifier le tarball installé sur le profil Linux choisi
+
+Depuis PowerShell Windows, avec Docker Desktop local et l’image épinglée déjà
+installée, passer le chemin d’un tarball local à tools/check-installed-package.ps1.
+Ce banc installe l’archive et les dépendances déjà présentes hors ligne, puis
+exécute les sept opérations sous cgroup v2 borné, sans réseau. Les artefacts et
+empreintes restent dans un nouveau dossier .cache/installed-package-*.
+Voir [le bilan et la commande réellement exécutée](certification/linux-requalification.md).
+Le smoke standard conserve aussi le contrôle Windows, ses éventuels échecs et
+les preuves portables ; un passage source ne remplace pas le test du package.
