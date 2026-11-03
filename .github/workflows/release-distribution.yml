@@ -39,7 +39,7 @@ jobs:
           test "$(git rev-parse HEAD:src)" = '3c4de0f22963ef4a0f9ee3cdf620f8e9a27f1cde'
           test "$(git rev-parse HEAD:runtime)" = '8774802eff76b89ed7abd1f4c67df49e35d1e3b4'
           test "$(git rev-parse HEAD:package.json)" = '2edcfe733b975ca3c19a0b72e37768c8a3b17b61'
-          test "$(git rev-parse HEAD:package-lock.json)" = '53ae3ad43640f535b90a88b7205077c685f1098a8'
+          test "$(git rev-parse HEAD:package-lock.json)" = '53ae3ad43640f535b90a88b7205077c685f1098a'
           test "$(gh run view 41626455083 --repo "$GITHUB_REPOSITORY" --json conclusion --jq .conclusion)" = success
           echo "ENGINE_VERSION=$version" >> "$GITHUB_ENV"
       - name: Verify exact archive and every packaged file
