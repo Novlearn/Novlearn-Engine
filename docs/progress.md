@@ -1,5 +1,20 @@
 # État et reprise
 
+## Lecture chiffrée du token staging — 4 novembre 2026
+
+L'utilisateur cherche à récupérer le token staging sans demander l'accès SSH à
+l'administrateur. Ajout d'un workflow manuel sur main et d'un script qui utilisent
+les trois secrets VPS existants. Le token est lu sur le VPS et chiffré avec la
+clé publique RSA fournie ; seuls les octets chiffrés sont affichés dans Actions.
+La clé privée reste locale, hors Git, dans un répertoire à accès Windows limité.
+Les configurations VPS, les tokens et les services ne sont pas modifiés ; seul
+un dossier temporaire contenant la clé publique est créé puis supprimé.
+
+Vérifications locales : syntaxe Bash, chiffrement et déchiffrement RSA-OAEP
+SHA-256 sur un token factice, absence de sa valeur claire dans la sortie et refus
+de clé/token malformés passent. La lecture réelle du VPS reste à effectuer après
+publication. Aucun token n'est affiché dans la conversation ni ajouté à Vercel.
+
 ## Bootstrap réussi et correction du conteneur CI — 4 novembre 2026
 
 Le run GitHub `Initialize Engine VPS #4` a terminé le bootstrap avec le compte

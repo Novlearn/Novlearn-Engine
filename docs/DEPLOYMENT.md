@@ -126,6 +126,25 @@ Apache et ne démarre pas de conteneur.
 
 ## Configuration GitHub
 
+### Récupérer le token staging sans accès SSH local
+
+Le workflow manuel **Read staging Engine token (encrypted)** utilise les mêmes
+trois secrets VPS. Il fonctionne sur `main`, lit uniquement le token staging
+existant et ne démarre aucun service. Le compte SSH doit pouvoir lire le fichier
+avec `sudo -n`. Il n'accorde aucun droit supplémentaire.
+
+Générer une paire RSA 3072 bits localement et garder sa clé privée hors Git.
+Passer le PEM de la clé publique encodé en base64 à l'entrée
+`public_key_base64`. Le VPS chiffre le token avec RSA-OAEP/SHA-256 ; les logs
+contiennent seulement `ENCRYPTED_ENGINE_TOKEN=<base64>`. Déchiffrer cette valeur
+sur l'ordinateur détenteur de la clé privée, puis copier le token dans les
+secrets serveur de NovLearn staging et de l'Admin appelant ce host staging.
+Ne pas publier la clé privée ni la valeur déchiffrée dans les logs ou le dépôt.
+Le workflow ne permet pas de récupérer le token production et ne renouvelle pas
+le token staging. Les fichiers temporaires de clé publique du VPS sont supprimés.
+
+### Accès et environnements
+
 Créer deux **Environments** dans `Settings → Environments` : `staging` et
 `production`. Ajouter au dépôt Engine les secrets existants `VPS_HOST`,
 `VPS_USERNAME` et `VPS_SSH_KEY`, avec les mêmes valeurs que dans le dépôt

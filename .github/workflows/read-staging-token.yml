@@ -1,0 +1,38 @@
+name: Read staging Engine token (encrypted)
+
+on:
+  workflow_dispatch:
+    inputs:
+      public_key_base64:
+        description: Base64-encoded PEM RSA public key (private key stays on your computer)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  read-token:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Validate the public key input before SSH
+        shell: bash
+        env:
+          TOKEN_PUBLIC_KEY_BASE64: ${{ inputs.public_key_base64 }}
+        run: |
+          set -euo pipefail
+          [[ "$TOKEN_PUBLIC_KEY_BASE64" =~ ^[A-Za-z0-9+/=]+$ && ${#TOKEN_PUBLIC_KEY_BASE64} -ge 100 && ${#TOKEN_PUBLIC_KEY_BASE64} -le 4096 ]]
+      - name: Read and encrypt the existing staging token on the VPS
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        env:
+          TOKEN_PUBLIC_KEY_BASE64: ${{ inputs.public_key_base64 }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: TOKEN_PUBLIC_KEY_BASE64
+          script_path: deploy/read-staging-token.sh
+          command_timeout: 2m

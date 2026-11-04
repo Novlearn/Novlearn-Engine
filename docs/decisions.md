@@ -340,3 +340,13 @@ lanceur refuse un parent PID 1. Conserver mémoire, swap, pids et délais. En ca
 d'échec de disponibilité, afficher uniquement l'état ciblé du conteneur et les
 réponses/logs nécessaires au diagnostic, sans inspecter sa configuration secrète.
 Les reproductions et limites locales sont consignées dans progress.
+
+### D63 — Récupération chiffrée du seul token staging (4 novembre 2026)
+
+Réutiliser l'accès SSH GitHub déjà disponible pour répondre à la demande de
+récupération sans intervention de l'administrateur. Limiter le workflow manuel
+à main et au token staging existant. Valider l'entrée base64 avant le passage
+SSH, puis chiffrer sur le VPS avec RSA-OAEP/SHA-256 et MGF1/SHA-256. Ne publier
+dans les logs que le ciphertext ; le déchiffrement utilise la clé privée locale,
+jamais envoyée à GitHub ou au VPS. Ne pas afficher ni renouveler le token, changer
+les droits SSH/sudo ou configurer des services externes dans cette opération.
