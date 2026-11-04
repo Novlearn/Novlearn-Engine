@@ -1,5 +1,14 @@
 # État et reprise
 
+## Lancement manuel du CI — 4 novembre 2026
+
+Le commit `4e911ea` de formatage est bien sur `main`, mais l'API GitHub ne
+retourne aucune exécution CI associée. Le workflow est activé et écoute les pushs
+sur `main`; la cause exacte de l'absence d'événement n'est pas établie. Ajout de
+`workflow_dispatch` au CI pour permettre de contrôler un commit via Actions sans
+modifier les workflows de release ou de déploiement. Aucun lancement manuel
+supplémentaire effectué depuis ce correctif.
+
 ## Workflow manuel de pré-vérification et bootstrap VPS — 4 novembre 2026
 
 Ajout local d'un workflow `workflow_dispatch` unique qui réutilise les secrets

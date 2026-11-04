@@ -304,3 +304,12 @@ nécessaires et est supprimé après l'exécution réussie du bootstrap.
 La procédure et les limites sont documentées dans [DEPLOYMENT.md](DEPLOYMENT.md).
 La revue YAML, le préflight, l'action SCP, le bootstrap Linux et toute exécution
 GitHub restent à faire; aucun VPS n'a été contacté ou modifié dans cette mission.
+
+### D60 — Lancement manuel de la CI (4 novembre 2026)
+
+Après le push du formatage `4e911ea`, la branche distante `main` pointe sur le
+commit, le workflow CI est activé et configuré sur les pushs à `main`, mais
+l'API GitHub ne retourne aucune exécution pour ce SHA. La raison exacte n'est
+pas démontrée. Ajouter `workflow_dispatch` au même workflow pour que la CI
+puisse être lancée explicitement depuis Actions sur `main`; ses jobs restent
+des contrôles uniquement, sans publication ni déploiement.
