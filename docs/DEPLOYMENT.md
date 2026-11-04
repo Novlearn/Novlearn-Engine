@@ -8,7 +8,7 @@ il n'ajoute aucune dépendance applicative. Il expose :
 
 | Route          | Accès                                       | Rôle                                                                                   |
 | -------------- | ------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `GET /healthz` | VPS local / contrôle de santé Docker         | État minimal, avec une opération de démarrage réellement exécutée dans le worker isolé |
+| `GET /healthz` | VPS local / contrôle de santé Docker        | État minimal, avec une opération de démarrage réellement exécutée dans le worker isolé |
 | `POST /run`    | `Authorization: Bearer <token>` obligatoire | Requête JSON du protocole Engine version 1, limite d'entrée 1 MiB                      |
 
 Les tokens staging et production sont différents et ne doivent rester que dans
