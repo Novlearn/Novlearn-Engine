@@ -12,7 +12,7 @@ GH_OWNER="$(cat /etc/novlearn-engine-owner)"
 IFS= read -r registry_user || { echo "Missing registry username." >&2; exit 64; }
 [[ "$registry_user" =~ ^[A-Za-z0-9-]{1,39}$ ]] || exit 64
 IFS= read -r registry_token || { echo "Missing registry credential." >&2; exit 64; }
-[[ "$registry_token" =~ ^[A-Za-z0-9_-]{32,4096}$ ]] || exit 64
+[[ "$registry_token" =~ ^[^[:space:]]{32,4096}$ ]] || exit 64
 if IFS= read -r _; then echo "Unexpected trailing input." >&2; exit 64; fi
 
 BASE=/opt/novlearn-engine

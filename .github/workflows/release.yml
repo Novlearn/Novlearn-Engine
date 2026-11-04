@@ -136,7 +136,7 @@ jobs:
             "$archive_path#novlearn-exercise-engine-0.2.1.tgz" \
             "$RUNNER_TEMP/engine-image.txt#engine-image.txt" \
             "$RUNNER_TEMP/npm-package/engine-artifact-sha256.txt#engine-artifact-sha256.txt"
-          echo "Published `$image@$digest`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Published ${image}@${digest}" >> "$GITHUB_STEP_SUMMARY"
 
   deploy-staging:
     needs: build-publish

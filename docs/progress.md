@@ -1,5 +1,23 @@
 # État et reprise
 
+## Publication Engine 0.2.1 et relance staging — 4 novembre 2026
+
+Le run CI `41887866785` passe sur Ubuntu et Windows, ainsi que le job
+`host-container`. Le tag `v0.2.1` cible `8513666` et la release GitHub est
+publiée. L'asset exact `novlearn-exercise-engine-0.2.1.tgz` porte le SHA-256
+`6d1d52f38297d6f91be0eaa4aea57eb63f61973eae4cc83d86fd0aa6651dd85a` ; l'image
+GHCR publiée est épinglée par digest
+`sha256:d1916edf981fd23b57f543937d83411df77b7dc5da290e24db9f41cbf544a4ea`.
+
+Le job de déploiement initial `41889427068` a échoué avant toute modification
+du VPS staging : l'action SSH masquait bien une valeur `GHCR_TOKEN`, puis le
+validateur distant l'a refusée. Le filtre alphanumérique supposait un alphabet
+de jeton trop étroit. Les deux validations limitent maintenant sa longueur et
+refusent seulement les espaces/retours de ligne. Un workflow de relance manuelle
+ne cible que le digest 0.2.1 ci-dessus et l'environnement staging. La migration
+Novlearn reste suspendue jusqu'à vérification de la santé staging. Production
+n'a pas été ciblée ; aucun secret n'a été lu ni affiché.
+
 ## Préparation de la release Engine 0.2.1 — en cours (4 novembre 2026)
 
 L’audit distant confirme `main` à `968696a9929614f04021dc53f7669e8c305adf4e`,

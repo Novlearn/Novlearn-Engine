@@ -13,7 +13,7 @@ set -euo pipefail
   echo "GHCR_USER is required." >&2
   exit 64
 }
-[[ "${GHCR_TOKEN:-}" =~ ^[A-Za-z0-9_-]{32,4096}$ ]] || {
+[[ "${GHCR_TOKEN:-}" =~ ^[^[:space:]]{32,4096}$ ]] || {
   echo "GHCR_TOKEN is required." >&2
   exit 64
 }

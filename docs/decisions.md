@@ -382,3 +382,13 @@ exposants irrationnels hors profil. Sérialiser les puissances rationnelles de
 garder intacte la fixture observée ; vérifier séparément les valeurs
 interpolées de son texte et les autres champs du snapshot, car le moteur
 sérialise désormais la présentation mathématique de façon normalisée.
+
+### D66 — Valider le jeton GHCR sans supposer son alphabet (4 novembre 2026)
+
+Le déploiement v0.2.1 staging a confirmé que l'action SSH recevait une valeur
+masquée pour `GHCR_TOKEN`, mais le script VPS la rejetait au contrôle de format.
+Les deux côtés de la frontière SSH bornent désormais sa taille et interdisent
+les espaces et retours de ligne, sans supposer l'alphabet interne du jeton.
+Le retry est un workflow manuel, séparé du workflow de publication et câblé au
+seul digest Engine v0.2.1 ; son environnement demeure fixé à `staging`. Aucun
+chemin production n'est ajouté.
