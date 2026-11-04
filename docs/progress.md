@@ -18,13 +18,14 @@ ne cible que le digest 0.2.1 ci-dessus et l'environnement staging. La migration
 Novlearn reste suspendue jusqu'à vérification de la santé staging. Production
 n'a pas été ciblée ; aucun secret n'a été lu ni affiché.
 
-## Préparation de la release Engine 0.2.1 — en cours (4 novembre 2026)
+## Contexte initial de réconciliation Engine 0.2.1 — historique
 
 L’audit distant confirme `main` à `968696a9929614f04021dc53f7669e8c305adf4e`,
 avec la CI de ce commit réussie, la release `v0.2.0` publiée et `v0.2.1`
-absente. Le tag publié contient des modules `remote-host`, mathématiques et
-tests qui n’avaient pas été réintégrés dans `main`. Le package Novlearn staging
-consomme ces interfaces et épingle l’archive `v0.2.0` par SHA-256.
+encore absente à l'audit initial. Le tag publié contient des modules
+`remote-host`, mathématiques et tests qui n’avaient pas été réintégrés dans
+`main`. Le package Novlearn staging consomme ces interfaces et épingle
+l’archive `v0.2.0` par SHA-256.
 
 Le commit `63b7235` restaure ces sources et tests, garde le serveur HTTP et le
 worker de `main`, et ajoute un test du client exporté contre le gestionnaire
@@ -54,8 +55,12 @@ ciblés** catalogue/grading/log-affine/replay passent localement ; build, types,
 lint, formatage, `npm.cmd pack --dry-run` (189 fichiers) et le smoke test package
 passent. L’empreinte du smoke local est variable et n’est pas celle de la
 release. Vitest complet reste bloqué sans résultat observable dans le runner
-Windows local. Le correctif et son nouveau run CI, le tag, la release et le
-déploiement staging restent à effectuer.
+Windows local. Le run CI `41887866785` a ensuite passé la suite complète sur
+Ubuntu et Windows, et le job `host-container`. La release, l'archive et l'image
+sont détaillées en tête de ce document. Le correctif du filtre a été poussé dans
+`505e181` ; son CI `41892821636` est vert. Le déploiement staging doit encore
+être déclenché manuellement avec le nouveau workflow dédié, puis sa santé vérifiée
+avant de reprendre la migration Novlearn.
 
 ## Lecture chiffrée du token staging — 4 novembre 2026
 
