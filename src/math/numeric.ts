@@ -257,6 +257,7 @@ export function prepareNumeric(
   values: Readonly<Record<string, GeneratedValue>>,
   path: string,
   allowInfinity: boolean,
+  exponentialExponentBounds?: readonly [number, number],
 ): NumericResult {
   const parsed = parseNumericInput(source, context);
   if (!parsed.ok)
@@ -494,8 +495,9 @@ export function prepareNumeric(
           : undefined;
         const exponentialPower =
           rationalValue !== undefined &&
-          [0, 1].includes(exactOrder(rationalValue, -16) ?? -2) &&
-          [-1, 0].includes(exactOrder(rationalValue, 16) ?? 2);
+          (exponentialExponentBounds === undefined ||
+            (exactOrder(rationalValue, exponentialExponentBounds[0]) !== -1 &&
+              exactOrder(rationalValue, exponentialExponentBounds[1]) !== 1));
         const e =
           head === 'Square'
             ? 2
@@ -545,7 +547,16 @@ export function prepareNumeric(
     const exact = exactNumber(evaluated, true);
     const expression = exactStructure(evaluated) ? evaluated : canonical;
     const display = expression;
-    const displayLatex = display.toLatex({ digitGroup: 0 });
+    const displayLatex = display.toLatex({
+      digitGroup: 0,
+      // Keep admitted rational powers of e in their exact source profile.
+      // A generic nth-root serialization would fail the square-root-only
+      // admission when the consumer reparses this display.
+      rootStyle: (node: MathSyntax) =>
+        Array.isArray(node) && node[0] === 'Root' && node[1] === 'ExponentialE'
+          ? 'quotient'
+          : 'radical',
+    });
     if (!display.isValid || !displayLatex || displayLatex.length > 4096)
       fail(
         'substitution-failed',

@@ -19,6 +19,7 @@ import { instantiateMath } from './math/substitution.js';
 import type { InstantiationMathDiagnostic } from './math/substitution.js';
 import { MathFailure } from './math/substitution.js';
 import { prepareNumeric } from './math/numeric.js';
+import { hasPowerOfEForm, POWER_OF_E_EXPONENT_BOUNDS } from './math/forms.js';
 import { prepareLogAffine } from './math/log-affine.js';
 import { prepareElementary } from './math/elementary.js';
 import { prepareFormReferences } from './math/form-references.js';
@@ -625,6 +626,9 @@ function instantiateElements(
           generated.values,
           `${path}/expectedLatex`,
           element.response.kind === 'extended-real',
+          hasPowerOfEForm(element.policy.form)
+            ? POWER_OF_E_EXPONENT_BOUNDS
+            : undefined,
         );
         if (!numeric.ok)
           return failElement(

@@ -24,12 +24,20 @@ compile le lanceur natif ; elles ne sont donc pas déclarées comme l’empreint
 release. Le run CI `41881350792` a révélé 6 assertions en conflit avec les
 limites d’admissibilité de `main` et une assertion de replay qui comparait à
 l’identique le texte mathématique historique et sa nouvelle présentation
-normalisée. Les limites d’exposant de `main` sont rétablies ; le replay conserve
-la fixture observée et compare séparément les champs fonctionnels et la
-présentation. Les 223 tests ciblés grading/log-affine/replay/texte passent.
-Compilation, types, lint et formatage passent localement ; Vitest complet reste
-bloqué sans résultat observable dans le runner Windows local. Le nouveau run CI,
-le tag, la release et le déploiement staging restent à effectuer.
+normalisée. Les limites d’exposant de `main` sont rétablies pour le formulaire
+pédagogique `power-of-e`, et le replay conserve la fixture observée en séparant
+champs fonctionnels et présentation normalisée. Le run CI `41885496618` a
+ensuite échoué sur les cas `e^{20}`, `e^{-1/4}` et `e^{-1/5}` : la borne ne doit
+pas restreindre les exponentielles rationnelles exactes du domaine réel général,
+et leur affichage doit rester réadmissible. La borne `[-16, 16]` est maintenant
+appliquée uniquement selon le formulaire `power-of-e` ; la sérialisation garde
+les puissances rationnelles de `e` sous une forme réadmissible. **241 tests
+ciblés** catalogue/grading/log-affine/replay passent localement ; build, types,
+lint, formatage, `npm.cmd pack --dry-run` (189 fichiers) et le smoke test package
+passent. L’empreinte du smoke local est variable et n’est pas celle de la
+release. Vitest complet reste bloqué sans résultat observable dans le runner
+Windows local. Le correctif et son nouveau run CI, le tag, la release et le
+déploiement staging restent à effectuer.
 
 ## Lecture chiffrée du token staging — 4 novembre 2026
 

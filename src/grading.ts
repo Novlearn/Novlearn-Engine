@@ -5,7 +5,11 @@ import { compareNumeric, prepareNumeric } from './math/numeric.js';
 import { prepareLogAffine, compareLogAffine } from './math/log-affine.js';
 import { prepareElementary, compareElementary } from './math/elementary.js';
 import { toleranceSyntax } from './contracts/answer-validation.js';
-import { checkForm } from './math/forms.js';
+import {
+  checkForm,
+  hasPowerOfEForm,
+  POWER_OF_E_EXPONENT_BOUNDS,
+} from './math/forms.js';
 import { prepareFormReferences } from './math/form-references.js';
 import {
   algebraKind,
@@ -588,6 +592,7 @@ export function gradeAnswer(
       instance.generation.values,
       '/expected',
       q.response.kind === 'extended-real',
+      hasPowerOfEForm(formPolicy) ? POWER_OF_E_EXPONENT_BOUNDS : undefined,
     );
     if (!expected.ok) return result('error', 'official-expected');
     const forms = prepareFormReferences(
@@ -615,6 +620,7 @@ export function gradeAnswer(
       {},
       '/answer/source',
       q.response.kind === 'extended-real',
+      hasPowerOfEForm(formPolicy) ? POWER_OF_E_EXPONENT_BOUNDS : undefined,
     );
     if (!student.ok) {
       const codes = student.diagnostics.map((d) => d.code);

@@ -8,6 +8,15 @@ export interface FormWitness {
   conforms: boolean | undefined;
   code: string;
 }
+export const POWER_OF_E_EXPONENT_BOUNDS = [-16, 16] as const;
+export function hasPowerOfEForm(policy: FormPolicy): boolean {
+  return (
+    policy === 'power-of-e' ||
+    (typeof policy === 'object' &&
+      policy.kind === 'accepted-forms' &&
+      policy.anyOf.includes('power-of-e'))
+  );
+}
 function unwrap(node: MathSyntax): MathSyntax {
   while (Array.isArray(node) && node[0] === 'Delimiter' && node.length === 2)
     node = node[1]!;
