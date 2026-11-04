@@ -22,6 +22,12 @@ de son SHA-256. Le helper partagé de production n'est pas remplacé. La migrati
 Novlearn attend toujours un déploiement staging sain. Aucun secret n'a été lu ni
 affiché et aucun conteneur de production n'a été touché.
 
+Le correctif `11254b5` et la CI `41921624551` sont verts sur Ubuntu et Windows,
+avec le job `host-container` et les nouveaux contrôles de syntaxe/format du
+jeton. Le run staging `41920817429`, lancé sur la version précédente, reste en
+échec ; il doit être relancé depuis le workflow mis à jour avant d'engager la
+migration Novlearn.
+
 ## Contexte initial de réconciliation Engine 0.2.1 — historique
 
 L’audit distant confirme `main` à `968696a9929614f04021dc53f7669e8c305adf4e`,
