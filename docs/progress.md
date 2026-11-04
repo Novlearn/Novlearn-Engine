@@ -1,5 +1,26 @@
 # État et reprise
 
+## Bootstrap avec le compte root existant — 4 novembre 2026
+
+Le run GitHub `Initialize Engine VPS #3` a validé le préflight et copié les
+fichiers, puis échoué avant le bootstrap : le compte SSH observé est UID 0 et
+la validation refusait root. À la demande de l'utilisateur, le workflow et le
+script acceptent désormais ce compte existant. La validation du nom reste
+active et son erreur déclenche le nettoyage du dossier temporaire du run.
+Le bootstrap n'ajoute aucune règle sudo pour root ; une initialisation ultérieure
+avec un compte dédié peut donc créer sa propre règle limitée au wrapper.
+
+La CI `#12` a réussi les vérifications Ubuntu et Windows, mais son job Docker a
+échoué en attendant `/healthz`. Ce problème reste distinct et non corrigé ici.
+Le présent changement ne lance aucun workflow ni aucune commande sur le VPS.
+
+Vérifications ciblées : syntaxe Bash du bootstrap et du bloc SSH du workflow,
+admission des noms root/non-root, refus des noms malformés, absence de règle sudo
+créée pour root, création pour un compte dédié, réexécution et refus d'une règle
+existante différente passent dans un dossier temporaire local. Format Prettier
+des fichiers YAML/Markdown modifiés vérifié. Aucun bootstrap complet ni nouveau
+build Docker exécuté ; le smoke conteneur rouge reste à diagnostiquer.
+
 ## Lancement manuel du CI — 4 novembre 2026
 
 Le commit `4e911ea` de formatage est bien sur `main`, mais l'API GitHub ne

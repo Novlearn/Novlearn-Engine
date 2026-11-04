@@ -313,3 +313,17 @@ l'API GitHub ne retourne aucune exécution pour ce SHA. La raison exacte n'est
 pas démontrée. Ajouter `workflow_dispatch` au même workflow pour que la CI
 puisse être lancée explicitement depuis Actions sur `main`; ses jobs restent
 des contrôles uniquement, sans publication ni déploiement.
+
+### D61 — Autoriser le bootstrap via le compte root existant (4 novembre 2026)
+
+L'utilisateur autorise l'adaptation et le push du workflow et du script pour
+réutiliser provisoirement le compte root déjà employé par NovLearn. Accepter
+root sans modifier les autres validations du bootstrap, les secrets, les ports
+ou la confirmation explicite. Ce choix donne aux workflows utilisant cette clé
+tous les droits root sur le VPS jusqu'au remplacement des accès.
+
+Ne pas écrire de règle sudo redondante pour root : le passage ultérieur à un
+compte dédié pourra créer la règle limitée au wrapper sans conflit avec une
+règle installée pour root. La création du compte, sa clé et le changement des
+secrets GitHub restent à réaliser par leurs administrateurs. L'utilisateur
+relancera lui-même l'initialisation ; aucune exécution VPS n'est incluse ici.

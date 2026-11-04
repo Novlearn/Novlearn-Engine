@@ -25,8 +25,8 @@ valid_port "$STAGING_PORT" || { echo "Supply an available staging port (1024-655
 valid_port "$PRODUCTION_PORT" || { echo "Supply an available production port (1024-65535)." >&2; exit 64; }
 [[ "$STAGING_PORT" != "$PRODUCTION_PORT" ]] || { echo "Ports must differ." >&2; exit 64; }
 [[ "$GH_OWNER" =~ ^[a-z0-9-]+$ ]] || { echo "Invalid lowercase GitHub organization." >&2; exit 64; }
-[[ "$SSH_USER" =~ ^[a-z_][a-z0-9_-]{0,31}$ && "$SSH_USER" != root ]] || {
-  echo "Supply the existing non-root VPS SSH username (1-32 lowercase letters, digits, _ or -)." >&2; exit 64;
+[[ "$SSH_USER" =~ ^[a-z_][a-z0-9_-]{0,31}$ ]] || {
+  echo "Supply the existing VPS SSH username (1-32 lowercase letters, digits, _ or -)." >&2; exit 64;
 }
 getent passwd "$SSH_USER" >/dev/null || { echo "The existing SSH user does not exist on this VPS." >&2; exit 1; }
 
@@ -134,13 +134,17 @@ for pair in "deploy/engine-deploy-root.sh:/usr/local/sbin/novlearn-engine-deploy
     install -o root -g root -m 0755 "$source_file" "$target_file"
   fi
 done
-if [[ ! -e /etc/sudoers.d/novlearn-engine-deploy ]]; then
+if [[ "$SSH_USER" == root ]]; then
+  echo "Using the existing root SSH account: GitHub deployments retain full VPS privileges. No sudo rule is added."
+elif [[ ! -e /etc/sudoers.d/novlearn-engine-deploy ]]; then
   printf '%s ALL=(root) NOPASSWD: /usr/local/sbin/novlearn-engine-deploy *\n' "$SSH_USER" > /etc/sudoers.d/novlearn-engine-deploy
 elif ! grep -Fqx "$SSH_USER ALL=(root) NOPASSWD: /usr/local/sbin/novlearn-engine-deploy *" /etc/sudoers.d/novlearn-engine-deploy; then
   echo "Existing Engine sudo rule differs; refusing to overwrite it." >&2; exit 1
 fi
-chmod 0440 /etc/sudoers.d/novlearn-engine-deploy
-visudo -cf /etc/sudoers.d/novlearn-engine-deploy >/dev/null
+if [[ "$SSH_USER" != root ]]; then
+  chmod 0440 /etc/sudoers.d/novlearn-engine-deploy
+  visudo -cf /etc/sudoers.d/novlearn-engine-deploy >/dev/null
+fi
 
 echo "Bootstrap installed for existing SSH user $SSH_USER. No container was started and Apache was not changed."
 echo "Configure the GitHub environments and verify the existing Apache /run proxy next."

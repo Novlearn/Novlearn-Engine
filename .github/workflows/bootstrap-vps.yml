@@ -180,9 +180,12 @@ jobs:
           script: |
             set -eu
             [[ "$BOOTSTRAP_DIR" =~ ^/tmp/novlearn-engine-bootstrap-[0-9]+-[0-9]+$ ]]
-            [[ "$SSH_USERNAME" =~ ^[a-z_][a-z0-9_-]{0,31}$ && "$SSH_USERNAME" != root ]]
             cleanup() { rm -rf -- "$BOOTSTRAP_DIR"; }
             trap cleanup EXIT
+            [[ "$SSH_USERNAME" =~ ^[a-z_][a-z0-9_-]{0,31}$ ]] || {
+              echo 'BLOCKED: invalid VPS SSH username.' >&2
+              exit 1
+            }
             cd "$BOOTSTRAP_DIR"
             sudo -n bash deploy/bootstrap-vps.sh \
               --gh-owner novlearn \

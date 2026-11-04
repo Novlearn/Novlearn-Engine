@@ -48,7 +48,7 @@ Dans GitHub → dépôt Engine → **Actions** → **Initialize Engine VPS** →
   routage NovLearn. Pour ce choix, saisis exactement
   `INITIALIZE NOVLEARN ENGINE ON VPS` dans le champ de confirmation. Cette
   action écrit des fichiers sous `/opt`, `/etc` et `/usr/local`, ainsi qu'une
-  règle `sudoers`, mais ne démarre toujours aucun conteneur et ne touche pas
+  règle `sudoers` pour un compte non-root, mais ne démarre toujours aucun conteneur et ne touche pas
   Apache.
 
 Le workflow doit être lancé depuis `main`. Le compte associé à `VPS_USERNAME`
@@ -57,6 +57,15 @@ donne pas les droits administrateur. Si le préflight échoue sur ce point,
 l'administrateur du VPS doit installer le bootstrap manuellement ou accorder les
 droits nécessaires avant de réessayer. Le workflow ne peut ni demander un mot de
 passe interactif, ni obtenir les secrets masqués depuis un autre dépôt.
+
+Le compte `root` existant est accepté : les workflows qui utilisent sa clé
+conservent alors tous les droits sur le VPS. Le bootstrap n'ajoute pas de règle
+sudo pour root. Pour passer ensuite à un compte dédié, Alexandre doit créer le
+compte et autoriser sa clé SSH, puis installer la règle limitée au wrapper
+`/usr/local/sbin/novlearn-engine-deploy` (ou relancer le bootstrap avec ce compte
+et les droits administrateur nécessaires). Remplacer ensuite `VPS_USERNAME` et
+`VPS_SSH_KEY`, vérifier l'accès, puis retirer l'ancienne clé root si elle n'est
+plus utilisée par les autres déploiements.
 
 La procédure manuelle ci-dessous reste disponible si Alexandre préfère exécuter
 le bootstrap depuis une copie du dépôt Engine sur le VPS. Elle ne touche pas à
@@ -86,8 +95,8 @@ Apache et ne démarre pas de conteneur.
    Le script refuse les ports occupés, le cgroup v1, les fichiers de
    configuration existants différents et les ports identiques. Il crée
    `/opt/novlearn-engine/{staging,production}`, deux tokens aléatoires séparés,
-   le wrapper root-owned et une règle sudo limitée à ce wrapper pour le compte
-   SSH existant. Le nom passé à `--ssh-user` doit être exactement la valeur du
+   le wrapper root-owned et, pour un compte non-root, une règle sudo limitée à ce
+   wrapper. Le nom passé à `--ssh-user` doit être exactement la valeur du
    secret GitHub `VPS_USERNAME`. Le bootstrap ne modifie pas `authorized_keys`
    et n'ajoute pas l'utilisateur au groupe Docker. Il est réexécutable sans
    remplacer les tokens ou configurations déjà créés.
