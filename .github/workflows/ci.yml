@@ -39,6 +39,15 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Validate staging deployment shell contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n deploy/deploy-staging-remote.sh deploy/engine-deploy-root.sh
+          token='ghs_example-token.with-safe.punctuation_1234567890'
+          [[ "$token" =~ ^[^[:space:]]{32,4096}$ ]]
+          token='ghs_example token.with-space_1234567890'
+          ! [[ "$token" =~ ^[^[:space:]]{32,4096}$ ]]
       - name: Build Engine host image
         run: docker build --pull --build-arg ENGINE_ARTIFACT_SHA256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --tag novlearn-engine-host:ci .
       - name: Smoke test the containerized host

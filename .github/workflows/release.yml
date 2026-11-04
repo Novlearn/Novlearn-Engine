@@ -150,6 +150,54 @@ jobs:
       packages: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Calculate the reviewed staging helper fingerprint
+        id: staging-helper
+        run: echo "sha256=$(sha256sum deploy/engine-deploy-root.sh | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+      - name: Prepare a private temporary helper directory
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        env:
+          HELPER_DIR: /tmp/novlearn-engine-staging-helper-${{ github.run_id }}-${{ github.run_attempt }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: HELPER_DIR
+          script: |
+            set -eu
+            [[ "$HELPER_DIR" =~ ^/tmp/novlearn-engine-staging-helper-[0-9]+-[0-9]+$ ]]
+            [[ ! -e "$HELPER_DIR" ]]
+            mkdir -m 0700 -- "$HELPER_DIR"
+      - name: Upload the reviewed helper
+        uses: appleboy/scp-action@917f8b81dfc1ccd331fef9e2d61bdc6c8be94634 # v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: deploy/engine-deploy-root.sh
+          target: /tmp/novlearn-engine-staging-helper-${{ github.run_id }}-${{ github.run_attempt }}
+          strip_components: 1
+          overwrite: true
+      - name: Install and verify the stage-only helper
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        env:
+          HELPER_DIR: /tmp/novlearn-engine-staging-helper-${{ github.run_id }}-${{ github.run_attempt }}
+          EXPECTED_SHA256: ${{ steps.staging-helper.outputs.sha256 }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: HELPER_DIR,EXPECTED_SHA256
+          script: |
+            set -euo pipefail
+            [[ "$HELPER_DIR" =~ ^/tmp/novlearn-engine-staging-helper-[0-9]+-[0-9]+$ ]]
+            [[ "$EXPECTED_SHA256" =~ ^[a-f0-9]{64}$ ]]
+            cleanup() { sudo -n rm -rf -- "$HELPER_DIR"; }
+            trap cleanup EXIT
+            source_file="$HELPER_DIR/engine-deploy-root.sh"
+            [[ -f "$source_file" && ! -L "$source_file" ]]
+            sudo -n install -o root -g root -m 0755 "$source_file" /usr/local/sbin/novlearn-engine-deploy-staging
+            actual_sha256="$(sudo -n sha256sum /usr/local/sbin/novlearn-engine-deploy-staging | cut -d' ' -f1)"
+            [[ "$actual_sha256" == "$EXPECTED_SHA256" ]]
       - name: Deploy tested release to staging
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
         env:
@@ -162,5 +210,5 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           envs: DEPLOY_ENVIRONMENT,IMAGE_REFERENCE,GHCR_USER,GHCR_TOKEN
-          script_path: deploy/deploy-remote.sh
+          script_path: deploy/deploy-staging-remote.sh
           command_timeout: 15m

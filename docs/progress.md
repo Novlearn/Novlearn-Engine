@@ -10,13 +10,17 @@ GHCR publiée est épinglée par digest
 `sha256:d1916edf981fd23b57f543937d83411df77b7dc5da290e24db9f41cbf544a4ea`.
 
 Le job de déploiement initial `41889427068` a échoué avant toute modification
-du VPS staging : l'action SSH masquait bien une valeur `GHCR_TOKEN`, puis le
-validateur distant l'a refusée. Le filtre alphanumérique supposait un alphabet
-de jeton trop étroit. Les deux validations limitent maintenant sa longueur et
-refusent seulement les espaces/retours de ligne. Un workflow de relance manuelle
-ne cible que le digest 0.2.1 ci-dessus et l'environnement staging. La migration
-Novlearn reste suspendue jusqu'à vérification de la santé staging. Production
-n'a pas été ciblée ; aucun secret n'a été lu ni affiché.
+du VPS staging : l'action SSH a reçu une valeur masquée, le validateur dans le
+checkout a accepté l'entrée et le helper root déjà installé a refusé son ancien
+format de jeton. Le workflow de relance `41920817429` a ensuite confirmé que le
+helper root déjà installé sur le VPS conserve l'ancien validateur ; aucun
+conteneur n'a été mis à jour. Le VPS confirme une session root issue du workflow
+de bootstrap. Le correctif ajoute donc un exécutable séparé
+`novlearn-engine-deploy-staging`,
+strictement limité à staging, installé après transfert temporaire et vérification
+de son SHA-256. Le helper partagé de production n'est pas remplacé. La migration
+Novlearn attend toujours un déploiement staging sain. Aucun secret n'a été lu ni
+affiché et aucun conteneur de production n'a été touché.
 
 ## Contexte initial de réconciliation Engine 0.2.1 — historique
 

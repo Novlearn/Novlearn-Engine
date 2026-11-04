@@ -4,7 +4,11 @@ set -euo pipefail
 ENVIRONMENT="${1:-}"
 IMAGE="${2:-}"
 [[ $# -eq 2 ]] || { echo "Expected environment and image digest." >&2; exit 64; }
-[[ "$ENVIRONMENT" == staging || "$ENVIRONMENT" == production ]] || exit 64
+if [[ "${0##*/}" == novlearn-engine-deploy-staging ]]; then
+  [[ "$ENVIRONMENT" == staging ]] || { echo "Staging helper only accepts staging." >&2; exit 64; }
+else
+  [[ "$ENVIRONMENT" == staging || "$ENVIRONMENT" == production ]] || exit 64
+fi
 GH_OWNER="$(cat /etc/novlearn-engine-owner)"
 [[ "$IMAGE" =~ ^ghcr\.io/${GH_OWNER}/novlearn-engine-host@sha256:[a-f0-9]{64}$ ]] || {
   echo "Rejected image reference." >&2; exit 64;
