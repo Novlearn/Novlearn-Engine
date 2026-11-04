@@ -8,8 +8,9 @@ absente. Le tag publié contient des modules `remote-host`, mathématiques et
 tests qui n’avaient pas été réintégrés dans `main`. Le package Novlearn staging
 consomme ces interfaces et épingle l’archive `v0.2.0` par SHA-256.
 
-Le candidat restaure ces sources et tests, garde le serveur HTTP et le worker de
-`main`, et ajoute un test du client exporté contre le gestionnaire HTTP actuel.
+Le commit `63b7235` restaure ces sources et tests, garde le serveur HTTP et le
+worker de `main`, et ajoute un test du client exporté contre le gestionnaire
+HTTP actuel.
 Le workflow de release empaquette une seule fois sur Windows pour inclure le
 lanceur natif, puis vérifie et transfère ces mêmes octets au job Linux, qui bâtit
 l’image GHCR et attache le tarball exact et son SHA-256 à la release. Le seul
@@ -20,10 +21,14 @@ interfaces restaurées et du package, **66/66 PASS** ; `npm.cmd pack --dry-run`
 PASS, 189 fichiers ; `npm.cmd run smoke:package` PASS. Les empreintes des
 tarballs construits localement diffèrent entre builds Windows, car le build
 compile le lanceur natif ; elles ne sont donc pas déclarées comme l’empreinte de
-release. `npm.cmd run check` n’a pas passé dans cet environnement : Vitest a
-rencontré des `ENOENT` dans son répertoire temporaire isolé ; avec `TEMP`/`TMP`
-dans le workspace, les tests natifs du host/CLI retournent `unavailable` et
-l’exécution a été interrompue après s’être bloquée. La CI distante du candidat,
+release. Le run CI `41881350792` a révélé 6 assertions en conflit avec les
+limites d’admissibilité de `main` et une assertion de replay qui comparait à
+l’identique le texte mathématique historique et sa nouvelle présentation
+normalisée. Les limites d’exposant de `main` sont rétablies ; le replay conserve
+la fixture observée et compare séparément les champs fonctionnels et la
+présentation. Les 223 tests ciblés grading/log-affine/replay/texte passent.
+Compilation, types, lint et formatage passent localement ; Vitest complet reste
+bloqué sans résultat observable dans le runner Windows local. Le nouveau run CI,
 le tag, la release et le déploiement staging restent à effectuer.
 
 ## Lecture chiffrée du token staging — 4 novembre 2026

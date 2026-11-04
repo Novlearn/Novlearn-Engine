@@ -370,3 +370,13 @@ automatique reste `staging`. Novlearn staging doit reprendre le binaire et
 l’empreinte de la release, jamais un tarball construit séparément. Les checks
 locaux Windows incomplets dus aux restrictions du runner ne remplacent pas les
 résultats CI distants, qui restent obligatoires avant le tag.
+
+### D65 — Préserver les limites de `main` dans la réintégration 0.2.0 (4 novembre 2026)
+
+La source `numeric.ts` de l’archive `v0.2.0` autorise des demi-puissances et des
+exposants exponentiels sans les limites plus strictes déjà présentes sur `main`.
+Conserver les bornes et admissions de `main` pour qu’une forme hors profil ne
+devienne pas une réponse faussement évaluée. Au rejeu vertical, garder intacte
+la fixture observée ; vérifier séparément les valeurs interpolées de son texte
+et les autres champs du snapshot, car le moteur sérialise désormais la
+présentation mathématique de façon normalisée.

@@ -485,35 +485,25 @@ export function prepareNumeric(
       }
       if (head === 'Power' || head === 'Square') {
         const base = ce.box(args[0]!, { form: 'raw' }).canonical;
-        // e^u and exp(u) share the same admitted closed real argument. Raw
-        // descendants have already been checked, including every inner domain.
+        const rationalExponent =
+          head === 'Power' && base.json === 'ExponentialE'
+            ? ce.box(args[1]!).evaluate()
+            : undefined;
+        const rationalValue = rationalExponent?.toRational()
+          ? exactNumber(rationalExponent, true)
+          : undefined;
         const exponentialPower =
-          head === 'Power' && base.json === 'ExponentialE';
+          rationalValue !== undefined &&
+          [0, 1].includes(exactOrder(rationalValue, -16) ?? -2) &&
+          [-1, 0].includes(exactOrder(rationalValue, 16) ?? 2);
         const e =
           head === 'Square'
             ? 2
             : exactNumber(ce.box(args[1]!).evaluate(), true);
         const exponent =
           typeof e === 'number' ? e : e === undefined ? undefined : e.toJSON();
-        const half =
-          head === 'Power'
-            ? ce.box(args[1]!).evaluate().toRational()
-            : undefined;
-        const halfPower = half?.[1] === 2 && Math.abs(half[0]) === 1;
-        if (halfPower) {
-          const sign = signOf(args[0]!);
-          if (sign === -1 || (sign === 0 && half![0] < 0))
-            fail(
-              'undefined-expression',
-              p,
-              'The real half-power domain is invalid.',
-            );
-          if (sign === undefined)
-            fail('not-calculable', p, 'The half-power domain is not proved.');
-        }
         if (
           !exponentialPower &&
-          !halfPower &&
           (typeof exponent !== 'number' ||
             !Number.isInteger(exponent) ||
             Math.abs(exponent) > 16)
@@ -525,7 +515,6 @@ export function prepareNumeric(
           );
         if (
           !exponentialPower &&
-          !halfPower &&
           typeof exponent === 'number' &&
           exponent <= 0
         ) {
@@ -556,16 +545,7 @@ export function prepareNumeric(
     const exact = exactNumber(evaluated, true);
     const expression = exactStructure(evaluated) ? evaluated : canonical;
     const display = expression;
-    const displayLatex = display.toLatex({
-      digitGroup: 0,
-      // Cortex may evaluate an admitted e^(p/q) into an nth root of e.
-      // Serialize that exact representation as a power, which stays inside
-      // the original admission; arbitrary nth-root inputs remain unsupported.
-      rootStyle: (node: MathSyntax) =>
-        Array.isArray(node) && node[0] === 'Root' && node[1] === 'ExponentialE'
-          ? 'quotient'
-          : 'radical',
-    });
+    const displayLatex = display.toLatex({ digitGroup: 0 });
     if (!display.isValid || !displayLatex || displayLatex.length > 4096)
       fail(
         'substitution-failed',
