@@ -48,7 +48,7 @@ jobs:
           token="$(openssl rand -hex 32)"
           cleanup() { docker rm --force novlearn-engine-host-ci >/dev/null 2>&1 || true; }
           trap cleanup EXIT
-          docker run --detach --name novlearn-engine-host-ci \
+          docker run --detach --init --name novlearn-engine-host-ci \
             --publish 127.0.0.1:18080:8080 \
             --env "ENGINE_API_TOKEN=$token" \
             --memory=384m --memory-swap=384m --pids-limit=64 --cpus=1.5 \
@@ -61,7 +61,13 @@ jobs:
             fi
             sleep 2
           done
-          [[ "$ready" == true ]] || { docker logs novlearn-engine-host-ci; exit 1; }
+          if [[ "$ready" != true ]]; then
+            echo 'Engine host did not become ready within 120 seconds.' >&2
+            docker inspect --format 'status={{.State.Status}} exit={{.State.ExitCode}} oom={{.State.OOMKilled}} error={{.State.Error}}' novlearn-engine-host-ci || true
+            docker logs --tail 100 novlearn-engine-host-ci || true
+            curl --include --silent --show-error --max-time 2 http://127.0.0.1:18080/healthz || true
+            exit 1
+          fi
           curl --fail --silent --show-error --max-time 10 \
             -H "Authorization: Bearer $token" \
             -H 'Content-Type: application/json' \

@@ -1,5 +1,32 @@
 # État et reprise
 
+## Bootstrap réussi et correction du conteneur CI — 4 novembre 2026
+
+Le run GitHub `Initialize Engine VPS #4` a terminé le bootstrap avec le compte
+existant : les fichiers de déploiement et tokens sont installés, aucun conteneur
+n'a démarré et Apache n'a pas été modifié. La CI `#13` du commit `33adc4b` a
+réussi sa matrice Ubuntu/Windows mais échoué à la disponibilité du host Docker.
+
+Deux causes ont été reproduites localement. L'image installe `python3-minimal`
+sans les modules standard requis par le lanceur (`ModuleNotFoundError: ctypes`).
+Après installation de `python3`, le smoke reste non sain sans `--init` : Node
+est PID 1 et le lanceur refuse ce parent pour garantir sa terminaison. Compose
+utilise déjà `init: true`. Le Dockerfile installe désormais Python complet et
+importe le vrai lanceur pendant le build sans exécuter sa fonction principale.
+Le smoke CI utilise `--init` et affiche l'état limité du conteneur, ses logs et
+la réponse de santé en cas de refus, sans afficher sa configuration ni son token.
+
+Vérifications locales : construction de l'ancienne image, reproduction du module
+manquant, build corrigé, reproduction du 503 sans init et smoke CI corrigé avec
+`/healthz` puis calcul authentifié réussis sous 384 MiB / swap 0 / 64 pids.
+Le profil Compose passe également (read-only, utilisateur 1000, capacités retirées,
+no-new-privileges, tmpfs) avec refus 401 sans token et 409 pour mauvaise archive.
+La création d'un nouveau réseau Docker local est bloquée par l'épuisement de ses
+plages ; ce contrôle Compose utilise donc un override local `network_mode: bridge`.
+Le fichier de déploiement n'est pas modifié. Les conteneurs de test sont supprimés.
+La nouvelle CI distante reste à observer après push ; aucune image GHCR ni aucun
+déploiement VPS n'est effectué par ce correctif.
+
 ## Bootstrap avec le compte root existant — 4 novembre 2026
 
 Le run GitHub `Initialize Engine VPS #3` a validé le préflight et copié les

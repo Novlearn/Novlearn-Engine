@@ -327,3 +327,16 @@ compte dédié pourra créer la règle limitée au wrapper sans conflit avec une
 règle installée pour root. La création du compte, sa clé et le changement des
 secrets GitHub restent à réaliser par leurs administrateurs. L'utilisateur
 relancera lui-même l'initialisation ; aucune exécution VPS n'est incluse ici.
+
+### D62 — Dépendances Python et init du conteneur CI (4 novembre 2026)
+
+Après le bootstrap VPS réussi, corriger le host-container rouge sans assouplir
+le lanceur ni ses contrôles de cgroup ou de parent. Debian `python3-minimal`
+sans recommandations omet notamment `ctypes` et `resource` ; installer `python3`
+et vérifier les imports du vrai lanceur dans l'image pendant le build.
+
+Aligner le smoke sur `init: true` du Compose avec `docker run --init`, car le
+lanceur refuse un parent PID 1. Conserver mémoire, swap, pids et délais. En cas
+d'échec de disponibilité, afficher uniquement l'état ciblé du conteneur et les
+réponses/logs nécessaires au diagnostic, sans inspecter sa configuration secrète.
+Les reproductions et limites locales sont consignées dans progress.
