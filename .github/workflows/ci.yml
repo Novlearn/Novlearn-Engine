@@ -1,12 +1,17 @@
 name: CI
 on:
   push:
+    branches: [main]
   pull_request:
-  workflow_dispatch:
+    branches: [main]
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   verify:
+    timeout-minutes: 30
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -16,9 +21,50 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '24.19.0'
+          node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install --global npm@11.17.0
       - run: npm ci
       - run: npm run check
       - run: npm pack --dry-run
       - run: npm run smoke:package
+
+  host-container:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Build Engine host image
+        run: docker build --pull --build-arg ENGINE_ARTIFACT_SHA256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --tag novlearn-engine-host:ci .
+      - name: Smoke test the containerized host
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="$(openssl rand -hex 32)"
+          cleanup() { docker rm --force novlearn-engine-host-ci >/dev/null 2>&1 || true; }
+          trap cleanup EXIT
+          docker run --detach --name novlearn-engine-host-ci \
+            --publish 127.0.0.1:18080:8080 \
+            --env "ENGINE_API_TOKEN=$token" \
+            --memory=384m --memory-swap=384m --pids-limit=64 --cpus=1.5 \
+            novlearn-engine-host:ci
+          ready=false
+          for attempt in {1..60}; do
+            if curl --fail --silent --max-time 2 http://127.0.0.1:18080/healthz >/dev/null; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          [[ "$ready" == true ]] || { docker logs novlearn-engine-host-ci; exit 1; }
+          curl --fail --silent --show-error --max-time 10 \
+            -H "Authorization: Bearer $token" \
+            -H 'Content-Type: application/json' \
+            --data '{"protocolVersion":1,"requestId":"ci-smoke","operation":"parseMathInput","payload":{"source":"1","context":{},"profile":"scalar-latex-v1"}}' \
+            -H 'x-engine-archive-sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' \
+            http://127.0.0.1:18080/run | node -e \
+              'let data="";process.stdin.on("data",chunk=>data+=chunk);process.stdin.on("end",()=>{const result=JSON.parse(data);if(!result.ok)process.exit(1)})'

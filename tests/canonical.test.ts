@@ -8,7 +8,7 @@ import {
 } from 'novlearn-exercise-engine';
 import type { GenerateVariablesOptions } from 'novlearn-exercise-engine';
 import reference from './fixtures/canonical/reference-vectors.json' with { type: 'json' };
-import packageJson from '../package.json' with { type: 'json' };
+// Replay pipeline stays 0.1.0; package 0.2.0 adds only the independent graph API.
 
 describe('canonical contract and reference vectors', () => {
   it.each(reference.vectors)(
@@ -24,7 +24,7 @@ describe('canonical contract and reference vectors', () => {
         }),
       ).toEqual(result);
       if (!generated.ok) throw new Error('Reference generation failed');
-      expect(generated.replay.engineVersion).toBe(packageJson.version);
+      expect(generated.replay.engineVersion).toBe('0.1.0');
       const { a, b, c, d, f, g, h } = generated.values;
       if (
         a?.kind !== 'integer' ||

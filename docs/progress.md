@@ -1,5 +1,51 @@
 # État et reprise
 
+## Workflow manuel de pré-vérification et bootstrap VPS — 4 novembre 2026
+
+Ajout local d'un workflow `workflow_dispatch` unique qui réutilise les secrets
+du dépôt `VPS_HOST`, `VPS_USERNAME` et `VPS_SSH_KEY`. Le mode `preflight` vérifie
+SSH, sudo non interactif, Docker/Compose, cgroup v2, outils, ports et état Engine
+sans modifier la configuration ou démarrer de service. Le mode `initialize`
+exige une phrase de confirmation, copie les trois scripts/configurations utiles
+dans un dossier temporaire privé, puis lance le bootstrap VPS existant. Les ports
+par défaut restent 3151/3152. La documentation précise les droits requis et le
+fait que l'initialisation ne publie ni image ni conteneur et ne modifie pas Apache.
+
+Aucun workflow distant n'a été lancé. Le compte VPS, son droit `sudo -n`, les
+prérequis et les secrets réels ne sont pas observables localement. Le workflow,
+les actions SSH/SCP, le bootstrap Linux et le préflight attendent une revue et une
+exécution contrôlée sur GitHub; aucun déploiement n'a été effectué.
+
+## Livraison locale CI/CD du host — 3 novembre 2026
+
+La CI vise maintenant les PR vers `main` et les pushs sur `main`. Le host dispose
+d'un adaptateur HTTP privé versionné avec token par environnement et sonde de
+disponibilité. Docker/Compose, scripts bootstrap/déploiement/rollback, publication
+GHCR par digest, staging automatique et promotion/rollback prod sous approbation
+sont ajoutés. Instructions pour Alexandre dans [DEPLOYMENT.md](DEPLOYMENT.md).
+
+Aucun secret GitHub, release, publication ou déploiement distant créé. Le VPS,
+ses ports/cgroup, Apache et les GitHub Environments restent à configurer. Check
+complet final : 1579/1579 tests ; `npm.cmd pack --dry-run`, smoke du package et
+`docker compose config --quiet` passent. Le daemon Docker est inaccessible et
+Bash est bloqué par l'isolation Windows ; image, scripts Linux et CI distante
+non exécutés.
+
+La revue du 4 novembre a ajouté au workflow CI un job Ubuntu qui construit
+l'image et exerce le host conteneurisé sous limites mémoire/processus, avec
+health check et requête authentifiée. Il attend le succès de la matrice
+Node/Windows et n'utilise aucun secret. Contrôle local de reprise : `npm ci`,
+pack dry-run, smoke du package et configuration Compose passent. Vitest n'a
+pas terminé dans ce sandbox Windows : 26 suites ne trouvent pas les fichiers
+temporaires Vitest (`ENOENT`), 7 suites et 158 tests passent avant l'échec ;
+une relance avec `TEMP` explicite reste bloquée et a été interrompue. Le daemon
+Docker local et Bash ne sont pas disponibles, donc le nouveau job conteneur
+attend son exécution sur GitHub Actions. Aucun déploiement ni release réel.
+
+## Extension locale des courbes — 21 octobre 2026
+
+[Sampling D54 / Admin D10](graph-sampling.md) autorisé, en cours : 109 tests ciblés passent, dont 28 nouveaux cas de sampling ; build/types stricts passent. Le premier contrôle complet a terminé avec dix échecs conservés ; les correctifs ciblés passent et le second contrôle complet reste à exécuter. Host Linux et tarball restent à qualifier avant adoption Admin. Aucun critère, protection ou environnement distant modifié.
+
 ## Régression de disponibilité des figures Admin — 17 octobre 2026
 
 La [correction ciblée](certification/numeric-render-cache.md), autorisée par
@@ -215,3 +261,46 @@ Le [rapport d’audit](audit.md) donne inventaire, corrections et périmètre du
 
 Le détail des livraisons et critères figure dans la roadmap ; ce tableau sert
 uniquement à retrouver les états Git et les preuves de reprise.
+
+### D55 — Sérialisation des attendus numériques Admin (30 octobre 2026)
+
+La mission Admin/Engine autorisée reproduit un attendu rendu par Cortex avec des
+séparateurs de groupes, puis refusé par le profil numérique inchangé. Les deux
+chemins numériques sérialisent désormais avec digitGroup: 0. Aucune admission,
+contrainte, forme, limite, source originale ou autorité mathématique n'est relâchée.
+Le test numeric-display-roundtrip couvre rationnels/réels, négatifs, grands nombres,
+rejeu et maintien du refus des entrées groupées hors profil.
+
+L'archive distribuée Admin 0.1.1 est construite depuis baa48c45 et ce correctif,
+sans les travaux 0.2.0 préexistants. SHA256 :
+c7116f9310da49478deb43ca64e04b974efd34765b45a22294c13b5235bdf927.
+Schéma 5 et pipeline 0.1.0 conservés ; les octets de présentation peuvent changer.
+Conserver l'archive exacte pour le rejeu et renouveler les reçus. Les sources de
+développement restent en 0.2.0 ; aucun tarball ancien n'est remplacé.
+
+Qualification candidate : build/types/lint ; 1542/1544 tests au premier passage,
+deux timeouts algébriques à 5 s pendant des builds concurrents ; relance complète
+du fichier algébrique 126/126 sans concurrence, même délai. Le contrôle composé
+s'arrête au format d'un ancien CDC de la copie de référence, conservé. Le banc
+officiel du package installé Linux passe sous 384 Mio / swap 0 / 64 pids et réseau
+coupé, avec arrêt des workers et rejeu. Cela ne qualifie pas Vercel ni NovLearn.
+Les manifests, patch exact de release et anciennes archives sont conservés dans
+Novlearn-admin/vendor ; aucune dépendance applicative au dossier voisin.
+
+## Audit CI/CD et déploiement VPS — 3 novembre 2026
+
+La CI GitHub existante est resserrée sur PR vers `main` et push sur `main`, avec
+concurrence par référence, Node depuis `.nvmrc` et permissions minimales. Le
+déploiement VPS demandé est bloqué par l'état du dépôt : le host est un CLI
+stdin/stdout, sans HTTP, ports ni endpoint de santé ; le profil Linux exige un
+cgroup v2 préconfiguré. Pas de service, secrets, Docker/Compose ou déploiement
+fictifs ajoutés. Voir [D56](decisions.md#d56--ci-locale-et-frontière-de-déploiement-du-host-3-novembre-2026)
+et [déploiement](DEPLOYMENT.md).
+
+Contrôles locaux : `npm.cmd ci` PASS ; `npm.cmd run check` passe
+build/types/lint/format, puis **1572 tests PASS / 1 FAIL**. Le seul échec est le
+test Windows du host, timeout après 10,15 s au lieu de la limite native de 5 s ;
+31 autres fichiers passent. Un premier Vitest séparé a échoué sur le chemin
+temporaire des workers ; le contrôle complet suivant a utilisé le répertoire
+temporaire autorisé. `npm.cmd pack --dry-run` PASS. CI distante et déploiement
+non exécutés.

@@ -1,5 +1,30 @@
 # Roadmap et critères de passage
 
+## Pré-vérification et bootstrap manuel VPS — livré localement, à exécuter
+
+Le workflow manuel `Initialize Engine VPS` dispose de deux modes : préflight
+sans changement de configuration, puis initialisation confirmée qui copie et
+exécute le bootstrap déjà livré. Il consomme seulement les trois secrets VPS du
+dépôt et requiert `sudo -n` déjà accordé au compte SSH. Le workflow n'a pas été
+publié ni exécuté; restent la revue, l'intégration dans `main`, le préflight réel
+et, après validation par l'administrateur VPS, l'initialisation.
+
+## CI/CD et host HTTP sur VPS — livré localement, déploiement à effectuer
+
+Le host possède maintenant un adaptateur HTTP privé, image Docker, deux Compose
+isolés, bootstrap VPS, SSH restreint, release GHCR par digest, staging
+automatique et promotion/rollback production avec approbation GitHub. La
+procédure pour Alexandre est dans [DEPLOYMENT.md](DEPLOYMENT.md). Aucun
+déploiement ni release réel effectué. Restent : configurer les Environments et
+secrets GitHub, valider cgroup/ports du VPS, installer les clés, adapter les
+vhosts Apache et effectuer une première release après que la CI soit verte. La
+CI inclut désormais la construction de l'image et un smoke test du host sous
+limites Docker ; ce job reste à observer sur un runner GitHub.
+
+## Extension locale des courbes — 21 octobre 2026
+
+[Sampling D54 / Admin D10](graph-sampling.md) autorisé, en cours : 109 tests ciblés passent, dont 28 nouveaux cas de sampling ; build/types stricts passent. Le premier contrôle complet a terminé avec dix échecs conservés ; les correctifs ciblés passent et le second contrôle complet reste à exécuter. Host Linux et tarball restent à qualifier avant adoption Admin. Aucun critère, protection ou environnement distant modifié.
+
 ## Correction ciblée de disponibilité — 17 octobre 2026
 
 Une charge Admin combinant figures et vecteurs révèle un timeout natif
@@ -90,3 +115,11 @@ Lire les consignes et l’état actuel, délimiter objectif/autorisation, réali
 contrats/code/tests du lot, exécuter check/pack et contrôles spécifiques, revoir
 le diff, actualiser progression/décisions/couverture. Commit seulement si autorisé
 dans cette mission. Aucun push, SQL, publication ou déploiement implicite.
+
+## Audit initial du CI/CD - état remplacé par la livraison ci-dessus
+
+L'audit a d'abord relevé le transport CLI stdin/stdout et l'absence de service
+HTTP. Après autorisation de l'adaptateur HTTP privé, les travaux décrits dans
+la section ci-dessus l'ont ajouté. La vérification du cgroup et la mise en
+service sur le VPS restent à effectuer. Détails dans [DEPLOYMENT.md](DEPLOYMENT.md)
+et [D56-D57](decisions.md).

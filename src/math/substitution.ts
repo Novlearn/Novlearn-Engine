@@ -482,7 +482,8 @@ export function instantiateMath(
     const display = substituted.canonical.evaluate();
     if (!display.isValid)
       fail('substitution-failed', path, 'Unable to produce a valid display.');
-    const displayLatex = display.latex;
+    // Generated answers must roundtrip through the unchanged numeric admission.
+    const displayLatex = display.toLatex({ digitGroup: 0 });
     if (!displayLatex || displayLatex.length > 4096)
       fail('limit', path, 'Display exceeds the text budget.');
     return {

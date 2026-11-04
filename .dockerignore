@@ -1,0 +1,10 @@
+.git
+.cache
+.npm-cache
+node_modules
+dist
+tests
+examples
+docs
+*.log
+*.tgz

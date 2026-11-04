@@ -278,6 +278,35 @@ export function prepareAlgebra(
       ok: false,
       diagnostics: parsed.diagnostics.map((d) => ({ ...d, path })),
     };
+  return admittedAlgebra(parsed, source, context, values, path, variable, kind);
+}
+
+/** Internal derived, already-admitted AST: no LaTeX roundtrip or extra parser. */
+export function prepareAlgebraSyntax(
+  syntax: MathSyntax,
+  variable: string,
+  path: string,
+): AlgebraResult {
+  return admittedAlgebra(
+    { syntax, symbols: { parameters: [] } },
+    '',
+    { variables: [variable] },
+    {},
+    path,
+    variable,
+    'inequality',
+  );
+}
+
+function admittedAlgebra(
+  parsed: { syntax: MathSyntax; symbols: { parameters: readonly string[] } },
+  source: string,
+  context: MathInputContext,
+  values: Readonly<Record<string, GeneratedValue>>,
+  path: string,
+  variable: string,
+  kind: AlgebraKind,
+): AlgebraResult {
   try {
     admitSource(source, path);
     const ce = new ComputeEngine();

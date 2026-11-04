@@ -1,0 +1,117 @@
+name: Engine release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+concurrency:
+  group: engine-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      packages: write
+    outputs:
+      image: ${{ steps.publish.outputs.image }}
+      digest: ${{ steps.publish.outputs.digest }}
+      tag: ${{ steps.publish.outputs.tag }}
+      archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Verify tag belongs to main and matches package version
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main:refs/remotes/origin/main
+          git merge-base --is-ancestor "$GITHUB_SHA" refs/remotes/origin/main
+          version="$(node -p "JSON.parse(require('node:fs').readFileSync('package.json','utf8')).version")"
+          [[ "$GITHUB_REF_NAME" == "v$version" ]]
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install --global npm@11.17.0
+      - run: npm ci
+      - run: npm run check
+      - run: npm pack --dry-run
+      - run: npm run smoke:package
+      - name: Calculate the exact package archive identity
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm pack --json --pack-destination "$RUNNER_TEMP" > "$RUNNER_TEMP/npm-pack.json"
+          archive="$(node -e "process.stdout.write(JSON.parse(require('node:fs').readFileSync(process.argv[1], 'utf8'))[0].filename)" "$RUNNER_TEMP/npm-pack.json")"
+          archive_sha256="$(sha256sum "$RUNNER_TEMP/$archive" | cut -d' ' -f1)"
+          [[ "$archive_sha256" =~ ^[a-f0-9]{64}$ ]]
+          echo "archive_sha256=$archive_sha256" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$archive_sha256" > "$RUNNER_TEMP/engine-artifact-sha256.txt"
+      - name: Build and publish immutable host image
+        id: publish
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          image="ghcr.io/$owner/novlearn-engine-host"
+          echo "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "GitHub Release already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+          if docker buildx imagetools inspect "$image:$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release image tag already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+          docker build --pull \
+            --build-arg "ENGINE_ARTIFACT_SHA256=${{ steps.package.outputs.archive_sha256 }}" \
+            --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.version=$GITHUB_REF_NAME" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --tag "$image:$GITHUB_REF_NAME" .
+          docker push "$image:$GITHUB_REF_NAME"
+          digest="$(docker buildx imagetools inspect "$image:$GITHUB_REF_NAME" --format '{{.Manifest.Digest}}')"
+          [[ "$digest" =~ ^sha256:[a-f0-9]{64}$ ]]
+          printf '%s@%s\n' "$image" "$digest" > "$RUNNER_TEMP/engine-image.txt"
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+          echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+          gh release create "$GITHUB_REF_NAME" --generate-notes \
+            --title "$GITHUB_REF_NAME" \
+            "$RUNNER_TEMP/engine-image.txt#engine-image.txt" \
+            "$RUNNER_TEMP/engine-artifact-sha256.txt#engine-artifact-sha256.txt"
+          echo "Published `$image@$digest`" >> "$GITHUB_STEP_SUMMARY"
+
+  deploy-staging:
+    needs: build-publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: staging
+    permissions:
+      contents: read
+      deployments: write
+      packages: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Deploy tested release to staging
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        env:
+          DEPLOY_ENVIRONMENT: staging
+          IMAGE_REFERENCE: ${{ needs.build-publish.outputs.image }}@${{ needs.build-publish.outputs.digest }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: DEPLOY_ENVIRONMENT,IMAGE_REFERENCE,GHCR_USER,GHCR_TOKEN
+          script_path: deploy/deploy-remote.sh
+          command_timeout: 15m

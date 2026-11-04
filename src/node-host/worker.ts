@@ -119,6 +119,21 @@ try {
         p.official as unknown as ExerciseInstance,
       );
       break;
+    case 'sampleDisplayGraph':
+      need('elementId,official,profile');
+      if (
+        !object(p.official) ||
+        p.official.schemaVersion !== 5 ||
+        typeof p.elementId !== 'string' ||
+        p.profile !== 'display-graph-v1'
+      )
+        throw new Error('invalid-request');
+      value = await engine.sampleDisplayGraph(
+        p.official as unknown as ExerciseInstance,
+        p.elementId,
+        p.profile,
+      );
+      break;
     case 'gradeAnswer':
       need('official,submission');
       if (!object(p.official) || p.official.schemaVersion !== 5)

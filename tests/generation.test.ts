@@ -12,7 +12,7 @@ import type {
 } from 'novlearn-exercise-engine';
 import { sampleIndex, wordStream } from '../src/generation/random.js';
 import fixture from './fixtures/contracts/rational-minimum.definition.json' with { type: 'json' };
-import packageJson from '../package.json' with { type: 'json' };
+// Replay pipeline stays 0.1.0; package 0.2.0 adds only the independent graph API.
 
 const integer = (
   overrides: Partial<IntegerVariableDefinition> = {},
@@ -88,7 +88,7 @@ describe('generation replay and word mapping', () => {
         computed: [],
         replay: {
           attempts: 1,
-          engineVersion: packageJson.version,
+          engineVersion: '0.1.0',
           generationVersion: 'mulberry32-rejection-v1',
           seed: String(seed),
           draws: 5,

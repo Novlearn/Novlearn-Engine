@@ -5,7 +5,7 @@ instancie et corrige des exercices mathématiques. Elle fournit des règles comm
 à NovLearn élève, NovLearn Admin et aux duels pour éviter des calculs et des
 corrections divergents entre applications.
 
-Le package privé **0.1.0** est ESM, utilise le **schéma 5** et repose sur
+Le package privé **0.2.0** est ESM, utilise le **schéma 5** et repose sur
 **CortexJS 0.151.0**, son unique bibliothèque mathématique principale. Le cœur
 portable ne dépend d’aucun framework ni de MathLive. Un adaptateur Node optionnel
 isole les calculs côté serveur ; le rendu, les droits, le stockage et les points
@@ -16,6 +16,10 @@ réutilise les succès exacts identiques au sein d’une seule instanciation. Le
 contrats, diagnostics et limites restent inchangés ; son état et ses preuves
 sont distincts de la certification historique ci-dessous. Aucun registre ni
 environnement distant n’est modifié.
+
+L’[extension de sampling D54 / Admin D10](docs/graph-sampling.md) est autorisée
+localement et en cours de qualification dans le package de développement 0.2.0.
+Elle ne remplace pas les certifications et archives historiques ci-dessous.
 
 ## Disponible aujourd’hui
 
@@ -80,6 +84,7 @@ Commencer par [l’index](docs/README.md), puis [l’architecture](docs/architec
 Les [capacités](docs/features.md) décrivent les profils opérationnels ; la
 [matrice CDC](docs/feature-coverage.md) relie les exigences à leurs preuves.
 [Progression](docs/progress.md) et [roadmap](docs/roadmap.md) permettent la reprise.
+[Déploiement du host](docs/DEPLOYMENT.md) décrit l'API privée et le CI/CD VPS.
 Les [décisions](docs/decisions.md) et leurs ADR conservent les justifications.
 
 Le [cahier des charges officiel](docs/CDC_référence.md) décrit la cible validée.

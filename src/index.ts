@@ -81,3 +81,14 @@ export type {
   InstantiateExerciseResult,
   InstantiationDiagnostic,
 } from './instantiation.js';
+
+export { sampleDisplayGraph } from './graph-sampling.js';
+export { GRAPH_PROFILE } from './contracts/graph.js';
+export type {
+  DisplayGraph,
+  GraphSamplingResult,
+  GraphSeries,
+  GraphPoint,
+  GraphDiagnostic,
+  GraphDiagnosticCode,
+} from './contracts/graph.js';

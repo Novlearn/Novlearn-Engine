@@ -8,6 +8,8 @@ assert.equal(typeof adaptLegacyExercise, 'function');
 assert.deepEqual(
   Object.keys(engine).sort(),
   [
+    'GRAPH_PROFILE',
+    'sampleDisplayGraph',
     'generateVariables',
     'gradeAnswer',
     'instantiateExercise',
@@ -108,6 +110,58 @@ try {
     instanceId: 'installed-linux-host',
   });
   assert.deepEqual(replay.value, official);
+  const graphDefinition = {
+    schemaVersion: 5,
+    kind: 'composed',
+    id: 'installed-graph',
+    revision: '1',
+    title: 'Installed graph',
+    generation: {
+      schemaVersion: 5,
+      definitions: [],
+      constraints: [],
+      maxAttempts: 4,
+      maxDraws: 16,
+    },
+    variables: [{ name: 'x', domain: 'real' }],
+    elements: [
+      {
+        id: 'g',
+        type: 'function-graph',
+        variable: 'x',
+        window: {
+          xMin: { latex: '-1' },
+          xMax: { latex: '1' },
+          yMin: { latex: '-1' },
+          yMax: { latex: '2' },
+        },
+        showGrid: true,
+        functions: [
+          { id: 'f', latex: 'x^2', color: '#2563eb', showExpression: true },
+        ],
+      },
+    ],
+  };
+  assert.equal(engine.GRAPH_PROFILE, 'display-graph-v1');
+  const graph = await send('instantiateExercise', {
+    definition: graphDefinition,
+    seed: 42,
+    instanceId: 'installed-graph',
+  });
+  assert.equal(graph.ok, true);
+  const sampled = await send('sampleDisplayGraph', {
+    official: graph.value,
+    elementId: 'g',
+    profile: engine.GRAPH_PROFILE,
+  });
+  assert.equal(sampled.ok, true);
+  assert.equal(sampled.value.state, 'complete');
+  assert.equal(sampled.value.series[0].points.length, 65);
+  assert.equal(sampled.value.series[0].segments.length, 64);
+  assert.doesNotMatch(
+    JSON.stringify(sampled),
+    /expected|policy|mathFields|substituted/,
+  );
 } finally {
   await host.close();
 }

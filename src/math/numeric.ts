@@ -514,7 +514,8 @@ export function prepareNumeric(
     const exact = exactNumber(evaluated, true);
     const expression = exactStructure(evaluated) ? evaluated : canonical;
     const display = expression;
-    if (!display.isValid || !display.latex || display.latex.length > 4096)
+    const displayLatex = display.toLatex({ digitGroup: 0 });
+    if (!display.isValid || !displayLatex || displayLatex.length > 4096)
       fail(
         'substitution-failed',
         path,
@@ -528,7 +529,7 @@ export function prepareNumeric(
           source,
           syntax: parsed.syntax,
           substituted: raw,
-          displayLatex: display.latex,
+          displayLatex,
         },
         expression,
         ...(exact === undefined ? {} : { exact }),

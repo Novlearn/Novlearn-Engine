@@ -78,7 +78,7 @@ const smoke = `import * as engine from 'novlearn-exercise-engine';
 import { adaptLegacyExercise } from 'novlearn-exercise-engine/legacy';
 import { createNodeHost } from 'novlearn-exercise-engine/node-host';
 const keys=Object.keys(engine).sort();
-const wanted=['generateVariables','gradeAnswer','instantiateExercise','parseMathInput','projectPublicInstance','validateDefinition','validateSubmission'].sort();
+const wanted=['GRAPH_PROFILE','sampleDisplayGraph','generateVariables','gradeAnswer','instantiateExercise','parseMathInput','projectPublicInstance','validateDefinition','validateSubmission'].sort();
 if(JSON.stringify(keys)!==JSON.stringify(wanted))throw Error('exports');
 if(typeof adaptLegacyExercise!=='function'||typeof createNodeHost!=='function')throw Error('subpaths');
 const definition=JSON.parse(await (await import('node:fs/promises')).readFile(new URL('./definition.json',import.meta.url),'utf8'));
@@ -87,8 +87,13 @@ if(!generated.ok)throw Error('instantiate');
 const official=JSON.parse(JSON.stringify(generated.value));
 const result=engine.gradeAnswer(official,{schemaVersion:5,instanceId:official.instanceId,questionId:'1781009000002',answer:{format:'latex',source:'\\\\sqrt{10}'}});
 if(result.state!=='correct')throw Error('grade');
+const graphDefinition={schemaVersion:5,kind:'composed',id:'installed-graph',revision:'1',title:'Installed graph',generation:{schemaVersion:5,definitions:[],constraints:[],maxAttempts:4,maxDraws:16},variables:[{name:'x',domain:'real'}],elements:[{id:'g',type:'function-graph',variable:'x',window:{xMin:{latex:'-1'},xMax:{latex:'1'},yMin:{latex:'-1'},yMax:{latex:'2'}},showGrid:true,functions:[{id:'f',latex:'x^2',color:'#2563eb',showExpression:true}]}]};
+const curve=engine.instantiateExercise(graphDefinition,{seed:42,instanceId:'external-graph'});
+if(!curve.ok||engine.GRAPH_PROFILE!=='display-graph-v1')throw Error('graph-contract');
+const samples=await engine.sampleDisplayGraph(curve.value,'g');
+if(!samples.ok||samples.value.state!=='complete'||samples.value.series[0].points.length!==65||samples.value.series[0].segments.length!==64)throw Error('graph-sampling');
 const publicInstance=engine.projectPublicInstance(official);
-console.log(JSON.stringify({keys,state:result.state,questions:publicInstance.elements.filter(e=>e.type==='question'||e.type==='mcq').length}));
+console.log(JSON.stringify({keys,graphSampling:{profile:samples.value.profile,state:samples.value.state,points:samples.value.series[0].points.length},state:result.state,questions:publicInstance.elements.filter(e=>e.type==='question'||e.type==='mcq').length}));
 `;
 await writeFile(join(consumer, 'smoke.mjs'), smoke);
 const nativeSmoke = `import { createNodeHost } from 'novlearn-exercise-engine/node-host';
@@ -112,10 +117,11 @@ await writeFile(join(consumer, 'native.mjs'), nativeSmoke);
 const nodeEvidence = JSON.parse(run([join(consumer, 'smoke.mjs')], consumer));
 await writeFile(
   join(consumer, 'types.ts'),
-  `import type { ExerciseDefinition, ExerciseInstance, AnswerSubmission, CorrectionResult, PublicInstance } from 'novlearn-exercise-engine';
-import { instantiateExercise, projectPublicInstance, gradeAnswer } from 'novlearn-exercise-engine';
+  `import type { ExerciseDefinition, ExerciseInstance, AnswerSubmission, CorrectionResult, PublicInstance, GraphSamplingResult } from 'novlearn-exercise-engine';
+import { instantiateExercise, projectPublicInstance, gradeAnswer, sampleDisplayGraph } from 'novlearn-exercise-engine';
 import type { LegacyRecipe } from 'novlearn-exercise-engine/legacy';
 import { createNodeHost } from 'novlearn-exercise-engine/node-host';
+export async function consumeGraph(official:ExerciseInstance):Promise<GraphSamplingResult>{return sampleDisplayGraph(official,'g');}
 export function consume(definition:ExerciseDefinition, submission:AnswerSubmission, recipe:LegacyRecipe):PublicInstance|CorrectionResult|undefined {
  const result=instantiateExercise(definition,{seed:42,instanceId:'types'});
  if(!result.ok)return undefined;

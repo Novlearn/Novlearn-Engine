@@ -1,0 +1,191 @@
+name: Initialize Engine VPS
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Read-only preflight or install the Engine deployment wrapper
+        required: true
+        type: choice
+        options:
+          - preflight
+          - initialize
+      staging_port:
+        description: VPS loopback port for staging (must match NovLearn Apache)
+        required: true
+        default: '3151'
+        type: string
+      production_port:
+        description: VPS loopback port for production
+        required: true
+        default: '3152'
+        type: string
+      confirmation:
+        description: For initialize only, enter INITIALIZE NOVLEARN ENGINE ON VPS
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engine-vps-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Validate inputs and explicit initialization confirmation
+        shell: bash
+        env:
+          OPERATION: ${{ inputs.operation }}
+          STAGING_PORT: ${{ inputs.staging_port }}
+          PRODUCTION_PORT: ${{ inputs.production_port }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          set -euo pipefail
+          valid_port() {
+            [[ "$1" =~ ^[0-9]{1,5}$ ]] && ((10#$1 >= 1024 && 10#$1 <= 65535))
+          }
+          [[ "$OPERATION" == preflight || "$OPERATION" == initialize ]]
+          valid_port "$STAGING_PORT"
+          valid_port "$PRODUCTION_PORT"
+          [[ "$STAGING_PORT" != "$PRODUCTION_PORT" ]]
+          if [[ "$OPERATION" == initialize ]]; then
+            [[ "$CONFIRMATION" == 'INITIALIZE NOVLEARN ENGINE ON VPS' ]] || {
+              echo 'Initialization requires the exact confirmation phrase.' >&2
+              exit 1
+            }
+          fi
+
+      - name: Read-only VPS preflight
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        env:
+          STAGING_PORT: ${{ inputs.staging_port }}
+          PRODUCTION_PORT: ${{ inputs.production_port }}
+          SSH_USERNAME: ${{ secrets.VPS_USERNAME }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: STAGING_PORT,PRODUCTION_PORT,SSH_USERNAME
+          script: |
+            set -eu
+            printf 'Connected as: '
+            id
+            sudo -n true || {
+              echo 'BLOCKED: this workflow needs non-interactive sudo for the VPS bootstrap.' >&2
+              exit 1
+            }
+            sudo -n bash -s -- "$STAGING_PORT" "$PRODUCTION_PORT" "$SSH_USERNAME" <<'PREFLIGHT'
+            set -eu
+            staging_port="$1"
+            production_port="$2"
+            ssh_username="$3"
+            required='docker curl ss flock openssl useradd visudo getent stat grep tr cmp awk sed mktemp install free df'
+            missing=''
+            for tool in $required; do
+              command -v "$tool" >/dev/null 2>&1 || missing="$missing $tool"
+            done
+            if [[ -n "$missing" ]]; then
+              echo "BLOCKED: missing VPS tools:$missing" >&2
+              exit 1
+            fi
+            docker --version
+            docker compose version
+            docker info --format 'Docker cgroup version: {{.CgroupVersion}}'
+            printf 'Host cgroup filesystem: '
+            stat -fc %T /sys/fs/cgroup
+            [[ "$(docker info --format '{{.CgroupVersion}}')" == 2 ]]
+            [[ "$(stat -fc %T /sys/fs/cgroup)" == cgroup2fs ]]
+            getent passwd "$ssh_username" >/dev/null 2>&1 || {
+              echo 'BLOCKED: SSH account was not found in the VPS user database.' >&2
+              exit 1
+            }
+            printf 'SSH account: %s\n' "$ssh_username"
+            printf 'Memory and disk:\n'
+            free -h
+            df -h /opt /run
+            printf 'Listeners on requested ports (review before initialize):\n'
+            ss -H -ltn "sport = :$staging_port" || true
+            ss -H -ltn "sport = :$production_port" || true
+            if [[ -e /opt/novlearn-engine ]]; then
+              printf 'Existing Engine root: '
+              stat -c '%F owner=%U mode=%a path=%n' /opt/novlearn-engine
+              if [[ ! -f /opt/novlearn-engine/.bootstrap-managed ]]; then
+                echo 'BLOCKED: /opt/novlearn-engine exists without the bootstrap marker.' >&2
+                exit 1
+              fi
+            else
+              echo 'Engine root: not present (fresh bootstrap path)'
+            fi
+            if [[ -f /etc/novlearn-engine-owner ]]; then
+              owner="$(cat /etc/novlearn-engine-owner)"
+              printf 'Configured Engine GitHub owner: %s\n' "$owner"
+              [[ "$owner" == novlearn ]] || {
+                echo 'BLOCKED: existing Engine owner differs from novlearn.' >&2
+                exit 1
+              }
+            fi
+            echo 'Read-only preflight passed. No VPS files or services were changed.'
+            PREFLIGHT
+
+      - name: Prepare private temporary upload directory
+        if: inputs.operation == 'initialize'
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        env:
+          BOOTSTRAP_DIR: /tmp/novlearn-engine-bootstrap-${{ github.run_id }}-${{ github.run_attempt }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: BOOTSTRAP_DIR
+          script: |
+            set -eu
+            [[ "$BOOTSTRAP_DIR" =~ ^/tmp/novlearn-engine-bootstrap-[0-9]+-[0-9]+$ ]]
+            [[ ! -e "$BOOTSTRAP_DIR" ]]
+            mkdir -m 0700 -- "$BOOTSTRAP_DIR"
+
+      - name: Copy the reviewed bootstrap files to the VPS
+        if: inputs.operation == 'initialize'
+        uses: appleboy/scp-action@917f8b81dfc1ccd331fef9e2d61bdc6c8be94634 # v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: deploy/bootstrap-vps.sh,deploy/compose.yml,deploy/engine-deploy-root.sh
+          target: /tmp/novlearn-engine-bootstrap-${{ github.run_id }}-${{ github.run_attempt }}
+          strip_components: 0
+          overwrite: true
+
+      - name: Initialize Engine deployment files and restricted sudo wrapper
+        if: inputs.operation == 'initialize'
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        env:
+          BOOTSTRAP_DIR: /tmp/novlearn-engine-bootstrap-${{ github.run_id }}-${{ github.run_attempt }}
+          STAGING_PORT: ${{ inputs.staging_port }}
+          PRODUCTION_PORT: ${{ inputs.production_port }}
+          SSH_USERNAME: ${{ secrets.VPS_USERNAME }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: BOOTSTRAP_DIR,STAGING_PORT,PRODUCTION_PORT,SSH_USERNAME
+          command_timeout: 10m
+          script: |
+            set -eu
+            [[ "$BOOTSTRAP_DIR" =~ ^/tmp/novlearn-engine-bootstrap-[0-9]+-[0-9]+$ ]]
+            [[ "$SSH_USERNAME" =~ ^[a-z_][a-z0-9_-]{0,31}$ && "$SSH_USERNAME" != root ]]
+            cleanup() { rm -rf -- "$BOOTSTRAP_DIR"; }
+            trap cleanup EXIT
+            cd "$BOOTSTRAP_DIR"
+            sudo -n bash deploy/bootstrap-vps.sh \
+              --gh-owner novlearn \
+              --staging-port "$STAGING_PORT" \
+              --production-port "$PRODUCTION_PORT" \
+              --ssh-user "$SSH_USERNAME"

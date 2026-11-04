@@ -1,0 +1,68 @@
+name: Promote or roll back Engine production
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: SemVer release tag, for example v0.2.1
+        required: true
+        type: string
+      operation:
+        description: Promote requires a successful staging deployment; rollback may target any published valid release
+        required: true
+        type: choice
+        options: [promote, rollback]
+permissions:
+  contents: read
+concurrency:
+  group: engine-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+    permissions:
+      contents: read
+      deployments: write
+      packages: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Validate release and staging evidence
+        id: image
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+          OPERATION: ${{ inputs.operation }}
+        run: |
+          set -euo pipefail
+          [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          image="ghcr.io/$owner/novlearn-engine-host"
+          if [[ "$OPERATION" == promote ]]; then
+            deployment="$(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=staging&ref=$VERSION&per_page=100" --jq '.[0].id // empty')"
+            [[ "$deployment" =~ ^[0-9]+$ ]] || { echo "No staging deployment found for $VERSION." >&2; exit 1; }
+            state="$(gh api "repos/$GITHUB_REPOSITORY/deployments/$deployment/statuses" --jq '.[0].state // empty')"
+            [[ "$state" == success ]] || { echo "Latest staging deployment is not successful." >&2; exit 1; }
+          fi
+          echo "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          gh release download "$VERSION" --pattern engine-image.txt --dir "$RUNNER_TEMP"
+          reference="$(cat "$RUNNER_TEMP/engine-image.txt")"
+          [[ "$reference" =~ ^ghcr\\.io/${owner}/novlearn-engine-host@sha256:[a-f0-9]{64}$ ]]
+          docker pull "$reference"
+          echo "reference=$reference" >> "$GITHUB_OUTPUT"
+      - name: Deploy exact published digest
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        env:
+          DEPLOY_ENVIRONMENT: production
+          IMAGE_REFERENCE: ${{ steps.image.outputs.reference }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: DEPLOY_ENVIRONMENT,IMAGE_REFERENCE,GHCR_USER,GHCR_TOKEN
+          script_path: deploy/deploy-remote.sh
+          command_timeout: 15m

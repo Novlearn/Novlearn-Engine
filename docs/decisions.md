@@ -191,3 +191,116 @@ tests existants. Qualification complète, comparaisons et package Linux borné
 requis avant adoption Admin. Le package reste privé ; aucun registre ou
 environnement distant n’est modifié. Les résultats sont consignés séparément
 dans [le relevé ciblé](certification/numeric-render-cache.md).
+
+### D54 — Sampling local officiel des courbes (21 octobre 2026)
+
+L’utilisateur répond explicitement « Oui, autoriser cette extension locale et sa
+certification » à la proposition Admin D10. Autoriser le calcul des fonctions et
+suites dans le moteur, sa certification puis l’intégration locale Admin ; garder
+quotas, délais et protections. Aucun changement de l’application élève NovLearn,
+base distante, publication réelle, push ou déploiement n’est inclus.
+Le profil et les limites sont décrits dans [le travail en cours](graph-sampling.md).
+Cette capacité s’ajoute au package 0.2.0 sans changer le pipeline des snapshots
+schéma 5 / engineVersion 0.1.0, ni réécrire les anciens artefacts.
+
+### D55 — Sérialisation des attendus numériques Admin (30 octobre 2026)
+
+La mission Admin/Engine autorisée reproduit un attendu rendu par Cortex avec des
+séparateurs de groupes, puis refusé par le profil numérique inchangé. Les deux
+chemins numériques sérialisent désormais avec digitGroup: 0. Aucune admission,
+contrainte, forme, limite, source originale ou autorité mathématique n'est relâchée.
+Le test numeric-display-roundtrip couvre rationnels/réels, négatifs, grands nombres,
+rejeu et maintien du refus des entrées groupées hors profil.
+
+L'archive distribuée Admin 0.1.1 est construite depuis baa48c45 et ce correctif,
+sans les travaux 0.2.0 préexistants. SHA256 :
+c7116f9310da49478deb43ca64e04b974efd34765b45a22294c13b5235bdf927.
+Schéma 5 et pipeline 0.1.0 conservés ; les octets de présentation peuvent changer.
+Conserver l'archive exacte pour le rejeu et renouveler les reçus. Les sources de
+développement restent en 0.2.0 ; aucun tarball ancien n'est remplacé.
+
+Qualification candidate : build/types/lint ; 1542/1544 tests au premier passage,
+deux timeouts algébriques à 5 s pendant des builds concurrents ; relance complète
+du fichier algébrique 126/126 sans concurrence, même délai. Le contrôle composé
+s'arrête au format d'un ancien CDC de la copie de référence, conservé. Le banc
+officiel du package installé Linux passe sous 384 Mio / swap 0 / 64 pids et réseau
+coupé, avec arrêt des workers et rejeu. Cela ne qualifie pas Vercel ni NovLearn.
+Les manifests, patch exact de release et anciennes archives sont conservés dans
+Novlearn-admin/vendor ; aucune dépendance applicative au dossier voisin.
+
+### D56 — CI locale et frontière de déploiement du host (3 novembre 2026)
+
+La CI existante est limitée aux pull requests vers `main` et aux pushs sur
+`main`, avec Node lu depuis `.nvmrc`, cache du lockfile, permissions de lecture
+seules et concurrence par référence. Elle conserve la matrice Ubuntu/Windows
+et les contrôles npm déjà présents.
+
+L'audit demandé constate que `src/node-host/cli.ts` est un transport privé
+stdin/stdout, pas un serveur HTTP : aucun port ni endpoint de santé n'existe. Le
+host Linux requiert en outre un cgroup v2 borné préexistant. Les exemples FastAPI
+sont des démonstrations, pas un service de production. Aucun Dockerfile/service,
+registre d'images, Compose, authentification HTTP, secrets GitHub ou procédure
+VPS ne sont donc inventés. Le déploiement à deux ports et les workflows qui en
+dépendent attendent une décision sur le contrat du service appelable et la
+configuration cgroup réelle. Voir [déploiement](DEPLOYMENT.md).
+
+`npm ci` et `npm pack --dry-run` passent localement. `npm run check` passe
+build/types/lint/format puis rapporte 1 572 tests passés et un timeout Windows
+du host à 10,15 s (limite de calcul native : 5 s) ; les autres 31 fichiers
+passent. Aucun workflow distant, release ou déploiement n'a été lancé.
+
+### D57 - Adaptateur HTTP privé et déploiement VPS du host (3 novembre 2026)
+
+À la suite du constat D56, le prompt autorise explicitement un host appelé par
+HTTP sur deux ports isolés. Ajouter un adaptateur Node privé versionné
+(`/v1/execute`, Bearer token distinct par environnement, `/healthz` avec sonde
+réelle du worker), sans modifier les règles de calcul ni les exports publics.
+Le conteneur exécute le CLI sous cgroup v2, 384 MiB, swap désactivé et 64 pids.
+
+Ajouter Docker/Compose, bootstrap idempotent sans remplacement des secrets,
+utilisateur SSH à commande forcée, wrapper root avec sudo restreint, publication
+GHCR par tag SemVer avec digest conservé comme release asset, staging automatique
+et promotion/rollback production manuels sous approbation GitHub. Le GITHUB_TOKEN
+de lecture GHCR passe par le canal SSH chiffré et n'est conservé que sous `/run`
+pendant le pull ; aucun PAT de registre n'est persistant sur le VPS.
+
+Le code n'a pas été déployé : environnements GitHub, clé SSH, ports, vhosts Apache
+et capacité cgroup du VPS restent à configurer/confirmer par leurs administrateurs.
+Contrôle final local : `npm ci`, check complet **1579/1579**, pack dry-run, smoke
+du package, format et configuration Compose passent. Dockerfile, scripts Bash,
+CI distante et déploiement réel n'ont pas pu être exécutés dans cet environnement.
+Voir [DEPLOYMENT.md](DEPLOYMENT.md).
+
+### D58 - Build et smoke test du conteneur en CI (4 novembre 2026)
+
+La revue du workflow constate que les contrôles du package ne construisent pas
+l'image Docker ni ne démarrent le host. Ajouter un job Ubuntu après la matrice de
+vérification : construire l'image, la lancer sous les limites de production,
+attendre `/healthz`, puis envoyer une requête authentifiée `/v1/execute`. Ce job
+utilise un token aléatoire temporaire et `contents: read` ; il ne déploie aucun
+environnement et n'utilise aucun secret.
+
+Vérification locale de reprise : `npm ci`, `npm pack --dry-run`, smoke du package,
+format et `docker compose config --quiet` avec variables factices passent. Les
+tentatives complètes Vitest rencontrent `ENOENT` dans les répertoires temporaires
+isolés de Windows ; une relance avec `TEMP` explicite reste bloquée sans résultat
+et est interrompue. Le daemon Docker local et Bash ne sont pas disponibles ; le
+nouveau build/smoke reste à exécuter sur le runner GitHub. Aucun workflow distant,
+release ou déploiement n'a été lancé.
+
+### D59 — Préflight et bootstrap VPS depuis un workflow manuel (4 novembre 2026)
+
+L'utilisateur demande un moyen clair d'initialiser le VPS avec les seuls secrets
+déjà disponibles dans le dépôt Engine. Ajouter un workflow_dispatch unique avec
+un mode `preflight` sans changement de configuration et un mode `initialize`
+protégé par une phrase de confirmation. Réutiliser exclusivement `VPS_HOST`,
+`VPS_USERNAME` et `VPS_SSH_KEY`; ne pas ajouter de secrets ni démarrer d'image
+ou conteneur pendant l'initialisation. Le bootstrap conserve ses vérifications,
+ports par défaut 3151/3152, cgroup v2, configuration idempotente et wrapper
+restreint. L'accès à `sudo -n` est un prérequis explicite, non accordé par le
+workflow. Le transfert temporaire contient seulement les trois fichiers
+nécessaires et est supprimé après l'exécution réussie du bootstrap.
+
+La procédure et les limites sont documentées dans [DEPLOYMENT.md](DEPLOYMENT.md).
+La revue YAML, le préflight, l'action SCP, le bootstrap Linux et toute exécution
+GitHub restent à faire; aucun VPS n'a été contacté ou modifié dans cette mission.
