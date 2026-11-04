@@ -1,10 +1,11 @@
 import { EventEmitter } from 'node:events';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { createRemoteHost } from 'novlearn-exercise-engine/remote-host';
 import { createEngineHttpServer } from '../src/node-host/server.js';
 import type { NodeHost } from '../src/node-host/executor.js';
 
-const token = 't'.repeat(48);
+const token = 'c'.repeat(64);
 const archiveSha256 = 'a'.repeat(64);
 
 function harness(isReady: () => boolean = () => true) {
@@ -132,6 +133,29 @@ describe('private Engine HTTP adapter', () => {
     expect(calls).toEqual([]);
   });
 
+  it('rejects browser-origin requests even with a valid private token', async () => {
+    const { server, calls } = harness();
+    const response = await dispatch(
+      server,
+      'POST',
+      '/run',
+      {
+        authorization: `Bearer ${token}`,
+        origin: 'https://browser.example',
+        'content-type': 'application/json',
+        'x-engine-archive-sha256': archiveSha256,
+      },
+      JSON.stringify({
+        protocolVersion: 1,
+        requestId: 'browser',
+        operation: 'validateDefinition',
+        payload: {},
+      }),
+    );
+    expect(response.status).toBe(403);
+    expect(calls).toEqual([]);
+  });
+
   it('passes the versioned request unchanged to the private host', async () => {
     const { server, calls } = harness();
     const body = JSON.stringify({
@@ -214,5 +238,57 @@ describe('private Engine HTTP adapter', () => {
     expect(response.status).toBe(409);
     expect(response.headers['x-engine-archive-sha256']).toBe(archiveSha256);
     expect(calls).toEqual([]);
+  });
+
+  it('connects the published remote-host client to the current HTTP host', async () => {
+    const { server, calls } = harness();
+    const fetchMock = vi.fn(async (_url: URL, init: RequestInit) => {
+      const headers = Object.fromEntries(new Headers(init.headers).entries());
+      const result = await dispatch(
+        server,
+        String(init.method),
+        '/run',
+        headers,
+        String(init.body),
+      );
+      return new Response(JSON.stringify(result.body), {
+        status: result.status,
+        headers: Object.fromEntries(
+          Object.entries(result.headers).map(([key, value]) => [
+            key,
+            String(value),
+          ]),
+        ),
+      });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const client = createRemoteHost({
+      url: 'https://engine.example/run',
+      token,
+      archiveSha256,
+    });
+    try {
+      const body = JSON.stringify({
+        protocolVersion: 1,
+        requestId: 'client-server',
+        operation: 'validateDefinition',
+        payload: {},
+      });
+      expect(await client.run(body)).toMatchObject({
+        requestId: 'client-server',
+        ok: true,
+      });
+      expect(calls).toEqual([body]);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      const health = await dispatch(server, 'GET', '/healthz');
+      expect(health.status).toBe(200);
+      expect(health.body).toMatchObject({
+        service: 'novlearn-engine-host',
+        protocolVersion: 1,
+      });
+    } finally {
+      await client.close();
+      vi.unstubAllGlobals();
+    }
   });
 });

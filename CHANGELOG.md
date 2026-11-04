@@ -1,5 +1,11 @@
 # Changements
 
+## 0.2.1
+
+- Restores the `remote-host` export and the math and tests shipped in 0.2.0,
+  while retaining the current HTTP host and deployment fixes.
+- Attaches the exact npm tarball and its SHA-256 to the GitHub release.
+
 ## 0.1.0 — pilote privé V1
 
 Schéma5 unique et sept fonctions publiques, quatre mécanismes de génération

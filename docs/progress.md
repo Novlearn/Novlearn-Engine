@@ -1,5 +1,31 @@
 # État et reprise
 
+## Préparation de la release Engine 0.2.1 — en cours (4 novembre 2026)
+
+L’audit distant confirme `main` à `968696a9929614f04021dc53f7669e8c305adf4e`,
+avec la CI de ce commit réussie, la release `v0.2.0` publiée et `v0.2.1`
+absente. Le tag publié contient des modules `remote-host`, mathématiques et
+tests qui n’avaient pas été réintégrés dans `main`. Le package Novlearn staging
+consomme ces interfaces et épingle l’archive `v0.2.0` par SHA-256.
+
+Le candidat restaure ces sources et tests, garde le serveur HTTP et le worker de
+`main`, et ajoute un test du client exporté contre le gestionnaire HTTP actuel.
+Le workflow de release empaquette une seule fois sur Windows pour inclure le
+lanceur natif, puis vérifie et transfère ces mêmes octets au job Linux, qui bâtit
+l’image GHCR et attache le tarball exact et son SHA-256 à la release. Le seul
+déploiement automatique reste l’environnement GitHub `staging`.
+
+Contrôles locaux réellement exécutés : `npm.cmd ci` PASS ; tests ciblés des
+interfaces restaurées et du package, **66/66 PASS** ; `npm.cmd pack --dry-run`
+PASS, 189 fichiers ; `npm.cmd run smoke:package` PASS. Les empreintes des
+tarballs construits localement diffèrent entre builds Windows, car le build
+compile le lanceur natif ; elles ne sont donc pas déclarées comme l’empreinte de
+release. `npm.cmd run check` n’a pas passé dans cet environnement : Vitest a
+rencontré des `ENOENT` dans son répertoire temporaire isolé ; avec `TEMP`/`TMP`
+dans le workspace, les tests natifs du host/CLI retournent `unavailable` et
+l’exécution a été interrompue après s’être bloquée. La CI distante du candidat,
+le tag, la release et le déploiement staging restent à effectuer.
+
 ## Lecture chiffrée du token staging — 4 novembre 2026
 
 L'utilisateur cherche à récupérer le token staging sans demander l'accès SSH à

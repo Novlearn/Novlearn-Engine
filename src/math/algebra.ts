@@ -499,7 +499,9 @@ function admittedAlgebra(
     const denominatorCoefficients = coefficients(denominator, variable, path);
     if (denominatorCoefficients.every((c) => sign(c, path) === 0))
       fail('undefined-expression', path, 'The derived denominator is zero.');
-    const displayLatex = head ? substituted.latex : expression.latex;
+    const displayLatex = (head ? substituted : expression).toLatex({
+      digitGroup: 0,
+    });
     if (!displayLatex || displayLatex.length > 4096)
       fail('limit', path, 'Algebra display exceeds its budget.');
     const math = {

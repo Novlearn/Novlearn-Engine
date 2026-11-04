@@ -350,3 +350,23 @@ SSH, puis chiffrer sur le VPS avec RSA-OAEP/SHA-256 et MGF1/SHA-256. Ne publier
 dans les logs que le ciphertext ; le déchiffrement utilise la clé privée locale,
 jamais envoyée à GitHub ou au VPS. Ne pas afficher ni renouveler le token, changer
 les droits SSH/sudo ou configurer des services externes dans cette opération.
+
+### D64 — Réconcilier la source publiée avant Engine 0.2.1 (4 novembre 2026)
+
+`main` avait conservé les corrections récentes du serveur HTTP, du worker, de la
+CI, de Docker et du VPS, mais pas plusieurs sources et tests inclus dans
+l’archive officielle `v0.2.0`. Réintégrer les interfaces `remote-host` et les
+modules mathématiques/tests de cette release, sans remplacer le serveur HTTP,
+le worker ni les fichiers d’exploitation actuels. La nouvelle version du
+package est `0.2.1` et le sous-chemin exporté reste limité à
+`novlearn-exercise-engine/remote-host`.
+
+Le job Windows produit une archive npm unique, tests compris, afin que le
+lanceur natif Windows soit présent. Il calcule son SHA-256 et transfère le même
+fichier au job Linux. Le job Linux vérifie cette empreinte, la passe à l’image
+GHCR et attache le tarball exact et le fichier de SHA-256 à la release. Le tag
+doit correspondre à `package.json` et provenir de `main`; le seul déploiement
+automatique reste `staging`. Novlearn staging doit reprendre le binaire et
+l’empreinte de la release, jamais un tarball construit séparément. Les checks
+locaux Windows incomplets dus aux restrictions du runner ne remplacent pas les
+résultats CI distants, qui restent obligatoires avant le tag.

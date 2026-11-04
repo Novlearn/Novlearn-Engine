@@ -12,7 +12,7 @@ import type {
 } from 'novlearn-exercise-engine';
 import { sampleIndex, wordStream } from '../src/generation/random.js';
 import fixture from './fixtures/contracts/rational-minimum.definition.json' with { type: 'json' };
-// Replay pipeline stays 0.1.0; package 0.2.0 adds only the independent graph API.
+// Replay pipeline stays 0.1.0; package 0.2.1 adds the transport and graph APIs.
 
 const integer = (
   overrides: Partial<IntegerVariableDefinition> = {},

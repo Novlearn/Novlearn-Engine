@@ -152,9 +152,23 @@ export type DisplayElementData<N> =
     };
 
 export type DisplayElement = ElementIdentity & DisplayElementData<NumericField>;
+export interface GraphPlot {
+  version: 'cortex-samples-v1';
+  xMin: number;
+  xMax: number;
+  values: (number | null)[][];
+}
 export type PublicDisplayElement = Pick<ElementIdentity, 'id' | 'sectionId'> & {
   formulaDomain: 'unverified';
-} & Exclude<DisplayElementData<RenderNumber>, { type: 'hint' | 'explanation' }>;
+} & (
+    | Exclude<
+        DisplayElementData<RenderNumber>,
+        { type: 'hint' | 'explanation' | 'function-graph' }
+      >
+    | (Extract<DisplayElementData<RenderNumber>, { type: 'function-graph' }> & {
+        plot?: GraphPlot;
+      })
+  );
 export type PrivateDisplayElement = Pick<
   ElementIdentity,
   'id' | 'sectionId'

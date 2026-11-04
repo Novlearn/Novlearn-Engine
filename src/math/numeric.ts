@@ -316,6 +316,37 @@ export function prepareNumeric(
         if (node[0] === 'Delimiter') return signOf(node[1]!);
         if (node[0] === 'Exp') return 1;
         if (node[0] === 'Power' && signOf(node[1]!) === 1) return 1;
+        if (node[0] === 'Sqrt') {
+          const s = signOf(node[1]!);
+          if (s === 0 || s === 1) return s;
+        }
+        if (node[0] === 'Negate') {
+          const s = signOf(node[1]!);
+          if (s !== undefined) return s === 0 ? 0 : s === 1 ? -1 : 1;
+        }
+        if (
+          node[0] === 'Multiply' ||
+          node[0] === 'Divide' ||
+          node[0] === 'Rational'
+        ) {
+          const signs = (node as readonly MathSyntax[])
+            .slice(1)
+            .map((n) => signOf(n));
+          if (signs.every((s) => s !== undefined)) {
+            const product = signs.reduce<number>((a, s) => a * s!, 1);
+            return product === 0 ? 0 : product > 0 ? 1 : -1;
+          }
+        }
+        if (node[0] === 'Add') {
+          const signs = (node as readonly MathSyntax[])
+            .slice(1)
+            .map((n) => signOf(n));
+          if (signs.every((s) => s === 0 || s === 1) && signs.includes(1))
+            return 1;
+          if (signs.every((s) => s === 0 || s === -1) && signs.includes(-1))
+            return -1;
+          if (signs.every((s) => s === 0)) return 0;
+        }
       }
       const expression = ce.box(node, { form: 'raw' }).canonical;
       const exact = exactNumber(expression.evaluate(), true);
@@ -454,25 +485,35 @@ export function prepareNumeric(
       }
       if (head === 'Power' || head === 'Square') {
         const base = ce.box(args[0]!, { form: 'raw' }).canonical;
-        const rationalExponent =
-          head === 'Power' && base.json === 'ExponentialE'
-            ? ce.box(args[1]!).evaluate()
-            : undefined;
-        const rationalValue = rationalExponent?.toRational()
-          ? exactNumber(rationalExponent, true)
-          : undefined;
+        // e^u and exp(u) share the same admitted closed real argument. Raw
+        // descendants have already been checked, including every inner domain.
         const exponentialPower =
-          rationalValue !== undefined &&
-          [0, 1].includes(exactOrder(rationalValue, -16) ?? -2) &&
-          [-1, 0].includes(exactOrder(rationalValue, 16) ?? 2);
+          head === 'Power' && base.json === 'ExponentialE';
         const e =
           head === 'Square'
             ? 2
             : exactNumber(ce.box(args[1]!).evaluate(), true);
         const exponent =
           typeof e === 'number' ? e : e === undefined ? undefined : e.toJSON();
+        const half =
+          head === 'Power'
+            ? ce.box(args[1]!).evaluate().toRational()
+            : undefined;
+        const halfPower = half?.[1] === 2 && Math.abs(half[0]) === 1;
+        if (halfPower) {
+          const sign = signOf(args[0]!);
+          if (sign === -1 || (sign === 0 && half![0] < 0))
+            fail(
+              'undefined-expression',
+              p,
+              'The real half-power domain is invalid.',
+            );
+          if (sign === undefined)
+            fail('not-calculable', p, 'The half-power domain is not proved.');
+        }
         if (
           !exponentialPower &&
+          !halfPower &&
           (typeof exponent !== 'number' ||
             !Number.isInteger(exponent) ||
             Math.abs(exponent) > 16)
@@ -484,6 +525,7 @@ export function prepareNumeric(
           );
         if (
           !exponentialPower &&
+          !halfPower &&
           typeof exponent === 'number' &&
           exponent <= 0
         ) {
@@ -514,7 +556,16 @@ export function prepareNumeric(
     const exact = exactNumber(evaluated, true);
     const expression = exactStructure(evaluated) ? evaluated : canonical;
     const display = expression;
-    const displayLatex = display.toLatex({ digitGroup: 0 });
+    const displayLatex = display.toLatex({
+      digitGroup: 0,
+      // Cortex may evaluate an admitted e^(p/q) into an nth root of e.
+      // Serialize that exact representation as a power, which stays inside
+      // the original admission; arbitrary nth-root inputs remain unsupported.
+      rootStyle: (node: MathSyntax) =>
+        Array.isArray(node) && node[0] === 'Root' && node[1] === 'ExponentialE'
+          ? 'quotient'
+          : 'radical',
+    });
     if (!display.isValid || !displayLatex || displayLatex.length > 4096)
       fail(
         'substitution-failed',

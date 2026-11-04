@@ -8,7 +8,7 @@ import {
 } from 'novlearn-exercise-engine';
 import type { GenerateVariablesOptions } from 'novlearn-exercise-engine';
 import reference from './fixtures/canonical/reference-vectors.json' with { type: 'json' };
-// Replay pipeline stays 0.1.0; package 0.2.0 adds only the independent graph API.
+// Replay pipeline stays 0.1.0; package 0.2.1 adds the transport and graph APIs.
 
 describe('canonical contract and reference vectors', () => {
   it.each(reference.vectors)(

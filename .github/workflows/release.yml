@@ -8,7 +8,52 @@ concurrency:
   group: engine-release-${{ github.ref }}
   cancel-in-progress: false
 jobs:
+  package:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    outputs:
+      archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install --global npm@11.17.0
+      - run: npm ci
+      - run: npm run check
+      - run: npm pack --dry-run
+      - run: npm run smoke:package
+      - name: Pack the Windows-compatible consumer archive
+        shell: pwsh
+        run: |
+          npm.cmd pack --pack-destination "$env:RUNNER_TEMP"
+          if ($LASTEXITCODE -ne 0) { throw 'npm pack failed.' }
+      - name: Calculate the exact package archive identity
+        id: package
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'novlearn-exercise-engine-0.2.1.tgz'
+          if (-not (Test-Path -LiteralPath $archive -PathType Leaf)) { throw 'The npm archive is missing.' }
+          $archiveSha256 = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($archiveSha256 -notmatch '^[a-f0-9]{64}$') { throw 'Invalid SHA-256.' }
+          $archiveSha256 | Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'engine-artifact-sha256.txt') -NoNewline
+          "archive_sha256=$archiveSha256" >> $env:GITHUB_OUTPUT
+      # Official v7 release pinned to its verified commit.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: npm-package
+          path: |
+            ${{ runner.temp }}/novlearn-exercise-engine-0.2.1.tgz
+            ${{ runner.temp }}/engine-artifact-sha256.txt
+          if-no-files-found: error
+          retention-days: 1
+
   build-publish:
+    needs: package
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -18,11 +63,24 @@ jobs:
       image: ${{ steps.publish.outputs.image }}
       digest: ${{ steps.publish.outputs.digest }}
       tag: ${{ steps.publish.outputs.tag }}
-      archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
+      archive_sha256: ${{ needs.package.outputs.archive_sha256 }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
+      # Official v7 release pinned to its verified commit.
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        with:
+          name: npm-package
+          path: ${{ runner.temp }}/npm-package
+      - name: Verify the transferred Windows npm archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/npm-package/novlearn-exercise-engine-0.2.1.tgz"
+          expected="$(cat "$RUNNER_TEMP/npm-package/engine-artifact-sha256.txt")"
+          actual="$(sha256sum "$archive" | cut -d' ' -f1)"
+          [[ "$expected" =~ ^[a-f0-9]{64}$ && "$actual" == "$expected" ]]
       - name: Verify tag belongs to main and matches package version
         shell: bash
         run: |
@@ -41,17 +99,6 @@ jobs:
       - run: npm run check
       - run: npm pack --dry-run
       - run: npm run smoke:package
-      - name: Calculate the exact package archive identity
-        id: package
-        shell: bash
-        run: |
-          set -euo pipefail
-          npm pack --json --pack-destination "$RUNNER_TEMP" > "$RUNNER_TEMP/npm-pack.json"
-          archive="$(node -e "process.stdout.write(JSON.parse(require('node:fs').readFileSync(process.argv[1], 'utf8'))[0].filename)" "$RUNNER_TEMP/npm-pack.json")"
-          archive_sha256="$(sha256sum "$RUNNER_TEMP/$archive" | cut -d' ' -f1)"
-          [[ "$archive_sha256" =~ ^[a-f0-9]{64}$ ]]
-          echo "archive_sha256=$archive_sha256" >> "$GITHUB_OUTPUT"
-          printf '%s\n' "$archive_sha256" > "$RUNNER_TEMP/engine-artifact-sha256.txt"
       - name: Build and publish immutable host image
         id: publish
         shell: bash
@@ -71,7 +118,7 @@ jobs:
             exit 1
           fi
           docker build --pull \
-            --build-arg "ENGINE_ARTIFACT_SHA256=${{ steps.package.outputs.archive_sha256 }}" \
+            --build-arg "ENGINE_ARTIFACT_SHA256=${{ needs.package.outputs.archive_sha256 }}" \
             --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
             --label "org.opencontainers.image.version=$GITHUB_REF_NAME" \
             --label "org.opencontainers.image.revision=$GITHUB_SHA" \
@@ -80,13 +127,15 @@ jobs:
           digest="$(docker buildx imagetools inspect "$image:$GITHUB_REF_NAME" --format '{{.Manifest.Digest}}')"
           [[ "$digest" =~ ^sha256:[a-f0-9]{64}$ ]]
           printf '%s@%s\n' "$image" "$digest" > "$RUNNER_TEMP/engine-image.txt"
+          archive_path="$RUNNER_TEMP/npm-package/novlearn-exercise-engine-0.2.1.tgz"
           echo "image=$image" >> "$GITHUB_OUTPUT"
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
           echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
           gh release create "$GITHUB_REF_NAME" --generate-notes \
             --title "$GITHUB_REF_NAME" \
+            "$archive_path#novlearn-exercise-engine-0.2.1.tgz" \
             "$RUNNER_TEMP/engine-image.txt#engine-image.txt" \
-            "$RUNNER_TEMP/engine-artifact-sha256.txt#engine-artifact-sha256.txt"
+            "$RUNNER_TEMP/npm-package/engine-artifact-sha256.txt#engine-artifact-sha256.txt"
           echo "Published `$image@$digest`" >> "$GITHUB_STEP_SUMMARY"
 
   deploy-staging:

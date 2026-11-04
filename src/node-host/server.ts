@@ -66,6 +66,12 @@ export function createEngineHttpServer(
       return;
     }
 
+    if (request.headers.origin !== undefined) {
+      send(response, 403, { error: 'browser-origin-not-allowed' });
+      request.resume();
+      return;
+    }
+
     const authorization = request.headers.authorization;
     const bearer =
       typeof authorization === 'string' && authorization.startsWith('Bearer ')

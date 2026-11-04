@@ -77,10 +77,11 @@ await copyFile(
 const smoke = `import * as engine from 'novlearn-exercise-engine';
 import { adaptLegacyExercise } from 'novlearn-exercise-engine/legacy';
 import { createNodeHost } from 'novlearn-exercise-engine/node-host';
+import { createRemoteHost } from 'novlearn-exercise-engine/remote-host';
 const keys=Object.keys(engine).sort();
 const wanted=['GRAPH_PROFILE','sampleDisplayGraph','generateVariables','gradeAnswer','instantiateExercise','parseMathInput','projectPublicInstance','validateDefinition','validateSubmission'].sort();
 if(JSON.stringify(keys)!==JSON.stringify(wanted))throw Error('exports');
-if(typeof adaptLegacyExercise!=='function'||typeof createNodeHost!=='function')throw Error('subpaths');
+if(typeof adaptLegacyExercise!=='function'||typeof createNodeHost!=='function'||typeof createRemoteHost!=='function')throw Error('subpaths');
 const definition=JSON.parse(await (await import('node:fs/promises')).readFile(new URL('./definition.json',import.meta.url),'utf8'));
 const generated=engine.instantiateExercise(definition,{seed:42,instanceId:'external-consumer'});
 if(!generated.ok)throw Error('instantiate');

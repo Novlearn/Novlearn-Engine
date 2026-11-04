@@ -5,7 +5,7 @@ instancie et corrige des exercices mathématiques. Elle fournit des règles comm
 à NovLearn élève, NovLearn Admin et aux duels pour éviter des calculs et des
 corrections divergents entre applications.
 
-Le package privé **0.2.0** est ESM, utilise le **schéma 5** et repose sur
+Le package privé **0.2.1** est ESM, utilise le **schéma 5** et repose sur
 **CortexJS 0.151.0**, son unique bibliothèque mathématique principale. Le cœur
 portable ne dépend d’aucun framework ni de MathLive. Un adaptateur Node optionnel
 isole les calculs côté serveur ; le rendu, les droits, le stockage et les points
@@ -18,7 +18,7 @@ sont distincts de la certification historique ci-dessous. Aucun registre ni
 environnement distant n’est modifié.
 
 L’[extension de sampling D54 / Admin D10](docs/graph-sampling.md) est autorisée
-localement et en cours de qualification dans le package de développement 0.2.0.
+localement et en cours de qualification dans le package de développement 0.2.1.
 Elle ne remplace pas les certifications et archives historiques ci-dessous.
 
 ## Disponible aujourd’hui
