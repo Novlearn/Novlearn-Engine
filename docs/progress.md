@@ -12,8 +12,8 @@ ses références. Les archives de release, manifestes, empreintes, fixtures et
 captures référencés par les scénarios de rejeu ou certification sont conservés.
 
 Aucun merge, publication de release ni déploiement n’est réalisé par ce nettoyage.
-Les résultats des contrôles locaux et du nettoyage du poste sont rapportés dans
-le compte rendu de la PR.
+Cette entrée décrit l’état du dépôt et ne constitue pas un relevé des fichiers
+locaux ni des ressources Docker du poste.
 
 ## Diagnostic indépendant et qualification de l'image publiée — 5 novembre 2026
 
