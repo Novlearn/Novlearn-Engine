@@ -46,7 +46,12 @@ sur un runner jetable ; cela ne vaut pas réception VPS ou Admin.
 ## Modification précise et préservation
 
 Le script sélectionne un unique vhost `ServerName staging.novlearn.fr`, SSL
-actif sur 443, dont le fichier résolu est dans `sites-available`. Il conserve
+actif sur 443, dont le fichier résolu est dans `sites-available`. Le fichier
+et le numéro de ligne fournis par `apachectl -S` identifient le bloc ; TLS peut
+être hérité et le ServerName peut être quoted ou porter un schéma/port. Les
+autres noms/alias et un `SSLEngine off` explicite sont refusés. Les logs
+`STAGING_HTTPS_VHOST_LINE` et `STAGING_VHOSTS` ne contiennent que la structure,
+sans directive privée ni chemin de clé. Le script conserve
 les octets des autres vhosts, même s'ils sont dans le même fichier. Aucun
 fichier `.env`, conteneur, image, certificat ou routage de production n'est
 modifié. Le rechargement gracieux concerne le processus Apache partagé.
