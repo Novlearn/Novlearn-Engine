@@ -1,5 +1,20 @@
 # État et reprise
 
+## Blocs Apache imbriqués — 5 novembre 2026
+
+Le run `42060507764` confirme le vhost staging ligne 74 et HOST_PORT=3151,
+puis refuse sa structure imbriquée avant toute écriture Apache. La correction
+conserve les blocs et les lignes continuées, suit les ouvertures/fermetures et
+applique l'exclusion exacte `/run` aux redirections à chaque profondeur.
+Les autres directives, les autres vhosts, les sauvegardes et le rollback sont
+préservés. Les fixtures couvrent des structures représentatives ; les logs
+ne contiennent pas le texte intégral du vhost VPS. Treize tests locaux passent ;
+le test avec Apache réel est exécuté séparément par la CI Linux. Aucun workflow
+VPS n'est déclenché et aucun accès SSH direct n'est utilisé dans cette correction.
+
+La CI dédiée de la PR #5 passe les 14 tests sans skip, dont Apache réel,
+job `127363811939`. Cette preuve porte sur le runner, pas sur le VPS ni Admin.
+
 ## Refus du mode inspect — 5 novembre 2026
 
 Le run `42056334750` trouve le vhost actif dans

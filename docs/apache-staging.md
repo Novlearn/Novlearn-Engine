@@ -64,8 +64,11 @@ priorité des Redirect de mod_alias sur les ProxyPass. `/run/`, `/runner`,
 `/healthz` et les autres chemins gardent leurs règles antérieures.
 
 Les configurations ambiguës (vhost partagé avec un autre domaine, doublon,
-route `/run` préexistante, conteneurs imbriqués, continuations, héritage ou
-includes inconnus) sont refusées avant écriture. L'include Certbot standard
+blocs déséquilibrés, héritage ou includes inconnus) sont refusées avant
+écriture. Les blocs imbriqués (`IfModule`, `Location`, `Directory`, `If`, etc.)
+et les directives continuées sont conservés. Les Redirect/RewriteRule y sont
+exclus de `/run` à chaque profondeur ; les proxys antérieurs restent après
+la réservation exacte Engine. L'include Certbot standard
 est accepté uniquement si son contenu ne comporte que commentaires et
 directives SSL. Si `inspect` refuse, conserver son diagnostic et préparer
 une adaptation revue à la configuration observée. Aucun vhost de remplacement

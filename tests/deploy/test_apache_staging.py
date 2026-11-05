@@ -14,6 +14,42 @@ STAGE = '<VirtualHost *:443>\n ServerName staging.novlearn.fr\n SSLEngine on\n{r
 
 
 class Patching(unittest.TestCase):
+    def test_nested_blocks_preserve_bytes_and_guard_routing_at_each_depth(self):
+        untouched = ' <Directory "/srv/novlearn public">\n  # Keep apostrophes: l\'application\n  Require all granted\n </Directory>\n'
+        redirect = '   RedirectMatch 307 ^/.*$ /accueil\n'
+        rewrite = '   RewriteRule ^ /accueil [R=307,L]\n'
+        routing = (untouched + ' <IfModule mod_alias.c>\n  <Location "/">\n' + redirect +
+                   '  </Location>\n </IfModule>\n <IfModule mod_rewrite.c>\n' + rewrite + ' </IfModule>\n')
+        result = repair.patch(PROD + STAGE.format(routing=routing), 3151)
+        self.assertTrue(result.startswith(PROD))
+        self.assertIn(untouched, result)
+        self.assertIn('<Location "/">\n    <If "%{REQUEST_URI} != \'/run\'">\n' + redirect, result)
+        self.assertIn('RewriteCond %{REQUEST_URI} !^/run$\n' + rewrite, result)
+        self.assertEqual(result, repair.patch(result, 3151))
+        # Identity is checked even when a managed route is already present.
+        with self.assertRaises(ValueError):
+            repair.patch(result.replace(' ServerName staging.novlearn.fr', ' ServerAlias novlearn.fr\n ServerName staging.novlearn.fr'), 3151)
+
+    def test_continued_directives_preserved_as_one_statement(self):
+        redirect = ' Redirect 307 \\\n / /accueil\n'
+        rewrite = ' RewriteRule ^ \\\n /accueil [R=307,L]\n'
+        result = repair.patch(STAGE.format(routing=redirect + rewrite), 3151)
+        self.assertIn('<If "%{REQUEST_URI} != \'/run\'">\n' + redirect + '    </If>', result)
+        self.assertIn('RewriteCond %{REQUEST_URI} !^/run$\n' + rewrite, result)
+
+    def test_unbalanced_or_unfinished_configuration_refused(self):
+        for routing in [' <Location />\n', ' </Location>\n', ' <IfModule mod_alias.c>\n </Location>\n']:
+            with self.subTest(routing=routing), self.assertRaises(ValueError):
+                repair.patch(STAGE.format(routing=routing), 3151)
+        with self.assertRaises(ValueError):
+            list(repair.statements([' Redirect / \\\n']))
+
+    def test_preexisting_run_proxy_kept_after_exact_reservation(self):
+        old = ' ProxyPass /run http://127.0.0.1:3001/run\n'
+        result = repair.patch(STAGE.format(routing=old), 3151)
+        self.assertIn(old, result)
+        self.assertLess(result.index('ProxyPassMatch ^/run$'), result.index(old))
+
     def test_apache_source_line_supports_inherited_tls_and_quoted_name(self):
         # Representative fixture; the VPS configuration itself was not exported.
         stage = STAGE.format(routing='').replace(' SSLEngine on\n', '').replace(
@@ -59,8 +95,7 @@ class Patching(unittest.TestCase):
         for source in [PROD, STAGE.format(routing='') * 2,
                        STAGE.format(routing=' ServerAlias novlearn.fr\n'),
                        STAGE.format(routing=' Include /etc/other.conf\n'),
-                       STAGE.format(routing=' <Location />\n </Location>\n'),
-                       STAGE.format(routing=' ProxyPass /run http://localhost:1/run\n')]:
+                       STAGE.format(routing=' <Location />\n </Directory>\n')]:
             with self.subTest(source=source), self.assertRaises(ValueError):
                 repair.patch(source, 3151)
 
