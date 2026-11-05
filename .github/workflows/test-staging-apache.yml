@@ -14,17 +14,62 @@ on:
       - .github/workflows/*staging-apache.yml
 permissions:
   contents: read
+concurrency:
+  group: engine-apache-tests-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   apache:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - name: Install Apache on the disposable runner
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y apache2
+          if ! command -v apache2 >/dev/null || [[ ! -f /usr/lib/apache2/modules/mod_ssl.so ]]; then
+            sudo apt-get update -o Acquire::Retries=2 -o Acquire::http::Timeout=20
+            sudo apt-get install -y --no-install-recommends apache2
+          fi
       - name: Test exact routing, redirects, preservation and rollback
         env:
           APACHE_INTEGRATION: '1'
         run: python3 -m unittest discover -s tests/deploy -p 'test_apache*.py' -v
+      - name: Start the exact published Engine 0.2.1 on the disposable runner
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_USER: ${{ github.actor }}
+        run: |
+          set -euo pipefail
+          export DOCKER_CONFIG="$RUNNER_TEMP/engine-apache-docker-auth"
+          mkdir -m 0700 "$DOCKER_CONFIG"
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GH_USER" --password-stdin
+          image=ghcr.io/novlearn/novlearn-engine-host@sha256:d1916edf981fd23b57f543937d83411df77b7dc5da290e24db9f41cbf544a4ea
+          docker pull "$image"
+          token="$(openssl rand -hex 32)"
+          echo "::add-mask::$token"
+          echo "REAL_ENGINE_API_TOKEN=$token" >> "$GITHUB_ENV"
+          docker run --detach --init --name apache-real-engine \
+            --publish 127.0.0.1:18080:8080 --env "ENGINE_API_TOKEN=$token" \
+            --memory=384m --memory-swap=384m --pids-limit=64 --cpus=1.5 \
+            --read-only --cap-drop=ALL --security-opt no-new-privileges:true \
+            --tmpfs /tmp:rw,noexec,nosuid,size=1m,uid=1000,gid=1000,mode=0700 "$image"
+          [[ "$(docker exec apache-real-engine printenv ENGINE_ARTIFACT_SHA256)" == 6d1d52f38297d6f91be0eaa4aea57eb63f61973eae4cc83d86fd0aa6651dd85a ]]
+          ready=false
+          for attempt in {1..60}; do
+            if curl --fail --silent --max-time 2 http://127.0.0.1:18080/healthz >/dev/null; then ready=true; break; fi
+            sleep 1
+          done
+          [[ "$ready" == true ]]
+      - name: Qualify Apache against the published Engine, not only a test backend
+        env:
+          APACHE_INTEGRATION: '1'
+          REAL_ENGINE_PORT: '18080'
+          REAL_ENGINE_ARCHIVE_SHA256: 6d1d52f38297d6f91be0eaa4aea57eb63f61973eae4cc83d86fd0aa6651dd85a
+        run: python3 -m unittest discover -s tests/deploy -p 'test_apache_integration.py' -v
+      - name: Remove the disposable Engine and registry credentials
+        if: always()
+        run: |
+          docker rm --force apache-real-engine || true
+          rm -rf -- "$RUNNER_TEMP/engine-apache-docker-auth"

@@ -1,5 +1,30 @@
 # État et reprise
 
+## Diagnostic indépendant et qualification de l'image publiée — 5 novembre 2026
+
+Le run `42063541954` s'arrête avant écriture sur une hypothèse incorrecte du
+validateur : toutes les directives de l'include Certbot devaient commencer par
+SSL. Cette règle est supprimée. LogFormat et les conteneurs sont acceptés ;
+les includes restent intacts et leur routage éventuel est signalé pour revue.
+Inspect affiche désormais le diagnostic masqué et les sondes avant de tenter
+de préparer un candidat ; un candidat refusé n'interrompt plus la collecte.
+
+Apply vérifie l'identité de l'archive, un calcul local et un calcul public
+authentifiés, les deux refus 401 HTTPS et la stabilité HTTP de `/` et `/accueil`.
+Une erreur de réception dans la transaction restaure Apache. Le client de sonde
+ne suit aucune redirection et ne passe pas le token en argument de processus.
+La CI ajoute l'image Engine 0.2.1 publiée, épinglée par digest, au banc Apache.
+La réception VPS et la qualification Admin restent distinctes de cette CI.
+
+Contrôles de cette correction : 19 tests Python locaux PASS ; Prettier ciblé,
+parsing YAML et `git diff --check` PASS. La CI Apache du run `42073232683`
+(job `127406483254`) passe : première phase 20 PASS / 1 skip explicite du
+conteneur non encore démarré, puis deux tests d'intégration PASS après démarrage
+de l'image publiée 0.2.1, dont le test avec cette image. Le réseau, TLS et la
+configuration complète du VPS ne sont pas remplacés par cette preuve runner.
+La session ne dispose pas d'un moyen opérationnel de lancer un nouveau workflow
+GitHub ; aucun run VPS, merge ou déploiement n'est effectué dans cette mission.
+
 ## Blocs Apache imbriqués — 5 novembre 2026
 
 Le run `42060507764` confirme le vhost staging ligne 74 et HOST_PORT=3151,

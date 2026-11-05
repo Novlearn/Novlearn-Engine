@@ -1,5 +1,16 @@
 # Décisions et ADR
 
+## Collecter avant de corriger et distinguer les preuves — 5 novembre 2026
+
+Un include Certbot ne se réduit pas aux directives préfixées SSL : conserver
+le fichier installé, accepter ses conteneurs et sa journalisation, signaler
+son routage éventuel sans le réécrire. Inspect est un diagnostic indépendant
+du générateur de candidat et n'est pas une preuve de raccordement Admin.
+Exiger un test CI avec l'image publiée en complément des services simulés.
+Après modification, exiger le refus 401, l'identité de l'archive, un calcul
+authentifié public et la préservation des pages staging dans la transaction
+de rollback. Les tests de Vercel restent une réception applicative séparée.
+
 ## Préserver les blocs Apache imbriqués — 5 novembre 2026
 
 Remplacer le refus global des conteneurs et continuations par une lecture des
