@@ -11,6 +11,10 @@ on:
         required: true
         type: choice
         options: [promote, rollback]
+      confirmation:
+        description: Type PROMOTE or ROLLBACK followed by the exact version tag
+        required: true
+        type: string
 permissions:
   contents: read
 concurrency:
@@ -18,6 +22,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -35,9 +40,15 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ inputs.version }}
           OPERATION: ${{ inputs.operation }}
+          CONFIRMATION: ${{ inputs.confirmation }}
         run: |
           set -euo pipefail
           [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          [[ "$OPERATION" == promote || "$OPERATION" == rollback ]]
+          [[ "$CONFIRMATION" == "${OPERATION^^} $VERSION" ]] || {
+            echo 'Production deployment requires confirmation of the operation and exact release tag.' >&2
+            exit 1
+          }
           owner="${GITHUB_REPOSITORY_OWNER,,}"
           image="ghcr.io/$owner/novlearn-engine-host"
           if [[ "$OPERATION" == promote ]]; then
