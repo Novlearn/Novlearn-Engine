@@ -1,29 +1,31 @@
 # Roadmap et critères de passage
 
-## Pré-vérification et bootstrap manuel VPS — livré localement, à exécuter
+## Installation et première release — réalisées
 
-Le workflow manuel `Initialize Engine VPS` dispose de deux modes : préflight
-sans changement de configuration, puis initialisation confirmée qui copie et
-exécute le bootstrap déjà livré. Il consomme seulement les trois secrets VPS du
-dépôt et requiert `sudo -n` déjà accordé au compte SSH. Le workflow n'a pas été
-publié ni exécuté; restent la revue, l'intégration dans `main`, le préflight réel
-et, après validation par l'administrateur VPS, l'initialisation.
+Le VPS Engine a été initialisé et la release `v0.2.1` est publiée. Le workflow
+de release a construit le tarball exact et son empreinte, publié l’image GHCR par
+digest et déployé cette version en staging. Le host HTTP reste séparé des
+applications consommatrices ; leur configuration de client doit épingler
+l’empreinte de l’archive.
 
-## CI/CD et host HTTP sur VPS — livré localement, déploiement à effectuer
+## Workflows et exploitation actuels
 
-Le host possède maintenant un adaptateur HTTP privé, image Docker, deux Compose
-isolés, bootstrap VPS, SSH restreint, release GHCR par digest, staging
-automatique et promotion/rollback production avec approbation GitHub. La
-procédure pour Alexandre est dans [DEPLOYMENT.md](DEPLOYMENT.md). Aucun
-déploiement ni release réel effectué. Restent : configurer les Environments et
-secrets GitHub, valider cgroup/ports du VPS, installer les clés, adapter les
-vhosts Apache et effectuer une première release après que la CI soit verte. La
-CI inclut désormais la construction de l'image et un smoke test du host sous
-limites Docker ; ce job reste à observer sur un runner GitHub.
+Les workflows actifs sont la CI, la release avec déploiement staging, le
+redéploiement manuel d’une release en staging, la promotion/rollback manuel de
+production, les tests Apache sur runner jetable et la réparation manuelle du
+seul vhost staging. L’initialisation du VPS et la récupération chiffrée du token
+ne sont plus des workflows du dépôt. Les procédures d’API, de configuration et
+de déploiement sont dans [DEPLOYMENT.md](DEPLOYMENT.md) ; le routage staging est
+dans [apache-staging.md](apache-staging.md).
 
-## Extension locale des courbes — 21 octobre 2026
+## Qualification initiale de l’extension de courbes — 21 octobre 2026
 
-[Sampling D54 / Admin D10](graph-sampling.md) autorisé, en cours : 109 tests ciblés passent, dont 28 nouveaux cas de sampling ; build/types stricts passent. Le premier contrôle complet a terminé avec dix échecs conservés ; les correctifs ciblés passent et le second contrôle complet reste à exécuter. Host Linux et tarball restent à qualifier avant adoption Admin. Aucun critère, protection ou environnement distant modifié.
+L’API [sampling D54 / Admin D10](graph-sampling.md) est incluse dans le package
+Engine 0.2.1. Les nombres ci-dessous décrivent le travail de qualification
+initiale d’octobre, pas un contrôle du tag actuel ni l’état d’une intégration
+consommatrice. Le premier contrôle complet avait terminé avec dix échecs ; les
+correctifs ciblés et les 109 tests ciblés passaient alors. Les contrats,
+protections et délais n’ont pas été assouplis.
 
 ## Correction ciblée de disponibilité — 17 octobre 2026
 
@@ -97,14 +99,14 @@ inchangées et `npm.cmd run check` complet. **Terminé, bilan du 13 octobre :
 Les chantiers suivants nécessitent une instruction distincte. Ils ne changent
 ni les priorités du CDC ni le verdict de V1 locale, et aucun n’est commencé ici.
 
-| Chantier                          | Objectif / tâches                                                                                                                                                   | Dépendances                                                             | Critères de validation                                                                                                                             |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Adoption serveur applicative      | Mettre à niveau le runtime ciblé, provisionner les quotas, registre officiel, identité/droits/store/tentatives ; intégrer la projection/correction pratique et duel | Artefact M12, environnement réel et autorisation sur dépôts applicatifs | Tests falsification/propriété/TTL/manche, interruption/récupération sous charge réelle, anciennes tentatives/rejeu/rollback ; aucun verdict client |
-| Distribution et publication       | Décider licence/registre/consommateurs ; release immuable et activation par définition                                                                              | Choix produit et contrats consommateurs                                 | Tarball exact installé, CI réellement exécutée, compatibilité et rollback qualifiés ; publication uniquement autorisée explicitement               |
-| Catalogue au-delà des huit lignes | Collecter des sources autorisées, inventorier/enregistrer provenance, adapter individuellement les cas admis                                                        | Exports réels et arbitrages pédagogiques                                | Originaux préservés, rapports sans pertes silencieuses, profils/tests par exercice ; blocages explicites, aucune exécution JS                      |
-| UI élève et Admin                 | Renderer partagé, édition, saisie et accessibilité ; afficher seulement les capacités admises                                                                       | Applications et données M2, workflows de publication définis            | Rendu/interaction réels par type, conservation IDs, champs privés absents, validation serveur commune ; MathLive sans autorité                     |
-| P2 du CDC                         | Scopes locaux, parties imbriquées, génération conditionnelle / réponses précédentes                                                                                 | Besoin produit documenté, contrat et politiques approuvés               | Modèle/version/provenance/rejeu et tests de chemins conditionnels ; aucune dépendance pédagogique implicite                                        |
-| Extensions mathématiques motivées | Profils additionnels précis, sans CAS universel                                                                                                                     | Cas utilisateur/catalogue démontré, méthode de preuve CortexJS          | Domaines avant réduction, vrais positifs/négatifs, contre-exemples et états inconnus ; limites publiées et mise à jour CDC                         |
+| Chantier                                | Objectif / tâches                                                                                                                                                   | Dépendances                                                             | Critères de validation                                                                                                                             |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Adoption serveur applicative            | Mettre à niveau le runtime ciblé, provisionner les quotas, registre officiel, identité/droits/store/tentatives ; intégrer la projection/correction pratique et duel | Artefact M12, environnement réel et autorisation sur dépôts applicatifs | Tests falsification/propriété/TTL/manche, interruption/récupération sous charge réelle, anciennes tentatives/rejeu/rollback ; aucun verdict client |
+| Prochaines versions et adoption élargie | Maintenir les contrats versionnés et les épingles de release dans chaque consommateur ; qualifier chaque upgrade et scénario de rejeu                               | Besoin produit et contrats consommateurs                                | CI verte, tarball et digest exacts, staging sain, promotion ou rollback explicitement vérifié                                                      |
+| Catalogue au-delà des huit lignes       | Collecter des sources autorisées, inventorier/enregistrer provenance, adapter individuellement les cas admis                                                        | Exports réels et arbitrages pédagogiques                                | Originaux préservés, rapports sans pertes silencieuses, profils/tests par exercice ; blocages explicites, aucune exécution JS                      |
+| UI élève et Admin                       | Renderer partagé, édition, saisie et accessibilité ; afficher seulement les capacités admises                                                                       | Applications et données M2, workflows de publication définis            | Rendu/interaction réels par type, conservation IDs, champs privés absents, validation serveur commune ; MathLive sans autorité                     |
+| P2 du CDC                               | Scopes locaux, parties imbriquées, génération conditionnelle / réponses précédentes                                                                                 | Besoin produit documenté, contrat et politiques approuvés               | Modèle/version/provenance/rejeu et tests de chemins conditionnels ; aucune dépendance pédagogique implicite                                        |
+| Extensions mathématiques motivées       | Profils additionnels précis, sans CAS universel                                                                                                                     | Cas utilisateur/catalogue démontré, méthode de preuve CortexJS          | Domaines avant réduction, vrais positifs/négatifs, contre-exemples et états inconnus ; limites publiées et mise à jour CDC                         |
 
 Le périmètre exclu au chapitre 15 du CDC n’est pas transformé en backlog
 obligatoire. La phase suivante reste un choix explicite, **un seul lot à la fois**.

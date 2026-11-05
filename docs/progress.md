@@ -1,5 +1,20 @@
 # État et reprise
 
+## Documentation d’exploitation après publication 0.2.1 — 5 novembre 2026
+
+L’audit de `main` (commit `566bb64`) confirme six workflows actifs :
+CI, release/staging, redéploiement staging, promotion/rollback production,
+tests Apache sur runner et réparation Apache staging. Les anciens workflows de
+bootstrap et de récupération chiffrée du token sont déjà absents de la branche
+courante. Les guides de déploiement, release, roadmap et API ont été réconciliés
+avec cet état ; le rapport documentaire isolé a été retiré après vérification de
+ses références. Les archives de release, manifestes, empreintes, fixtures et
+captures référencés par les scénarios de rejeu ou certification sont conservés.
+
+Aucun merge, publication de release ni déploiement n’est réalisé par ce nettoyage.
+Cette entrée décrit l’état du dépôt et ne constitue pas un relevé des fichiers
+locaux ni des ressources Docker du poste.
+
 ## Diagnostic indépendant et qualification de l'image publiée — 5 novembre 2026
 
 Le run `42063541954` s'arrête avant écriture sur une hypothèse incorrecte du
