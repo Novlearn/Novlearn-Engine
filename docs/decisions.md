@@ -1,5 +1,18 @@
 # Décisions et ADR
 
+## Réparation limitée du vhost HTTPS staging — 5 novembre 2026
+
+Préparer un workflow manuel distinct de la release, utilisant les trois secrets
+VPS existants et sans accès SSH local. La source du port est le HOST_PORT installé
+de staging, recoupé avec le conteneur en cours ; 3151 est observé dans les logs du
+bootstrap réussi. Réserver exactement `/run` avant le routage Novlearn et exclure
+ce chemin des RewriteRule et Redirect du seul vhost staging. Refuser un vhost
+ambigu plutôt que remplacer une configuration inconnue. Sauvegarder le fichier
+intégral, vérifier Apache, recharger et restaurer sur erreur. Les autres vhosts,
+tokens et services ne sont pas modifiés ; le reload est celui d'Apache partagé.
+Le 401 public vérifie le routage, pas le calcul ni la qualification depuis Admin.
+Voir [la procédure et le rollback](apache-staging.md).
+
 Les ADR décrivent les raisons et conséquences techniques. Les bilans ne sont
 pas des décisions actives supplémentaires. **Active** signifie toujours applicable
 avec ses extensions ; **Superseded** signifie remplacée ; **Historical** désigne
