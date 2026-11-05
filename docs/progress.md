@@ -1,5 +1,25 @@
 # État et reprise
 
+## Route publique Engine staging — préparation du 5 novembre 2026
+
+Le constat utilisateur est un POST `/run` public redirigé en 307 vers
+`/accueil`. Le bootstrap réussi `41818738477` utilisait le port staging 3151.
+Le nouveau workflow manuel `repair-staging-apache.yml` vérifie ce port contre
+le `.env` staging et Docker, puis cible uniquement le vhost HTTPS staging.
+Sauvegarde, configtest, reload gracieux et retour automatique sur erreur sont
+prévus, avec restauration manuelle par identifiant de sauvegarde.
+Procédure et limites : [réparation Apache staging](apache-staging.md).
+
+Six tests Python locaux passent (patch exact, préservation, refus et erreurs
+de transaction) après avoir dirigé TEMP/TMP vers un dossier autorisé du dépôt.
+La première tentative utilisait un répertoire temporaire Windows inaccessible.
+`npm.cmd run check` passe build/types/lint/format puis échoue au chargement de
+33 suites sur leurs caches sandbox ENOENT ; 151 tests passent dans 5 fichiers.
+`npm.cmd pack --dry-run` passe (189 fichiers). Le test Apache réel est préparé
+en CI sur runner jetable, pas exécuté localement. Aucun workflow VPS déclenché,
+aucun accès SSH direct, aucun merge ou déploiement production. La réception
+publique 401 puis la qualification Admin Vercel restent à réaliser.
+
 ## Diagnostic et recréation Engine staging - 5 novembre 2026
 
 Le run Engine `41924601043` a déployé le digest 0.2.1 avec succès.
