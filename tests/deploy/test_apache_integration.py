@@ -47,7 +47,9 @@ class ApacheIntegration(unittest.TestCase):
                     preamble += ''.join(f'LoadModule {m}_module /usr/lib/apache2/modules/mod_{m}.so\n' for m in modules)
                     preamble += f'User {pwd.getpwuid(os.getuid()).pw_name}\nGroup {grp.getgrgid(os.getgid()).gr_name}\n'
                     source = STAGE.format(routing=redirects).replace('http://127.0.0.1:3001/', f'http://127.0.0.1:{backend.server_port}/')
-                    vhost = repair.patch(source, backend.server_port).replace('*:443', f'*:{port}').replace(' SSLEngine on\n', '')
+                    # Exercise Apache's file:line selection with inherited TLS.
+                    source = source.replace(' SSLEngine on\n', '')
+                    vhost = repair.patch(source, backend.server_port, vhost_line=1).replace('*:443', f'*:{port}')
                     config.write_text(preamble + vhost)
                     subprocess.run(['apache2', '-t', '-f', str(config)], check=True, capture_output=True)
                     apache = subprocess.Popen(['apache2', '-X', '-f', str(config)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

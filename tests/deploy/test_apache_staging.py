@@ -14,6 +14,31 @@ STAGE = '<VirtualHost *:443>\n ServerName staging.novlearn.fr\n SSLEngine on\n{r
 
 
 class Patching(unittest.TestCase):
+    def test_apache_source_line_supports_inherited_tls_and_quoted_name(self):
+        # Representative fixture; the VPS configuration itself was not exported.
+        stage = STAGE.format(routing='').replace(' SSLEngine on\n', '').replace(
+            'ServerName staging.novlearn.fr', 'ServerName "https://STAGING.novlearn.fr:443"')
+        source = '<IfModule mod_ssl.c>\n' + PROD + stage + '</IfModule>\n'
+        line = source[:source.index(stage)].count('\n') + 1
+        result = repair.patch(source, 3151, vhost_line=line)
+        self.assertIn(PROD, result)
+        self.assertIn(repair.route(3151), result)
+        self.assertEqual(result, repair.patch(result, 3151, vhost_line=line))
+
+    def test_apache_line_never_selects_production_or_wrong_block(self):
+        source = PROD + STAGE.format(routing='')
+        for line in [1, 2, 999]:
+            with self.subTest(line=line), self.assertRaises(ValueError):
+                repair.patch(source, 3151, vhost_line=line)
+        stage = STAGE.format(routing='').replace('SSLEngine on', 'SSLEngine off')
+        with self.assertRaises(ValueError):
+            repair.patch(stage, 3151, vhost_line=1)
+
+    def test_vhost_diagnostic_excludes_private_configuration(self):
+        source = STAGE.format(routing=' SetEnv ENGINE_API_TOKEN private-value\n SSLCertificateKeyFile /private/key.pem\n')
+        summary = repair.vhost_summary(source)
+        self.assertEqual([{'line': 1, 'names': [repair.DOMAIN], 'tls_directives': ['sslengine']}], summary)
+
     def test_exact_route_order_and_preserved_production(self):
         source = PROD + STAGE.format(routing='')
         result = repair.patch(source, 3151)

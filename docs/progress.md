@@ -1,5 +1,20 @@
 # État et reprise
 
+## Refus du mode inspect — 5 novembre 2026
+
+Le run `42056334750` trouve le vhost actif dans
+`/etc/apache2/sites-available/novlearn.fr-le-ssl.conf` et confirme le port
+3151, puis échoue avant toute écriture Apache : la seconde recherche textuelle
+exige un ServerName littéral et un `SSLEngine on` dans le même bloc. Les logs
+ne donnent pas le contenu du vhost et ne permettent pas d'identifier laquelle
+de ces hypothèses est fausse. La sélection utilise désormais le numéro de ligne
+fourni par `apachectl -S`, avec vérification du nom staging et du port 443.
+Un nom quoted/schéma/port et TLS hérité sont admis ; les vhosts partagés avec
+la production restent refusés. Un diagnostic structurel limité aux lignes,
+noms et présence des directives TLS aide à qualifier un éventuel nouveau refus.
+Le contenu complet et les secrets ne sont pas journalisés. Aucun workflow VPS
+n'est relancé par cette correction ; sauvegarde et rollback restent inchangés.
+
 ## Route publique Engine staging — préparation du 5 novembre 2026
 
 Le constat utilisateur est un POST `/run` public redirigé en 307 vers
