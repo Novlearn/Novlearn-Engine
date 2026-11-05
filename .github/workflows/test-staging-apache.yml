@@ -1,0 +1,30 @@
+name: Test staging Apache repair
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - deploy/apache-staging.py
+      - tests/deploy/**
+      - .github/workflows/*staging-apache.yml
+  push:
+    branches: [main]
+    paths:
+      - deploy/apache-staging.py
+      - tests/deploy/**
+      - .github/workflows/*staging-apache.yml
+permissions:
+  contents: read
+jobs:
+  apache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Install Apache on the disposable runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y apache2
+      - name: Test exact routing, redirects, preservation and rollback
+        env:
+          APACHE_INTEGRATION: '1'
+        run: python3 -m unittest discover -s tests/deploy -p 'test_apache*.py' -v
