@@ -16,7 +16,7 @@ MathJSON quand le contrat le prévoit. Aucun CAS parallèle ni deuxième parseur
 | -------------------------------- | ------------------------------------------------------------------------------------------ |
 | Cœur portable, entrée du package | Définition, génération, instanciation, projection et correction                            |
 | Sous-chemin `node-host` et CLI   | Processus neuf, protocole privé, file, quotas et interruption OS                           |
-| Sous-chemin `remote-host`        | Client serveur HTTPS vers `POST /run`, token privé et empreinte d’archive épinglée          |
+| Sous-chemin `remote-host`        | Client serveur HTTPS vers `POST /run`, token privé et empreinte d’archive épinglée         |
 | Sous-chemin `legacy`             | Conversion explicite de sources historiques avec recette revue et rapport                  |
 | Backend applicatif               | Droits, définition publiée, seed/ID officiels, stockage, tentatives, points et progression |
 | Interface élève/Admin/duels      | Édition, rendu, MathLive, interactions et feedback autorisé                                |

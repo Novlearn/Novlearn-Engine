@@ -6,10 +6,10 @@ Ce guide décrit le service HTTP privé, sa configuration et les workflows actue
 
 L’image GHCR exécute `novlearn-engine-server` derrière le host Node isolé.
 
-| Route | Accès | Fonction |
-| --- | --- | --- |
-| `GET /healthz` | Contrôle de santé local | Retourne l’état du host après un calcul de démarrage réussi. |
-| `POST /run` | Serveur autorisé uniquement | Accepte une requête JSON du protocole Engine v1, jusqu’à 1 MiB. |
+| Route          | Accès                       | Fonction                                                        |
+| -------------- | --------------------------- | --------------------------------------------------------------- |
+| `GET /healthz` | Contrôle de santé local     | Retourne l’état du host après un calcul de démarrage réussi.    |
+| `POST /run`    | Serveur autorisé uniquement | Accepte une requête JSON du protocole Engine v1, jusqu’à 1 MiB. |
 
 Chaque appel `POST /run` porte `Authorization: Bearer <token>` et
 `x-engine-archive-sha256: <sha256>`. Le host compare l’empreinte reçue à celle
@@ -44,14 +44,14 @@ Les logs JSON sont limités à trois fichiers de 10 MiB par conteneur.
 
 ## Workflows actifs
 
-| Workflow | Déclenchement et effet |
-| --- | --- |
-| `CI` | Push et PR vers `main`, ou lancement manuel. Vérifie Windows/Linux, le package et le host conteneurisé. |
-| `Engine release` | Push d’un tag `v*`. Vérifie le tag et le package, publie l’archive exacte avec son SHA-256 et l’image GHCR par digest, puis déploie cette release en staging. |
-| `Deploy Engine release to staging` | Lancement manuel depuis `main` pour redéployer une release publiée en staging, avec confirmation du tag exact. |
+| Workflow                                 | Déclenchement et effet                                                                                                                                                                             |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CI`                                     | Push et PR vers `main`, ou lancement manuel. Vérifie Windows/Linux, le package et le host conteneurisé.                                                                                            |
+| `Engine release`                         | Push d’un tag `v*`. Vérifie le tag et le package, publie l’archive exacte avec son SHA-256 et l’image GHCR par digest, puis déploie cette release en staging.                                      |
+| `Deploy Engine release to staging`       | Lancement manuel depuis `main` pour redéployer une release publiée en staging, avec confirmation du tag exact.                                                                                     |
 | `Promote or roll back Engine production` | Lancement manuel depuis `main`. Une promotion exige le dernier déploiement staging réussi ; un rollback cible une release publiée. L’environnement production applique son approbation configurée. |
-| `Test staging Apache repair` | PR/push modifiant les scripts, tests ou workflow Apache. Teste sur un runner jetable ; ne contacte pas le VPS. |
-| `Repair Engine staging Apache route` | Lancement manuel depuis `main`, environnement staging. Modes inspect/apply/rollback limités au vhost HTTPS staging. |
+| `Test staging Apache repair`             | PR/push modifiant les scripts, tests ou workflow Apache. Teste sur un runner jetable ; ne contacte pas le VPS.                                                                                     |
+| `Repair Engine staging Apache route`     | Lancement manuel depuis `main`, environnement staging. Modes inspect/apply/rollback limités au vhost HTTPS staging.                                                                                |
 
 Les anciens workflows d’initialisation du VPS et de récupération du token ont
 été retirés. Le dépôt ne contient plus de procédure automatisée de bootstrap ;

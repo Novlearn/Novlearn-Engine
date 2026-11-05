@@ -9,15 +9,15 @@ saisies non fiables utilise [l’hôte serveur isolé](adr/015-private-python-tr
 
 ## Les huit fonctions de l’entrée portable
 
-| Fonction exportée       | Signature utile / résultat                                                                                      |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `validateDefinition`    | `unknown` → `{ok:true,value:ExerciseDefinition}` ou diagnostics structurels                                     |
-| `validateSubmission`    | `unknown` → `{ok:true,value:AnswerSubmission}` ou diagnostics structurels                                       |
-| `parseMathInput`        | `source`, contexte facultatif, profil public facultatif → source/syntaxe/symboles ou diagnostics                |
-| `generateVariables`     | `unknown`, `{seed,generationVersion?}` → `values/groups/computed/replay` ou diagnostics                         |
-| `instantiateExercise`   | `unknown`, `{instanceId,seed,generationVersion?}` → `{ok:true,value:ExerciseInstance}` ou diagnostics           |
-| `projectPublicInstance` | Snapshot officiel de confiance → `PublicInstance` ; version inconnue : exception `unsupported-snapshot-version` |
-| `gradeAnswer`           | Snapshot officiel de confiance, soumission `unknown` → `CorrectionResult` par question                          |
+| Fonction exportée       | Signature utile / résultat                                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `validateDefinition`    | `unknown` → `{ok:true,value:ExerciseDefinition}` ou diagnostics structurels                                        |
+| `validateSubmission`    | `unknown` → `{ok:true,value:AnswerSubmission}` ou diagnostics structurels                                          |
+| `parseMathInput`        | `source`, contexte facultatif, profil public facultatif → source/syntaxe/symboles ou diagnostics                   |
+| `generateVariables`     | `unknown`, `{seed,generationVersion?}` → `values/groups/computed/replay` ou diagnostics                            |
+| `instantiateExercise`   | `unknown`, `{instanceId,seed,generationVersion?}` → `{ok:true,value:ExerciseInstance}` ou diagnostics              |
+| `projectPublicInstance` | Snapshot officiel de confiance → `PublicInstance` ; version inconnue : exception `unsupported-snapshot-version`    |
+| `gradeAnswer`           | Snapshot officiel de confiance, soumission `unknown` → `CorrectionResult` par question                             |
 | `sampleDisplayGraph`    | Snapshot officiel et ID d’élément → `GraphSamplingResult` asynchrone ; voir [graph-sampling.md](graph-sampling.md) |
 
 La seed est obligatoire : entier uint32 ou chaîne décimale canonique, sans
