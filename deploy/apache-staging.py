@@ -25,6 +25,48 @@ def vhosts(source):
     return list(re.finditer(r"(?ims)^[ \t]*<VirtualHost\s+[^>]+>.*?^[ \t]*</VirtualHost>[^\n]*", source))
 
 
+def statements(lines):
+    """Read logical Apache lines without changing their original bytes."""
+    raw, logical, start = [], [], 0
+    for number, line in enumerate(lines, 1):
+        if not raw:
+            start = number
+        raw.append(line)
+        value = line.rstrip("\r\n")
+        continued = value.endswith("\\") and not value.lstrip().startswith("#")
+        logical.append(value[:-1] if continued else value)
+        if not continued:
+            yield "".join(raw), " ".join(logical).strip(), start
+            raw, logical = [], []
+    if raw:
+        raise ValueError(f"Unfinished continuation at staging body line {start}")
+
+
+def body_statements(lines):
+    """Track container boundaries; expressions and directive values stay opaque."""
+    stack = []
+    for raw, logical, number in statements(lines):
+        if not logical or logical.startswith("#"):
+            yield raw, "", number
+            continue
+        if logical.startswith("<"):
+            closing = re.fullmatch(r"</([A-Za-z][A-Za-z0-9]*)\s*>", logical)
+            opening = re.fullmatch(r"<([A-Za-z][A-Za-z0-9]*)\b.*>", logical)
+            if closing:
+                name = closing[1].lower()
+                if not stack or stack.pop() != name:
+                    raise ValueError(f"Unbalanced staging container at body line {number}")
+            elif opening and opening[1].lower() != "virtualhost":
+                stack.append(opening[1].lower())
+            else:
+                raise ValueError(f"Unsupported staging container syntax at body line {number}")
+            yield raw, "", number
+        else:
+            yield raw, logical, number
+    if stack:
+        raise ValueError("Unclosed staging containers")
+
+
 def server_name(value):
     # Apache accepts a quoted ServerName, an optional scheme and a port.
     from urllib.parse import urlsplit
@@ -37,8 +79,7 @@ def vhost_summary(source):
     summary = []
     for block in vhosts(source):
         names, directives = [], []
-        for line in block[0].splitlines()[1:-1]:
-            stripped = line.strip()
+        for raw, stripped, number in statements(block[0].splitlines(keepends=True)[1:-1]):
             if not re.match(r"(?i)^(ServerName|ServerAlias|SSLEngine|Include|IncludeOptional)\s", stripped):
                 continue
             parts = shlex.split(stripped)
@@ -69,27 +110,22 @@ def patch(source, port, vhost_line=None):
     lines = b[0].splitlines(keepends=True)
     if not re.search(r":443\s*>$", lines[0].strip()):
         raise ValueError("Staging vhost must listen on HTTPS port 443")
-    names = [shlex.split(line.strip())[1:] for line in lines[1:-1]
-             if re.match(r"(?i)^\s*ServerName\s", line)]
+    body = list(body_statements(lines[1:-1]))
+    names = [shlex.split(logical)[1:] for raw, logical, number in body
+             if re.match(r"(?i)^ServerName\s", logical)]
     if len(names) != 1 or len(names[0]) != 1 or server_name(names[0][0]) != DOMAIN:
         raise ValueError("Apache-selected vhost is not exclusive to staging; inspect STAGING_VHOSTS metadata")
-    if re.search(r"(?im)^\s*SSLEngine\s+off\s*$", b[0]):
+    if any(re.fullmatch(r"(?i)SSLEngine\s+off", logical) for raw, logical, number in body):
         raise ValueError("Selected staging vhost explicitly disables TLS")
-    if BEGIN in b[0]:
-        expected = route(port)
-        if b[0].count(BEGIN) != 1 or expected not in b[0]:
-            raise ValueError("Existing managed route differs; review before replacement")
-        return source
-    # Automatic edits are deliberately limited to flat vhost routing. Unknown
-    # containers/includes need a reviewed fixture rather than a guessed rewrite.
-    for line in lines[1:-1]:
-        s = line.strip()
-        if not s or s.startswith("#"):
+    # Validate the complete structure before making a candidate. Containers,
+    # comments and unrelated directives are copied verbatim, including nesting.
+    for raw, s, number in body:
+        if not s:
             continue
-        if s.startswith("<") or s.endswith("\\"):
-            raise ValueError("Nested/continued staging configuration requires review")
+        directive = s.split(None, 1)[0].lower()
+        if directive not in {"servername", "serveralias", "include", "includeoptional", "rewriteoptions"}:
+            continue
         parts = shlex.split(s)
-        directive = parts[0].lower()
         if directive in {"servername", "serveralias"} and (len(parts) != 2 or server_name(parts[1]) != DOMAIN):
             raise ValueError("Shared staging/production vhost refused")
         if directive in {"include", "includeoptional", "rewriteoptions"}:
@@ -100,20 +136,23 @@ def patch(source, port, vhost_line=None):
             for included in Path(parts[1]).read_text().splitlines():
                 if included.strip() and not included.lstrip().startswith("#") and not re.match(r"(?i)^\s*SSL\w+\s", included):
                     raise ValueError("Unexpected non-TLS directive in SSL include")
-        if directive in {"proxypass", "proxypassmatch", "rewriterule"} and "/run" in s:
-            raise ValueError("Existing /run routing requires review")
+    if BEGIN in b[0]:
+        expected = route(port)
+        if b[0].count(BEGIN) != 1 or expected not in b[0]:
+            raise ValueError("Existing managed route differs; review before replacement")
+        return source
     result = [lines[0], route(port)]
-    for line in lines[1:-1]:
-        s = line.strip().lower()
-        if s.startswith(("redirect ", "redirectmatch ", "redirect\t", "redirectmatch\t")):
+    for raw, logical, number in body:
+        directive = logical.split(None, 1)[0].lower() if logical else ""
+        if directive in {"redirect", "redirectmatch"}:
             # mod_alias redirects take precedence over ProxyPass, regardless of
             # textual order. Keep their original arguments under an exact guard.
-            result.extend(['    <If "%{REQUEST_URI} != \'/run\'">\n', line, "    </If>\n"])
-        elif s.startswith(("rewriterule ", "rewriterule\t")):
+            result.extend(['    <If "%{REQUEST_URI} != \'/run\'">\n', raw, "    </If>\n"])
+        elif directive == "rewriterule":
             # Last condition ANDs with an existing OR condition group.
-            result.extend(["    RewriteCond %{REQUEST_URI} !^/run$\n", line])
+            result.extend(["    RewriteCond %{REQUEST_URI} !^/run$\n", raw])
         else:
-            result.append(line)
+            result.append(raw)
     result.append(lines[-1])
     return source[:b.start()] + "".join(result) + source[b.end():]
 
