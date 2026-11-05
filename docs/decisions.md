@@ -393,3 +393,12 @@ remplacer le helper partagé de production. Le workflow transfère le script dan
 un répertoire temporaire privé, vérifie son empreinte, l'installe au chemin
 stage-only, puis déploie le digest immuable 0.2.1. Aucun secret n'est lu ni
 affiché ; aucune modification au service de production n'est requise.
+
+### D67 - Vérifier le token et le calcul du seul staging (5 novembre 2026)
+
+Conserver le nom serveur `ENGINE_API_TOKEN` et le secret staging existant.
+`ENGINE_TOKEN` est un nom côté consommateur ; son absence dans Docker ne
+prouve pas une absence du secret serveur. Comparer sans divulgation le token
+staging à celui du conteneur et exiger un calcul authentifié HTTP 200 en plus
+de `/healthz`. Recréer uniquement `engine` dans `novlearn-engine-staging`, sans
+nouvelle release, sans toucher à Compose partagé ni à la production.

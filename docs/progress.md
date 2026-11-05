@@ -1,5 +1,39 @@
 # État et reprise
 
+## Diagnostic et recréation Engine staging - 5 novembre 2026
+
+Le run Engine `41924601043` a déployé le digest 0.2.1 avec succès.
+Le run Novlearn `42006269028` observe ensuite HTTP 503 sur un calcul
+authentifié. Son diagnostic inspecte `ENGINE_TOKEN`, alors que bootstrap,
+Compose et serveur Engine utilisent `ENGINE_API_TOKEN`. Cette absence ne
+prouve donc pas un défaut de chargement du token.
+
+Le workflow manuel staging ajoute une comparaison privée du token du fichier
+staging avec celui du conteneur, une sonde `/run`, puis la recréation du seul
+service `engine` du projet staging avec le digest et le token existants.
+La sonde est répétée après disponibilité. Aucun token n'est affiché, aucun
+fichier/service de production ni dépôt consommateur n'est modifié.
+Le workflow Engine `42007563347`, exécuté depuis
+`fix/staging-authenticated-redeploy` au commit `37e7612`, est PASS.
+Avant recréation : `ENGINE_API_TOKEN_present=true staging_env_match=true`,
+puis HTTP 503 / `unavailable`. Après recréation : même token, HTTP 200 et
+`ok=true`. Le problème n'était donc pas un token absent ; la cause interne de
+l'indisponibilité initiale n'est pas établie par ces sondes.
+
+Le rejeu du contrôle Novlearn `42006269028` (tentative 2, job `127178686928`)
+confirme `/healthz=200`, `authenticatedCalculation=true` et des empreintes
+requête/réponse identiques à la release 0.2.1. Il échoue ensuite sur le contrôle
+Apache `/api/exercises` vers Next port 3001, hors du périmètre Engine demandé.
+Apache et les sources Novlearn restent inchangés ; aucun merge dans main,
+aucune nouvelle image/release, aucun déploiement production.
+
+Contrôles locaux : `git diff --check`, Prettier ciblé et
+`npm.cmd pack --dry-run` PASS. `npm.cmd run check` passe build, types, lint et
+format, puis échoue : 33 suites ne chargent pas leur cache temporaire sandbox
+(ENOENT), un test host Windows dépasse son délai ; 172 tests passent.
+Bash local est refusé et Docker Desktop indisponible ; le script Bash a été
+réellement exécuté avec succès par le workflow staging distant.
+
 ## Publication Engine 0.2.1 et relance staging — 4 novembre 2026
 
 Le run CI `41887866785` passe sur Ubuntu et Windows, ainsi que le job
