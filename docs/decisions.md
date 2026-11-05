@@ -1,5 +1,15 @@
 # Décisions et ADR
 
+## Sélection du vhost par Apache — 5 novembre 2026
+
+Utiliser le fichier et la ligne annoncés par `apachectl -S` pour sélectionner
+le bloc actif, puis vérifier indépendamment son identité staging et le port 443. Ne pas déduire la configuration TLS effective de la présence littérale
+de `SSLEngine on` dans le bloc, car elle peut provenir d'un include ou être
+héritée. Refuser un `SSLEngine off` explicite et tout nom/alias de production.
+Les exemples de régression sont des fixtures représentatives, pas une copie
+observée du vhost VPS. Le prochain inspect conserve un diagnostic structurel
+sans publier les directives privées ou les chemins de clés.
+
 ## Réparation limitée du vhost HTTPS staging — 5 novembre 2026
 
 Préparer un workflow manuel distinct de la release, utilisant les trois secrets
