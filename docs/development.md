@@ -29,7 +29,7 @@ npm.cmd pack --dry-run
 
 La distribution inclut `dist` et le README. Les docs détaillées, fixtures,
 rapports privés et exemples applicatifs restent dans le dépôt. Les sous-chemins
-publics sont `node-host`, `legacy` et ``remote-host`, en plus de l’entrée portable ;
+publics sont `node-host`, `legacy` et `remote-host`, en plus de l’entrée portable ;
 aucun import de fichier interne ne fait partie du contrat public.
 
 ## Code et tests
