@@ -1,6 +1,15 @@
 name: Deploy Engine release to staging
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Published Engine release tag, for example v0.2.1
+        required: true
+        type: string
+      confirmation:
+        description: Type DEPLOY STAGING followed by the exact version tag
+        required: true
+        type: string
 permissions:
   contents: read
 concurrency:
@@ -8,6 +17,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy-staging:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -18,6 +28,26 @@ jobs:
       packages: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Validate the published release and explicit staging confirmation
+        id: image
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          set -euo pipefail
+          [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          [[ "$CONFIRMATION" == "DEPLOY STAGING $VERSION" ]] || {
+            echo 'Staging deployment requires confirmation of the exact release tag.' >&2
+            exit 1
+          }
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          image="ghcr.io/$owner/novlearn-engine-host"
+          gh release download "$VERSION" --pattern engine-image.txt --dir "$RUNNER_TEMP"
+          reference="$(cat "$RUNNER_TEMP/engine-image.txt")"
+          [[ "$reference" =~ ^ghcr\.io/${owner}/novlearn-engine-host@sha256:[a-f0-9]{64}$ ]]
+          echo "reference=$reference" >> "$GITHUB_OUTPUT"
       - name: Calculate the reviewed staging helper fingerprint
         id: staging-helper
         run: echo "sha256=$(sha256sum deploy/engine-deploy-root.sh | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
@@ -66,11 +96,11 @@ jobs:
             sudo -n install -o root -g root -m 0755 "$source_file" /usr/local/sbin/novlearn-engine-deploy-staging
             actual_sha256="$(sudo -n sha256sum /usr/local/sbin/novlearn-engine-deploy-staging | cut -d' ' -f1)"
             [[ "$actual_sha256" == "$EXPECTED_SHA256" ]]
-      - name: Deploy the exact Engine 0.2.1 image to staging
+      - name: Deploy the selected published Engine release to staging
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
         env:
           DEPLOY_ENVIRONMENT: staging
-          IMAGE_REFERENCE: ghcr.io/novlearn/novlearn-engine-host@sha256:d1916edf981fd23b57f543937d83411df77b7dc5da290e24db9f41cbf544a4ea
+          IMAGE_REFERENCE: ${{ steps.image.outputs.reference }}
           GHCR_USER: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
