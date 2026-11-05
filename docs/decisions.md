@@ -1,5 +1,18 @@
 # Décisions et ADR
 
+## Préserver les blocs Apache imbriqués — 5 novembre 2026
+
+Remplacer le refus global des conteneurs et continuations par une lecture des
+lignes logiques et un suivi des blocs. Conserver les octets des directives
+existantes, et insérer les exclusions `/run` autour des Redirect/RedirectMatch
+et avant les RewriteRule, y compris dans les blocs. Ne pas interpréter les
+expressions ou réécrire les règles générales. Les proxys antérieurs restent
+après la nouvelle réservation exacte. Refuser les structures déséquilibrées,
+les vhosts partagés et les includes non qualifiés. Vérifier le comportement
+avec Apache et deux services distincts pour distinguer une réponse Engine du
+routage vers Novlearn. Les garde-fous configtest, recharge et rollback restent
+applicables ; aucune configuration de production n'est modifiée.
+
 ## Sélection du vhost par Apache — 5 novembre 2026
 
 Utiliser le fichier et la ligne annoncés par `apachectl -S` pour sélectionner
