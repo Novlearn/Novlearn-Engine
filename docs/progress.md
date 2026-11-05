@@ -13,7 +13,26 @@ staging avec celui du conteneur, une sonde `/run`, puis la recr�ation du seul
 service `engine` du projet staging avec le digest et le token existants.
 La sonde est r�p�t�e apr�s disponibilit�. Aucun token n'est affich�, aucun
 fichier/service de production ni d�p�t consommateur n'est modifi�.
-R�sultats distants de cette intervention � consigner apr�s ex�cution.
+Le workflow Engine `42007563347`, ex�cut� depuis
+`fix/staging-authenticated-redeploy` au commit `37e7612`, est PASS.
+Avant recr�ation : `ENGINE_API_TOKEN_present=true staging_env_match=true`,
+puis HTTP 503 / `unavailable`. Apr�s recr�ation : m�me token, HTTP 200 et
+`ok=true`. Le probl�me n'�tait donc pas un token absent ; la cause interne de
+l'indisponibilit� initiale n'est pas �tablie par ces sondes.
+
+Le rejeu du contr�le Novlearn `42006269028` (tentative 2, job `127178686928`)
+confirme `/healthz=200`, `authenticatedCalculation=true` et des empreintes
+requ�te/r�ponse identiques � la release 0.2.1. Il �choue ensuite sur le contr�le
+Apache `/api/exercises` vers Next port 3001, hors du p�rim�tre Engine demand�.
+Apache et les sources Novlearn restent inchang�s ; aucun merge dans main,
+aucune nouvelle image/release, aucun d�ploiement production.
+
+Contr�les locaux : `git diff --check`, Prettier cibl� et
+`npm.cmd pack --dry-run` PASS. `npm.cmd run check` passe build, types, lint et
+format, puis �choue : 33 suites ne chargent pas leur cache temporaire sandbox
+(ENOENT), un test host Windows d�passe son d�lai ; 172 tests passent.
+Bash local est refus� et Docker Desktop indisponible ; le script Bash a �t�
+r�ellement ex�cut� avec succ�s par le workflow staging distant.
 
 ## Publication Engine 0.2.1 et relance staging - 4 novembre 2026
 
@@ -463,3 +482,4 @@ test Windows du host, timeout apr�s 10,15 s au lieu de la limite native de 5 s
 temporaire des workers ; le contr�le complet suivant a utilis� le r�pertoire
 temporaire autoris�. `npm.cmd pack --dry-run` PASS. CI distante et d�ploiement
 non ex�cut�s.
+
