@@ -1,0 +1,110 @@
+name: Repair Engine staging Apache route
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Inspect, apply the exact staging route, or restore a backup
+        type: choice
+        options: [inspect, apply, rollback]
+        default: inspect
+      backup:
+        description: Backup ID printed by a previous apply (rollback only)
+        type: string
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: engine-staging-deploy
+  cancel-in-progress: false
+jobs:
+  repair:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: staging
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Validate and fingerprint the reviewed script
+        id: helper
+        env:
+          MODE: ${{ inputs.mode }}
+          BACKUP: ${{ inputs.backup }}
+        run: |
+          set -euo pipefail
+          [[ "$MODE" =~ ^(inspect|apply|rollback)$ ]]
+          if [[ "$MODE" == rollback ]]; then
+            [[ "$BACKUP" =~ ^[0-9]{8}T[0-9]{6}-[a-z0-9_]+$ ]]
+          else
+            [[ -z "$BACKUP" ]]
+          fi
+          python3 -m unittest discover -s tests/deploy -p 'test_apache_staging.py'
+          echo "sha256=$(sha256sum deploy/apache-staging.py | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+      - name: Prepare a private staging repair directory
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        env:
+          REPAIR_DIR: /tmp/novlearn-engine-apache-${{ github.run_id }}-${{ github.run_attempt }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: REPAIR_DIR
+          script: |
+            set -eu
+            [[ "$REPAIR_DIR" =~ ^/tmp/novlearn-engine-apache-[0-9]+-[0-9]+$ ]]
+            [[ ! -e "$REPAIR_DIR" ]]
+            mkdir -m 0700 -- "$REPAIR_DIR"
+      - name: Transfer the reviewed staging repair
+        uses: appleboy/scp-action@917f8b81dfc1ccd331fef9e2d61bdc6c8be94634
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: deploy/apache-staging.py
+          target: /tmp/novlearn-engine-apache-${{ github.run_id }}-${{ github.run_attempt }}
+          strip_components: 1
+      - name: Inspect or repair only the active staging HTTPS vhost
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        env:
+          REPAIR_DIR: /tmp/novlearn-engine-apache-${{ github.run_id }}-${{ github.run_attempt }}
+          EXPECTED_SHA256: ${{ steps.helper.outputs.sha256 }}
+          MODE: ${{ inputs.mode }}
+          BACKUP: ${{ inputs.backup }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: REPAIR_DIR,EXPECTED_SHA256,MODE,BACKUP
+          command_timeout: 3m
+          script: |
+            set -euo pipefail
+            [[ "$REPAIR_DIR" =~ ^/tmp/novlearn-engine-apache-[0-9]+-[0-9]+$ ]]
+            [[ "$EXPECTED_SHA256" =~ ^[a-f0-9]{64}$ ]]
+            [[ "$MODE" =~ ^(inspect|apply|rollback)$ ]]
+            [[ -z "$BACKUP" || "$BACKUP" =~ ^[0-9]{8}T[0-9]{6}-[a-z0-9_]+$ ]]
+            file="$REPAIR_DIR/apache-staging.py"
+            [[ -f "$file" && ! -L "$file" ]]
+            [[ "$(sha256sum "$file" | cut -d' ' -f1)" == "$EXPECTED_SHA256" ]]
+            sudo -n python3 "$file" "$MODE" --backup "$BACKUP"
+      - name: Verify public routing from the GitHub runner
+        if: inputs.mode == 'apply'
+        run: |
+          set -euo pipefail
+          code="$(curl --silent --show-error --max-time 20 --dump-header "$RUNNER_TEMP/headers" --output "$RUNNER_TEMP/body" --write-out '%{http_code}' -H 'Content-Type: application/json' --data '{}' https://staging.novlearn.fr/run)"
+          [[ "$code" == 401 ]]
+          ! grep -qi '^location:' "$RUNNER_TEMP/headers"
+          python3 -c 'import json,sys; assert json.load(open(sys.argv[1])) == {"error":"unauthorized"}' "$RUNNER_TEMP/body"
+      - name: Remove the temporary uploaded script
+        if: always()
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        env:
+          REPAIR_DIR: /tmp/novlearn-engine-apache-${{ github.run_id }}-${{ github.run_attempt }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: REPAIR_DIR
+          script: |
+            set -eu
+            [[ "$REPAIR_DIR" =~ ^/tmp/novlearn-engine-apache-[0-9]+-[0-9]+$ ]]
+            rm -f -- "$REPAIR_DIR/apache-staging.py"
+            if [[ -d "$REPAIR_DIR" ]]; then rmdir -- "$REPAIR_DIR"; fi
