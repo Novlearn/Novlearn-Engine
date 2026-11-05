@@ -7,6 +7,10 @@ on:
         description: Base64-encoded PEM RSA public key (private key stays on your computer)
         required: true
         type: string
+      confirmation:
+        description: Type READ STAGING TOKEN ENCRYPTED to authorize the read
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -22,8 +26,13 @@ jobs:
         shell: bash
         env:
           TOKEN_PUBLIC_KEY_BASE64: ${{ inputs.public_key_base64 }}
+          CONFIRMATION: ${{ inputs.confirmation }}
         run: |
           set -euo pipefail
+          [[ "$CONFIRMATION" == 'READ STAGING TOKEN ENCRYPTED' ]] || {
+            echo 'Reading the staging token requires explicit confirmation.' >&2
+            exit 1
+          }
           [[ "$TOKEN_PUBLIC_KEY_BASE64" =~ ^[A-Za-z0-9+/=]+$ && ${#TOKEN_PUBLIC_KEY_BASE64} -ge 100 && ${#TOKEN_PUBLIC_KEY_BASE64} -le 4096 ]]
       - name: Read and encrypt the existing staging token on the VPS
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
