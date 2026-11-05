@@ -20,6 +20,10 @@ en CI sur runner jetable, pas exécuté localement. Aucun workflow VPS déclench
 aucun accès SSH direct, aucun merge ou déploiement production. La réception
 publique 401 puis la qualification Admin Vercel restent à réaliser.
 
+La CI dédiée de la PR #3, run `42050956362`, job `127326603914`, passe
+les sept tests sans skip, dont le routage sur un vrai Apache de runner Linux
+et les cas de retour arrière. Elle ne contacte pas le VPS.
+
 ## Diagnostic et recréation Engine staging - 5 novembre 2026
 
 Le run Engine `41924601043` a déployé le digest 0.2.1 avec succès.
