@@ -1,20 +1,66 @@
-# Distribution pilote privée et adoption
+# Distribution, release et adoption
 
-Actualisation documentaire du 12 octobre 2026 : la suite Windows de cet audit
-passe **1533 tests / 29 fichiers sans skip**, incluant l’hôte natif et la CLI.
-Le refus OS consigné en M9/M12 reste une observation historique ; aucune politique
-OS modifiée par cette mission, cause de l’évolution non établie. Les benchmarks,
-archives consommées et captures ci-dessous restent les preuves historiques M12,
-sans nouvelle exécution de ces bancs. Voir [contrôles actuels](progress.md#contrôles-de-la-réorganisation-documentaire).
+## Release actuelle
 
-Le package ESM0.1.0 utilise le schéma5, CortexJS0.151.0 et le générateur
-mulberry32-rejection-v1. Sept fonctions sont exportées à la racine ;
-`./legacy` expose adaptLegacyExercise et `./node-host` createNodeHost.
-Les contrats sont décrits dans [architecture](architecture.md) et les capacités
-dans [la matrice CDC](feature-coverage.md). Publication npm, push, déploiement et
-activation de production ne sont pas effectués par cette livraison locale.
+Le package privé courant est `novlearn-exercise-engine@0.2.1`, schéma 5,
+CortexJS 0.151.0. Le tag `v0.2.1` pointe sur le commit `8513666`. La release
+GitHub attache le tarball npm exact et `engine-artifact-sha256.txt` contenant
+son SHA-256 :
 
-## Consommation et environnement
+`6d1d52f38297d6f91be0eaa4aea57eb63f61973eae4cc83d86fd0aa6651dd85a`.
+
+L’image du host publiée pour cette release est identifiée par le digest :
+
+`sha256:d1916edf981fd23b57f543937d83411df77b7dc5da290e24db9f41cbf544a4ea`.
+
+Le package racine expose les API portables décrites dans [usage.md](usage.md).
+Les sous-chemins publics sont `./node-host`, `./legacy` et
+`./remote-host`. Le package est privé (`private: true`) : la distribution
+consommateur est l’archive exacte de la release GitHub, pas une publication
+automatique sur npm.
+
+## Cycle de publication et de déploiement
+
+Le workflow [release.yml](../.github/workflows/release.yml) se déclenche sur un
+tag `v*`, vérifie que le tag correspond à `package.json` et provient de
+`main`, exécute check/pack/smoke, construit une archive unique sur Windows,
+calcule son SHA-256, puis publie le tarball et l’image GHCR immuable. Ce workflow
+déploie ensuite ce digest en staging.
+
+Le workflow [deploy-staging-release.yml](../.github/workflows/deploy-staging-release.yml)
+permet de redéployer manuellement une release existante en staging. Le workflow
+[deploy-production.yml](../.github/workflows/deploy-production.yml) permet
+ensuite de promouvoir une release dont le déploiement staging a réussi, ou de
+revenir à une release publiée. Le déploiement production passe par
+l’environnement GitHub `production` et son approbation configurée. Les routes,
+secrets et contrôles de santé sont décrits dans
+[DEPLOYMENT.md](DEPLOYMENT.md).
+
+Pour intégrer une release dans un consommateur, utiliser l’archive attachée et
+son SHA-256 exacts. Le client serveur envoie le digest dans
+`x-engine-archive-sha256`; le host refuse une archive différente. Ne reconstruis
+pas une release existante à partir du même numéro de version.
+
+## Conservation et rejeu
+
+Une tentative persistée doit conserver l’identité du package et son empreinte,
+le lock du consommateur, la définition/révision et le snapshot officiel. La
+version seule n’est pas une preuve d’identité ni une autorisation. Le backend
+sélectionne l’artefact admis pour le rejeu ; le client ne choisit ni l’artefact
+ni la politique de correction.
+
+Conserve les archives requises par les tentatives encore rejouables et par les
+retours arrière, ainsi que leurs manifestes et empreintes. Les manifests de
+release et les fixtures de rejeu ne sont pas des caches supprimables : leur
+usage est décrit par [la procédure de rejeu](#qualification-historique-du-package-010)
+et les tests de release.
+
+## Qualification historique du package 0.1.0
+
+Les sections qui suivent conservent les observations détaillées du pilote 0.1.0.
+Elles documentent des preuves historiques, pas l’état actuel de la release 0.2.1.
+
+## Parcours de qualification historique 0.1.0
 
 ```powershell
 npm.cmd ci
@@ -55,7 +101,7 @@ ne sont pas le committed memory Windows. Le nettoyage sous pression a été mesu
 jusqu'à18,25s en M9 ; aucun SLO strict de réponse/fermeture ou survie de l'API sous
 OOM n'est promis. Les appels synchrones du cœur seul n'ont pas de préemption.
 
-## Identité d'artefact et stockage
+## Identité d’artefact et stockage — preuves historiques
 
 La version npm seule ne distingue pas les archives0.1.0 successives de cette
 phase privée. Conserver le SHA256 du tarball, son integrity npm, le lock exact
@@ -78,7 +124,7 @@ validateur complet de snapshots externes. Un artefact compatible doit être
 sélectionné par un registre privé avant lecture/rejeu ; aucune migration implicite
 des anciens contrats expérimentauxV1–V4 n'est fournie.
 
-## Upgrade et rollback effectivement testés
+## Upgrade et rollback effectivement testés pour 0.1.0
 
 L'archive précédente a été produite depuis `git archive 41a8ef2`, build dans le
 répertoire extrait puis pack dans ce même cwd. Son SHA256 est
@@ -122,7 +168,7 @@ Les tests ne promettent pas la compatibilité de toutes les
 versions futures : chaque upgrade nécessite ses propres oracles, snapshots et
 cas réels. Les archives, locks et données privées restent dans le cache du banc.
 
-## Adoption progressive
+## Principes d’adoption progressive
 
 1. Sélectionner côté serveur une liste explicite de définitions/révisions admises
    et l'artefact exact autorisé pour chacune ; un flag client ne l'active pas.

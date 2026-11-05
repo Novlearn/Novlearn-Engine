@@ -449,3 +449,17 @@ prouve pas une absence du secret serveur. Comparer sans divulgation le token
 staging à celui du conteneur et exiger un calcul authentifié HTTP 200 en plus
 de `/healthz`. Recréer uniquement `engine` dans `novlearn-engine-staging`, sans
 nouvelle release, sans toucher à Compose partagé ni à la production.
+
+
+### D68 — Maintenir la documentation alignée sur les artefacts actifs (5 novembre 2026)
+
+Après la publication 0.2.1, les guides opérationnels ne doivent plus présenter
+les workflows d’initialisation et de récupération du token supprimés comme des
+procédures disponibles, ni confondre l’API publique livrée avec un état de
+migration des applications. Garder une référence actuelle par sujet : contrat
+et client public, construction, release, host HTTP et diagnostic staging.
+
+Retirer l’ancien rapport d’audit documentaire seulement après vérification de
+ses références entrantes. Préserver les archives, manifestes, empreintes,
+rapports de certification et fixtures encore requis par provenance, publication,
+rejeu ou rollback ; leur âge seul n’établit pas leur inutilité.

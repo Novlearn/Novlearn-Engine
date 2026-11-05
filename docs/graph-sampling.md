@@ -1,20 +1,20 @@
 # Échantillonnage officiel d’affichage — D54 / Admin D10
 
-**Implémentation en cours de qualification locale. Aucun tarball adopté ni
-nouveau runtime certifié à ce stade.** L’utilisateur autorise explicitement
-l’extension locale, sa certification et son intégration dans Admin le 21 octobre 2026. Les protections, quotas et délais existants restent inchangés.
+`sampleDisplayGraph` est une API publique du package Engine 0.2.1. Elle reçoit
+un snapshot officiel conservé côté serveur et l’ID d’un élément. Le profil fixe
+`display-graph-v1` produit une sortie distincte versionnée 1 : coordonnées
+numériques approximatives, segments admis, lacunes et états
+`complete`/`partial`/`unsupported`. Aucun snapshot, corrigé ou ancien reçu
+n’est réécrit.
 
-L’API asynchrone sampleDisplayGraph reçoit une instance officielle conservée par
-un serveur et un ID d’élément. Le profil fixe display-graph-v1 produit une sortie
-séparée versionnée 1 : coordonnées numériques approximatives, segments admis,
-lacunes et états complete/partial/unsupported. Aucun snapshot, corrigé ou ancien
-reçu n’est réécrit. Un objet navigateur n’acquiert aucune provenance officielle.
+Cette API exige un snapshot officiel admis ; la forme d’un objet reçu du
+navigateur n’établit pas sa provenance. Le résultat n’est ni une preuve
+mathématique universelle ni une attestation d’autorisation.
 
-Le package de développement passe à 0.2.0 pour cette nouvelle API ; le champ
-engineVersion des snapshots reste 0.1.0, identifiant du pipeline d’instanciation
-et de correction inchangé, sous schéma 5. Le nouveau résultat porte son propre
-profil versionné. L’archive et sa version devront être qualifiées ensemble avant
-adoption ; aucune archive Admin existante n’est remplacée par ce jalon.
+La section de qualification ci-dessous conserve les résultats de développement
+du lot D54 du 21 octobre 2026. Ces nombres décrivent cette exécution historique,
+pas une nouvelle mesure du package 0.2.1 ni la consommation effective par une
+application.
 
 ## Calcul et domaine
 
@@ -45,7 +45,7 @@ La projection ne contient ni source privée, AST, valeurs générées, politique
 attendu ou trace Cortex. L’empreinte de l’élément lie le résultat à sa source ;
 elle n’est ni une attestation pédagogique ni une preuve d’autorisation.
 
-## Résultats obtenus jusqu’ici
+## Résultats de qualification historiques — 21 octobre 2026
 
 Compilation et types stricts passent. Le dernier contrôle ciblé passe **109 tests / quatre fichiers**, dont 28 cas de sampling, avec le délai Vitest inchangé de cinq secondes. Les deux scénarios à seize fonctions rationnelles valent 2 165 ms et 2 087 ms. Le nouveau test de comptage exige 390 opérations pour deux séries identiques : admission, valeurs, gardes ponctuelles et gardes d’intervalle, y compris lorsque les preuves sont réutilisées. Le calcul exact est conservé pour la chaîne récurrente ; une fonction dessinée ne recalcule plus une seconde valeur exacte inutilisée.
 

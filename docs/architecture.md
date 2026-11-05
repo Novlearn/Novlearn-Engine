@@ -16,6 +16,7 @@ MathJSON quand le contrat le prévoit. Aucun CAS parallèle ni deuxième parseur
 | -------------------------------- | ------------------------------------------------------------------------------------------ |
 | Cœur portable, entrée du package | Définition, génération, instanciation, projection et correction                            |
 | Sous-chemin `node-host` et CLI   | Processus neuf, protocole privé, file, quotas et interruption OS                           |
+| Sous-chemin `remote-host`        | Client serveur HTTPS vers `POST /run`, token privé et empreinte d’archive épinglée          |
 | Sous-chemin `legacy`             | Conversion explicite de sources historiques avec recette revue et rapport                  |
 | Backend applicatif               | Droits, définition publiée, seed/ID officiels, stockage, tentatives, points et progression |
 | Interface élève/Admin/duels      | Édition, rendu, MathLive, interactions et feedback autorisé                                |
@@ -171,5 +172,5 @@ Il n’existe pas de champ `instantiationVersion` concurrent. Même définition,
 ordre, budgets, seed, ID et artefact donnent le même snapshot JSON.
 
 Les APIs expérimentales V1–V4 sont refusées. Pour un rejeu entre builds privés
-0.1.0, conserver archive et lock par empreinte, puis sélectionner l’artefact
+0.2.1, conserver archive et lock par empreinte, puis sélectionner l’artefact
 côté serveur. Voir [release](release.md), [usage](usage.md) et [ADR 008](adr/008-canonical-consolidation.md).

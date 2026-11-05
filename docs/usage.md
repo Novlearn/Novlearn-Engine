@@ -7,7 +7,7 @@ Les valeurs et diagnostics observés sont indiqués ci-dessous. Ce programme
 illustre le cœur synchrone avec des données de confiance ; l’intégration de
 saisies non fiables utilise [l’hôte serveur isolé](adr/015-private-python-transport.md).
 
-## Les sept fonctions de l’entrée portable
+## Les huit fonctions de l’entrée portable
 
 | Fonction exportée       | Signature utile / résultat                                                                                      |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -18,11 +18,12 @@ saisies non fiables utilise [l’hôte serveur isolé](adr/015-private-python-tr
 | `instantiateExercise`   | `unknown`, `{instanceId,seed,generationVersion?}` → `{ok:true,value:ExerciseInstance}` ou diagnostics           |
 | `projectPublicInstance` | Snapshot officiel de confiance → `PublicInstance` ; version inconnue : exception `unsupported-snapshot-version` |
 | `gradeAnswer`           | Snapshot officiel de confiance, soumission `unknown` → `CorrectionResult` par question                          |
+| `sampleDisplayGraph`    | Snapshot officiel et ID d’élément → `GraphSamplingResult` asynchrone ; voir [graph-sampling.md](graph-sampling.md) |
 
 La seed est obligatoire : entier uint32 ou chaîne décimale canonique, sans
 zéro initial. `generationVersion`, facultative, vaut exclusivement
 `mulberry32-rejection-v1`. Les types sont exportés avec `import type`.
-Les sous-chemins `legacy` et `node-host` sont traités dans les guides spécialisés.
+Les sous-chemins `legacy`, `node-host` et `remote-host` sont traités dans les guides spécialisés.
 
 ## 1. Définir les variables et un exercice à deux questions
 

@@ -17,9 +17,10 @@ contrats, diagnostics et limites restent inchangés ; son état et ses preuves
 sont distincts de la certification historique ci-dessous. Aucun registre ni
 environnement distant n’est modifié.
 
-L’[extension de sampling D54 / Admin D10](docs/graph-sampling.md) est autorisée
-localement et en cours de qualification dans le package de développement 0.2.1.
-Elle ne remplace pas les certifications et archives historiques ci-dessous.
+L’[API de sampling D54 / Admin D10](docs/graph-sampling.md) est incluse dans le
+package Engine 0.2.1. Le guide décrit son contrat et ses limites ; les rapports
+de qualification historiques y sont distingués de l’état de chaque application
+consommatrice.
 
 ## Disponible aujourd’hui
 

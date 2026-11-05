@@ -29,8 +29,8 @@ npm.cmd pack --dry-run
 
 La distribution inclut `dist` et le README. Les docs détaillées, fixtures,
 rapports privés et exemples applicatifs restent dans le dépôt. Les sous-chemins
-autorisés sont l’entrée portable, `node-host` et `legacy` ; aucun import de fichier
-interne ne fait partie du contrat public.
+publics sont `node-host`, `legacy` et `remote-host), en plus de l’entrée portable ;
+aucun import de fichier interne ne fait partie du contrat public.
 
 ## Code et tests
 
@@ -206,15 +206,15 @@ réelle et le rejeu de deux archives. Un `pack --dry-run` seul ne prouve pas une
 installation externe réussie.
 
 Schéma 5, révision pédagogique, version de générateur et artefact moteur ont des
-rôles distincts. Pendant la phase privée, deux builds 0.1.0 peuvent différer :
-identifier tarball et lock par SHA-256. Un upgrade CortexJS exige revue des
-profils et contre-exemples, vecteurs, saisies réelles et anciennes tentatives.
-Le garde de versions de snapshot ne remplace pas les droits et l’origine serveur.
+rôles distincts. La release 0.2.1 fournit un tarball et un SHA-256 immuables ;
+conserver aussi le lock du consommateur pour distinguer les dépendances exactes.
+Un upgrade CortexJS exige la revue des profils, contre-exemples, vecteurs, saisies
+réelles et anciennes tentatives. Le garde de versions de snapshot ne remplace
+pas les droits et l’origine serveur.
 
-Avant adoption : provisionner un hôte admissible, mesurer le nettoyage et la
-charge ciblée, remplacer les identités/store de démo, sélectionner les instances
-officielles et ne renvoyer que la projection/feedback autorisés. Publication,
-SQL, déploiement et intégration des dépôts voisins exigent leur mission propre.
+La [release](release.md) et le [déploiement du host](DEPLOYMENT.md) sont gérés
+par les workflows Engine. La configuration des applications, leur stockage SQL
+et leurs permissions restent du ressort des dépôts consommateurs.
 
 ## Documentation
 
