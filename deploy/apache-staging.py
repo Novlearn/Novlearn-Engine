@@ -21,18 +21,60 @@ def run(*args):
     return subprocess.check_output(args, text=True, stderr=subprocess.PIPE).strip()
 
 
-def patch(source, port):
+def vhosts(source):
+    return list(re.finditer(r"(?ims)^[ \t]*<VirtualHost\s+[^>]+>.*?^[ \t]*</VirtualHost>[^\n]*", source))
+
+
+def server_name(value):
+    # Apache accepts a quoted ServerName, an optional scheme and a port.
+    from urllib.parse import urlsplit
+    parsed = urlsplit(value if "://" in value else "//" + value)
+    return parsed.hostname.lower().rstrip(".") if parsed.hostname else ""
+
+
+def vhost_summary(source):
+    """Only structural metadata, never full config, tokens or certificates."""
+    summary = []
+    for block in vhosts(source):
+        names, directives = [], []
+        for line in block[0].splitlines()[1:-1]:
+            stripped = line.strip()
+            if not re.match(r"(?i)^(ServerName|ServerAlias|SSLEngine|Include|IncludeOptional)\s", stripped):
+                continue
+            parts = shlex.split(stripped)
+            directive = parts[0].lower()
+            if directive in {"servername", "serveralias"}:
+                names.extend(server_name(n) for n in parts[1:])
+            elif directive in {"sslengine", "include", "includeoptional"}:
+                directives.append(directive)
+        summary.append({"line": source.count("\n", 0, block.start()) + 1,
+                        "names": names, "tls_directives": directives})
+    return summary
+
+
+def patch(source, port, vhost_line=None):
     """Preserve all bytes outside one unambiguous staging HTTPS vhost."""
     if not 1024 <= port <= 65535:
         raise ValueError("Invalid staging port")
-    blocks = list(re.finditer(r"(?ims)^[ \t]*<VirtualHost\s+[^>]+>.*?^[ \t]*</VirtualHost>[^\n]*", source))
-    matches = [b for b in blocks if re.search(r"(?im)^\s*ServerName\s+staging\.novlearn\.fr\s*$", b[0]) and re.search(r"(?im)^\s*SSLEngine\s+on\s*$", b[0])]
+    blocks = vhosts(source)
+    if vhost_line is not None:
+        # Apache has already resolved includes and selected the active vhost.
+        # Its file:line is authoritative; do not guess TLS inheritance by regex.
+        matches = [b for b in blocks if source.count("\n", 0, b.start()) + 1 == vhost_line]
+    else:
+        matches = [b for b in blocks if re.search(r"(?im)^\s*ServerName\s+staging\.novlearn\.fr\s*$", b[0]) and re.search(r"(?im)^\s*SSLEngine\s+on\s*$", b[0])]
     if len(matches) != 1:
         raise ValueError("Expected exactly one staging HTTPS vhost")
     b = matches[0]
     lines = b[0].splitlines(keepends=True)
     if not re.search(r":443\s*>$", lines[0].strip()):
         raise ValueError("Staging vhost must listen on HTTPS port 443")
+    names = [shlex.split(line.strip())[1:] for line in lines[1:-1]
+             if re.match(r"(?i)^\s*ServerName\s", line)]
+    if len(names) != 1 or len(names[0]) != 1 or server_name(names[0][0]) != DOMAIN:
+        raise ValueError("Apache-selected vhost is not exclusive to staging; inspect STAGING_VHOSTS metadata")
+    if re.search(r"(?im)^\s*SSLEngine\s+off\s*$", b[0]):
+        raise ValueError("Selected staging vhost explicitly disables TLS")
     if BEGIN in b[0]:
         expected = route(port)
         if b[0].count(BEGIN) != 1 or expected not in b[0]:
@@ -48,7 +90,7 @@ def patch(source, port):
             raise ValueError("Nested/continued staging configuration requires review")
         parts = shlex.split(s)
         directive = parts[0].lower()
-        if directive in {"servername", "serveralias"} and parts != [parts[0], DOMAIN]:
+        if directive in {"servername", "serveralias"} and (len(parts) != 2 or server_name(parts[1]) != DOMAIN):
             raise ValueError("Shared staging/production vhost refused")
         if directive in {"include", "includeoptional", "rewriteoptions"}:
             # Certbot's usual include is accepted only after checking that it
@@ -167,6 +209,8 @@ def main():
             raise RuntimeError("Staging vhost outside sites-available refused")
         original = path.read_bytes()
         print(f"STAGING_HTTPS_VHOST={path}", flush=True)
+        print(f"STAGING_HTTPS_VHOST_LINE={locations[0][1]}", flush=True)
+        print("STAGING_VHOSTS=" + json.dumps(vhost_summary(original.decode("utf-8"))), flush=True)
         if args.mode != "rollback":
             # Do not source or display .env (contains API credentials).
             values = re.findall(r"(?m)^HOST_PORT=(\d+)\s*$", Path("/opt/novlearn-engine/staging/.env").read_text())
@@ -178,7 +222,7 @@ def main():
                 raise RuntimeError("Staging .env and running container port disagree")
             print(f"STAGING_HOST_PORT={port}", flush=True)
             probe(f"http://127.0.0.1:{port}/run")
-            candidate = patch(original.decode("utf-8"), port).encode("utf-8")
+            candidate = patch(original.decode("utf-8"), port, vhost_line=int(locations[0][1])).encode("utf-8")
             print(f"Staging candidate changes={candidate != original}", flush=True)
             if args.mode == "inspect":
                 return
