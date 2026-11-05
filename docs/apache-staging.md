@@ -18,9 +18,18 @@ Apache route** (`repair-staging-apache.yml`) → Run workflow, branche `main` :
 
 1. Choisir `mode=inspect`, laisser `backup` vide. Cette étape identifie par
    `apachectl -S` le vhost HTTPS actif, son fichier réel et le port du conteneur.
-   Elle valide le candidat sans modifier la configuration ou recharger Apache.
+   Elle affiche les règles staging avec masquage des valeurs sensibles,
+   l'empreinte et les directives des includes et les modules manquants, puis
+   sonde Engine sans token et avec un calcul authentifié local. Elle ne modifie
+   pas la configuration et ne recharge pas Apache.
    Un dossier temporaire de transfert et un verrou staging sont utilisés.
-2. Si l'inspection réussit, choisir `mode=apply`, `backup` vide. Le workflow
+   `INSPECT_COMPLETE=true` indique seulement que le diagnostic est terminé.
+   Avant apply, exiger `LOCAL_UNAUTHENTICATED=PASS`,
+   `LOCAL_AUTHENTICATED=PASS`, `STAGING_MISSING_MODULES=[]` et
+   `STAGING_CANDIDATE_PREPARED=true`. Le contrôle public peut encore échouer
+   tant que la route n'est pas corrigée. Le diagnostic reste disponible si
+   le candidat est refusé ; lire le motif plutôt que relancer à l'identique.
+2. Après revue de ces constats, choisir `mode=apply`, `backup` vide. Le workflow
    requiert les trois secrets VPS existants et l'accès `sudo -n` déjà utilisé.
    Il ne déploie ni image ni application. Conserver l'identifiant
    `STAGING_APACHE_BACKUP` imprimé dans les logs.
@@ -69,8 +78,9 @@ blocs déséquilibrés, héritage ou includes inconnus) sont refusées avant
 et les directives continuées sont conservés. Les Redirect/RewriteRule y sont
 exclus de `/run` à chaque profondeur ; les proxys antérieurs restent après
 la réservation exacte Engine. L'include Certbot standard
-est accepté uniquement si son contenu ne comporte que commentaires et
-directives SSL. Si `inspect` refuse, conserver son diagnostic et préparer
+est conservé sans imposer un préfixe SSL à toutes ses directives. Les blocs
+et LogFormat y sont valides. Du routage dans cet include partagé est signalé
+pour revue, sans modification du fichier. Si `inspect` refuse, conserver son diagnostic et préparer
 une adaptation revue à la configuration observée. Aucun vhost de remplacement
 n'est généré à l'aveugle et aucun module Apache n'est activé automatiquement.
 
@@ -80,7 +90,12 @@ Avant chaque changement, le fichier intégral et un manifeste d'empreintes
 sont conservés sous `/var/backups/novlearn-engine-apache-staging/<ID>/`, dossier 0700. Le remplacement atomique préserve propriétaire et permissions. Ensuite :
 `apachectl configtest`, `systemctl reload apache2`, POST HTTPS via SNI local,
 puis POST HTTPS via DNS public. Les deux sondes doivent obtenir exactement
-401/unauthorized, sans Location et avec certificat vérifié.
+401/unauthorized, sans Location, avec certificat et identité de l'archive
+vérifiés. Un calcul authentifié public doit ensuite réussir avec HTTP 200,
+le requestId attendu et `ok=true`. Le secret passe dans un en-tête en mémoire,
+pas dans les arguments du processus, et aucune redirection n'est suivie.
+Le comportement HTTP de `/` et `/accueil` doit rester identique au constat
+avant modification. Ces contrôles ne remplacent pas les actions Admin.
 
 Un échec de remplacement, configtest, reload ou de l'une de ces sondes restaure
 le fichier original puis refait configtest et reload, tout en gardant le run
@@ -97,3 +112,17 @@ réintroduit le routage antérieur, donc peut réintroduire le 307 initial.
 
 Ne pas utiliser un workflow de release ou de promotion production pour cette
 correction. Ne pas relancer le bootstrap VPS.
+
+## Qualification et limites de la PR de diagnostic
+
+La CI utilise un vrai Apache, un fichier Certbot représentatif contenant
+LogFormat/IfModule, puis l'image publiée Engine 0.2.1 épinglée par digest.
+Elle vérifie les appels authentifiés, refus de token/empreinte/Origin/type MIME,
+les chemins voisins et la conservation du vhost production. Elle ne déploie
+rien et n'utilise aucun secret VPS. Le token de test est temporaire.
+
+Le fichier Certbot testé n'est pas une copie observée du VPS. Le certificat
+public, le réseau réel et les actions de l'Admin sur Vercel restent à recevoir
+dans ces environnements. L'appel serveur Vercel ne doit pas transférer l'en-tête
+Origin du navigateur. L'URL du contrat est exactement `/run` ; une query string
+ou `/run/` ne constitue pas cette route dans le host publié.

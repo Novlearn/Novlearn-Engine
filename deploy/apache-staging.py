@@ -240,7 +240,7 @@ def probe(url, resolve=False, archive=None):
             cmd.extend(["--resolve", f"{DOMAIN}:443:127.0.0.1"])
         status = run(*cmd, url)
         if status != "401" or re.search(r"(?im)^location:", headers.read_text()) or json.loads(body.read_text()) != {"error": "unauthorized"}:
-            raise RuntimeError("Expected HTTP 401 unauthorized without Location")
+            raise RuntimeError(f"Expected HTTP 401 unauthorized without Location; got HTTP {status}")
         if archive and not re.search(r"(?im)^x-engine-archive-sha256:\s*" + re.escape(archive) + r"\s*$", headers.read_text()):
             raise RuntimeError("Unauthorized response has an unexpected Engine archive identity")
 
@@ -394,7 +394,7 @@ def main():
                         action()
                         print(name + "=PASS", flush=True)
                     except Exception as error:
-                        print(name + "=FAIL " + type(error).__name__, flush=True)
+                        print(name + "=FAIL " + type(error).__name__ + ": " + str(error), flush=True)
                 try:
                     candidate = patch(source, port, vhost_line=selected_line).encode("utf-8")
                     print(f"STAGING_CANDIDATE_PREPARED=true changed={candidate != original}", flush=True)

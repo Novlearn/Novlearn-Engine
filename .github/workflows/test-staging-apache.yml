@@ -14,6 +14,9 @@ on:
       - .github/workflows/*staging-apache.yml
 permissions:
   contents: read
+concurrency:
+  group: engine-apache-tests-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   apache:
     runs-on: ubuntu-latest
@@ -25,8 +28,10 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - name: Install Apache on the disposable runner
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y apache2
+          if ! command -v apache2 >/dev/null || [[ ! -f /usr/lib/apache2/modules/mod_ssl.so ]]; then
+            sudo apt-get update -o Acquire::Retries=2 -o Acquire::http::Timeout=20
+            sudo apt-get install -y --no-install-recommends apache2
+          fi
       - name: Test exact routing, redirects, preservation and rollback
         env:
           APACHE_INTEGRATION: '1'
