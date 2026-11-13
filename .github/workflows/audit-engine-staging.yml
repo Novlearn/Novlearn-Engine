@@ -2,6 +2,11 @@ name: Audit Engine staging
 
 on:
   workflow_dispatch:
+    inputs:
+      repair_swap:
+        description: Réappliquer les limites mémoire/swap au seul Engine staging, sans redémarrage
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -18,17 +23,20 @@ jobs:
     environment: staging
 
     steps:
-      - name: Diagnostiquer Engine staging sans modifier les services
+      - name: Auditer Engine staging et réparer le swap si demandé
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        env:
+          REPAIR_SWAP: ${{ inputs.repair_swap && 'true' || 'false' }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          envs: REPAIR_SWAP
           command_timeout: 3m
           script: |
             set -eu
 
-            sudo -n python3 - <<'PY'
+            sudo -n python3 - "$REPAIR_SWAP" <<'PY'
             import json
             import math
             import re
@@ -48,6 +56,9 @@ jobs:
                 "6d1d52f38297d6f91be0eaa4aea57eb63f61973eae4cc83d86fd0aa6651dd85a"
             )
             failures = []
+            if sys.argv[1:] not in ([], ["false"], ["true"]):
+                raise SystemExit("Invalid repair option")
+            repair_requested = sys.argv[1:] == ["true"]
 
             def report(name, **values):
                 print(
@@ -67,6 +78,89 @@ jobs:
                     text=True,
                     timeout=20,
                 ).stdout.strip()
+
+            def staging_cgroup(container_id):
+                script = '''
+            import json
+            from pathlib import Path
+            root = Path("/sys/fs/cgroup").resolve()
+            entry = next(line[3:] for line in Path("/proc/self/cgroup").read_text().splitlines() if line.startswith("0::"))
+            group = (root / entry.lstrip("/")).resolve()
+            if group != root and root not in group.parents:
+                raise SystemExit(1)
+            print(json.dumps({name: (group / name).read_text().strip() for name in ("memory.max", "memory.swap.max", "pids.max")}))
+            '''
+                return json.loads(command(
+                    "docker", "exec", container_id, "/usr/bin/env", "-i",
+                    "/usr/bin/python3", "-c", script,
+                ))
+
+            def limit_bytes(value):
+                if type(value) is int:
+                    return value
+                if isinstance(value, str):
+                    match = re.fullmatch(r"([0-9]+)([bkmg]?)", value.lower())
+                    if match:
+                        return int(match[1]) * {"": 1, "b": 1, "k": 1024, "m": 1048576, "g": 1073741824}[match[2]]
+                return None
+
+            def staging_swap(container_id, container, repair):
+                expected = 402653184
+                before = staging_cgroup(container_id)
+                host = container.get("HostConfig", {})
+                report("SWAP_CONFIGURATION",
+                       docker_memory_bytes=host.get("Memory"),
+                       docker_memory_swap_bytes=host.get("MemorySwap"),
+                       kernel_swap=before.get("memory.swap.max"),
+                       repair_requested=repair)
+                if not repair:
+                    return
+                labels = container.get("Config", {}).get("Labels") or {}
+                if (labels.get("com.docker.compose.project") != "novlearn-engine-staging"
+                        or labels.get("com.docker.compose.service") != "engine"
+                        or not container.get("State", {}).get("Running")
+                        or host.get("Memory") != expected or host.get("PidsLimit") != 64):
+                    stop("REPAIR_STAGING_CONTAINER_GUARD_FAILED")
+                supported = json.loads(command("docker", "info", "--format", "{{json .SwapLimit}}"))
+                report("DOCKER_SWAP_LIMIT_SUPPORT", supported=supported is True)
+                if supported is not True:
+                    stop("DOCKER_SWAP_LIMIT_UNSUPPORTED")
+                # Verify persistence before updating the live container. Never
+                # rewrite the Compose file shared with production.
+                compose = json.loads(command(
+                    "docker", "compose", "--project-name", "novlearn-engine-staging",
+                    "--env-file", "/opt/novlearn-engine/staging/.env",
+                    "-f", "/opt/novlearn-engine/compose.yml", "config", "--format", "json",
+                ))
+                service = compose.get("services", {}).get("engine", {})
+                memory = limit_bytes(service.get("mem_limit"))
+                swap = limit_bytes(service.get("memswap_limit"))
+                report("PERSISTENT_STAGING_LIMITS", memory_bytes=memory, memory_swap_bytes=swap)
+                if memory != expected or swap != expected:
+                    stop("PERSISTENT_STAGING_LIMITS_INVALID")
+                changed = (before.get("memory.max") != str(expected)
+                           or before.get("memory.swap.max") != "0"
+                           or host.get("MemorySwap") != expected)
+                if changed:
+                    command("docker", "update", "--memory", str(expected),
+                            "--memory-swap", str(expected), container_id)
+                after = json.loads(command("docker", "inspect", container_id))[0]
+                after_host = after.get("HostConfig", {})
+                if (after.get("Id") != container.get("Id")
+                        or after.get("Image") != container.get("Image")
+                        or after.get("Config", {}).get("Env") != container.get("Config", {}).get("Env")
+                        or after.get("State", {}).get("Pid") != container.get("State", {}).get("Pid")
+                        or after_host.get("Memory") != expected
+                        or after_host.get("MemorySwap") != expected
+                        or after_host.get("PidsLimit") != 64):
+                    stop("REPAIR_CONTAINER_POSTCHECK_FAILED")
+                actual = staging_cgroup(container_id)
+                report("REPAIRED_CGROUP_LIMITS", memory=actual.get("memory.max"),
+                       swap=actual.get("memory.swap.max"), pids=actual.get("pids.max"))
+                if actual != {"memory.max": str(expected), "memory.swap.max": "0", "pids.max": "64"}:
+                    stop("REPAIR_EFFECTIVE_LIMITS_NOT_APPLIED")
+                report("STAGING_SWAP_REPAIR", applied=changed, effective_swap_zero=True,
+                       same_image=True, same_process=True)
 
             class NoRedirect(HTTPRedirectHandler):
                 def redirect_request(self, req, fp, code, msg, headers, newurl):
@@ -296,6 +390,10 @@ jobs:
                     failures.append("TOKEN_MISMATCH")
                 if not archive_matches:
                     failures.append("ARCHIVE_MISMATCH")
+
+                if repair_requested and (port != 3151 or not token_matches or not archive_matches):
+                    stop("REPAIR_STAGING_CONFIGURATION_GUARD_FAILED")
+                staging_swap(container_id, container, repair_requested)
 
                 base = f"http://127.0.0.1:{port}"
 

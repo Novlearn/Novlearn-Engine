@@ -82,6 +82,16 @@ l’empreinte exactes nécessaires au rejeu des tentatives historiques.
 
 ## Diagnostic
 
+- Pour réparer le refus lié à `memory.swap.max=max`, lancer **Audit Engine
+  staging** sur `main` avec `repair_swap=true`. Le défaut `false` conserve
+  l’audit en lecture seule. La réparation vérifie le conteneur staging, le
+  token et l’archive, le support Docker du swap et les limites Compose
+  persistantes. Elle réapplique uniquement `memory=384m` et
+  `memory-swap=384m` au conteneur existant, sans redémarrage, puis exige les
+  quotas cgroup effectifs, la même image et le même processus. Le calcul HTTP
+  authentifié doit ensuite réussir ; un simple `docker update` réussi ne
+  constitue pas une réception. Une absence de support Docker ou une dérive du
+  Compose partagé bloque avant écriture et demande un diagnostic supplémentaire.
 - Pour le 503 staging avec `/healthz` encore vert, utiliser le workflow manuel
   **Audit Engine staging** (`audit-engine-staging.yml`, branche `main`). Après
   un échec du contrôle initial, une sonde supplémentaire relève les compteurs

@@ -473,3 +473,14 @@ messages d’exception, les logs bruts ou les secrets. Garder un parent vivant e
 stdin ouvert jusqu’à la fin du calcul, ainsi qu’un délai externe de terminaison.
 Le contrôle initial reste en échec ; le succès éventuel de la sonde supplémentaire
 ne qualifie pas à lui seul le service HTTP ni la disponibilité applicative.
+
+### D70 — Réappliquer le quota swap du seul staging avant toute évolution du lanceur (13 novembre 2026)
+
+Après observation de `memory.swap.max=max`, conserver l’exigence de swap nul du
+lanceur. Ajouter une option manuelle de réparation au workflow existant, fausse
+par défaut. Vérifier les labels staging, le port, le token, l’archive, les quotas
+attendus, le support Docker et la configuration Compose persistante avant un
+`docker update` limité à l’identifiant sélectionné. Ne pas réécrire le Compose
+partagé, recréer le conteneur, déployer une image ni changer les secrets. Vérifier
+les quotas réels et un calcul après l’opération, plutôt que conclure au seul
+succès de Docker ou du healthcheck.

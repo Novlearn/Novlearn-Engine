@@ -1,5 +1,23 @@
 # État et reprise
 
+## Réparation ciblée de la limite swap staging — 13 novembre 2026
+
+La trace fournie relève `memory.swap.max=max` puis un `ValueError` ligne 92 du
+lanceur, avant création du worker. Le refus est cohérent avec la lecture entière
+de cette valeur et l’exigence de swap nul. Le motif de l’écart entre la limite
+attendue et la limite effective n’est pas encore établi.
+
+Sur demande explicite de réparation, le workflow existant reçoit une option
+`repair_swap`, désactivée par défaut. Elle réapplique les limites mémoire/swap au
+seul conteneur staging après contrôles de support et de persistance Compose,
+sans changer d’image, de token ou de processus. La réception exige les valeurs
+cgroup réelles puis un calcul authentifié. Le lanceur et ses protections ne sont
+pas modifiés. Quatorze tests Python locaux passent, dont le refus de la
+production, l’absence de support swap, la dérive Compose, la vérification de la
+limite effective et l’idempotence. Le parsing YAML, la compilation des programmes
+Python embarqués, le format et le diff sont vérifiés. La validation et la
+réception sur le VPS seront consignées après exécution du workflow.
+
 ## Sonde du lanceur Engine staging — 13 novembre 2026
 
 Les traces fournies par l’utilisateur montrent un conteneur healthy, une
