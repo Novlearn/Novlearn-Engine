@@ -15,8 +15,25 @@ cgroup réelles puis un calcul authentifié. Le lanceur et ses protections ne so
 pas modifiés. Quatorze tests Python locaux passent, dont le refus de la
 production, l’absence de support swap, la dérive Compose, la vérification de la
 limite effective et l’idempotence. Le parsing YAML, la compilation des programmes
-Python embarqués, le format et le diff sont vérifiés. La validation et la
-réception sur le VPS seront consignées après exécution du workflow.
+Python embarqués, le format et le diff sont vérifiés ; la syntaxe Bash des deux
+étapes est vérifiée localement sans exécution de leurs commandes.
+
+Après autorisation explicite de publier `3312f10` sur `main` et de lancer
+`repair_swap=true`, le run [43470947643](https://github.com/Novlearn/Novlearn-Engine/actions/runs/43470947643)
+réussit. Docker annonçait déjà mémoire/swap à 402653184 octets et le Compose
+persistant correspondait, mais la limite cgroup swap était `max`. La
+réapplication ciblée donne `memory.max=402653184`, `memory.swap.max=0` et
+`pids.max=64`, avec la même image et le même processus. Le calcul authentifié
+répond HTTP 200, transport et calcul valides, identifiant et archive vérifiés,
+sans redirection ; `AUDIT_RESULT=PASS`. Le motif initial de la dérive cgroup
+malgré la configuration Docker correcte n’est pas établi par cette réparation.
+
+La vérification navigateur sur la session staging existante confirme ensuite le
+chargement réel de `/exercices?id=8`, titre « Limite », énoncé et champ de réponse
+affichés après actualisation. Aucune réponse d’élève n’est soumise. Aucun
+redémarrage, changement de version, secret, fichier Compose partagé ou service
+de production n’a été nécessaire. La réparation ne livre pas les corrections
+PWA préparées dans la PR Novlearn #19.
 
 ## Sonde du lanceur Engine staging — 13 novembre 2026
 
