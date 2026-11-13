@@ -14,7 +14,7 @@ jobs:
   audit:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     environment: staging
 
     steps:
@@ -416,4 +416,116 @@ jobs:
                     error_type=type(error).__name__,
                 )
                 sys.exit(1)
+            PY
+
+      - name: Identifier le refus du lanceur Linux
+        if: ${{ failure() && !cancelled() }}
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 3m
+          script: |
+            set -eu
+            sudo -n python3 - <<'PY'
+            import json, subprocess, sys
+
+            ids = subprocess.check_output([
+                "docker", "ps", "--quiet",
+                "--filter", "label=com.docker.compose.project=novlearn-engine-staging",
+                "--filter", "label=com.docker.compose.service=engine",
+            ], text=True, timeout=15).splitlines()
+            if len(ids) != 1:
+                print("AUDIT_ERROR=EXPECTED_ONE_RUNNING_STAGING_ENGINE", flush=True)
+                sys.exit(1)
+            cid = ids[0]
+
+            for name in ("pids.current", "pids.max", "pids.events", "memory.swap.max"):
+                result = subprocess.run(
+                    ["docker", "exec", cid, "cat", "/sys/fs/cgroup/" + name],
+                    capture_output=True, text=True, timeout=10,
+                )
+                text = result.stdout.strip()
+                if result.returncode == 0 and all(
+                    line.isdigit() or line == "max" or (
+                        len(line.split()) == 2 and line.split()[0] == "max"
+                        and line.split()[1].isdigit()
+                    ) for line in text.splitlines()
+                ):
+                    print("CGROUP_" + name.upper().replace(".", "_") + "=" + text, flush=True)
+
+            trace_code = r'''
+            import json, os, runpy, sys
+            target = sys.argv[1]
+            sys.argv = sys.argv[1:]
+            def trace(frame, event, arg):
+                if frame.f_code.co_filename == target:
+                    data = None
+                    if event == "exception":
+                        error = arg[1]
+                        data = {"event": "exception", "function": frame.f_code.co_name,
+                                "line": frame.f_lineno, "type": type(error).__name__,
+                                "errno": getattr(error, "errno", None)}
+                    elif event == "return" and type(arg) is int and arg == 70:
+                        data = {"event": "refused", "function": frame.f_code.co_name,
+                                "line": frame.f_lineno}
+                    if data is not None:
+                        os.write(2, ("AUDIT_TRACE=" + json.dumps(data) + "\n").encode())
+                return trace
+            try:
+                module = runpy.run_path(target, run_name="audit_launcher")
+                sys.settrace(trace)
+                code = module["main"]()
+            except Exception as error:
+                os.write(2, ("AUDIT_TRACE=" + json.dumps({
+                    "event": "fatal", "type": type(error).__name__,
+                    "errno": getattr(error, "errno", None)
+                }) + "\n").encode())
+                code = 70
+            os._exit(code)
+            '''
+            payload = {
+                "protocolVersion": 1, "requestId": "audit-launcher",
+                "operation": "parseMathInput",
+                "payload": {"source": "1", "context": {}, "profile": "scalar-latex-v1"},
+            }
+            child = subprocess.Popen([
+                "docker", "exec", "-i", cid, "/bin/sh", "-c",
+                '/usr/bin/timeout -s KILL 10s /usr/bin/env -i /usr/bin/python3 -c "$@"; rc=$?; exit "$rc"',
+                "audit", trace_code, "/app/dist/node-host/linux/job.py",
+                "/usr/local/bin/node", "/app/dist/node-host/worker.js",
+                "402653184", "128", "1048576", "5000",
+            ], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            try:
+                child.stdin.write((json.dumps(payload) + "\n").encode())
+                child.stdin.flush()
+            except BrokenPipeError:
+                pass
+            try:
+                child.wait(timeout=20)
+            except subprocess.TimeoutExpired:
+                child.kill()
+                print("AUDIT_ERROR=DIAGNOSTIC_TIMEOUT", flush=True)
+                sys.exit(1)
+            stdout, stderr = child.communicate(timeout=3)
+            frames = []
+            for line in stdout.decode("utf-8", errors="replace").splitlines():
+                try:
+                    frame = json.loads(line)
+                    if isinstance(frame, dict):
+                        frames.append(frame)
+                except ValueError:
+                    pass
+            for line in stderr.decode("utf-8", errors="replace").splitlines():
+                if line.startswith("AUDIT_TRACE="):
+                    value = json.loads(line[len("AUDIT_TRACE="):])
+                    print("LAUNCHER_TRACE=" + json.dumps(value), flush=True)
+            response = next((f for f in frames if f.get("requestId") == "audit-launcher"), {})
+            print("LAUNCHER_RESULT=" + json.dumps({
+                "exit_code": child.returncode,
+                "worker_started": any(f.get("event") == "started" for f in frames),
+                "transport_ok": response.get("ok") is True,
+            }), flush=True)
+            sys.exit(0 if child.returncode == 0 and response.get("ok") is True else 1)
             PY

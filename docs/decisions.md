@@ -462,3 +462,14 @@ Retirer l’ancien rapport d’audit documentaire seulement après vérification
 ses références entrantes. Préserver les archives, manifestes, empreintes,
 rapports de certification et fixtures encore requis par provenance, publication,
 rejeu ou rollback ; leur âge seul n’établit pas leur inutilité.
+
+### D69 — Diagnostiquer le refus du lanceur staging sans l’assouplir (13 novembre 2026)
+
+Un `/healthz` vert ne prouve pas qu’un nouveau calcul peut encore démarrer.
+Après un échec de l’audit HTTP staging, instrumenter uniquement en mémoire le
+lanceur de l’image en cours, avec une requête synthétique, ses quotas et son
+environnement vide habituels. Exposer les lignes et codes système, jamais les
+messages d’exception, les logs bruts ou les secrets. Garder un parent vivant et
+stdin ouvert jusqu’à la fin du calcul, ainsi qu’un délai externe de terminaison.
+Le contrôle initial reste en échec ; le succès éventuel de la sonde supplémentaire
+ne qualifie pas à lui seul le service HTTP ni la disponibilité applicative.

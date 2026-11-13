@@ -82,6 +82,17 @@ l’empreinte exactes nécessaires au rejeu des tentatives historiques.
 
 ## Diagnostic
 
+- Pour le 503 staging avec `/healthz` encore vert, utiliser le workflow manuel
+  **Audit Engine staging** (`audit-engine-staging.yml`, branche `main`). Après
+  un échec du contrôle initial, une sonde supplémentaire relève les compteurs
+  de processus et le refus du lanceur Linux : `CGROUP_…`, `LAUNCHER_TRACE` et
+  `LAUNCHER_RESULT`. Elle utilise le lanceur installé, instrumenté en mémoire,
+  un calcul synthétique et un environnement sans secrets. Aucun fichier du
+  conteneur, quota ou contrôle d’isolation n’est modifié ; aucun service n’est
+  redémarré. Cette sonde ajoute des processus temporaires au même cgroup et ne
+  remplace pas le contrôle HTTP initial. Une exception tracée peut être traitée
+  normalement par le lanceur : lire aussi son résultat final. Le job reste en
+  échec si le contrôle HTTP a échoué, même si cette sonde réussit.
 - Vérifier `/healthz` sur le port loopback de l’environnement concerné et
   l’état Compose avec le bon fichier `.env`.
 - Pour diagnostiquer un refus 401, un 503 ou une empreinte incompatible,

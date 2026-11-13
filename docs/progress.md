@@ -1,5 +1,28 @@
 # État et reprise
 
+## Sonde du lanceur Engine staging — 13 novembre 2026
+
+Les traces fournies par l’utilisateur montrent un conteneur healthy, une
+configuration staging cohérente et aucun événement OOM, mais un calcul
+authentifié HTTP 503 / `unavailable` en environ 39 ms. Le contrôle `/healthz`
+conserve le résultat du calcul de démarrage ; il ne rejoue pas chaque calcul.
+La cause système précise reste à identifier.
+
+Le workflow d’audit existant reçoit une seconde étape, exécutée après échec de
+l’audit initial sauf annulation. Elle relève les compteurs cgroup de processus
+et instrumente en mémoire le lanceur installé pour afficher fonction, ligne,
+type d’exception et errno, sans message privé ni environnement. Les protections
+du lanceur, les quotas et les fichiers du conteneur sont préservés. Le délai du
+job passe à huit minutes pour couvrir les deux étapes bornées à trois minutes.
+
+Contrôles locaux : six tests Python réussis (refus, errno sans message privé,
+succès, sélection staging et collecte filtrée), parsing YAML et compilation des
+programmes Python embarqués réussis, Prettier ciblé et `git diff --check` réussis.
+Le comportement Linux/Docker réel et la sonde sur VPS restent à vérifier.
+L’utilisateur demande explicitement de conserver seulement `main` parmi les
+branches locales et d’y committer ce changement. Aucun workflow distant, accès
+VPS, redémarrage, déploiement ou push n’est exécuté pour cette préparation.
+
 ## Documentation d’exploitation après publication 0.2.1 — 5 novembre 2026
 
 L’audit de `main` (commit `566bb64`) confirme six workflows actifs :
