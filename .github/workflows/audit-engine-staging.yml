@@ -1,0 +1,419 @@
+name: Audit Engine staging
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engine-staging-deploy
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: staging
+
+    steps:
+      - name: Diagnostiquer Engine staging sans modifier les services
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 3m
+          script: |
+            set -eu
+
+            sudo -n python3 - <<'PY'
+            import json
+            import math
+            import re
+            import subprocess
+            import sys
+            import uuid
+            from pathlib import Path
+            from urllib.error import HTTPError
+            from urllib.request import (
+                HTTPRedirectHandler,
+                ProxyHandler,
+                Request,
+                build_opener,
+            )
+
+            EXPECTED_ARCHIVE = (
+                "6d1d52f38297d6f91be0eaa4aea57eb63f61973eae4cc83d86fd0aa6651dd85a"
+            )
+            failures = []
+
+            def report(name, **values):
+                print(
+                    name + "=" + json.dumps(values, ensure_ascii=True),
+                    flush=True,
+                )
+
+            def stop(code):
+                report("AUDIT_ERROR", code=code)
+                sys.exit(1)
+
+            def command(*args):
+                return subprocess.run(
+                    args,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=20,
+                ).stdout.strip()
+
+            class NoRedirect(HTTPRedirectHandler):
+                def redirect_request(self, req, fp, code, msg, headers, newurl):
+                    return None
+
+            opener = build_opener(ProxyHandler({}), NoRedirect())
+
+            def http(label, url, payload=None, headers=None):
+                request = Request(
+                    url,
+                    data=None if payload is None else json.dumps(payload).encode(),
+                    headers=headers or {},
+                    method="GET" if payload is None else "POST",
+                )
+                try:
+                    try:
+                        response = opener.open(request, timeout=15)
+                    except HTTPError as error:
+                        response = error
+
+                    with response:
+                        status = response.code
+                        response_headers = response.headers
+                        raw = response.read(65537)
+
+                    body = {}
+                    if len(raw) <= 65536:
+                        try:
+                            parsed = json.loads(raw)
+                            if isinstance(parsed, dict):
+                                body = parsed
+                        except (ValueError, UnicodeError):
+                            pass
+
+                    return status, response_headers, body
+                except Exception as error:
+                    report(label, transport_error=type(error).__name__)
+                    failures.append(label)
+                    return None, {}, {}
+
+            def main():
+                ids = command(
+                    "docker", "ps", "--all", "--quiet",
+                    "--filter",
+                    "label=com.docker.compose.project=novlearn-engine-staging",
+                    "--filter",
+                    "label=com.docker.compose.service=engine",
+                ).splitlines()
+
+                if len(ids) != 1:
+                    report("CONTAINER_COUNT", count=len(ids))
+                    stop("EXPECTED_ONE_STAGING_ENGINE_CONTAINER")
+
+                container_id = ids[0]
+                container = json.loads(
+                    command("docker", "inspect", container_id)
+                )[0]
+
+                labels = container.get("Config", {}).get("Labels") or {}
+                if (
+                    labels.get("com.docker.compose.project")
+                    != "novlearn-engine-staging"
+                    or labels.get("com.docker.compose.service") != "engine"
+                ):
+                    stop("STAGING_CONTAINER_LABEL_MISMATCH")
+
+                state = container.get("State", {})
+                health = state.get("Health", {})
+                limits = container.get("HostConfig", {})
+
+                report(
+                    "CONTAINER_STATE",
+                    status=state.get("Status"),
+                    running=state.get("Running"),
+                    health=health.get("Status"),
+                    oom_killed=state.get("OOMKilled"),
+                    exit_code=state.get("ExitCode"),
+                    restart_count=container.get("RestartCount"),
+                    memory_limit_bytes=limits.get("Memory"),
+                    pids_limit=limits.get("PidsLimit"),
+                    healthcheck_exit_codes=[
+                        entry.get("ExitCode")
+                        for entry in health.get("Log", [])[-5:]
+                    ],
+                )
+
+                # Ne jamais afficher les logs bruts : seulement des marqueurs connus.
+                try:
+                    logs = command(
+                        "docker", "logs",
+                        "--since", "30m",
+                        "--tail", "150",
+                        container_id,
+                    )
+                    # Docker peut envoyer les logs applicatifs sur stderr.
+                    captured = subprocess.run(
+                        [
+                            "docker", "logs",
+                            "--since", "30m",
+                            "--tail", "150",
+                            container_id,
+                        ],
+                        capture_output=True,
+                        text=True,
+                        timeout=20,
+                        check=True,
+                    )
+                    logs = (
+                        captured.stdout + "\n" + captured.stderr
+                    )[-131072:].lower()
+
+                    markers = [
+                        "enoent", "eacces", "eperm", "enomem",
+                        "enospc", "erofs", "eagain",
+                        "permission denied",
+                        "operation not permitted",
+                        "no such file or directory",
+                        "out of memory",
+                        "cannot allocate memory",
+                        "resource temporarily unavailable",
+                        "read-only file system",
+                        "sigkill", "sigsegv", "bwrap",
+                    ]
+                    report(
+                        "ENGINE_LOG_SIGNALS",
+                        counts={
+                            marker: logs.count(marker)
+                            for marker in markers
+                            if marker in logs
+                        },
+                    )
+                except Exception as error:
+                    report(
+                        "ENGINE_LOG_SIGNALS",
+                        available=False,
+                        error_type=type(error).__name__,
+                    )
+
+                if not state.get("Running"):
+                    stop("STAGING_ENGINE_NOT_RUNNING")
+
+                # Les compteurs peuvent révéler un worker tué par manque de mémoire,
+                # même si le processus principal du conteneur reste actif.
+                try:
+                    events = command(
+                        "docker", "exec", container_id,
+                        "cat", "/sys/fs/cgroup/memory.events",
+                    )
+                    counters = {}
+                    for line in events.splitlines():
+                        parts = line.split()
+                        if (
+                            len(parts) == 2
+                            and parts[0] in {
+                                "low", "high", "max", "oom",
+                                "oom_kill", "oom_group_kill",
+                            }
+                            and parts[1].isdigit()
+                        ):
+                            counters[parts[0]] = int(parts[1])
+                    report("CGROUP_MEMORY_EVENTS", counters=counters)
+                except Exception:
+                    report("CGROUP_MEMORY_EVENTS", available=False)
+
+                # Lire uniquement la configuration staging, sans la sourcer
+                # ni afficher ses valeurs privées.
+                env_text = Path(
+                    "/opt/novlearn-engine/staging/.env"
+                ).read_text()
+
+                ports = re.findall(
+                    r"(?m)^HOST_PORT=([0-9]+)[ \t]*$",
+                    env_text,
+                )
+                tokens = re.findall(
+                    r"(?m)^ENGINE_API_TOKEN=([^\r\n]+)$",
+                    env_text,
+                )
+
+                if len(ports) != 1 or len(tokens) != 1:
+                    stop("INVALID_STAGING_CONFIGURATION")
+
+                port = int(ports[0])
+                token = tokens[0]
+
+                if not 1024 <= port <= 65535 or len(token) < 32:
+                    stop("INVALID_STAGING_PORT_OR_TOKEN")
+
+                bindings = (
+                    container.get("NetworkSettings", {})
+                    .get("Ports", {})
+                    .get("8080/tcp")
+                ) or []
+
+                if (
+                    len(bindings) != 1
+                    or bindings[0].get("HostIp") != "127.0.0.1"
+                    or bindings[0].get("HostPort") != str(port)
+                ):
+                    stop("STAGING_PORT_BINDING_MISMATCH")
+
+                # La configuration complète reste uniquement en mémoire.
+                runtime_env = {}
+                for entry in container.get("Config", {}).get("Env") or []:
+                    key, separator, value = entry.partition("=")
+                    if separator:
+                        runtime_env[key] = value
+
+                archive = runtime_env.get("ENGINE_ARTIFACT_SHA256", "")
+                if not re.fullmatch(r"[a-f0-9]{64}", archive):
+                    stop("INVALID_RUNNING_ARCHIVE_IDENTITY")
+
+                token_matches = (
+                    runtime_env.get("ENGINE_API_TOKEN") == token
+                )
+                archive_matches = archive == EXPECTED_ARCHIVE
+
+                report(
+                    "ENGINE_CONFIGURATION",
+                    host_port=port,
+                    token_matches_staging_file=token_matches,
+                    archive_sha256=archive,
+                    matches_expected_0_2_1=archive_matches,
+                )
+
+                if not token_matches:
+                    failures.append("TOKEN_MISMATCH")
+                if not archive_matches:
+                    failures.append("ARCHIVE_MISMATCH")
+
+                base = f"http://127.0.0.1:{port}"
+
+                status, _, body = http(
+                    "ENGINE_HEALTH",
+                    base + "/healthz",
+                )
+                report(
+                    "ENGINE_HEALTH",
+                    http=status,
+                    status=(
+                        body.get("status")
+                        if body.get("status") in {"ok", "unavailable"}
+                        else "unexpected-response"
+                    ),
+                )
+                if status != 200 or body.get("status") != "ok":
+                    failures.append("HEALTH_CHECK")
+
+                request_id = "audit-" + str(uuid.uuid4())
+                payload = {
+                    "protocolVersion": 1,
+                    "requestId": request_id,
+                    "operation": "parseMathInput",
+                    "payload": {
+                        "source": "1",
+                        "context": {},
+                        "profile": "scalar-latex-v1",
+                    },
+                }
+
+                status, headers, body = http(
+                    "ENGINE_RUN",
+                    base + "/run",
+                    payload,
+                    {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json",
+                        "x-engine-archive-sha256": archive,
+                    },
+                )
+
+                allowed_errors = {
+                    "invalid-request", "input-limit", "output-limit",
+                    "stderr-limit", "busy", "timeout", "aborted",
+                    "closed", "unavailable", "crash", "protocol-error",
+                    "worker-error", "unauthorized", "archive-mismatch",
+                    "unsupported-media-type", "browser-origin-not-allowed",
+                }
+                error = body.get("error")
+                safe_error = (
+                    error
+                    if isinstance(error, str) and error in allowed_errors
+                    else None if error is None else "unrecognized-error"
+                )
+
+                metrics = body.get("metrics")
+                safe_metrics = {}
+                if isinstance(metrics, dict):
+                    for key in ("elapsedMs", "queuedMs"):
+                        value = metrics.get(key)
+                        if (
+                            isinstance(value, (int, float))
+                            and not isinstance(value, bool)
+                            and math.isfinite(value)
+                        ):
+                            safe_metrics[key] = value
+
+                value = body.get("value")
+                calculation_ok = (
+                    isinstance(value, dict)
+                    and value.get("ok") is True
+                )
+                identity_matches = (
+                    headers.get("x-engine-archive-sha256") == archive
+                )
+                request_matches = body.get("requestId") == request_id
+                redirected = headers.get("Location") is not None
+
+                report(
+                    "ENGINE_RUN",
+                    http=status,
+                    transport_ok=body.get("ok") is True,
+                    calculation_ok=calculation_ok,
+                    error=safe_error,
+                    request_id_matches=request_matches,
+                    archive_matches=identity_matches,
+                    redirect_present=redirected,
+                    metrics=safe_metrics,
+                )
+
+                if not (
+                    status == 200
+                    and body.get("ok") is True
+                    and calculation_ok
+                    and request_matches
+                    and identity_matches
+                    and not redirected
+                ):
+                    failures.append("AUTHENTICATED_CALCULATION")
+
+                report(
+                    "AUDIT_RESULT",
+                    complete=True,
+                    result="FAIL" if failures else "PASS",
+                    failed_checks=sorted(set(failures)),
+                )
+                sys.exit(1 if failures else 0)
+
+            try:
+                main()
+            except Exception as error:
+                # Pas de traceback ni de sortie brute susceptible de contenir
+                # une configuration privée.
+                report(
+                    "AUDIT_ERROR",
+                    code="DIAGNOSTIC_COMMAND_FAILED",
+                    error_type=type(error).__name__,
+                )
+                sys.exit(1)
+            PY
