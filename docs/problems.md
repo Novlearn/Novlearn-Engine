@@ -7,15 +7,15 @@ correction livrée ni une cause technique définitivement établie.
 
 ## Suivi
 
-| Identifiant | Sujet                                                                             | Statut                                        | Emplacement de correction                                   |
-| ----------- | --------------------------------------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------------- |
-| PB-001      | Possibilité de valider plus de deux fois, sans explication du décompte            | Consigné ; règle à clarifier dans l'interface | Novlearn pressenti                                          |
-| PB-002      | Messages de saisie et de correction trop peu précis                               | Consigné ; précision à améliorer              | Novlearn pressenti ; diagnostic Engine à vérifier           |
-| PB-003      | Bonnes racines rejetées et accolades contraignantes                               | Consigné ; saisie sans accolades souhaitée    | À déterminer : Engine, Novlearn ou définition de l'exercice |
-| PB-004      | Réponse manifestement fausse sans verdict « incorrect »                           | Consigné ; cause à diagnostiquer              | À déterminer : Engine, Novlearn ou définition de l'exercice |
-| PB-005      | Réponse attendue d'intervalle peu simplifiée et notation de bornes incohérente    | Consigné ; affichage à clarifier              | À déterminer : Engine, Novlearn ou données de l'exercice    |
-| PB-006      | Facteurs égaux à 1 conservés dans les expressions affichées                       | Consigné ; simplification visuelle à examiner | À déterminer : Engine ou renderer NovLearn                  |
-| PB-007      | Exercice 63 : rendu graphique indisponible (422), puis calcul déjà en cours (429) | Consigné ; graphe à diagnostiquer             | Intégration Engine / exercice ; verrou NovLearn             |
+| Identifiant | Sujet                                                                             | Statut                                                        | Emplacement de correction              |
+| ----------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------------- |
+| PB-001      | Possibilité de valider plus de deux fois, sans explication du décompte            | Règle serveur conforme ; explication UI à transmettre         | Novlearn                               |
+| PB-002      | Messages de saisie et de correction trop peu précis                               | États distincts disponibles ; correspondance UI à transmettre | Novlearn                               |
+| PB-003      | Bonnes racines rejetées et accolades contraignantes                               | Corrigé dans Engine local ; staging non qualifié              | Engine, puis adoption Novlearn         |
+| PB-004      | Réponse manifestement fausse sans verdict « incorrect »                           | Corrigé dans Engine local ; staging non qualifié              | Engine, puis adoption Novlearn         |
+| PB-005      | Réponse attendue d'intervalle peu simplifiée et notation de bornes incohérente    | Valeur officielle manquante ; attribution impossible          | Donnée officielle ou renderer Novlearn |
+| PB-006      | Facteurs égaux à 1 conservés dans les expressions affichées                       | Source exacte manquante ; règle globale à qualifier           | Donnée du QCM ou renderer Novlearn     |
+| PB-007      | Exercice 63 : rendu graphique indisponible (422), puis calcul déjà en cours (429) | Pas de cause Engine démontrée ; preuve staging manquante      | Intégration / données Novlearn         |
 
 ## Contexte commun — 13 novembre 2026
 
@@ -249,6 +249,125 @@ dans Engine, sans soumettre de réponse d'élève ni modifier le staging.
 graphe réellement hors profil reçoit une explication claire et ne déclenche pas
 une boucle de retry/concurrence trompeuse. Tout refus reste explicite et ne
 devient pas un faux succès.
+
+## Audit et correction Engine — 14 novembre 2026
+
+### PB-001 — Limite d'essais
+
+Lecture du code local Novlearn (source de travail, déploiement non vérifié) :
+`frontend/app/lib/engine/learner.ts` ajoute un essai seulement si le résultat
+serveur est `incorrect`. `correct` termine la question ; deux `incorrect`
+terminent une question libre ; `invalid`, `indeterminate` et `error` gardent
+le compteur. La règle serveur observée respecte donc la demande. L'affichage
+ne montre qu'un bouton « Réessayer » et un compteur restant implicite ; le
+parcours staging n'a pas été retesté. Correction applicative à transmettre.
+
+### PB-002 — Messages et diagnostics
+
+Le moteur expose déjà `state` et un code de diagnostic à l'intérieur du résultat de
+correction (`correct`, `incorrect`, `invalid`, `indeterminate`, `error`). La
+préparation de saisie expose en plus les catégories `empty`, `incomplete`,
+`invalid-syntax`, `unknown-symbol`, `unsupported`, `limit` et
+`technical-error`. La projection publique ne contient ni corrigé ni politique.
+Le renderer local Novlearn regroupe actuellement `indeterminate` et `error`
+dans le message « La correction ne peut pas conclure. Réessayez. » ; les
+exceptions réseau ont une autre branche. Aucun nouveau contrat Engine n'est
+nécessaire. La correspondance d'affichage et une liste blanche de codes sans
+divulgation sont à réaliser côté Novlearn.
+
+### PB-003 / PB-004 — Liste de solutions
+
+Correction Engine : le profil officiel `set` accepte désormais une expression
+scalaire comme singleton ou l'AST CortexJS d'une séquence délimitée par `;`.
+Les accolades restent admises, l'entrée source n'est pas réécrite, et le profil
+`intervals` n'utilise pas cette interprétation. La vérification exacte donne
+`incorrect` à `12;3`, à un singleton ne contenant qu'une racine et à une liste
+avec une valeur supplémentaire ; une comparaison non prouvée reste
+`indeterminate`. Une séquence incomplète est `invalid`. Le cas des deux racines
+de la capture est reconstruit depuis l'image : le LaTeX exact envoyé par
+MathLive et la définition staging restent inconnus. Le code local n'établit
+donc pas encore que la capture a été corrigée sur staging.
+
+### PB-005 — Réponse attendue et intervalles
+
+La capture confirme le rendu visuel `√(6/(40/1))` puis `[a, ∞)` ; elle ne
+fournit ni définition/version, ni LaTeX officiel. Engine sérialise la
+présentation mathématique par CortexJS, mais les preuves disponibles ne
+permettent pas d'affirmer que l'attendu officiel vaut `√(6/(40/1))`, ni de
+distinguer une source officielle maladroite d'une transformation du renderer.
+Pas de changement de présentation Engine sans la définition et le parcours
+exact. Le cas `[a ; +∞[` relève aussi de l'intégration du parseur d'intervalle
+et de la convention de rendu effectivement configurée.
+
+### PB-006 — Facteurs égaux à 1
+
+Le code Novlearn local transmet les choix au renderer MathText/KaTeX et
+l'instanciation Engine conserve les chaînes des options après substitution.
+L'image ne prouve pas la source de l'exercice, son type de contenu ni que ces
+fichiers sont ceux de staging. Une simplification algébrique automatique des
+propositions dans Engine pourrait modifier une forme pédagogique et créer des
+choix visuellement identiques. Aucune transformation n'est ajoutée. Il faut
+retrouver la définition officielle ou qualifier explicitement une passe de
+présentation côté renderer, avec détection de collision sans changement d'ID
+ni de correction.
+
+### PB-007 — Graphique 63 et concurrence
+
+La capture montre les HTTP 422 puis 429, mais pas la définition utilisée ni la
+réponse structurée de sampling. Le code local Novlearn rejette un résultat de
+sampling qu'il ne peut pas attacher à la projection ; cela n'établit pas une
+régression Engine. `withEngineJob` produit le même 429 si le même propriétaire
+a déjà un travail ou si les deux places globales sont occupées ; les preuves
+actuelles ne distinguent pas ces cas. Ne pas modifier le profil de sampling ni
+les limites. Il faut obtenir la définition/version, fonctions, fenêtre,
+résultat et diagnostics du sampler, puis les heures et propriétaires (sans
+données privées superflues) des requêtes. Novlearn doit également afficher un
+message distinct selon la cause de concurrence.
+
+### Transmission à Novlearn
+
+Les fichiers locaux observés sont des indices de travail, pas une preuve de
+leur identité avec staging. Pour qualifier et corriger le parcours consommateur :
+
+1. **PB-001** — Garder l'autorité du compteur au serveur. Confirmer que seuls
+   `incorrect` incrémente ; afficher `attempts` et la limite de deux de façon
+   compréhensible. Garder `invalid`, `indeterminate`, `error` et les erreurs
+   réseau sans pénalité. Tester les cinq états avec des réponses serveur et le
+   rejeu de session.
+2. **PB-002** — Mapper `correct`/`incorrect` à leur retour ; `invalid` à une
+   aide au format ou à la complétion selon une liste blanche de codes ;
+   `indeterminate` à une comparaison non concluante sans le présenter comme
+   faux ; `error` et HTTP 5xx à une indisponibilité technique. Ne pas conseiller
+   de répéter la même saisie en cas d'indétermination, ne pas exposer l'attendu,
+   la politique ou les diagnostics privés. Tester aussi une exception réseau.
+3. **PB-003/004** — Construire un tarball Engine local depuis le commit de
+   correction, relever son SHA-256, mettre à jour la dépendance et le manifeste
+   du consommateur, puis vérifier la définition officielle de l'exercice,
+   l'entrée MathLive exacte, les deux ordres, `12;3`, une racine seule, une
+   valeur en trop, les accolades, une syntaxe incomplète, une comparaison
+   indéterminée et le compteur. Refaire ensuite le parcours HTTP sur staging ;
+   ne déclarer résolu sur le site qu'après ce test.
+4. **PB-005** — Joindre l'ID/révision et l'attendu serveur exact, puis comparer
+   `source`, `displayLatex`, `revealedAnswer`, la transformation `formatForDisplay`
+   et le rendu MathText. Si la source vaut bien `√(6/(40/1))`, vérifier une
+   présentation équivalente à `√(3/20)` et une convention d'intervalle française
+   cohérente, sans changer l'ouverture de borne.
+5. **PB-006** — Retrouver les données et IDs officiels du QCM. Corriger la source
+   pédagogique si elle comporte les facteurs parasites, ou qualifier une passe
+   purement visuelle dans le renderer. Comparer les expressions avant/après au
+   moyen de CortexJS dans le domaine défini ; bloquer la publication si deux
+   choix deviennent identiques, sans changer identifiants ou clé de correction.
+6. **PB-007** — Capturer la définition/version servie (fonctions, domaine,
+   fenêtre), le résultat et les diagnostics de `sampleDisplayGraph`, ainsi que
+   les heures et propriétaires des deux requêtes. Reproduire localement avec le
+   même snapshot et comparer au profil. Distinguer refus de sampling, saturation
+   globale et travail déjà actif du même utilisateur. Garder quotas et
+   concurrence inchangés ; tester le refus explicite, l'absence de retry en
+   boucle et un graphe pris en charge.
+
+Après correction, joindre les preuves d'adoption du tarball exact et du
+parcours staging. Aucune capture seule ne suffit à marquer un problème résolu
+sur staging.
 
 ## Ajouter les prochains signalements
 

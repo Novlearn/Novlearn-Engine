@@ -226,8 +226,43 @@ export function prepareCollection(
       )
         node = node[1]!;
       if (node === 'EmptySet') return;
-      if (!Array.isArray(node) || node[0] !== 'Set')
-        fail('invalid-syntax', p, 'A finite set is required.');
+      // A bare semicolon-separated answer is the same mathematical set syntax
+      // as the members inside braces. Consume CortexJS's parsed delimiter AST;
+      // do not split or rewrite the original LaTeX source.
+      if (
+        Array.isArray(node) &&
+        node[0] === 'Delimiter' &&
+        node.length === 3 &&
+        (node[2] === "';'" ||
+          (node[2] !== null &&
+            typeof node[2] === 'object' &&
+            !Array.isArray(node[2]) &&
+            'str' in node[2] &&
+            node[2].str === ';'))
+      ) {
+        const sequence = node[1];
+        if (
+          !Array.isArray(sequence) ||
+          sequence[0] !== 'Sequence' ||
+          sequence.length < 3
+        )
+          fail('invalid-syntax', p, 'At least two set members are required.');
+        const members = (sequence as MathSyntax[]).slice(1);
+        if (members.length > 64)
+          fail('limit', p, 'At most 64 finite set members.');
+        for (const [i, member] of members.entries())
+          items.push(number(member, `${p}/${i}`, false));
+        return;
+      }
+      if (Array.isArray(node) && node[0] === 'Block')
+        fail('incomplete', p, 'Complete the finite set before submitting.');
+      if (!Array.isArray(node) || node[0] !== 'Set') {
+        // A single scalar is an unbraced singleton set in a question whose
+        // official response kind is `set`; its cardinality can then be proved
+        // against the official set instead of being reported as malformed.
+        items.push(number(node, `${p}/0`, false));
+        return;
+      }
       let members = (node as MathSyntax[]).slice(1);
       if (
         members.length === 1 &&

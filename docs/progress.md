@@ -1,5 +1,54 @@
 # État et reprise
 
+## Audit des problèmes PB-001 à PB-007 — 14 novembre 2026
+
+L'audit croisé des sept signalements est consigné dans
+[le registre](problems.md), avec un prompt de transmission à Novlearn. Les
+captures ont été lues ; elles restent des preuves visuelles, sans le LaTeX
+exact, la définition officielle complète ni l'identité de la version staging.
+Les sources locales de Novlearn ont été inspectées en lecture seule.
+
+PB-001 : la règle serveur locale compte uniquement `incorrect` et termine une
+question ouverte après deux réponses incorrectes ; la demande porte donc sur
+l'explication visuelle côté Novlearn. PB-002 : Engine expose déjà des états et
+codes de correction distincts ; le renderer local regroupe `indeterminate` et
+`error`, sans besoin démontré de nouveau contrat Engine. Aucun de ces deux
+problèmes n'est déclaré résolu sur staging.
+
+PB-003/004 : le profil `set` Engine accepte une liste CortexJS `a;b` ou un
+singleton non entouré d'accolades, conserve la source, et garde l'interprétation
+distincte des profils scalaire et intervalle. Les comparaisons exactes rejettent
+`12;3`, une racine seule ou une valeur supplémentaire ; les comparaisons
+indéterminées restent telles quelles ; une syntaxe incomplète est invalide.
+Tests de régression ajoutés. Reproduction de la capture reconstruite, pas
+requête MathLive/staging enregistrée.
+
+PB-005 : valeur officielle et chemin de rendu exact non disponibles ; pas de
+changement Engine attribuable. PB-006 : source de choix non retrouvée ; la
+réécriture des options pourrait affecter la forme pédagogique et créer des
+collisions, donc correction de donnée ou renderer à qualifier côté Novlearn.
+PB-007 : aucune définition staging ni sortie du sampler accessibles ; aucun
+défaut Engine établi. Le 429 local Novlearn confond un travail du même
+propriétaire avec une saturation des deux places globales. Aucun quota n'est
+modifié. Les preuves nécessaires et critères de transfert figurent dans le
+registre.
+
+Contrôles réalisés : `npm.cmd ci` passe après une première tentative bloquée
+par DNS (`registry.npmjs.org`), puis autorisation d'accès réseau.
+Dans `npm.cmd run check`, build, TypeScript strict, lint et format passent ;
+Vitest termine avec 37 fichiers passés, un fichier échoué, 1 643 tests réussis
+et un échec : le test
+de host Windows reçoit `timeout` après 7,1 s sous la charge de la suite. Le
+rejeu isolé `npm.cmd exec vitest -- run tests/node-host.test.mjs` passe (31/31).
+Avec le répertoire temporaire Vitest redirigé vers `.cache/vitest-tmp`, le
+fichier de régression collections passe (98/98), y compris la conservation des
+octets source ; la sélection ciblée précédente
+passe aussi (8/8). `npm.cmd pack --dry-run` passe et inclut 189 fichiers ; aucune
+release, empreinte publiable ou archive de livraison n'est créée. Pas de test
+navigateur, parcours staging, publication ni CI distante lancés. La commande
+`check` complète reste notée comme ayant un échec de délai transitoire, même si
+son rejeu isolé réussit.
+
 ## Registre des problèmes utilisateur — 13 novembre 2026
 
 Création de [problems.md](problems.md) à la demande de l'utilisateur pour

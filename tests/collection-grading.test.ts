@@ -70,6 +70,74 @@ function grade(
 
 describe('M4 finite sets of known solutions', () => {
   it.each([
+    [
+      String.raw`\{-4+5\sqrt{2}/2;-4-5\sqrt{2}/2\}`,
+      String.raw`-4+5\sqrt{2}/2;-4-5\sqrt{2}/2`,
+    ],
+    [
+      String.raw`\{-4+5\sqrt{2}/2;-4-5\sqrt{2}/2\}`,
+      String.raw`-4-5\sqrt{2}/2;-4+5\sqrt{2}/2`,
+    ],
+  ])('accepts bare semicolon list %s', (expected, source) => {
+    const result = grade(expected, source);
+    expect(result).toMatchObject({
+      state: 'correct',
+      proof: 'exact-collection',
+    });
+  });
+  it('retains the exact source of a bare semicolon list', () => {
+    const source = String.raw`-4 - 5\sqrt{2}/2 ; -4 + 5\sqrt{2}/2`;
+    expect(prepareCollection(source, {}, {}, '/answer', 'set')).toMatchObject({
+      ok: true,
+      value: { math: { source } },
+    });
+  });
+  it.each([
+    [String.raw`\{-4+5\sqrt{2}/2;-4-5\sqrt{2}/2\}`, '12;3'],
+    [String.raw`\{-4+5\sqrt{2}/2;-4-5\sqrt{2}/2\}`, String.raw`-4+5\sqrt{2}/2`],
+    [
+      String.raw`\{-4+5\sqrt{2}/2;-4-5\sqrt{2}/2\}`,
+      String.raw`-4+5\sqrt{2}/2;-4-5\sqrt{2}/2;3`,
+    ],
+  ])(
+    'proves a bare semicolon list is different: %s / %s',
+    (expected, source) => {
+      expect(grade(expected, source).state).toBe('incorrect');
+    },
+  );
+  it.each(['12;', '12;;3'])(
+    'keeps incomplete bare lists invalid: %s',
+    (source) => {
+      expect(grade(String.raw`\{1;2\}`, source).state).toBe('invalid');
+    },
+  );
+  it('preserves indeterminate comparisons for unproved bare members', () => {
+    expect(
+      grade(
+        String.raw`\{\sqrt{2}+\sqrt{3};\sqrt{5}\}`,
+        String.raw`\sqrt{5};\sqrt{7}`,
+      ),
+    ).toMatchObject({ state: 'indeterminate', value: 'unknown' });
+  });
+  it('does not enable semicolon lists for interval or scalar response profiles', () => {
+    expect(grade('[1;2]', '1;2', 'intervals').state).toBe('invalid');
+    const scalar = official({
+      ...definition('1'),
+      elements: [
+        {
+          id: 'q',
+          type: 'question',
+          text: 'Scalar',
+          points: 1,
+          response: { format: 'latex', kind: 'real' },
+          expectedLatex: '1',
+          policy: { domain: 'real', form: 'value-only' },
+        },
+      ],
+    });
+    expect(answer(scalar, '1;2').state).not.toBe('correct');
+  });
+  it.each([
     ['\\{-2,3\\}', '\\{3,-2\\}'],
     ['\\{-2;3\\}', '\\{3;-2;3;-2\\}'],
     ['\\emptyset', '\\varnothing'],

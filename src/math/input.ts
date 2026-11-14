@@ -553,6 +553,7 @@ function parseInput<
                 'Union',
                 'Sequence',
                 'Delimiter',
+                'Block',
               ].includes(head)
             ))
         ) {

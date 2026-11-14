@@ -493,3 +493,20 @@ attendus, le support Docker et la configuration Compose persistante avant un
 partagé, recréer le conteneur, déployer une image ni changer les secrets. Vérifier
 les quotas réels et un calcul après l’opération, plutôt que conclure au seul
 succès de Docker ou du healthcheck.
+
+### D71 — Accepter les solutions non accoladées dans le profil `set` (14 novembre 2026)
+
+Pour une question dont le contrat officiel est `response.kind: set`, traiter
+l'AST CortexJS d'une séquence séparée par `;` comme un ensemble fini, en plus
+des accolades existantes. Une expression scalaire complète est interprétée
+comme un singleton dans ce seul profil, afin qu'une racine oubliée puisse être
+comparée et jugée incorrecte au lieu d'être déclarée invalide. Les réponses
+restent comparées par les preuves exactes existantes : une preuve absente reste
+`indeterminate`; une syntaxe incomplète reste `invalid`.
+
+Conserver la chaîne originale sans découpage ni réécriture. Les intervalles et
+réponses scalaires gardent leur interprétation propre. N'utiliser que la
+structure MathJSON analysée par CortexJS ; pas de parseur LaTeX parallèle, de
+comparaison numérique approximative ni de fallback transformant l'inconnu en
+faux. Cette correction locale ne qualifie pas à elle seule l'adoption Novlearn
+ou le parcours staging.
