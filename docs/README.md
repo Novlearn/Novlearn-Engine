@@ -22,6 +22,10 @@ pas des capacités livrées.
 
 ## Traçabilité et intégration
 
+Le [registre des problèmes rencontrés](problems.md) conserve les signalements
+utilisateur, les preuves disponibles et les comportements souhaités avant de
+choisir une correction dans Engine ou Novlearn.
+
 | Document                                       | Rôle et moment de consultation                                                                  |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | [Matrice CDC](feature-coverage.md)             | Vérifier chaque exigence, son lot, son implémentation et ses preuves                            |

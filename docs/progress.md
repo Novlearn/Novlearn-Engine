@@ -1,5 +1,48 @@
 # État et reprise
 
+## Registre des problèmes utilisateur — 13 novembre 2026
+
+Création de [problems.md](problems.md) à la demande de l'utilisateur pour
+consigner les problèmes avant correction : décompte des essais, précision des
+messages, bonnes racines rejetées sans accolades et réponse `12 ; 3` sans
+verdict. Les deux captures originales sont conservées dans `docs/assets/problems`.
+La préférence pour une saisie des solutions sans accolades est enregistrée ;
+son implémentation et le dépôt responsable restent à déterminer après diagnostic.
+Les observations staging, les lectures de code local et les appels locaux de
+préparation sur le package installé 0.2.1 sont explicitement distingués.
+Aucun code fonctionnel, dépôt consommateur ou environnement distant n'est modifié.
+Le signalement suivant PB-005 ajoute l'affichage d'une borne de réponse attendue
+peu simplifiée et le mélange de conventions de parenthèses d'intervalle, avec
+une capture conservée. Sa formule interne et la responsabilité de rendu restent
+à diagnostiquer.
+Un HTTP 409 sur la soumission d'un DS avait été ajouté provisoirement au registre,
+puis retiré après reclassement : il concerne le flux backend/RPC de NovLearn et
+ne doit pas figurer parmi les problèmes Engine. La capture copiée dans ce dépôt
+a aussi été retirée. L'analyse locale du code NovLearn est restée en lecture
+seule ; aucun appel staging ni changement dans NovLearn ou la base n'est effectué.
+Le signalement PB-006 consigne ensuite les facteurs multiplicatifs égaux à 1
+visibles dans les propositions d'un QCM sur les suites géométriques. La capture
+est conservée ; l'origine des chaînes et la responsabilité du renderer restent
+à établir.
+Lecture croisée du code local Engine/NovLearn : l'adaptateur historique et
+l'instanciation Engine préservent le texte des options (avec substitution des
+paramètres), puis le renderer NovLearn le transmet à KaTeX sans simplification.
+La source exacte de l'exercice n'a pas été retrouvée ; la cause la plus probable
+est une proposition LaTeX rédigée avec des facteurs 1. Une correction globale
+relèverait du renderer et d'une décision pédagogique, tandis qu'une correction
+de ce seul QCM relève de sa donnée source. Aucun code fonctionnel n'a été changé.
+Le signalement PB-007 documente l'échec de rendu du graphique de l'exercice 63
+(422), suivi d'un refus de concurrence (429). Le code local attribue le premier
+au contrôle de résultat du sampling graphique dans l'intégration NovLearn et le
+second à son verrou de calcul. La définition effectivement utilisée sur staging
+et le résultat du sampler restent à relever pour savoir si le tracé est hors
+profil ou invalide.
+Contrôles documentaires : Prettier ciblé (`--write` puis `--check`) et
+`git diff --check` passent ; `Get-FileHash -Algorithm SHA256` confirme que les
+copies des captures sont identiques aux originaux. `npm.cmd ci`,
+`npm.cmd run check` et `npm.cmd pack --dry-run` ne sont pas exécutés pour cette
+modification documentaire ; aucune suite navigateur ni CI distante n'est lancée.
+
 ## Réparation ciblée de la limite swap staging — 13 novembre 2026
 
 La trace fournie relève `memory.swap.max=max` puis un `ValueError` ligne 92 du

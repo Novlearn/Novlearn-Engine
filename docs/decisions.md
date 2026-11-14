@@ -1,5 +1,14 @@
 # Décisions et ADR
 
+## Consigner les problèmes de saisie avant correction — 13 novembre 2026
+
+Tenir un [registre unique](problems.md) dans Engine pour les problèmes remontés
+par l'utilisateur, sans préjuger du dépôt où les corriger. Conserver les preuves,
+séparer les constats des hypothèses et choisir les corrections progressivement.
+L'utilisateur souhaite des messages plus précis et une saisie des solutions
+sans accolades obligatoires. Cette orientation est consignée, sans changement
+immédiat des contrats, du parsing, des verdicts ou du décompte d'essais.
+
 ## Collecter avant de corriger et distinguer les preuves — 5 novembre 2026
 
 Un include Certbot ne se réduit pas aux directives préfixées SSL : conserver
