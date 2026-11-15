@@ -1,5 +1,15 @@
 # Décisions et ADR
 
+## D72 — Versionner la correction avant son adoption staging (15 novembre 2026)
+
+Après l'échec de l'exercice 14, publier le correctif D71 dans une nouvelle
+version Engine plutôt que de remplacer l'archive 0.2.1 déjà publiée. L'archive
+exacte, son SHA-256 et le digest de l'image doivent provenir du workflow de
+release réussi. Corriger le workflow pour qu'il dérive le nom de l'archive de la
+version du package. Aligner Novlearn uniquement sur les artefacts ainsi publiés,
+redéployer, puis vérifier le host et le parcours élève avant de qualifier un
+problème résolu. Garder l'archive précédente disponible pour rollback/rejeu.
+
 ## Consigner les problèmes de saisie avant correction — 13 novembre 2026
 
 Tenir un [registre unique](problems.md) dans Engine pour les problèmes remontés
