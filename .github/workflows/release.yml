@@ -15,6 +15,7 @@ jobs:
       contents: read
     outputs:
       archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
+      archive_name: ${{ steps.package.outputs.archive_name }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -36,18 +37,21 @@ jobs:
         id: package
         shell: pwsh
         run: |
-          $archive = Join-Path $env:RUNNER_TEMP 'novlearn-exercise-engine-0.2.1.tgz'
+          $version = node -p "JSON.parse(require('node:fs').readFileSync('package.json','utf8')).version"
+          $archiveName = "novlearn-exercise-engine-$version.tgz"
+          $archive = Join-Path $env:RUNNER_TEMP $archiveName
           if (-not (Test-Path -LiteralPath $archive -PathType Leaf)) { throw 'The npm archive is missing.' }
           $archiveSha256 = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
           if ($archiveSha256 -notmatch '^[a-f0-9]{64}$') { throw 'Invalid SHA-256.' }
           $archiveSha256 | Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'engine-artifact-sha256.txt') -NoNewline
+          "archive_name=$archiveName" >> $env:GITHUB_OUTPUT
           "archive_sha256=$archiveSha256" >> $env:GITHUB_OUTPUT
       # Official v7 release pinned to its verified commit.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: npm-package
           path: |
-            ${{ runner.temp }}/novlearn-exercise-engine-0.2.1.tgz
+            ${{ runner.temp }}/${{ steps.package.outputs.archive_name }}
             ${{ runner.temp }}/engine-artifact-sha256.txt
           if-no-files-found: error
           retention-days: 1
@@ -77,7 +81,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          archive="$RUNNER_TEMP/npm-package/novlearn-exercise-engine-0.2.1.tgz"
+          archive="$RUNNER_TEMP/npm-package/${{ needs.package.outputs.archive_name }}"
           expected="$(cat "$RUNNER_TEMP/npm-package/engine-artifact-sha256.txt")"
           actual="$(sha256sum "$archive" | cut -d' ' -f1)"
           [[ "$expected" =~ ^[a-f0-9]{64}$ && "$actual" == "$expected" ]]
@@ -127,13 +131,14 @@ jobs:
           digest="$(docker buildx imagetools inspect "$image:$GITHUB_REF_NAME" --format '{{.Manifest.Digest}}')"
           [[ "$digest" =~ ^sha256:[a-f0-9]{64}$ ]]
           printf '%s@%s\n' "$image" "$digest" > "$RUNNER_TEMP/engine-image.txt"
-          archive_path="$RUNNER_TEMP/npm-package/novlearn-exercise-engine-0.2.1.tgz"
+          archive_path="$RUNNER_TEMP/npm-package/${{ needs.package.outputs.archive_name }}"
+          archive_name="${{ needs.package.outputs.archive_name }}"
           echo "image=$image" >> "$GITHUB_OUTPUT"
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
           echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
           gh release create "$GITHUB_REF_NAME" --generate-notes \
             --title "$GITHUB_REF_NAME" \
-            "$archive_path#novlearn-exercise-engine-0.2.1.tgz" \
+            "$archive_path#$archive_name" \
             "$RUNNER_TEMP/engine-image.txt#engine-image.txt" \
             "$RUNNER_TEMP/npm-package/engine-artifact-sha256.txt#engine-artifact-sha256.txt"
           echo "Published ${image}@${digest}" >> "$GITHUB_STEP_SUMMARY"
@@ -212,3 +217,4 @@ jobs:
           envs: DEPLOY_ENVIRONMENT,IMAGE_REFERENCE,GHCR_USER,GHCR_TOKEN
           script_path: deploy/deploy-staging-remote.sh
           command_timeout: 15m
+

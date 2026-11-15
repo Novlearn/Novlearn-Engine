@@ -1,5 +1,17 @@
 # Distribution, release et adoption
 
+## Candidat 0.2.2 — en préparation
+
+Le candidat inclut la correction des ensembles sans accolades de D71. La
+publication est en attente d'une PR revue et de la CI. Le workflow de release
+calcule le nom de l'archive à partir de la version du package pour éviter qu'un
+tag publie le contenu d'une version différente. Aucun SHA, archive ou tag de
+0.2.2 n'est attesté avant la réussite du workflow de release.
+
+Après publication, inscrire ici le commit source, le tag, le SHA-256 exact de
+l'archive et le digest de l'image staging. Le consommateur Novlearn devra épingler
+cette archive et empreinte, puis son déploiement staging devra être vérifié.
+
 ## Release actuelle
 
 Le package privé courant est `novlearn-exercise-engine@0.2.1`, schéma 5,
@@ -191,3 +203,4 @@ Aucune CI distante n'a été lancée. Les vérifications OS et Python locales so
 rapportées séparément ; une suite package Linux avec skips Windows n'est pas une
 preuve d'isolation Windows actuelle. Le pilote reste local, sans publication ou
 adoption dans les repositories applicatifs.
+

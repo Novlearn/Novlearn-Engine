@@ -1,5 +1,17 @@
 # État et reprise
 
+## Release corrective 0.2.2 — en cours — 15 novembre 2026
+
+À la suite de l'échec staging de l'exercice 14, l'archive attendue par Novlearn
+ne correspond pas à celle annoncée par le host staging. L'utilisateur a autorisé
+une release Engine distincte puis le réalignement du consommateur. Le correctif
+D71 est déjà sur `main`; ce lot prépare une release sémantique 0.2.2 et rend le
+workflow de publication indépendant d'un nom de version codé en dur.
+
+La CI locale et distante, la revue, la publication, le déploiement staging et le
+réalignement Novlearn restent à faire. Aucun SHA de 0.2.2 n'est encore connu ;
+ne pas réutiliser l'empreinte locale de 0.2.1 ou de l'archive de développement.
+
 ## Audit des problèmes PB-001 à PB-007 — 14 novembre 2026
 
 L'audit croisé des sept signalements est consigné dans
@@ -726,3 +738,4 @@ test Windows du host, timeout après 10,15 s au lieu de la limite native de 5 s 
 temporaire des workers ; le contrôle complet suivant a utilisé le répertoire
 temporaire autorisé. `npm.cmd pack --dry-run` PASS. CI distante et déploiement
 non exécutés.
+
