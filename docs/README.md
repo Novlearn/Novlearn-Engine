@@ -45,4 +45,3 @@ Les guides spécialisés restent séparés parce qu’ils portent des procédure
 des preuves propres. Les anciennes visions, spécifications, revues et stratégies
 de tests sont archivées ; leur contenu actuel a été intégré aux guides principaux.
 [AGENTS.md](../AGENTS.md) conserve les règles de travail dans ce dépôt.
-

@@ -738,4 +738,3 @@ test Windows du host, timeout après 10,15 s au lieu de la limite native de 5 s 
 temporaire des workers ; le contrôle complet suivant a utilisé le répertoire
 temporaire autorisé. `npm.cmd pack --dry-run` PASS. CI distante et déploiement
 non exécutés.
-

@@ -520,4 +520,3 @@ structure MathJSON analysée par CortexJS ; pas de parseur LaTeX parallèle, de
 comparaison numérique approximative ni de fallback transformant l'inconnu en
 faux. Cette correction locale ne qualifie pas à elle seule l'adoption Novlearn
 ou le parcours staging.
-

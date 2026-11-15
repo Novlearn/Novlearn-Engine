@@ -217,4 +217,3 @@ jobs:
           envs: DEPLOY_ENVIRONMENT,IMAGE_REFERENCE,GHCR_USER,GHCR_TOKEN
           script_path: deploy/deploy-staging-remote.sh
           command_timeout: 15m
-

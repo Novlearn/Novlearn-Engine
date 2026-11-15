@@ -203,4 +203,3 @@ Aucune CI distante n'a été lancée. Les vérifications OS et Python locales so
 rapportées séparément ; une suite package Linux avec skips Windows n'est pas une
 preuve d'isolation Windows actuelle. Le pilote reste local, sans publication ou
 adoption dans les repositories applicatifs.
-
