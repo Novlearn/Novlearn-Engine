@@ -150,6 +150,31 @@ describe('official bounded graph samples', () => {
     expect(value.formulaDomain).toBe('unverified');
     expect(value.approximation).toBe('numeric');
   });
+  it('samples the staging exercise real cube-root function across negative x', async () => {
+    const g = graph(String.raw`(x/3)\sqrt[3]{x^2}-2\sqrt[3]{x}`);
+    if (g.type !== 'function-graph') throw Error();
+    g.window.xMin = n('-3');
+    g.window.xMax = n('3');
+    const result = await sampled(official(g));
+    expect(result.state).toBe('complete');
+    expect(result.series[0]!.points).toHaveLength(65);
+    expect(result.series[0]!.segments).toHaveLength(64);
+    for (const point of result.series[0]!.points) {
+      const x = point.x;
+      expect(point.y).toBeCloseTo(
+        (x / 3) * Math.cbrt(x ** 2) - 2 * Math.cbrt(x),
+        12,
+      );
+    }
+  });
+  it('keeps indexed roots other than real cube roots outside the graph profile', async () => {
+    const result = await sampled(official(graph(String.raw`\sqrt[5]{x}`)));
+    expect(result.state).toBe('unsupported');
+    expect(result.series[0]!.points).toEqual([]);
+    expect(result.diagnostics).toEqual([
+      { seriesId: 'f', code: 'unsupported-expression' },
+    ]);
+  });
   it.each(['1/x', '(x^2-1)/(x-1)'])(
     'preserves the raw hole of %s',
     async (latex) => {
@@ -183,7 +208,7 @@ describe('official bounded graph samples', () => {
       ),
     ).toBe(true);
   });
-  it.each(['\\sqrt{x}', '\\ln(x)'])(
+  it.each(['\\sqrt{x}', '\\sqrt[2]{x}', '\\ln(x)'])(
     'keeps the real domain boundary of %s',
     async (latex) => {
       const result = await sampled(official(graph(latex)));

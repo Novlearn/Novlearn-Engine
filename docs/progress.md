@@ -1,16 +1,45 @@
 # État et reprise
 
-## Release corrective 0.2.2 — en cours — 15 novembre 2026
+## Diagnostic staging et correction locale PB-007 — 17 novembre 2026
+
+La définition active staging de l'exercice 63 a été lue en mode consultation :
+version `ab854a70-88f5-4455-8960-fec693ad7359`, révision 1, empreinte
+`72b6b7781d692a3d0c9d1b3198bdaa3d364ba761a0f433c43ef71a4f16434d5b`. Le graphe
+sur `[-3,3]` utilise `(x/3)\\sqrt[3]{x^2}-2\\sqrt[3]{x}`. CortexJS le représente
+avec des nœuds `Root` d'indice 3 ; le profil Engine précédent n'admettait que
+l'indice 2, ce qui causait le refus `unsupported-expression` repris par
+l'intégration en HTTP 422.
+
+Le sampler accepte maintenant les racines réelles d'indices 2 et 3 seulement.
+La racine carrée garde son contrôle de domaine ; la racine cubique est définie
+sur les radicandes réels négatifs aussi. Le test ciblé `tests/graph-sampling.test.ts`
+passe (31/31) après compilation.
+
+`npm.cmd run check` passe build, typecheck, lint et format, puis la suite globale
+échoue dans les processus natifs Windows et deux tests CLI. Le contrôle isolé
+du host retourne `unavailable`, et le test CLI n'obtient pas le résultat moteur
+attendu. Aucun ajustement du watchdog ou des protections n'a été fait. La
+commande complète n'a pas produit de rapport final exploitable et a été
+interrompue après les premiers résultats ; ces tests ne sont pas déclarés
+passants. La vérification staging reste à refaire après une release Engine et
+une adoption Novlearn ; le HTTP 429 de la capture demande encore une preuve
+distincte côté Novlearn.
+
+## Release corrective 0.2.2 — achevée — 15 novembre 2026
 
 À la suite de l'échec staging de l'exercice 14, l'archive attendue par Novlearn
 ne correspond pas à celle annoncée par le host staging. L'utilisateur a autorisé
-une release Engine distincte puis le réalignement du consommateur. Le correctif
-D71 est déjà sur `main`; ce lot prépare une release sémantique 0.2.2 et rend le
-workflow de publication indépendant d'un nom de version codé en dur.
+une release Engine distincte puis le réalignement du consommateur. La PR Engine
+#8 est fusionnée, sa CI passe, et `v0.2.2` est publiée et déployée sur le staging
+Engine (workflow `43724930613`). La PR Novlearn #21 est fusionnée ; l'application
+est réalignée sur le tarball exact SHA-256
+`0a691f331ac1fb6c5cc33157414998a7907ab1e362385d6a4720230ae36a98e6` et son
+déploiement staging `43740176640` passe.
 
-La CI locale et distante, la revue, la publication, le déploiement staging et le
-réalignement Novlearn restent à faire. Aucun SHA de 0.2.2 n'est encore connu ;
-ne pas réutiliser l'empreinte locale de 0.2.1 ou de l'archive de développement.
+En parcours élève, l'exercice 14 s'ouvre et accepte les racines sans accolades ;
+l'exercice 49 valide et révèle son intervalle en notation française. L'exercice
+63 demeure indisponible, cause diagnostiquée dans la section PB-007 ci-dessus.
+Ces vérifications ne qualifient pas la production.
 
 ## Audit des problèmes PB-001 à PB-007 — 14 novembre 2026
 

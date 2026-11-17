@@ -1,29 +1,25 @@
 # Distribution, release et adoption
 
-## Candidat 0.2.2 — en préparation
+## Candidat 0.2.3 — en préparation
 
-Le candidat inclut la correction des ensembles sans accolades de D71. La
-publication est en attente d'une PR revue et de la CI. Le workflow de release
-calcule le nom de l'archive à partir de la version du package pour éviter qu'un
-tag publie le contenu d'une version différente. Aucun SHA, archive ou tag de
-0.2.2 n'est attesté avant la réussite du workflow de release.
-
-Après publication, inscrire ici le commit source, le tag, le SHA-256 exact de
-l'archive et le digest de l'image staging. Le consommateur Novlearn devra épingler
-cette archive et empreinte, puis son déploiement staging devra être vérifié.
+Le candidat ajoute au sampling graphique la racine cubique réelle requise par
+l'exercice 63 de staging, tout en conservant la contrainte de domaine des
+racines carrées et le refus des autres indices. La publication attend une revue
+de la PR et une CI réussie. Après publication, Novlearn devra épingler l'archive
+exacte et son empreinte, puis son déploiement staging devra être vérifié.
 
 ## Release actuelle
 
-Le package privé courant est `novlearn-exercise-engine@0.2.1`, schéma 5,
-CortexJS 0.151.0. Le tag `v0.2.1` pointe sur le commit `8513666`. La release
+Le package privé courant est `novlearn-exercise-engine@0.2.2`, schéma 5,
+CortexJS 0.151.0. Le tag `v0.2.2` pointe sur le commit `8669322`. La release
 GitHub attache le tarball npm exact et `engine-artifact-sha256.txt` contenant
 son SHA-256 :
 
-`6d1d52f38297d6f91be0eaa4aea57eb63f61973eae4cc83d86fd0aa6651dd85a`.
+`0a691f331ac1fb6c5cc33157414998a7907ab1e362385d6a4720230ae36a98e6`.
 
 L’image du host publiée pour cette release est identifiée par le digest :
 
-`sha256:d1916edf981fd23b57f543937d83411df77b7dc5da290e24db9f41cbf544a4ea`.
+`sha256:f31b301a54e7c148cdec2d6389020f6ec31e48d1a32eb36cbf13669a8b25bb10`.
 
 Le package racine expose les API portables décrites dans [usage.md](usage.md).
 Les sous-chemins publics sont `./node-host`, `./legacy` et

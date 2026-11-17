@@ -135,12 +135,13 @@ export class GraphMath {
           this.condition(['Subtract', args[1]!, 1], 'NotEqual');
         }
       }
-      if (head === 'Sqrt' || head === 'Root') {
-        if (
-          head === 'Root' &&
-          this.ce.box(args[1]!).evaluate().toRational()?.join('/') !== '2/1'
-        )
+      if (head === 'Root') {
+        const degree = this.ce.box(args[1]!).evaluate().toRational();
+        if (!degree || degree[1] !== 1 || ![2, 3].includes(degree[0]))
           throw new GraphMathFailure('unsupported-expression');
+        if (degree[0] === 2) this.condition(args[0]!, 'GreaterEqual');
+        // A real cube root is defined on all real radicands, including negatives.
+      } else if (head === 'Sqrt') {
         this.condition(args[0]!, 'GreaterEqual');
       }
       if (head === 'Tan') this.condition(['Cos', args[0]!], 'NotEqual');
