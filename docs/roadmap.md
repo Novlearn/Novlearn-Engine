@@ -2,7 +2,7 @@
 
 ## Installation et première release — réalisées
 
-Le VPS Engine a été initialisé et la release `v0.2.1` est publiée. Le workflow
+Le VPS Engine a été initialisé et la release `v0.2.2` est publiée. Le workflow
 de release a construit le tarball exact et son empreinte, publié l’image GHCR par
 digest et déployé cette version en staging. Le host HTTP reste séparé des
 applications consommatrices ; leur configuration de client doit épingler

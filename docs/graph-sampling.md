@@ -7,6 +7,12 @@ numériques approximatives, segments admis, lacunes et états
 `complete`/`partial`/`unsupported`. Aucun snapshot, corrigé ou ancien reçu
 n’est réécrit.
 
+Le profil accepte les racines carrées réelles et les racines cubiques réelles.
+Pour `Root`, seuls les indices entiers 2 et 3 sont admis ; l'indice 2 conserve
+son contrôle de domaine non négatif, et les radicandes négatifs d'une racine
+cubique restent définis dans `ℝ`. Les autres racines indexées restent
+`unsupported`.
+
 Cette API exige un snapshot officiel admis ; la forme d’un objet reçu du
 navigateur n’établit pas sa provenance. Le résultat n’est ni une preuve
 mathématique universelle ni une attestation d’autorisation.

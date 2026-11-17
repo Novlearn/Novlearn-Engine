@@ -7,15 +7,15 @@ correction livrée ni une cause technique définitivement établie.
 
 ## Suivi
 
-| Identifiant | Sujet                                                                             | Statut                                                        | Emplacement de correction              |
-| ----------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------------- |
-| PB-001      | Possibilité de valider plus de deux fois, sans explication du décompte            | Règle serveur conforme ; explication UI à transmettre         | Novlearn                               |
-| PB-002      | Messages de saisie et de correction trop peu précis                               | États distincts disponibles ; correspondance UI à transmettre | Novlearn                               |
-| PB-003      | Bonnes racines rejetées et accolades contraignantes                               | Corrigé dans Engine local ; staging non qualifié              | Engine, puis adoption Novlearn         |
-| PB-004      | Réponse manifestement fausse sans verdict « incorrect »                           | Corrigé dans Engine local ; staging non qualifié              | Engine, puis adoption Novlearn         |
-| PB-005      | Réponse attendue d'intervalle peu simplifiée et notation de bornes incohérente    | Valeur officielle manquante ; attribution impossible          | Donnée officielle ou renderer Novlearn |
-| PB-006      | Facteurs égaux à 1 conservés dans les expressions affichées                       | Source exacte manquante ; règle globale à qualifier           | Donnée du QCM ou renderer Novlearn     |
-| PB-007      | Exercice 63 : rendu graphique indisponible (422), puis calcul déjà en cours (429) | Pas de cause Engine démontrée ; preuve staging manquante      | Intégration / données Novlearn         |
+| Identifiant | Sujet                                                                             | Statut                                                                  | Emplacement de correction              |
+| ----------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------- |
+| PB-001      | Possibilité de valider plus de deux fois, sans explication du décompte            | Règle serveur conforme ; explication UI à transmettre                   | Novlearn                               |
+| PB-002      | Messages de saisie et de correction trop peu précis                               | États distincts disponibles ; correspondance UI à transmettre           | Novlearn                               |
+| PB-003      | Bonnes racines rejetées et accolades contraignantes                               | Corrigé dans Engine local ; staging non qualifié                        | Engine, puis adoption Novlearn         |
+| PB-004      | Réponse manifestement fausse sans verdict « incorrect »                           | Corrigé dans Engine local ; staging non qualifié                        | Engine, puis adoption Novlearn         |
+| PB-005      | Réponse attendue d'intervalle peu simplifiée et notation de bornes incohérente    | Valeur officielle manquante ; attribution impossible                    | Donnée officielle ou renderer Novlearn |
+| PB-006      | Facteurs égaux à 1 conservés dans les expressions affichées                       | Source exacte manquante ; règle globale à qualifier                     | Donnée du QCM ou renderer Novlearn     |
+| PB-007      | Exercice 63 : rendu graphique indisponible (422), puis calcul déjà en cours (429) | Cause du 422 identifiée ; correctif Engine local, staging à requalifier | Engine et intégration Novlearn         |
 
 ## Contexte commun — 13 novembre 2026
 
@@ -323,6 +323,23 @@ les limites. Il faut obtenir la définition/version, fonctions, fenêtre,
 résultat et diagnostics du sampler, puis les heures et propriétaires (sans
 données privées superflues) des requêtes. Novlearn doit également afficher un
 message distinct selon la cause de concurrence.
+
+**Mise à jour du diagnostic — 17 novembre 2026.** La définition active lue en
+staging est l'exercice 63, version `ab854a70-88f5-4455-8960-fec693ad7359`,
+révision 1, empreinte `72b6b7781d692a3d0c9d1b3198bdaa3d364ba761a0f433c43ef71a4f16434d5b`.
+Son élément graphique couvre `[-3,3]` et contient
+`(x/3)\\sqrt[3]{x^2}-2\\sqrt[3]{x}`. CortexJS analyse ces racines comme des
+opérations `Root` d'indice 3, mais le profil Engine précédent rejetait tout
+indice autre que 2. Le 422 est donc expliqué par une limite du profil, pas par
+une saturation de sampling.
+
+Le correctif local autorise l'indice entier 3, dont le domaine réel inclut les
+radicandes négatifs ; l'indice 2 conserve son garde `radicand >= 0`, et les
+autres indices restent refusés. Un test de régression reprend la fonction et la
+fenêtre staging, compare les 65 valeurs à `Math.cbrt` et vérifie 64 segments.
+La correction est seulement locale : aucune release ni adoption staging de
+cette extension n'est faite. Le 429 visible reste à qualifier côté Novlearn,
+car ses journaux et la corrélation des deux requêtes ne sont pas disponibles.
 
 ### Transmission à Novlearn
 

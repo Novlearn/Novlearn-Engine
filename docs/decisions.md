@@ -1,5 +1,17 @@
 # Décisions et ADR
 
+## D73 — Échantillonner les racines cubiques réelles dans les graphes (17 novembre 2026)
+
+La définition active staging de l'exercice 63 utilise une fonction comportant
+`\\sqrt[3]{x}` sur `[-3,3]`. La preuve exacte du snapshot et la reproduction
+CortexJS établissent que le refus Engine venait de l'admissibilité des nœuds
+`Root` d'indice 3. Autoriser uniquement les indices entiers 2 et 3 dans le
+sampler : l'indice 2 garde la contrainte de radicande non négatif ; l'indice 3
+est réel sur tout `ℝ`, y compris pour les radicandes négatifs. Refuser les
+autres indices comme `unsupported-expression`. Ne pas modifier le parser, le
+contrat de sampling, les quotas ou la politique de concurrence. La qualification
+du 429 et l'adoption staging restent distinctes.
+
 ## D72 — Versionner la correction avant son adoption staging (15 novembre 2026)
 
 Après l'échec de l'exercice 14, publier le correctif D71 dans une nouvelle

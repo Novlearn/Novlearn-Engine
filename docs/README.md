@@ -1,7 +1,7 @@
 # Documentation du moteur
 
-Référence technique du package privé, actuellement publié en 0.2.1 ; le candidat
-0.2.2 contient le correctif de saisie de type ensemble et attend sa release. Le
+Référence technique du package privé, actuellement publié en 0.2.2 ; le candidat
+0.2.3 ajoute le support des racines cubiques réelles dans les graphes et attend sa release. Le
 package utilise CortexJS 0.151.0 ; ses contrats publics et les usages réservés au serveur sont
 décrits dans les guides ci-dessous.
 Le [CDC officiel](CDC_référence.md) décrit les objectifs. Le code et les tests

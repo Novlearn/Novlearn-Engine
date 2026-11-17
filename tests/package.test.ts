@@ -6,7 +6,7 @@ import packageJson from '../package.json' with { type: 'json' };
 
 describe('built package boundary', () => {
   it('versions the new API package separately from unchanged replay snapshots', () => {
-    expect(packageJson.version).toBe('0.2.2');
+    expect(packageJson.version).toBe('0.2.3');
     expect(engine.GRAPH_PROFILE).toBe('display-graph-v1');
     expect(typeof engine.sampleDisplayGraph).toBe('function');
   });
