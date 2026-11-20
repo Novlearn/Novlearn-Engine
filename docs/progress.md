@@ -768,7 +768,6 @@ temporaire des workers ; le contrôle complet suivant a utilisé le répertoire
 temporaire autorisé. `npm.cmd pack --dry-run` PASS. CI distante et déploiement
 non exécutés.
 
-
 ## Garde-fou de réparation aligné sur Engine 0.2.3 — 20 novembre 2026
 
 Le run staging avec `repair_swap=true` a été arrêté avant toute mise à jour :

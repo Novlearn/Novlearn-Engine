@@ -533,7 +533,6 @@ comparaison numérique approximative ni de fallback transformant l'inconnu en
 faux. Cette correction locale ne qualifie pas à elle seule l'adoption Novlearn
 ou le parcours staging.
 
-
 ### D74 — Aligner l'audit staging sur l'archive Engine 0.2.3 (20 novembre 2026)
 
 Après la publication et l'installation vérifiée d'Engine 0.2.3, le garde-fou de
