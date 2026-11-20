@@ -767,3 +767,17 @@ test Windows du host, timeout après 10,15 s au lieu de la limite native de 5 s 
 temporaire des workers ; le contrôle complet suivant a utilisé le répertoire
 temporaire autorisé. `npm.cmd pack --dry-run` PASS. CI distante et déploiement
 non exécutés.
+
+## Garde-fou de réparation aligné sur Engine 0.2.3 — 20 novembre 2026
+
+Le run staging avec `repair_swap=true` a été arrêté avant toute mise à jour :
+`REPAIR_STAGING_CONFIGURATION_GUARD_FAILED`. Son propre audit observe le digest
+Engine 0.2.3 `3068549e521d1f643ced8564e94ad645dbccace22a9ec173c912530af3766028`,
+mais le garde-fou attendait encore l'archive 0.2.1. Le diagnostic de repli confirme
+que `memory.swap.max=max` reste en place et que le worker ne démarre toujours pas.
+
+Le workflow de cette branche compare désormais le digest 0.2.3. Test ciblé
+`python -m unittest discover -s tests/deploy -p test_engine_audit.py` : **15 tests
+PASS**. Aucun changement staging, redéploiement ou suite complète n'a été effectué.
+Après fusion, relancer explicitement la réparation staging pour appliquer le quota
+et valider un calcul HTTP 200.
