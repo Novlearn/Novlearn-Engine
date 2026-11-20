@@ -532,3 +532,13 @@ structure MathJSON analysée par CortexJS ; pas de parseur LaTeX parallèle, de
 comparaison numérique approximative ni de fallback transformant l'inconnu en
 faux. Cette correction locale ne qualifie pas à elle seule l'adoption Novlearn
 ou le parcours staging.
+
+
+### D74 — Aligner l'audit staging sur l'archive Engine 0.2.3 (20 novembre 2026)
+
+Après la publication et l'installation vérifiée d'Engine 0.2.3, le garde-fou de
+réparation du workflow staging comparait encore l'archive à l'empreinte 0.2.1.
+Cela bloquait la correction du seul quota swap runtime avant toute mutation. Mettre
+à jour l'empreinte et le libellé de version avec le digest observé 0.2.3, et couvrir
+ce contrat par un test. Ne pas lancer le workflow de réparation, modifier staging
+ou déployer dans le cadre de cette correction locale.

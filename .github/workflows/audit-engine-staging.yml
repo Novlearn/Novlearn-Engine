@@ -53,7 +53,7 @@ jobs:
             )
 
             EXPECTED_ARCHIVE = (
-                "6d1d52f38297d6f91be0eaa4aea57eb63f61973eae4cc83d86fd0aa6651dd85a"
+                "3068549e521d1f643ced8564e94ad645dbccace22a9ec173c912530af3766028"
             )
             failures = []
             if sys.argv[1:] not in ([], ["false"], ["true"]):
@@ -383,7 +383,7 @@ jobs:
                     host_port=port,
                     token_matches_staging_file=token_matches,
                     archive_sha256=archive,
-                    matches_expected_0_2_1=archive_matches,
+                    matches_expected_0_2_3=archive_matches,
                 )
 
                 if not token_matches:
