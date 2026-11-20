@@ -121,7 +121,7 @@ class StagingArchiveGuard(unittest.TestCase):
     def test_repair_guard_tracks_the_deployed_engine_023_archive(self):
         source = WORKFLOW.read_text(encoding="utf-8")
         expected = re.search(
-            r'EXPECTED_ARCHIVE\\s*=\\s*\\(\\s*"([a-f0-9]{64})"', source
+            r'EXPECTED_ARCHIVE\s*=\s*\(\s*"([a-f0-9]{64})"', source
         )
         self.assertIsNotNone(expected)
         self.assertEqual(
